@@ -1,6 +1,6 @@
 ### To run in browser
-Download file (and dependencies, see [pyviz](https://pyviz.org/installation.html)) and run
+Download this folder (and dependencies, see [pyviz](https://pyviz.org/installation.html)) and run
 ```
-panel serve panel_plotly_bokeh.ipynb
+bokeh serve panel/
 ```
 and go to the localhost:..... url.
