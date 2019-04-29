@@ -14,9 +14,7 @@ This document enlists possible requirements for the web app.
 3. Make sure you go to the actual Git repository folder using ```cd [git folder location]```.
 4. Now you can work on the web app.
 
-### Deployments
-There are multiple platforms on which the web app can be hosted. Each platform has its own benefits and drawbacks. Possible providers are AWS (Amazon), Azure (Microsoft), Google Cloud Platform, Heroku, or self-hosted.
-
+### Deployment
 To run the Flask service locally execute the following commands: 
 1. ```pip install -e .```
 2. ```set FLASK_APP=app``` (or ```export FLASK_APP=app``` on UNIX-like systems)
