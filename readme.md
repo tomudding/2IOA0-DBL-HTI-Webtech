@@ -8,7 +8,7 @@ This document enlists possible requirements for the web app.
 3. Create a new conda environment using ```conda create -n 2ioa0 python=3.6``` (make sure to use Python 3.6(.8)).
 4. Activate the conda environment using ```conda activate 2ioa0```.
 5. Install _pyviz_ using ```conda install -c pyviz/label/dev pyviz```.
-5.1. Additional packages can be downloaded from the Anaconda Forge. A list of additional required packages is listed under 'Required Packages'.
+6. Additional packages can be downloaded from the Anaconda Forge. A list of additional required packages is listed under 'Required Packages'.
 
 #### Usage
 1. Open the _Anaconda Prompt_ as an administrator (solves permission issues).
