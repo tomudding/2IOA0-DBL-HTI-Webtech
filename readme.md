@@ -19,3 +19,12 @@ This document enlists possible requirements for the web app.
 
 ### Deployments
 There are multiple platforms on which the web app can be hosted. Each platform has its own benefits and drawbacks. Possible providers are AWS (Amazon), Azure (Microsoft), Google Cloud Platform, Heroku, or self-hosted.
+
+To run the Flask service locally execute the following commands: 
+```export FLASK_APP=server.py```
+```flask run```
+_The Flask service should now be running on 127.0.0.1:5000, it can be accessed through [localhost:5000](localhost:5000)._
+
+To deploy the Flask service on an actual webserver execute the following commands:
+```export FLASK_APP=server.py```
+```flask run --host=0.0.0.0```
