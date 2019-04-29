@@ -22,7 +22,7 @@ There are multiple platforms on which the web app can be hosted. Each platform h
 
 To run the Flask service locally execute the following commands: 
 1. ```export FLASK_APP=server.py```
-2. ```flask run```
+2. ```flask run```  
 _The Flask service should now be running on 127.0.0.1:5000, it can be accessed through [localhost:5000](localhost:5000)._
 
 To deploy the Flask service on an actual webserver execute the following commands:
