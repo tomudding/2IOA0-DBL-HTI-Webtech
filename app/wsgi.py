@@ -3,7 +3,7 @@ Author(s): Tom Udding
 Created: 2019-04-29
 Edited: 2019-04-29
 """
-from server import app
+from app import server
 
 if __name__ == "__main__":
-    app.run()
+    server.run()
