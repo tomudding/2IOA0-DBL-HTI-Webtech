@@ -1,3 +1,8 @@
+"""
+Author(s): Tom Udding
+Created: 2019-04-29
+Edited: 2019-04-29
+"""
 from flask import Flask
 app = Flask(__name__)
 
