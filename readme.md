@@ -15,10 +15,10 @@ To access the development environment:
 3. Make sure you go to the actual Git repository folder using ```cd [git folder location]```.
 4. Now you can work on the web app.
 5. After you finished a certain task, you can upload it to Github by doing the following commands in a git command prompt (or similar actions in Github desktop):
-5.1 ```git pull origin master``` to get the latest repository from Github.
-5.2 ```git add .``` to add all your file changes to a commit.
-5.3 ```git commit -m "Put commit message here``` to make the commit.
-5.4 ```git push origin master``` to push your commit to Github.
+   1. ```git pull origin master``` to get the latest repository from Github.
+   2. ```git add .``` to add all your file changes to a commit.
+   3. ```git commit -m "Put commit message here``` to make the commit.
+   4. ```git push origin master``` to push your commit to Github.
 
 ### 3. Deployment
 To run the Flask app service locally execute the following commands (in the repository folder): 
