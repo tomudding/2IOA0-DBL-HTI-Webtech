@@ -18,7 +18,8 @@ To access the development environment:
    1. ```git pull origin master``` to get the latest repository from Github.
    2. ```git add .``` to add all your file changes to a commit.
    3. ```git commit -m "Put commit message here``` to make the commit.
-   4. ```git push origin master``` to push your commit to Github.
+   4. ```git push origin master``` to push your commit to Github.  
+   <sup><em><strong>If you decide to implement a whole new feature which requires a lot of modifications please do it on <a href="https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging">a seperate branch and create a pull request to merge</a> it into the master branch.</strong></em></sup>
 
 ### 3. Deployment
 To run the Flask app service locally execute the following commands (in the repository folder): 
