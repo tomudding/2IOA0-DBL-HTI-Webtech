@@ -7,6 +7,6 @@ from flask import Blueprint, render_template
 
 visualiseBlueprint = Blueprint('visualiseBlueprint', __name__, template_folder='templates')
 
-@visualiseBlueprint.route('/', methods=['GET'])
+@visualiseBlueprint.route('/visualise', methods=['GET'])
 def visualise():
     return render_template('visualise.html')
