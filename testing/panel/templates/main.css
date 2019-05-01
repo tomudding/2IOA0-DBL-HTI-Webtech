@@ -1,0 +1,68 @@
+body {
+	background-color: rgba(255,255,255,100);
+}
+
+* {
+	margin: 0;
+	padding: 0;
+
+}
+
+.header {
+	background-color: #F2F2F2;
+	height: 60px;
+	width: 100%;
+	display: block;
+}
+
+.header-85-percent {
+	width: 85%;
+	height: 100%;
+	display: block;
+	margin: 0 auto;
+}
+
+.logo-container {
+	height: 100%;
+	float: left;
+}
+
+.logo-container img {
+	height: 60%;
+	margin: 30%;
+}
+
+.upload-file-container {
+	height: 100%;
+	float: right;
+}
+
+.header-button {
+	color: black;
+	height: 40px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	margin-right: 10px;
+	border: 1px solid #747474;
+	border-radius: 30px;
+	background-color: #F2F2F2;
+	cursor: pointer;
+	padding: 10px;
+	padding-left: 20px;
+	padding-right: 20px;
+	font-size: 12px;
+	color: #747474;
+}
+
+.header-button:hover {
+	border: 1px solid #F2F2F2;
+	color: black;
+	background-color: #E2E2E2;
+}
+
+
+#button-text {
+	color: #7c7c7c;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	font-size: 10px;
+}
