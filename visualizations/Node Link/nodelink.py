@@ -79,6 +79,9 @@ for row in df.itertuples(): #For each row in the dataframe
     for element in row: #For each element in each row
         element_count += 1 #Increase second node index by 1
         if type(element) == float:
+            #if element == 1.0: #Code in case for symmetric matrix, effectively halving running time of this loop
+            #    break
+            #elif element > tolerance:
             if element > tolerance and not element == 1.0:
                 start.append(index_count) #Add starting node index to the edge starting list
                 end.append(element_count) #Add ending node index to the edge ending list
