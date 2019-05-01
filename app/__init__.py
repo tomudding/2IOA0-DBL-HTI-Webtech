@@ -23,6 +23,7 @@ import app.upload
 
 # import views from app
 from app.index import indexBlueprint
+from app.visualise import visualiseBlueprint
 
 # register views as blueprints
 server.register_blueprint(indexBlueprint)
