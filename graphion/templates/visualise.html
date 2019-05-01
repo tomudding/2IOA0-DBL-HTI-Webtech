@@ -11,6 +11,9 @@ Edited: 2019-05-01
 		<meta http-equiv="X-UA-Compatible" content="ie=edge">
 		<title>graphion - visualisation</title>
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+		<!-- Bokeh files from Cloudflare CDN -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh.min.css" integrity="sha256-kmX/Nb5PazwKydPmaZjEb9sOg8BWh1v5eP14IzXJUkU=" crossorigin="anonymous" />
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh.min.js" integrity="sha256-VwiC87GeMmJLjJIRwyI9USfUlf9zpJbgZugDAz7W5CA=" crossorigin="anonymous"></script>
 	</head>
 	<body>
 		<!--Header-->
@@ -27,5 +30,25 @@ Edited: 2019-05-01
 				</div>
 			</div>
 		</header>
+		<!--
+			THIS SECTION IS BASED ON MY OWN HTML/CSS FRAMEWORK
+			NEEDS TO BE ADJUSTED TO WHAT ANTON COMES UP WITH
+			UNLESS WE WANT TO USE THIS
+		-->
+		<section class="body-wrapper">
+			<div class="container">
+				<div class="row">
+					<div class="col-s-12">
+						{% block body %}
+						    {% for plot in plots %}
+						        {% for part in plot %}
+						            {{ part|safe }}
+						        {% endfor %}
+						    {% endfor %}
+						{% endblock %}
+					</div>
+				</div>
+			</div>
+		</section>
 	</body>
 </html>
