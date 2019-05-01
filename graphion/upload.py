@@ -1,0 +1,30 @@
+"""
+Author(s): Tom Udding
+Created: 2019-05-01
+Edited: 2019-05-01
+"""
+import os
+from flask import flash, request, redirect, url_for
+from werkzeug.utils import secure_filename
+from graphion import server
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in server.config['ALLOWED_EXTENSIONS']
+
+@server.route('/upload', methods=['POST'])
+def upload_file():
+    if request.method == 'POST':
+        if 'file' not in request.files:
+            # throw exception because file is not in submitted form
+            return redirect('/visualise')
+        file = request.files['file']
+        if file.filename == '':
+            # throw exception because file is still not submitted
+            return redirect('/visualise')
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            if (os.path.isfile(server.config['UPLOAD_FOLDER'].join(filename))):
+                # throw exception because file with that name already exists
+                return redirect('/visualise')
+            file.save(os.path.join(server.config['UPLOAD_FOLDER'], filename))
+            return redirect('/visualise')

@@ -22,8 +22,8 @@ To access the development environment:
    <sup><em><strong>If you decide to implement a whole new feature which requires a lot of modifications please do it on <a href="https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging">a seperate branch and create a pull request to merge</a> it into the master branch.</strong></em></sup>
 
 ### 3. Deployment
-To run the Flask app service locally execute the following commands (in the repository folder): 
+To run the Flask app service locally execute the following commands (in the repository folder):
 1. ```pip install -e .```
-2. ```set FLASK_APP=app``` (or ```export FLASK_APP=app``` on UNIX-like systems)
+2. ```set FLASK_APP=graphion``` (or ```export FLASK_APP=graphion``` on UNIX-like systems)
 3. ```flask run```
 _The Flask service should now be running on localhost:5000._
