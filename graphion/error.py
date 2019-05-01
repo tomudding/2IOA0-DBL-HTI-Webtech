@@ -1,10 +1,10 @@
 """
 Author(s): Tom Udding
 Created: 2019-04-29
-Edited: 2019-04-29
+Edited: 2019-05-01
 """
 from graphion import server
-from flask import render_template
+from flask import request, render_template
 
 @server.errorhandler(403)
 def not_allowed(error):
