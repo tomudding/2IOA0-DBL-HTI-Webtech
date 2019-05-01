@@ -27,10 +27,12 @@ import graphion.upload
 
 # import views from app
 from graphion.index import indexBlueprint
+from graphion.selection import selectionBlueprint
 from graphion.visualise import visualiseBlueprint
 
 # register views as blueprints
 server.register_blueprint(indexBlueprint)
+server.register_blueprint(selectionBlueprint)
 server.register_blueprint(visualiseBlueprint)
 
 # other stuff

@@ -16,14 +16,19 @@ def upload_file():
     if request.method == 'POST':
         if 'file' not in request.files:
             # throw exception because file is not in submitted form
-            return redirect('/visualise')
+            return redirect('/selection')
         file = request.files['file']
         if file.filename == '':
             # throw exception because file is still not submitted
-            return redirect('/visualise')
+            return redirect('/selection')
         if file and allowed_file(file.filename):
             fileUniqueHash = secrets.token_hex(server.config['TOKEN_SIZE'])
             fileName = fileUniqueHash + '.' + file.filename.split('.')[-1]
+            fileNameInfo = fileUniqueHash + '.info'
             file.save(os.path.join(server.config['UPLOAD_FOLDER'], fileName))
+            fileOriginalName = secure_filename(file.filename)
+            fileOriginalInformation = open(os.path.join(server.config['UPLOAD_FOLDER'], fileNameInfo), 'w')
+            fileOriginalInformation.write(fileOriginalName)
+            fileOriginalInformation.close()
             return redirect('/visualise/' + fileUniqueHash)
-    return redirect('/visualise')
+    return redirect('/selection')

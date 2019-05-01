@@ -1,0 +1,69 @@
+<!--
+Author(s): Tom Udding
+Created: 2019-04-29
+Edited: 2019-05-01
+-->
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>graphion - file selection</title>
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+	</head>
+	<body>
+		<!--Header-->
+		<header class="navigation-wrapper">
+			<div class=header>
+				<div class="header-85-percent">
+					<!--Left-side container with the logo-->
+					<div class="logo-container">
+						<img src="{{ url_for('static', filename='images/network.png') }}" alt="graphion logo" class="logo">
+					</div>
+				</div>
+			</div>
+		</header>
+		<!--
+			THIS SECTION IS BASED ON MY OWN HTML/CSS FRAMEWORK
+			NEEDS TO BE ADJUSTED TO WHAT ANTON COMES UP WITH
+			UNLESS WE WANT TO USE THIS
+		-->
+		<section class="body-wrapper">
+			<div class="container">
+				<div class="row">
+					<div class="col-s-12"></div>
+				</div>
+				<div class="row">
+					<div class="col-s-6">
+						<!-- existing file selection -->
+						
+					</div>
+					<div class="col-s-6">
+						<!-- file upload -->
+						<div class="upload-file-container">
+							<form action="/upload" method="POST" enctype="multipart/form-data">
+								<label for="file-upload" class="button">Upload File</label>
+							    <input type="file" name="file" id="file-upload" hidden>
+								<!--Text displaying the file name of the uploaded file-->
+								<span class="button-text" id="button-text-bold">File chosen:</span>
+								<span class="button-text" id="display-file-name">no file selected</span>
+							    <input type="submit" value="Submit" name="submit">
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</body>
+	<script>
+		var fileInputButton = document.getElementById('file-upload');
+		fileInputButton.addEventListener('change', showFileName);
+
+		function showFileName(event) {
+			var input = event.srcElement;
+			var fileName = input.files[0].name;
+			document.getElementById('display-file-name').textContent = fileName;
+		}
+	</script>
+</html>

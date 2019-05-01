@@ -1,6 +1,6 @@
 <!--
-Author(s): Anton Vellikok, Tom Udding
-Created: 2019-04-29
+Author(s): Tom Udding
+Created: 2019-05-01
 Edited: 2019-05-01
 -->
 <!DOCTYPE html>
@@ -9,41 +9,23 @@ Edited: 2019-05-01
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta http-equiv="X-UA-Compatible" content="ie=edge">
-		<title>graphion</title>
+		<title>graphion - visualisation</title>
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
 	</head>
 	<body>
-		<div class="container">
-			<!--Header-->
-			<div class="header">
+		<!--Header-->
+		<header class="navigation-wrapper">
+			<div class=header>
 				<div class="header-85-percent">
 					<!--Left-side container with the logo-->
 					<div class="logo-container">
 						<img src="{{ url_for('static', filename='images/network.png') }}" alt="graphion logo" class="logo">
 					</div>
-					<!--Right-side container with the upload file and submit buttons-->
-					<div class="upload-file-container">
-						<form action="/upload" method="POST" enctype="multipart/form-data">
-							<label for="file-upload" class="button">Upload File</label>
-						    <input type="file" name="file" id="file-upload" hidden>
-							<!--Text displaying the file name of the uploaded file-->
-							<span class="button-text" id="button-text-bold">File chosen:</span>
-							<span class="button-text" id="display-file-name">no file selected</span>
-						    <input type="submit" value="Submit" name="submit">
-						</form>
+					<div class="visualisation-information-wrapper">
+						<span>You are currently viewing: {{ fileName }}</span>
 					</div>
 				</div>
 			</div>
-		</div>
+		</header>
 	</body>
-	<script>
-		var fileInputButton = document.getElementById('file-upload');
-		fileInputButton.addEventListener('change', showFileName);
-
-		function showFileName(event) {
-			var input = event.srcElement;
-			var fileName = input.files[0].name;
-			document.getElementById('display-file-name').textContent = fileName;
-		}
-	</script>
 </html>
