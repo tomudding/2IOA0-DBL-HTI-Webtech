@@ -6,7 +6,7 @@ Edited: 2019-05-01
 import os
 from flask import flash, request, redirect, url_for
 from werkzeug.utils import secure_filename
-from app import server
+from graphion import server
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in server.config['ALLOWED_EXTENSIONS']

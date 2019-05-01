@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(
-    name='app',
-    packages=['app'],
+    name='graphion',
+    packages=['graphion'],
     include_package_data=True,
 )

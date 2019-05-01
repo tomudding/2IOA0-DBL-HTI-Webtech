@@ -18,15 +18,16 @@ server.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 server.config['ALLOWED_EXTENSIONS'] = ALLOWED_EXTENSIONS
 
 # general imports
-import app.error
-import app.upload
+import graphion.error
+import graphion.upload
 
 # import views from app
-from app.index import indexBlueprint
-from app.visualise import visualiseBlueprint
+from graphion.index import indexBlueprint
+from graphion.visualise import visualiseBlueprint
 
 # register views as blueprints
 server.register_blueprint(indexBlueprint)
+server.register_blueprint(visualiseBlueprint)
 
 # other stuff
 if (not os.path.isdir(server.config['UPLOAD_FOLDER'])):

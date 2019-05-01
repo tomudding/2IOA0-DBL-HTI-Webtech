@@ -3,7 +3,7 @@ Author(s): Tom Udding
 Created: 2019-04-29
 Edited: 2019-04-29
 """
-from app import server
+from graphion import server
 from flask import render_template
 
 @server.errorhandler(403)
