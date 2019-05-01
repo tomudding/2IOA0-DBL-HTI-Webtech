@@ -16,14 +16,15 @@ def upload_file():
     if request.method == 'POST':
         if 'file' not in request.files:
             # throw exception because file is not in submitted form
-            return redirect(request.url)
+            return redirect('/visualise')
         file = request.files['file']
         if file.filename == '':
             # throw exception because file is still not submitted
-            return redirect(request.url)
+            return redirect('/visualise')
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             if (os.path.isfile(server.config['UPLOAD_FOLDER'].join(filename))):
                 # throw exception because file with that name already exists
+                return redirect('/visualise')
             file.save(os.path.join(server.config['UPLOAD_FOLDER'], filename))
-            return redirect('/')
+            return redirect('/visualise')
