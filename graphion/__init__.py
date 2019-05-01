@@ -9,13 +9,17 @@ server = Flask(__name__)
 
 # constants
 UPLOAD_FOLDER = 'uploads'               #
+TEMP_FOLDER = 'temp'                    #
 ALLOWED_EXTENSIONS = set(['csv'])       #
 BUFFER_SIZE = 64000                     #
-MAX_CONTENT_LENGTH = 20 * 1024 * 1024    # limit file upload size to 20 MB
+MAX_CONTENT_LENGTH = 20 * 1024 * 1024   # limit file upload size to 20 MB
 
 # app configurations
 server.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+server.config['TEMP_FOLDER'] = TEMP_FOLDER
 server.config['ALLOWED_EXTENSIONS'] = ALLOWED_EXTENSIONS
+server.config['BUFFER_SIZE'] = BUFFER_SIZE
+server.config['MAX_CONTENT_LENGTH'] = MAX_CONTENT_LENGTH
 
 # general imports
 import graphion.error
