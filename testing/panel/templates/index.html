@@ -7,7 +7,7 @@
     {% block inner_head %}
       <meta charset="utf-8">
       <title>Custom title</title>
-      <h1>My header</h1>
+      <link rel="stylesheet" type="text/css" href="main.css">
       {% block preamble %}{% endblock %}
       {% block resources %}
         {% block css_resources %}
@@ -23,6 +23,36 @@
   {% endblock %}
   {% block body %}
   <body>
+
+    <div class="container">
+
+        <!--Header-->
+        <div class="header">
+            <div class="header-85-percent">
+                
+                <div class="logo-container">
+                    <img src="images/network.png" alt="graphion logo" class="logo">
+                </div>
+
+                <div class="upload-file-container">
+                    <button type="button" class="header-button">try our example</button>
+                    <input type="file" hidden="hidden" id="original-input-button">
+                    <button type="button" class="header-button" id="redirected-input-button">upload file</button>
+
+                        <!--Redirecteding the original input button to a custom one-->
+                        <script>
+                        const ogInput = document.getElementById("original-input-button")
+                        const redirectedInput = document.getElementById("redirected-input-button")
+                        </script>
+
+                    <span id="button-text">File has not been chosen yet.</span>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
     {% block inner_body %}
       {% block contents %}
         {% for doc in docs %}
