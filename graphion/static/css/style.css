@@ -61,40 +61,42 @@ body {
 	float: right;
 }
 
-.header-button {
-	color: black;
-	height: 40px;
-	margin-top: 10px;
-	margin-bottom: 10px;
-	margin-right: 10px;
-	border: 1px solid #747474;
-	border-radius: 30px;
-	background-color: #F2F2F2;
-	cursor: pointer;
-	padding: 10px;
-	padding-left: 20px;
-	padding-right: 20px;
-	font-size: 12px;
-	color: #747474;
+input:focus,
+button:focus {
+    outline: none;
 }
 
-.header-button:hover {
-	border: 1px solid #F2F2F2;
-	color: black;
-	background-color: #E2E2E2;
+input,
+button,
+.button {
+    background-color: rgb(242, 242, 242);
+    height: 2.5rem;
+    color: rgb(128, 128, 128);
+	font-size: 0.75rem;
+	border: 0.0625rem solid rgb(141, 141, 141);
+    border-radius: 1.875rem;
+    line-height: 1;
+	margin: 0.625rem;
+	padding: 0.625rem;
+	-webkit-transition: background-color 0.5s ease;
+	-moz-transition: background-color 0.5s ease;
+	-ms-transition: background-color 0.5s ease;
+	-o-transition: background-color 0.5s ease;
+	transition: background-color 0.5s ease;
 }
 
+input:disabled {
+    cursor: not-allowed;
+}
+
+input:hover,
+button:hover,
+.button:hover {
+	background-color: rgb(195, 195, 195);
+	color: rgb(83, 83, 83);
+}
 
 .button-text {
 	color: #7c7c7c;
-	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-	font-size: 10px;
-}
-
-#button-text-bold {
-	font-weight: bold;
-}
-
-#display-file-name {
-	margin-right: 5px;
+	font-size: 0.625rem;
 }
