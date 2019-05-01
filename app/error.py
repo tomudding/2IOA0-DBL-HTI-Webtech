@@ -14,6 +14,14 @@ def not_allowed(error):
 def not_found(error):
     return render_template('errors/404.html'), 404
 
+@server.errorhandler(405)
+def method_not_allowed(error):
+    return render_template('errors/405.html'), 405
+
+@server.errorhandler(413)
+def size_exceeded(error):
+    return render_template('errors/413.html'), 413
+
 @server.errorhandler(500)
 def internal_error(error):
     return render_template('errors/500.html'), 500
