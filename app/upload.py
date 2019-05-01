@@ -23,6 +23,7 @@ def upload_file():
             return redirect(request.url)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            #if (os.path.isfile(filename)):
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            if (os.path.isfile(server.config['UPLOAD_FOLDER'].join(filename))):
+                # throw exception because file with that name already exists
+            file.save(os.path.join(server.config['UPLOAD_FOLDER'], filename))
             return redirect('/')
