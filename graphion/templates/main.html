@@ -5,7 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title>graphion</title>
-	<link rel="stylesheet" type="text/css" href="graphion/static/css/style.css">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
 	<div class="container">
@@ -16,7 +16,7 @@
 				
 				<!--Left-side container with the logo-->
 				<div class="logo-container">
-					<img src="images/network.png" alt="graphion logo" class="logo">
+					<img src="{{ url_for('static', filename='image/network.png') }}" alt="graphion logo" class="logo">
 				</div>
 
 				<!--Right-side container with the upload file and submit buttons-->
