@@ -33,3 +33,4 @@ def upload_file():
             #    return redirect('/visualise')
             #file.save(os.path.join(server.config['UPLOAD_FOLDER'], fileName))
             return redirect('/visualise')
+        return redirect('/visualise')
