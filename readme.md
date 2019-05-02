@@ -1,4 +1,34 @@
 # 2IOA0 DBL HTI + Webtech
+
+## REQUIREMENTS
+Minimal requirements as described in VisProjectDescription.pdf and the kickoff slides. 
+- [ ] At least **2** visual metaphors
+  - [x] Node-link diagram with at least **3** different layouts:
+    - [ ] Radial
+    - [ ] Force-directed
+    - [ ] Hierarchical
+    - [ ] Extra: others
+  - [x] Adjacency matrix with at least **5** different reordering strategies
+    - [ ] ???
+    - [ ] ???
+    - [ ] ???
+    - [ ] ???
+    - [ ] ???
+    - [ ] Extra: others
+  - [ ] Extra: others (e.g. hybrid representations like NodeTrix or MatLink)
+- [ ] **Web-based** visualization tool for networks (weighted and directed graphs)
+  - [x] Accessable via URL
+  - [ ] Upload graph data (in a specified data format)
+  - [ ] Visual interactions from each of the 7 categores of interactions (Yi et al.)
+  - [ ] Data and insights should be sharable with all other people using the web tool
+
+Suggested further improvements but not required:
+- [ ] Multiple coordinated view design
+  - [ ] Different visualizations next to each other
+  - [ ] Brushing and linking (highlighting / selecting is synchronized between graphs)
+- [ ] Options for link representations in node-link diagrams (dotted, dashed, curved etc.)
+- [ ] Edge bundling (though bold red text comes included: Only if you enjoy visualization and like to do more)
+
 ## DOCUMENTATION
 ### 1. Installation
 To install the development environment:
