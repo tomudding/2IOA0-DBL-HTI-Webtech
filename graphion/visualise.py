@@ -4,7 +4,7 @@ Created: 2019-05-01
 Edited: 2019-05-01
 """
 from flask import Blueprint, redirect, render_template
-from graphion.graphing.nodelink import createNodeLinkGraph
+from graphion.graphing.nodelink import generateNodeLinkGraph
 
 visualiseBlueprint = Blueprint('visualiseBlueprint', __name__, template_folder='templates')
 

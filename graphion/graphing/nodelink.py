@@ -17,7 +17,7 @@ from bokeh.models import GraphRenderer, StaticLayoutProvider, Circle, MultiLine,
 from bokeh.palettes import Viridis256
 from bokeh.models.graphs import from_networkx
 
-def createNodeLinkGraph(file):
+def generateNodeLinkGraph(file):
     #Reading the file
     file = file + '.csv'
     fname = os.path.join(server.config['UPLOAD_FOLDER'], file)
