@@ -14,5 +14,5 @@ def visualise(file=None):
     if file is None:
         return redirect('/selection')
     plots = []
-    plots.append(createNodeLinkGraph(file))
+    plots.append(generateNodeLinkGraph(file))
     return render_template('visualise.html', fileName=file, plots=plots)

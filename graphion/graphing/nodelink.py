@@ -12,8 +12,8 @@ from graphion import server
 
 from bokeh.io import show, output_file
 from bokeh.embed import components
-from bokeh.plotting import figure
-from bokeh.models import GraphRenderer, StaticLayoutProvider, Circle, MultiLine, Arrow, NormalHead
+#from bokeh.plotting import figure
+from bokeh.models import Plot, GraphRenderer, StaticLayoutProvider, Circle, MultiLine, Arrow, NormalHead, Range1d, PanTool, BoxZoomTool, ResetTool
 from bokeh.palettes import Viridis256
 from bokeh.models.graphs import from_networkx
 
@@ -68,6 +68,7 @@ def generateNodeLinkGraph(file):
     N = len(names)
     node_indices = list(range(N)) #Create list of numeric node indices
 
+    # Scale for the repeating pattern of the colours
     scale = math.ceil(N / 256)
 
     #Iterate over dataframe and save non-zero edges
@@ -90,8 +91,14 @@ def generateNodeLinkGraph(file):
                     end.append(element_count) #Add ending node index to the edge ending list
 
     #Create the plot with two axes, a title and interaction tools
-    plot = figure(title='Circular Node-Link Diagram', x_range=(0 - (N * 2.1) , N * 2.1), y_range=(0 - (N * 2.1) , N * 2.1),
-                  tools='pan, wheel_zoom, reset', toolbar_location = 'right', frame_height = 800, frame_width = 800)
+    #plot = figure(title='Circular Node-Link Diagram', x_range=(0 - (N * 2.1) , N * 2.1), y_range=(0 - (N * 2.1) , N * 2.1),
+    #              tools='pan, wheel_zoom, reset', toolbar_location = 'right', frame_height = 400, frame_width = 400, output_backend="webgl")
+    plot = Plot(x_range=Range1d(0 - (N * 2.1) , N * 2.1), y_range=Range1d(0 - (N * 2.1) , N * 2.1),
+              toolbar_location = 'right', frame_height = 400, frame_width = 400, output_backend="webgl")
+
+    plot.title.text = "Circular Node-Link Diagram"
+
+    plot.add_tools(PanTool(), BoxZoomTool(), ResetTool())
 
     #Create the graph object
     graph = GraphRenderer()
