@@ -19,7 +19,7 @@ Minimal requirements as described in VisProjectDescription.pdf and the kickoff s
 - [ ] **Web-based** visualization tool for networks (weighted and directed graphs)
   - [x] Accessable via URL ([graphion](https://graphion.uddi.ng))
   - [ ] Upload graph data (in a specified data format)
-  - [ ] Visual interactions from each of the 7 categores of interactions (Yi et al.)
+  - [ ] Visual interactions from each of the 7 categories of interactions (Yi et al.)
   - [ ] Data and insights should be sharable with all other people using the web tool
 
 Suggested further improvements but not required:
