@@ -1,102 +1,184 @@
-/**
- * Author(s): Anton Vellikok, Tom Udding
- * Created: 2019-04-29
- * Edited: 2019-05-01
- */
-html, body, div, span, applet, object, iframe, input, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cit, code, del, dfn, em, img, ins, kbd, q, s,
- samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article,
- aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+* {
     margin: 0;
-    -webkit-margin-before: 0;
-    -webkit-margin-after: 0;
     padding: 0;
-    border: 0;
-    outline: 0;
-    font-size: 100%;
-    font: inherit;
-    vertical-align: baseline;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-html {
-    background-color: rgb(255, 255, 255);
-    height: 100%;
-    position: relative;
+header {
+    background-image: url(home-background.jpg);
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
 }
 
-body {
-    color: rgb(51, 51, 51);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-    font-size: 1em;
-    font-weight: 400;
-    line-height: 1.75;
-    min-height: 100%;
-}
 
 .header {
-    background-color: #F2F2F2;
-    height: 60px;
-    width: 100%;
+	background-color: rgba(red, green, blue, 0);
+	height: 60px;
+	width: 100%;
     display: block;
 }
 
 .header-85-percent {
-    width: 85%;
-    height: 100%;
-    display: block;
+	width: 85%;
+	height: 100%;
+	display: block;
     margin: 0 auto;
+    position: fixed;
 }
 
 .logo-container {
-    height: 100%;
+	height: 100%;
     float: left;
 }
 
 .logo-container img {
-    height: 60%;
-    margin: 30%;
+	height: 5vh;
+    margin-left: 10vw;
+    margin-top: 1vh;
 }
 
-.upload-file-container {
-    height: 100%;
-    float: right;
+.logo-text-container {
+	height: 100%;
+    float: left;
+    display: block;
+    margin-left: 10px;
 }
 
-input:focus,
-button:focus {
-    outline: none;
+.logo-text {
+	color: #383838;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 35px;
+
 }
 
-input,
-button,
-.button {
-    background-color: rgb(242, 242, 242);
-    height: 2.5rem;
-    color: rgb(128, 128, 128);
-    font-size: 0.75rem;
-    border: 0.0625rem solid rgb(141, 141, 141);
-    border-radius: 1.875rem;
-    line-height: 1;
-    margin: 0.625rem;
-    padding: 0.625rem;
-    -webkit-transition: background-color 0.5s ease;
-    -moz-transition: background-color 0.5s ease;
-    -ms-transition: background-color 0.5s ease;
-    -o-transition: background-color 0.5s ease;
-    transition: background-color 0.5s ease;
+#logo-text-bold {
+	font-weight: bold;
 }
 
-input:disabled {
-    cursor: not-allowed;
+
+.header-buttons-container {
+	height: 100%;
+	float: right;
 }
 
-input:hover,
-button:hover,
-.button:hover {
-    background-color: rgb(195, 195, 195);
-    color: rgb(83, 83, 83);
+.header-button {
+	color: black;
+	height: 40px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	margin-right: 10px;
+	border: 3px solid #FD5050;
+	border-radius: 0px;
+	background-color:  rgba(0, 0, 0, 0.8);
+	cursor: pointer;
+	padding: 10px;
+	padding-left: 20px;
+	padding-right: 20px;
+	font-size: 12px;
+	color: white;
 }
 
-.button-text {
-    color: #7c7c7c;
-    font-size: 0.625rem;
+.header-button:hover {
+	border: 3px solid black;
+	color: black;
+	background-color: rgba(0, 0, 0, 0);
+}
+
+.central-container {
+    height: 100vh;
+}
+
+.black-box {
+    margin: 0 auto;
+    margin-top: 14vh;
+    margin-left: 24vw;
+    height: 57vh;
+    width: 51vw;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+}
+
+.black-box-text {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: bold;
+}
+
+.bb-hi {
+    font-size: 70px;
+    margin-top: 40px;
+    display: inline-block;
+}
+
+.bb-welcome {
+    font-size: 40px;
+}
+
+.bb-graphion {
+    color: #FD5050;
+}
+
+.bb-graphion-normal {
+    font-weight: normal;
+}
+
+.bb-begin {
+    font-size: 30px;
+    font-weight: normal;
+}
+
+.launch-graphion-button {
+    color: black;
+	height: 40px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	margin-right: 10px;
+	border: 3px solid #FD5050;
+	border-radius: 0px;
+	background-color:  rgba(0, 0, 0, 0.8);
+	cursor: pointer;
+	padding: 10px;
+	padding-left: 20px;
+	padding-right: 20px;
+	font-size: 12px;
+	color: white;
+}
+
+.launch-graphion-button:hover {
+	border: 3px solid black;
+	color: black;
+	background-color: rgba(0, 0, 0, 0);
+}
+
+#meet-the-team {
+    font-size: 75px;
+    text-align: left;
+    color: #747474;
+    height: 100vh;
+}
+
+#team-text, #report-text, #video-text {
+    margin-left: 5vw;
+    font-weight: bold;
+}
+
+#report {
+    font-size: 75px;
+    text-align: left;
+    color: white;
+    height: 100vh;
+    background-color: #818181;
+}
+
+#video {
+    font-size: 75px;
+    text-align: left;
+    color: white;
+    height: 100vh;
+    background-color: #FD5050;
+}
+
+.space-container {
+    height: 5vh;
 }
