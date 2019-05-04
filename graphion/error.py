@@ -6,6 +6,10 @@ Edited: 2019-05-01
 from graphion import server
 from flask import request, render_template
 
+@server.errorhandler(400)
+def bad_request(error):
+    return render_template('errors/400.html'), 400
+
 @server.errorhandler(403)
 def not_allowed(error):
     return render_template('errors/403.html'), 403

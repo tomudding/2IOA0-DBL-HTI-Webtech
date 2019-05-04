@@ -1,7 +1,7 @@
 """
 Author(s): Tom Udding
 Created: 2019-04-29
-Edited: 2019-05-01
+Edited: 2019-05-05
 """
 import os
 from flask import Flask
@@ -30,10 +30,15 @@ from graphion.index import indexBlueprint
 from graphion.selection import selectionBlueprint
 from graphion.visualise import visualiseBlueprint
 
+# import api views from app
+from graphion.api.nodelink.radial import apiNodeLinkRadialBlueprint
+
 # register views as blueprints
 server.register_blueprint(indexBlueprint)
 server.register_blueprint(selectionBlueprint)
 server.register_blueprint(visualiseBlueprint)
+
+server.register_blueprint(apiNodeLinkRadialBlueprint)
 
 # other stuff
 if (not os.path.isdir(server.config['UPLOAD_FOLDER'])):
