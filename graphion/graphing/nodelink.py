@@ -9,7 +9,6 @@ import math
 import networkx as nx
 
 from graphion import server
-from graphion.processing.clean_df import to_pandas_df
 
 from bokeh.io import show, output_file
 from bokeh.embed import components
@@ -19,8 +18,52 @@ from bokeh.palettes import Viridis256
 from bokeh.models.graphs import from_networkx
 
 def generateNodeLinkGraph(file):
-    #Get pandas dataframe and names
-    df, names = to_pandas_df(file, 150)
+    #Reading the file
+    file = file + '.csv'
+    fname = os.path.join(server.config['UPLOAD_FOLDER'], file)
+    f = open(fname, 'r')
+
+    #Reading first line
+    line1 = f.readline()
+    names = line1[1:].split(';')
+
+    # Rename duplicates since there are people with the same name
+    seen = {}
+    dupes = []
+
+    for index, name in enumerate(names):
+        if name not in seen:
+            seen[name] = 1
+        else:
+            if seen[name] == 1:
+                dupes.append((index, name))
+            seen[name] += 1
+
+    # add 1, 2 etc after the name
+    for pair in dupes:
+        index = pair[0]
+        name = pair[1]
+        for i in range(seen[name]):
+            names[index] = name + str((i+1))
+            #print(names[index])
+
+    # Read csv
+    df = pd.read_csv(f, names=names, sep=';')
+
+    # Fix it
+    df = df.reset_index(level=1)
+    names.append("delete")
+    df.columns = names
+    del df["delete"]
+    df.set_index([df.columns], inplace=True)
+
+    # Get names again for later use
+    names = df.columns.tolist()
+
+    # Get 150*150 sub matrix since otherwise the plot is very slow..
+    df = df.head(150)[names[0:150]]
+    names = df.columns.tolist()
+
     #Get total amount of nodes
     N = len(names)
     node_indices = list(range(N)) #Create list of numeric node indices
