@@ -3,7 +3,9 @@ Author(s): Tom Udding
 Created: 2019-05-04
 Edited: 2019-05-05
 """
-from flask import Blueprint, jsonify
+from bokeh.embed import json_item
+from flask import Blueprint
+from json import dumps
 from graphion.graphing.generator import generateNodeLinkGraph
 
 apiNodeLinkRadialBlueprint = Blueprint('apiNodeLinkRadialBlueprint', __name__, template_folder='templates')
@@ -18,4 +20,4 @@ def radialNodeLinkAPI(file=None, directed=None):
         isDirected = False
     else:
         isDirected = True
-    return jsonify(generateNodeLinkGraph("RADIAL", file, isDirected))
+    return dumps(json_item(generateNodeLinkGraph("RADIAL", file, isDirected)))

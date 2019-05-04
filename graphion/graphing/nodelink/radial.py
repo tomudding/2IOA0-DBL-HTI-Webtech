@@ -23,9 +23,9 @@ def generateJSON(df, isDirected):
     extension('bokeh')
     defaults = dict(width=400, height=400, padding=0.1)
     opts.defaults(opts.EdgePaths(**defaults), opts.Graph(**defaults), opts.Nodes(**defaults))
-    
+
     G = from_pandas_adjacency(df)
     graph = Graph.from_networkx(G, circular_layout).opts(directed=isDirected, width=600, height=600, arrowhead_length=0.05)
 
     renderedGraph = renderer('bokeh').server_doc(graph)
-    return renderedGraph.to_json()
+    return renderedGraph.roots[0]
