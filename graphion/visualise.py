@@ -13,6 +13,4 @@ visualiseBlueprint = Blueprint('visualiseBlueprint', __name__, template_folder='
 def visualise(file=None):
     if file is None:
         return redirect('/selection')
-    plots = []
-    plots.append(generateNodeLinkGraph("RADIAL", file, True))
-    return render_template('visualise.html', fileName=file, plots=plots)
+    return render_template('visualise.html', fileName=file)
