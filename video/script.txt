@@ -1,0 +1,19 @@
+Take a look at this beautiful dataset.
+* Open the co_citation dataset in excel
+Imagine that you would like to understand this dataset. Well... that won't be nice.
+That's why we created Graphion. When we open the file in our app...
+* Open co_citation dataset in the webapp
+it looks prettier at least. You can't understand it yet, but we will show you how you can!
+
+** TODO WAIT FOR THE ACTUAL VISUALIZATIONS AND INSERT THIS PART OF THE SCRIPT ONCE WE HAVE THEM
+
+We have been a little rude since we still haven't introduced ourselves.
+You can read it in the app
+* Open the 'About us' part of the webapp
+but we will tell it ourselves since everyone has to be in the video anyway.
+
+* Let everyone quickly introduce themselves and explain briefly what they have done
+
+* Let the frontend guys show what they have made and explain how they made it.
+
+* Let the backend guys explain what is behind all the pretty graphs
