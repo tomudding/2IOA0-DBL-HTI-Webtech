@@ -8,10 +8,10 @@ from graphion.graphing.nodelink.radial import generateRadialGraph
 
 import os
 
-def generateNodeLinkGraph(type, file, directed=None):
+def generateNodeLinkGraph(type, file, isDirected=None):
     file = getFilePath(file)
     if type.upper() == "RADIAL":
-        return generateRadialGraph(file, directed)
+        return generateRadialGraph(file, isDirected)
     elif type.upper() == "FORCEDIRECTED":
         return generateForceDirectedGraph(file)
     elif type.upper() == "HIERARCHICAL":
