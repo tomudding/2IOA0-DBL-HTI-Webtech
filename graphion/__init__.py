@@ -32,6 +32,7 @@ from graphion.visualise import visualiseBlueprint
 
 # import api views from app
 from graphion.api.nodelink.radial import apiNodeLinkRadialBlueprint
+from graphion.api.matrix.matrix import apiMatrixBlueprint
 
 # register views as blueprints
 server.register_blueprint(indexBlueprint)
@@ -39,6 +40,7 @@ server.register_blueprint(selectionBlueprint)
 server.register_blueprint(visualiseBlueprint)
 
 server.register_blueprint(apiNodeLinkRadialBlueprint)
+server.register_blueprint(apiMatrixBlueprint)
 
 # other stuff
 if (not os.path.isdir(server.config['UPLOAD_FOLDER'])):
