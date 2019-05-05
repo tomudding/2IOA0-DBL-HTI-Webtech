@@ -10,16 +10,12 @@ import param
 import hvplot.pandas
 from colorcet import palette
 from scipy.spatial.distance import pdist, squareform
-from sklearn import datasets
 from fastcluster import linkage
 
 def makeMatrix(df):
     names = df.columns.tolist()
     df = df.head(150)[names[0:150]]
     names = df.columns.tolist()
-    solid = df.reset_index()
-    liquid = solid.melt(id_vars='index', value_vars=list(df.columns[1:]), value_name="Similarity", var_name="name2")
-    liquid.columns = ['name1', 'name2', 'similarity']
 
     #convert similarity into unsimilarity (1.0 - similarity)
     for name in names:
@@ -30,7 +26,7 @@ def makeMatrix(df):
     #We have to clean data and modified the method
 
     dist_mat = squareform(pdist(df))
-    #%%
+    
     def seriation(Z,N,cur_index):
         '''
             input:
@@ -77,16 +73,13 @@ def makeMatrix(df):
         seriated_dist[b,a] = seriated_dist[a,b]
 
         return seriated_dist, res_order, res_linkage
-    #%%
+    
     ordered_dist_mat = {}
     ordered_dist_mat['ward'], res_order, res_linkage = compute_serial_matrix(dist_mat,"ward")
     ordered_dist_mat['single'], res_order, res_linkage = compute_serial_matrix(dist_mat,"single")
     ordered_dist_mat['average'], res_order, res_linkage = compute_serial_matrix(dist_mat,"average")
     ordered_dist_mat['complete'], res_order, res_linkage = compute_serial_matrix(dist_mat,"complete")
 
-    solid = pd.DataFrame(ordered_dist_mat['ward'])
-    solid.index = names
-    solid.columns = names
     pn.extension()
 
     class Matrix_dropdown(param.Parameterized):
