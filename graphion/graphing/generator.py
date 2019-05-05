@@ -21,8 +21,9 @@ def generateNodeLinkGraph(type, file, isDirected=None):
         # throw exception, invalid input
         return ""
 
-def generateMatrix(type, file):
-    return ""
+def generateMatrix(file):
+    file = getFilePath(file)
+    return makeMatrix(file)
 
 def getFilePath(file):
     file = file + '.csv'
