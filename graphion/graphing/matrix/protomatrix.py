@@ -12,7 +12,11 @@ from colorcet import palette
 from scipy.spatial.distance import pdist, squareform
 from fastcluster import linkage
 
-def makeMatrix(df):
+# Graphion imports
+from graphion.graphing.parser import processCSVMatrix
+
+def makeMatrix(file):
+    df = processCSVMatrix(file)
     names = df.columns.tolist()
     df = df.head(150)[names[0:150]]
     names = df.columns.tolist()
