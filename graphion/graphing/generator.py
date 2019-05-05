@@ -5,6 +5,7 @@ Edited: 2019-05-04
 """
 from graphion import server
 from graphion.graphing.nodelink.radial import generateRadialGraph
+from graphion.graphing.matrix.protomatrix import makeMatrix
 
 import os
 
