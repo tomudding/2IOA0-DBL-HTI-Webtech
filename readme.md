@@ -9,7 +9,7 @@ Minimal requirements as described in VisProjectDescription.pdf and the kickoff s
     - [ ] Hierarchical
     - [ ] Extra: others
   - [x] Adjacency matrix with at least **5** different reordering strategies
-    - [ ] Clustering
+    - [x] Clustering
       - [x] Agglomerative hierarchichal clustering 
         - Different ways of calculating the similarity between two clusters (aka. linkage criteria):
         - [x] Ward's method (minimizes the total within-cluster variance)
@@ -26,11 +26,17 @@ Minimal requirements as described in VisProjectDescription.pdf and the kickoff s
     - [ ] Greedy algorithms
       - [ ] Bipolarization
     - [ ] Optimal-leaf ordering
-    - [ ] Extra: others
-  - [ ] Extra: others (e.g. hybrid representations like NodeTrix or MatLink)
+    - [ ] ...
+  - Extra: others like (e.g. hybrid representations like NodeTrix or MatLink,)
+    - Hybrid representations
+      - [ ] NodeTrix
+      - [ ] MatLink
+    - [ ] [3D node-link diagram](https://plot.ly/python/3d-network-graph/)
+    - [ ] [Arc diagram (combined with matrix reorderings maybe)](https://www.data-to-viz.com/graph/arc.html)
+    
 - [ ] **Web-based** visualization tool for networks (weighted and directed graphs)
   - [x] Accessable via URL ([graphion](https://graphion.uddi.ng))
-  - [ ] Upload graph data (in a specified data format)
+  - [x] Upload graph data (in a specified data format)
   - [ ] Visual interactions from each of the 7 categories of interactions (Yi et al.)
   - [ ] Data and insights should be sharable with all other people using the web tool
 
