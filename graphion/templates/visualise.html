@@ -42,19 +42,8 @@ Edited: 2019-05-05
 		-->
 		<section class="body-wrapper">
 			<div class="container">
-				<div class="row">
-					<div class="col-s-12">
-						<p id="nodelink-load">Loading nodelink diagram...</p>
-						<div id="nodelink-plot"></div>
-						<p id="matrix-load">Loading matrix...
-						<div id="matrix-plot"></div>
-					</div>
-				</div>
+				{{ script|safe }}
 			</div>
 		</section>
 	</body>
-	<script>
-		fetch('/api/nodelink/radial/directed/{{ fileName }}').then(function(response) { document.getElementById('nodelink-load').innerHTML = 'Loaded!'; return response.json(); }).then(function(item) { Bokeh.embed.embed_item(item, "nodelink-plot"); });
-		fetch('/api/matrix/matrix/{{ fileName }}').then(function(response) { document.getElementById('matrix-load').innerHTML = 'Loaded!'; return response.json(); }).then(function(item) { Bokeh.embed.embed_item(item, "matrix-plot"); });
-	</script>
 </html>
