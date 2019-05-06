@@ -21,11 +21,12 @@ def generateRadialGraph(file, isDirected):
 def generateJSON(df, isDirected):
     # set defaults for HoloViews
     extension('bokeh')
+    renderer('bokeh').webgl = True
     defaults = dict(width=400, height=400, padding=0.1)
     opts.defaults(opts.EdgePaths(**defaults), opts.Graph(**defaults), opts.Nodes(**defaults))
 
     G = from_pandas_adjacency(df)
-    graph = Graph.from_networkx(G, circular_layout).opts(directed=isDirected, width=600, height=600, arrowhead_length=0.05)
+    graph = Graph.from_networkx(G, circular_layout).opts(directed=isDirected, width=600, height=600, arrowhead_length=0.0005)
 
     renderedGraph = renderer('bokeh').server_doc(graph)
     return renderedGraph.roots[0]
