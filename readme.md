@@ -10,7 +10,7 @@ Minimal requirements as described in VisProjectDescription.pdf and the kickoff s
     - [ ] Extra: others
   - [x] Adjacency matrix with at least **5** different reordering strategies
     - [ ] Clustering
-      - [ ] Agglomerative hierarchichal clustering 
+      - [x] Agglomerative hierarchichal clustering 
         - Different ways of calculating the similarity between two clusters (aka. linkage criteria):
         - [x] Ward's method (minimizes the total within-cluster variance)
         - [x] single/minimum linkage clustering (dist(C1,C2) = min dist(Pi,Pj))
@@ -24,10 +24,10 @@ Minimal requirements as described in VisProjectDescription.pdf and the kickoff s
         - [x] Cityblock
         - [x] etc..
       - [ ] k-means clustering
+      - [ ] Spectral Clustering
     - [ ] Greedy algorithms
       - [ ] Bipolarization
     - [ ] Optimal-leaf ordering
-    - [ ] Spectral Clustering
     - [ ] Extra: others
   - [ ] Extra: others (e.g. hybrid representations like NodeTrix or MatLink)
 - [ ] **Web-based** visualization tool for networks (weighted and directed graphs)
