@@ -10,12 +10,19 @@ Minimal requirements as described in VisProjectDescription.pdf and the kickoff s
     - [ ] Extra: others
   - [x] Adjacency matrix with at least **5** different reordering strategies
     - [ ] Clustering
-      - [ ] Agglomerative hierarchichal clustering with different ways of calculating the similarity between two clusters (aka. linkage criteria):
+      - [ ] Agglomerative hierarchichal clustering 
+        - Different ways of calculating the similarity between two clusters (aka. linkage criteria):
         - [x] Ward's method (minimizes the total within-cluster variance)
         - [x] single/minimum linkage clustering (dist(C1,C2) = min dist(Pi,Pj))
         - [x] complete/maximum linkage clustering (dist(C1, C2) = max dist(Pi, Pj))
         - [x] average linkage clustering (dist(C1, C2) = avg(dist(Pi, Pj)))
-        - [ ] ...
+        - [x] weighted
+        - [x] centroid
+        - [x] median
+        - Different distance metrics
+        - [x] Euclidean
+        - [x] Cityblock
+        - [x] etc..
       - [ ] k-means clustering
     - [ ] Greedy algorithms
       - [ ] Bipolarization
