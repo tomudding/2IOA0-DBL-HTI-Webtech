@@ -5,6 +5,7 @@ Edited: 2019-05-04
 """
 from graphion import server
 from graphion.graphing.nodelink.radial import generateRadialGraph
+from graphion.graphing.nodelink.forcedirected import generateForceDirectedGraph
 from graphion.graphing.matrix.protomatrix import makeMatrix
 
 import os
@@ -14,7 +15,7 @@ def generateNodeLinkGraph(type, file, isDirected=None):
     if type.upper() == "RADIAL":
         return generateRadialGraph(file, isDirected)
     elif type.upper() == "FORCEDIRECTED":
-        return generateForceDirectedGraph(file)
+        return generateForceDirectedGraph(file, isDirected)
     elif type.upper() == "HIERARCHICAL":
         return generateHierarchicalGraph(file)
     else:

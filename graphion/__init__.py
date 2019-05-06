@@ -30,8 +30,13 @@ from graphion.index import indexBlueprint
 from graphion.selection import selectionBlueprint
 from graphion.visualise import visualiseBlueprint
 
+# TESTING
+from graphion.testvis import testvisualiseBlueprint
+server.register_blueprint(testvisualiseBlueprint)
+
 # import api views from app
 from graphion.api.nodelink.radial import apiNodeLinkRadialBlueprint
+from graphion.api.nodelink.forcedirected import apiNodeLinkForceDirectedBlueprint
 from graphion.api.matrix.matrix import apiMatrixBlueprint
 
 # register views as blueprints
@@ -40,6 +45,7 @@ server.register_blueprint(selectionBlueprint)
 server.register_blueprint(visualiseBlueprint)
 
 server.register_blueprint(apiNodeLinkRadialBlueprint)
+server.register_blueprint(apiNodeLinkForceDirectedBlueprint)
 server.register_blueprint(apiMatrixBlueprint)
 
 # other stuff
