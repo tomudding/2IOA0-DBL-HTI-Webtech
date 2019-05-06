@@ -17,10 +17,12 @@ from graphion.graphing.parser import processCSVMatrix
 
 def makeMatrix(file):
     df = processCSVMatrix(file)
+    print(df)
     names = df.columns.tolist()
     df = df.head(150)[names[0:150]]
     names = df.columns.tolist()
-
+    names = [name.replace('_', ' ') for name in names]
+    df.columns = names
     #convert similarity into unsimilarity (1.0 - similarity)
     for name in names:
         df[name] = 1 - df[name]
