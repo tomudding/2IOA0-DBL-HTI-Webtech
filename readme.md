@@ -20,7 +20,7 @@ Minimal requirements as described in VisProjectDescription.pdf and the kickoff s
     - [ ] Greedy algorithms
       - [ ] Bipolarization
     - [ ] Optimal-leaf ordering
-    - [ ] ???
+    - [ ] Spectral Clustering
     - [ ] Extra: others
   - [ ] Extra: others (e.g. hybrid representations like NodeTrix or MatLink)
 - [ ] **Web-based** visualization tool for networks (weighted and directed graphs)
