@@ -23,8 +23,6 @@ Minimal requirements as described in VisProjectDescription.pdf and the kickoff s
         - [x] Euclidean
         - [x] Cityblock
         - [x] etc..
-      - [ ] k-means clustering
-      - [ ] Spectral Clustering
     - [ ] Greedy algorithms
       - [ ] Bipolarization
     - [ ] Optimal-leaf ordering
