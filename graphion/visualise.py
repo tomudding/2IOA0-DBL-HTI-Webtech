@@ -22,16 +22,16 @@ visualiseBlueprint = Blueprint('visualiseBlueprint', __name__, template_folder='
 @visualiseBlueprint.route('/visualise', methods=['GET'], strict_slashes=False)
 @visualiseBlueprint.route('/visualise/<file>', methods=['GET'], strict_slashes=False)
 
-file = None
 def visualise(file=None):
     if file is None:
         return redirect('/selection')
-    file = file
+    global file_global
+    file_global = file
     script = server_document('http://localhost:%d/bkapp' % port)
     return render_template('visualise.html', fileName=file, script=script)
 
 def modify_doc(doc):
-    doc.add_root(generateBokehApp(file))
+    doc.add_root(generateBokehApp(file_global))
 
 bkapp = Application(FunctionHandler(modify_doc))
 
@@ -40,7 +40,7 @@ sockets, port = bind_sockets("localhost", 0)
 def bk_worker():
     asyncio.set_event_loop(asyncio.new_event_loop())
 
-    bokeh_tornado = BokehTornado({'/bkapp': bkapp}, extra_websocket_origins=["localhost:8000"])
+    bokeh_tornado = BokehTornado({'/bkapp': bkapp}, extra_websocket_origins=["localhost:5000"])
     bokeh_http = HTTPServer(bokeh_tornado)
     bokeh_http.add_sockets(sockets)
 

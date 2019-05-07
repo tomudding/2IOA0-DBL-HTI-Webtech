@@ -11,15 +11,9 @@ from networkx import from_pandas_adjacency
 from networkx.drawing.layout import circular_layout, spring_layout
 import panel as pn
 
-# Radial Node-Link Graph Generator
-def generateGraph(file, isDirected):
-    if isDirected == None:
-        isDirected = False
+# Generate graph
+def generateGraph(file):
     df = processCSVMatrix(file)
-    return generateJSON(df, isDirected)
-
-# Generate BokehJS compatible JSON
-def generateJSON(df, isDirected):
     # set defaults for HoloViews
     extension('bokeh')
     renderer('bokeh').webgl = True
@@ -27,6 +21,6 @@ def generateJSON(df, isDirected):
     opts.defaults(opts.EdgePaths(**defaults), opts.Graph(**defaults), opts.Nodes(**defaults))
 
     G = from_pandas_adjacency(df)
-    graph = Graph.from_networkx(G, circular_layout).opts(directed=isDirected, width=600, height=600, arrowhead_length=0.0005)
+    graph = Graph.from_networkx(G, circular_layout).opts(directed=False, width=600, height=600, arrowhead_length=0.0005)
     # Make a panel and widgets with param for choosing a layout
     return pn.Column(graph)

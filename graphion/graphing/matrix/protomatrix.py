@@ -17,7 +17,6 @@ from graphion.graphing.parser import processCSVMatrix
 
 def makeMatrix(file):
     df = processCSVMatrix(file)
-    print(df)
     names = df.columns.tolist()
     df = df.head(150)[names[0:150]]
     names = df.columns.tolist()
