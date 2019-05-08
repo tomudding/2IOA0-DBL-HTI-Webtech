@@ -34,7 +34,7 @@
         AID TOOLS
 ######################*/
 .space-container {
-    height: 5vh;
+    height: 7vh;
 }
 
 
@@ -46,7 +46,7 @@
 ######################*/
 .header {
 	background-color: white;
-	height: 60px;
+	height: 7vh;
     width: 100%;
     display: inline-block;
     position: fixed;
@@ -175,9 +175,8 @@
 
 .black-box {
     margin: 0 auto;
-    margin-left: 24vw;
     height: 57vh;
-    width: 51vw;
+    width: 85vw;
     text-align: center;
     color: white;
     display: block;
@@ -199,9 +198,10 @@
 }
 
 .bb-graphion {
-    font-size: 65px;
-    letter-spacing: 35px;
+    font-size: 7vw;
+    letter-spacing: 2vw;
     font-family: Caviar;
+    text-align: center;
 }
 
 .bb-your {
@@ -214,6 +214,18 @@
     font-family: Roboto;
     letter-spacing: 5px;
 }
+
+@media (max-width: 767px) {                  
+    #cross-image {
+       display: none;
+    }
+ }
+
+ @media (min-width: 767px) {                  
+    #ctrl-menu-break {
+       display: none;
+    }
+ }
 
 #launch-btn {
     color: #3189FF;
@@ -296,7 +308,7 @@
     font-size: 75px;
     text-align: left;
     color: #747474;
-    height: 100vh;
+    height: 93vh;
 }
 
 
@@ -372,7 +384,7 @@
 #report-img {
     margin-top: 5vh;
     vertical-align: middle;
-    height: 80vh;
+    width: 30vw;
     margin-left: 10vw;
 }
 
@@ -388,6 +400,10 @@
     font-size: 75px;
     text-align: left;
     color: white;
-    height: 100vh;
-    background-color: #FD5050;
+    height: 93vh;
+}
+
+#iframe {
+    width: 98.9vw;
+    height: 93vh;
 }
