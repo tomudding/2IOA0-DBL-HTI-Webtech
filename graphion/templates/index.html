@@ -6,13 +6,14 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>graphion</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100" rel="stylesheet"> 
 </head>
 <body>
 
 <!-- Header area, ID for -->
     <div class="header" id="home">
         <div class="header-85-percent">
-            
+
             <!--Left-side of the header: logo-->
             <div class="logo-container">
                 <img src="{{ url_for('static', filename='images/network.png') }}" alt="graphion logo" class="logo">
@@ -21,15 +22,15 @@
             <!--Left-side of the header: logo text-->
             <div class="logo-text-container">
                 <a class="logo-text" href="#main-page" style="text-decoration:none">graph<span class="logo-text" id="logo-text-bold">ion</span></a>
-            </div> 
-            
+            </div>
+
 
             <!--Right-side of the header: buttons-->
             <div class="header-buttons-container">
 
                 <!--Team jump-button-->
                 <button type="button" class="header-button" onclick="location.href='#meet-the-team'">TEAM</button>
-                        
+
                 <!--Submit jump-button-->
                 <button type="button" class="header-button" onclick="location.href='#video'">VIDEO</button>
 
@@ -52,7 +53,7 @@
                         N0.25
                     </span>
                     <br>
-                    <span class="bb-graphion"> 
+                    <span class="bb-graphion">
                         GRAPHION
                     </span>
                     <br>
@@ -85,8 +86,8 @@
     <div id="video">
             <div class="space-container"></div>
             <iframe width="560" height="315" id="iframe" frameborder="0"
-            src="https://www.youtube-nocookie.com/embed/9YffrCViTVk" 
-            allow="accelerometer; autoplay; encrypted-media; gyroscope; 
+            src="https://www.youtube-nocookie.com/embed/9YffrCViTVk"
+            allow="accelerometer; autoplay; encrypted-media; gyroscope;
             picture-in-picture" allowfullscreen></iframe>
         </div>
 
@@ -143,6 +144,6 @@
             <img src="{{ url_for('static', filename='images/Report.jpg') }}" alt="report-img" id="report-img">
         </div>
     </div>
-    
+
 </body>
 </html>
