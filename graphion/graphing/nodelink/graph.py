@@ -14,6 +14,8 @@ import panel as pn
 # Generate graph
 def generateGraph(file):
     df = processCSVMatrix(file)
+    # submatrix for quicker development
+    df = df.head(150)[names[0:150]]
     # set defaults for HoloViews
     extension('bokeh')
     renderer('bokeh').webgl = True
