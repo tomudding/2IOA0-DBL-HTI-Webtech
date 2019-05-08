@@ -18,7 +18,8 @@ from graphion.graphing.parser import processCSVMatrix
 def makeMatrix(file):
     df = processCSVMatrix(file)
     names = df.columns.tolist()
-    df = df.head(150)[names[0:150]]
+    if (len(names) > 150):
+        df = df.head(150)[names[0:150]]
     names = df.columns.tolist()
     names = [name.replace('_', ' ') for name in names]
     df.columns = names
