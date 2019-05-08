@@ -6,6 +6,10 @@
     padding: 0;
 }
 
+
+
+
+
 /*######################
         FONTS
 ######################*/
@@ -15,9 +19,16 @@
 }
 
 @font-face {
+    font-family: Roboto;
+    src: url(Roboto-Thin.ttf);
+}
+
+@font-face {
     font-family: Caviar;
     src: url(CaviarDreams.ttf);
 }
+
+
 
 /*######################
         AID TOOLS
@@ -25,6 +36,10 @@
 .space-container {
     height: 7vh;
 }
+
+
+
+
 
 /*######################
         HEADER
@@ -200,13 +215,13 @@
     letter-spacing: 5px;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 767px) {                  
     #cross-image {
        display: none;
     }
  }
 
- @media (min-width: 767px) {
+ @media (min-width: 767px) {                  
     #ctrl-menu-break {
        display: none;
     }
@@ -372,6 +387,10 @@
     width: 30vw;
     margin-left: 10vw;
 }
+
+
+
+
 
 /*######################
         VIDEO PAGE
