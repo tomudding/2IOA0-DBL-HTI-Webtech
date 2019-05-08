@@ -3,6 +3,7 @@ Take a look at this beautiful dataset.
 Imagine that you would like to understand this dataset. Well... that won't be nice.
 That's why we created Graphion. When we open the file in our app...
 * Open co_citation dataset in the webapp
+* Pause the video to hide the long loading screen
 it looks prettier at least. You can't understand it yet, but we will show you how you can!
 
 ** TODO WAIT FOR THE ACTUAL VISUALIZATIONS AND INSERT THIS PART OF THE SCRIPT ONCE WE HAVE THEM
@@ -12,8 +13,12 @@ You can read it in the app
 * Open the 'About us' part of the webapp
 but we will tell it ourselves since everyone has to be in the video anyway.
 
-* Let everyone quickly introduce themselves and explain briefly what they have done
+* Let everyone briefly introduce themselves and explain briefly what they have done
 
-* Let the frontend guys show what they have made and explain how they made it.
+* Let Anton and Sophia show the website and go through all pages except the actual visualizations.
 
-* Let the backend guys explain what is behind all the pretty graphs
+* Tom and Sam demonstrate the node-link diagram and all its possibilities
+
+* Let Steven and Rain demonstrate the adjacency matrix and all its possibilities
+
+* Tim will show the dirty and fast javascript attempt
