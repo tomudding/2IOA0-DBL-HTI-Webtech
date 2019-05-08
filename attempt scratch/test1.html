@@ -138,7 +138,7 @@
                 const startTime2 = performance.now();
                 console.log('clear took ' + (startTime2 - startTimeClear) + ' ms');
                 ctx.strokeStyle = "black";
-                ctx.lineWidth = Math.min(0.001 * BUFFER_WIDTH * BUFFER_HEIGHT / EDGE_COUNT, 10);
+                ctx.lineWidth = 0.001 * BUFFER_WIDTH * BUFFER_HEIGHT / EDGE_COUNT;
                 for (let index = 0; index < EDGE_COUNT; index++){
                     const v1 = edgesFrom[index];
                     const v2 = edgesTo[index];
