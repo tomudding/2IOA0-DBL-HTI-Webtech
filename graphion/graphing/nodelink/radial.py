@@ -4,6 +4,7 @@ Created: 2019-05-03
 Edited: 2019-05-05
 """
 from bokeh.document.document import Document
+from bokeh.plotting import reset_output
 from graphion.graphing.parser import processCSVMatrix
 from holoviews.element.graphs import Graph
 from holoviews import opts, renderer, extension
@@ -22,6 +23,7 @@ def generateJSON(df, isDirected):
     # set defaults for HoloViews
     extension('bokeh')
     renderer('bokeh').webgl = True
+    reset_output()
     defaults = dict(width=400, height=400, padding=0.1)
     opts.defaults(opts.EdgePaths(**defaults), opts.Graph(**defaults), opts.Nodes(**defaults))
 

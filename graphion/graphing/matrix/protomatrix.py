@@ -17,7 +17,6 @@ from graphion.graphing.parser import processCSVMatrix
 
 def makeMatrix(file):
     df = processCSVMatrix(file)
-    print(df)
     names = df.columns.tolist()
     df = df.head(150)[names[0:150]]
     names = df.columns.tolist()
@@ -26,13 +25,13 @@ def makeMatrix(file):
     #convert similarity into unsimilarity (1.0 - similarity)
     for name in names:
         df[name] = 1 - df[name]
-    df.head()
+    #df.head()
 
     #This is just the method online: https://gmarti.gitlab.io/ml/2017/09/07/how-to-sort-distance-matrix.html
     #We have to clean data and modified the method
 
     dist_mat = squareform(pdist(df))
-    
+
     def seriation(Z,N,cur_index):
         '''
             input:
@@ -79,7 +78,7 @@ def makeMatrix(file):
         seriated_dist[b,a] = seriated_dist[a,b]
 
         return seriated_dist, res_order, res_linkage
-    
+
     ordered_dist_mat = {}
     ordered_dist_mat['ward'], res_order, res_linkage = compute_serial_matrix(dist_mat,"ward")
     ordered_dist_mat['single'], res_order, res_linkage = compute_serial_matrix(dist_mat,"single")
