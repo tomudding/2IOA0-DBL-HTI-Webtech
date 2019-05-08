@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>graphion</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
 
@@ -15,7 +15,7 @@
             
             <!--Left-side of the header: logo-->
             <div class="logo-container">
-                <img src="images/network.png" alt="graphion logo" class="logo">
+                <img src="{{ url_for('static', filename='images/network.png') }}" alt="graphion logo" class="logo">
             </div>
 
             <!--Left-side of the header: logo text-->
@@ -64,7 +64,7 @@
                         <button type="button" onclick="location.href='main.html'" id="launch-btn">LAUNCH</button>
                         <br>
                         <button type="button" class="header-button" onclick="location.href='#meet-the-team'">TEAM</button>
-                        <img src="images/cancel.png" alt="cross" id="cross-image">
+                        <img src="{{ url_for('static', filename='images/cancel.jpg') }}" alt="cross" id="cross-image">
                         <br id="ctrl-menu-break">
                         <button type="button" class="header-button" onclick="location.href='#video'">VIDEO</button>
                         <br>
@@ -140,7 +140,7 @@
             </div>
         </div>
         <div id="report-right-side">
-            <img src="images/Report.jpg" alt="report-img" id="report-img">
+            <img src="{{ url_for('static', filename='images/Report.jpg') }}" alt="report-img" id="report-img">
         </div>
     </div>
     
