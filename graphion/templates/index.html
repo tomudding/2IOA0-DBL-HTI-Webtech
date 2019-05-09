@@ -10,8 +10,6 @@ Edited: 2019-05-09
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>graphion</title>
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/grid.css') }}">
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/grid_style.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
         <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
     </head>
@@ -27,7 +25,7 @@ Edited: 2019-05-09
 
                 <!--Left-side of the header: logo text-->
                 <div class="logo-text-container">
-                    <a class="logo-text" href="#main-page" style="text-decoration:none">graph<span class="logo-text" id="logo-text-bold">ion</span></a>
+                    <a class="logo-text" href="#main-page">graph<span class="logo-text"><strong>ion</strong></span></a>
                 </div>
 
                 <!--Right-side of the header: buttons-->
@@ -37,10 +35,10 @@ Edited: 2019-05-09
                     <a class="header-button" href="#meet-the-team">TEAM</a>
 
                     <!--Submit jump-button-->
-                    <a class="header-button" onclick="location.href='#video'">VIDEO</a>
+                    <a class="header-button" href="#video">VIDEO</a>
 
                     <!--Video jump-button-->
-                    <a class="header-button" onclick="location.href='#report'">REPORT</a>
+                    <a class="header-button" href="#report">REPORT</a>
 
                     <!--Launch jump-button-->
                     <a class="header-button" id="launch-btn-header" href="selection">LAUNCH</a>

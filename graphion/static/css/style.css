@@ -35,6 +35,7 @@ html {
     display: inline-block;
     position: fixed;
     margin: 0 auto;
+    z-index: 3;
 }
 
 .header-85-percent {
@@ -65,7 +66,7 @@ html {
 
 .logo-text {
 	color: #5D5C60;
-    font-family: Caviar;
+    font-family: Roboto;
     letter-spacing: 3px;
     font-size: 25px;
 
@@ -98,6 +99,7 @@ html {
 	color: #5D5C60;
     background-color: rgba(0, 0, 0, 0);
     letter-spacing: 2px;
+    transition: 0.6s;
 }
 
 #launch-btn-header {
@@ -173,13 +175,13 @@ html {
     margin-bottom: 3vh;
     display: inline-block;
     letter-spacing: 5px;
-    font-family: Kiona;
+    font-family: Roboto;
 }
 
 .bb-graphion {
-    font-size: 7vw;
-    letter-spacing: 2vw;
-    font-family: Caviar;
+    font-size: 6vw;
+    letter-spacing: 3vw;
+    font-family: Roboto;
     text-align: center;
 }
 
@@ -220,9 +222,10 @@ html {
     font-size: 14px;
     font-family: Roboto;
     font-weight: bold;
-    border: 0px solid black;
+    border: 0px solid white;
     background-color: rgba(0, 0, 0, 0);
     letter-spacing: 2px;
+    transition: 0.6s;
 }
 
 #launch-btn:hover {
@@ -278,12 +281,49 @@ html {
         TEAM PAGE
 ######################*/
 #meet-the-team {
-    margin-left: 5vw;
-    font-weight: bold;
-    font-size: 75px;
-    text-align: left;
-    color: #747474;
     height: 93vh;
+    margin-left: 5vw;
+    margin-right: 5vw;
+}
+
+
+#team-text {
+    text-align: left;
+    margin-top: 5vh;
+    font-size: 65px;
+    letter-spacing: 15px;
+    font-family: Roboto;
+    color: #5D5C60;
+    line-height: 75px;
+}
+
+.row {
+    text-align: center;
+    display: inline-block;
+}
+
+.photo-and-name {
+    width: calc(100% / 4);
+    overflow: hidden;
+    float: left;
+    height: auto;
+    transition: 0.6s;
+}
+
+.photo-and-name h1 {
+    font-family: Roboto;
+    font-size: 18px;
+}
+
+.photo-and-name p {
+    font-family: Roboto;
+    font-size: 15px;
+    color: #5D5C60;
+    margin-bottom: 20px;
+}
+
+.photo-and-name:hover {
+    background-color: rgb(156, 156, 156);
 }
 
 /*######################
@@ -321,7 +361,7 @@ html {
     float: left;
 }
 
-#download-report-button {
+.download-report-button {
     color: black;
 	height: 40px;
 	margin-top: 10px;
@@ -339,9 +379,10 @@ html {
 	color: #5D5C60;
     background-color: rgba(0, 0, 0, 0);
     letter-spacing: 2px;
+    transition: 1s;
 }
 
-#download-report-button:hover {
+.download-report-button:hover {
     border: 3px solid white;
 	color: white;
     background-color: rgba(0, 0, 0, 0.8);
@@ -362,15 +403,61 @@ html {
 /*######################
         VIDEO PAGE
 ######################*/
+
+
 #video {
     font-weight: bold;
     font-size: 75px;
     text-align: left;
     color: white;
     height: 93vh;
+    display: none;
+}
+
+#play-button {
+    display: block;
+    position: relative;
+    text-align: center;
+    margin: 0 auto;
+    margin-bottom: calc(46.5vh - 20px);
+    margin-top: calc(46.5vh - 20px);
+    transition: 1s;
+}
+
+#close-video-button {
+    display: none;
+    position: absolute;
+    text-align: center;
+    margin-left: 85vw;
+    margin-top: 85vh;
+    transition: 1s;
+    z-index: 2;
+    color: black;
+	height: 40px;
+	border-radius: 0px;
+	cursor: pointer;
+	padding: 5px;
+	padding-left: 20px;
+	padding-right: 20px;
+    font-size: 12px;
+    font-family: Roboto;
+    font-weight: bold;
+    border: 3px solid #FD5050;
+	color: white;
+    background-color: #FD5050;
+    letter-spacing: 2px;
+    transition: 1s;
+}
+
+#close-video-button:hover {
+    border: 3px solid rgba(0, 0, 0, 0.8);
+	color: white;
+    background-color: rgba(0, 0, 0, 0.8);
 }
 
 #iframe {
     width: 98.9vw;
     height: 93vh;
+    z-index: 1;
+    position: relative;
 }
