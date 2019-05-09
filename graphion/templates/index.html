@@ -1,224 +1,203 @@
+<!--
+Author(s): Tom Udding, Anton Vellikok
+Created: 2019-04-29
+Edited: 2019-05-10
+-->
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>graphion</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>graphion</title>
+        <link rel="stylesheet" type="text/css" href="static/css/style.css">
+        <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
+    </head>
+    <body>
+        <header class="header" id="home">
 
-    <!--######################################
-        ###########  Header area  ############
-        ###################################### -->
-    <div class="header" id="home">
+            <!--Creates 7.5% margins on left and right-->
+            <div class="header-85-percent">
 
-        <!--Creates 7.5% margins on left and right-->
-        <div class="header-85-percent">
-            
-            <!--Left-side of the header: logo-->
-            <div class="logo-container">
-                <img src="images/network.png" alt="graphion logo" class="logo">
-            </div>
-
-            <!--Left-side of the header: logo text-->
-            <div class="logo-text-container">
-                <a class="logo-text" href="#main-page" style="text-decoration:none">graph<span class="logo-text" id="logo-text-bold">ion</span></a>
-            </div> 
-            
-
-            <!--Right-side of the header: buttons-->
-            <div class="header-buttons-container">
-
-                <!--Menu-button for smaller displays (mobile devices)-->
-                <div class="mobile-nav">
-                <label for="menu-button-checkbox">
-                    <img src="images/menu-button.png" alt="menu-button" id="menu-button">
-                </label>
-                <input type="checkbox" id="menu-button-checkbox">
-                <div class="mobile-menu">
-                    <a href="#meet-the-team">TEAM</a>
-                    <a href="#video-jump">VIDEO</a>
-                    <a href="#report">REPORT</a>
-                    <a href="main.html"><span>LAUNCH</span></a>
-                </div>
+                <!--Left-side of the header: logo-->
+                <div class="logo-container">
+                    <img src="static/images/network.png" alt="graphion logo" class="logo">
                 </div>
 
-                <!--Team jump-button-->
-                <button type="button" class="header-button" onclick="location.href='#meet-the-team'">TEAM</button>
-                        
-                <!--Video jump-button-->
-                <button type="button" class="header-button" onclick="location.href='#video-jump'">VIDEO</button>
+                <!--Left-side of the header: logo text-->
+                <div class="logo-text-container">
+                    <a class="logo-text" href="#main-page">graph<span class="logo-text" id="logo-text-bold">ion</span></a>
+                </div>
 
-                <!--Report jump-button-->
-                <button type="button" class="header-button" onclick="location.href='#report'">REPORT</button>
 
-                <!--Launch jump-button-->
-                <button type="button" id="launch-btn-header" class="header-button" onclick="location.href='main.html'">LAUNCH</button>
+                <!--Right-side of the header: buttons-->
+                <div class="header-buttons-container">
 
+                    <!--Menu-button for smaller displays (mobile devices)-->
+                    <div class="mobile-nav">
+                    <label for="menu-button-checkbox">
+                        <img src="static/images/menu-button.png" alt="menu-button" id="menu-button">
+                    </label>
+                    <input type="checkbox" id="menu-button-checkbox">
+                    <div class="mobile-menu">
+                        <a href="#meet-the-team">TEAM</a>
+                        <a href="#video-jump">VIDEO</a>
+                        <a href="#report">REPORT</a>
+                        <a href="selection"><span>LAUNCH</span></a>
+                    </div>
+                    </div>
+
+                    <!--Team jump-button-->
+                    <a class="header-button" href="#meet-the-team">TEAM</a>
+
+                    <!--Video jump-button-->
+                    <a class="header-button" href="#video-jump">VIDEO</a>
+
+                    <!--Report jump-button-->
+                    <a class="header-button" href="#report">REPORT</a>
+
+                    <!--Launch jump-button-->
+                    <a class="launch-btn-header" href="selection">LAUNCH</a>
+
+                </div>
             </div>
-        </div>
-    </div>
-
-    <!--######################################
-        ###########  Main page  ##############
-        ###################################### -->
-    <div id="main-page">
-        <div class="central-container">
-            <div class="black-box">
-                <div class="black-box-text">
-                    <span class="bb-n025">
-                        N0.25
-                    </span>
-                    <br>
-                    <span class="bb-graphion"> 
-                        GRAPHION
-                    </span>
-                    <br>
-                    <span class="bb-your">
-                        YOUR DATA VISUALIZATION EXPERT
-                    </span>
-                    <br>
-                    <div class="control-menu">
-                        <button type="button" onclick="location.href='main.html'" id="launch-btn">LAUNCH</button>
+        </header>
+        <section class="body-wrapper" id="main-page">
+            <div class="central-container">
+                <div class="black-box">
+                    <div class="black-box-text">
+                        <span class="bb-n025">
+                            N0.25
+                        </span>
                         <br>
-                        <button type="button" class="ctlr-menu-button" onclick="location.href='#meet-the-team'">TEAM</button>
-                        <!--Cross image between buttons-->
-                        <img src="images/cancel.png" alt="cross" id="cross-image">
-                        <br id="ctrl-menu-break">
-                        <button type="button" class="ctlr-menu-button" onclick="location.href='#video-jump'">VIDEO</button>
+                        <span class="bb-graphion">
+                            GRAPHION
+                        </span>
                         <br>
-                        <button type="button" class="ctlr-menu-button" onclick="location.href='#report'">REPORT</button>
+                        <span class="bb-your">
+                            YOUR DATA VISUALIZATION EXPERT
+                        </span>
+                        <br>
+                        <div class="control-menu">
+                            <a class="launch-btn" href="selection">LAUNCH</a>
+                            <br>
+                            <a class="ctlr-menu-button" href="#meet-the-team">TEAM</a>
+                            <!--Cross image between buttons-->
+                            <img src="static/images/cancel.png" alt="cross" id="cross-image">
+                            <a class="ctlr-menu-button" href="#video-jump">VIDEO</a>
+                            <br>
+                            <a class="ctlr-menu-button" href="#report">REPORT</a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <!--######################################
-        ###########  Team page  ##############
-        ###################################### -->
-    <div id="meet-the-team">
-        <div class="space-container"></div>
-        <span id="team-text">Meet the team</span>
-        <div class="row">
-            <div class="photo-and-name">
-                <img src="images/putin.jpg" alt="profile-image">
-                <br>
-                <h1 class="profile-name">Vladimir Vladimirovich Putin</h1>
-                <p class="title">President of Russia</p>
+        </section>
+        <section class="body-wrapper" id="meet-the-team">
+            <div class="space-container"></div>
+            <span id="team-text">Meet the team</span>
+            <div class="row">
+                <div class="photo-and-name">
+                    <img src="static/images/team/nameofteammember.jpg" alt="Sam Baggen">
+                    <br>
+                    <h1 class="profile-name">Sam Baggen</h1>
+                    <p class="title">Title</p>
+                </div>
+                <div class="photo-and-name">
+                    <img src="static/images/team/nameofteammember.jpg" alt="Steven van den Broek">
+                    <br>
+                    <h1 class="profile-name">Steven van den Broek</h1>
+                    <p class="title">Title</p>
+                </div>
+                <div class="photo-and-name">
+                    <img src="static/images/team/nameofteammember.jpg" alt="Yuqin Cui">
+                    <br>
+                    <h1 class="profile-name">Yuqin Cui</h1>
+                    <p class="title">Title</p>
+                </div>
+                <div class="photo-and-name">
+                    <img src="static/images/team/nameofteammember.jpg" alt="Tim van de Klundert">
+                    <br>
+                    <h1 class="profile-name">Tim van de Klundert</h1>
+                    <p class="title">Title</p>
+                </div>
+                <div class="photo-and-name">
+                    <img src="static/images/team/nameofteammember.jpg" alt="Tom Udding">
+                    <br>
+                    <h1 class="profile-name">Tom Udding</h1>
+                    <p class="title">Title</p>
+                </div>
+                <div class="photo-and-name">
+                    <img src="static/images/team/nameofteammember.jpg" alt="Anton Vellikok">
+                    <br>
+                    <h1 class="profile-name">Anton Vellikok</h1>
+                    <p class="title">Title</p>
+                </div>
+                <div class="photo-and-name">
+                    <img src="static/images/team/nameofteammember.jpg" alt="Yuqing Zeng">
+                    <br>
+                    <h1 class="profile-name">Yuqing Zeng</h1>
+                    <p class="title">Title</p>
+                </div>
             </div>
-            <div class="photo-and-name">
-                <img src="images/putin.jpg" alt="profile-image">
-                <br>
-                <h1 class="profile-name">Vladimir Vladimirovich Putin</h1>
-                <p class="title">President of Russia</p>
+        </section>
+        <div id="video-jump"></div>
+        <section class="body-wrapper">
+            <button class="download-report-button" id="play-button" onclick="document.getElementById('video').style.display='block';document.getElementById('play-button').style.display='none';document.getElementById('close-video-button').style.display='block';location.href='#video-jump'">PLAY THE VIDEO</button>
+            <button class="download-report-button" id="close-video-button" onclick="document.getElementById('video').style.display='none';document.getElementById('play-button').style.display='block';document.getElementById('close-video-button').style.display='none';">CLOSE THE VIDEO</button>
+            <div id="video">
+                <div class="space-container"></div>
+                <iframe width="560" height="315" id="iframe" frameborder="0" src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
-            <div class="photo-and-name">
-                <img src="images/putin.jpg" alt="profile-image">
+        </section>
+        <section class="body-wrapper" id="report">
+            <div class="space-container"></div>
+            <div id="report-left-side">
+                <div id="report-text">Read our report</div>
                 <br>
-                <h1 class="profile-name">Vladimir Vladimirovich Putin</h1>
-                <p class="title">President of Russia</p>
+                <div id="report-abstract-title">1. Abstarct</div>
+                <div id="report-abstract">
+                    This paper describes a data visualization tool for in the browser. It
+                    allows anyone with access to the site to upload data sets and visualize
+                    them in their browser using various kinds of graphs. The tool is written
+                    in Python and makes use of Bokeh and NetworkX.
+                    Before explaining more about the tool, I will briefly describe what a
+                    graph is.
+                    Graphs consist of vertices and edges. The vertices represent the ’things’
+                    the graph is about. When the graph is about people, every vertex would
+                    represent a person. The edges denote the relationships between the
+                    vertices. Every edge connects 2 vertices with each other. In a graph
+                    where the vertices are people, the edges could for instance show which
+                    people like each other.
+                    This tool can be used to create node-link diagrams and adjacency matrices.
+                    In a node-link diagram, the vertices are shown usually as small dots
+                    and the edges are shown as lines or arrows. The vertices can be located
+                    anywhere in the graph and they can often be moved around by the
+                    user to make it easier to find insights. In a node-link diagram, you can
+                    quickly see relations in your data set since human eyes are good at
+                    seeing patterns.
+                    Adjacency matrices show the vertices and graphs in a completely different
+                    way. The vertices are no longer scattered across the screen, but
+                    are placed on the left and top of the screen. Every vertex on top of the
+                    screen has its own column and every vertex on the left of the screen has
+                    its own row. Usually, all vertices appear once on the top and once on
+                    the left. This way, they create some kind of table where a small place
+                    is reserved for the (optional) connection between the vertex right above
+                    the spot and the vertex left of the spot. These spots are usually very
+                    small and are filled with a color that denotes the connection between
+                    its vertices. In simple cases, black could indicate that the vertices are
+                    connected and white could indicate that they are not.
+                    This tool lets the user upload a data set and allows the user to view the
+                    node-link diagram or adjacency matrix of that data set. These views
+                    also allow several interactions with the data set to study it more in
+                    depth. This paper will explain in more detail what exactly the tool is
+                    capable of.
+                    <br>
+                    <a href="downloads/report.pdf" class="download-report-button" download>DOWNLOAD REPORT</a>
+                </div>
             </div>
-            <div class="photo-and-name">
-                <img src="images/putin.jpg" alt="profile-image">
-                <br>
-                <h1 class="profile-name">Vladimir Vladimirovich Putin</h1>
-                <p class="title">President of Russia</p>
+            <div id="report-right-side">
+                <img src="static/images/report.jpg" alt="report-img" id="report-img">
             </div>
-            <div class="photo-and-name">
-                <img src="images/putin.jpg" alt="profile-image">
-                <br>
-                <h1 class="profile-name">Vladimir Vladimirovich Putin</h1>
-                <p class="title">President of Russia</p>
-            </div>
-            <div class="photo-and-name">
-                <img src="images/putin.jpg" alt="profile-image">
-                <br>
-                <h1 class="profile-name">Vladimir Vladimirovich Putin</h1>
-                <p class="title">President of Russia</p>
-            </div>
-            <div class="photo-and-name">
-                <img src="images/putin.jpg" alt="profile-image">
-                <br>
-                <h1 class="profile-name">Vladimir Vladimirovich Putin</h1>
-                <p class="title">President of Russia</p>
-            </div>
-        </div>
-    </div>
-
-
-    <!--######################################
-        ###########  Video page  #############
-        ###################################### -->
-    <div id="video-jump"></div>
-    <button class="download-report-button" id="play-button" onclick="document.getElementById('video').style.display='block';document.getElementById('play-button').style.display='none';document.getElementById('close-video-button').style.display='block';location.href='#video-jump'">PLAY THE VIDEO</button>
-    <button class="download-report-button" id="close-video-button" onclick="document.getElementById('video').style.display='none';document.getElementById('play-button').style.display='block';document.getElementById('close-video-button').style.display='none';">CLOSE THE VIDEO</button>
-    <div id="video">
-        <div class="space-container"></div>
-        <iframe width="560" height="315" id="iframe" frameborder="0"
-        src="https://www.youtube-nocookie.com/embed/9YffrCViTVk" 
-        allow="accelerometer; autoplay; encrypted-media; gyroscope; 
-        picture-in-picture" allowfullscreen></iframe>
-    </div>
-
-
-    <!--######################################
-        ###########  Report page  ############
-        ###################################### -->
-    <div id="report">
-        <div class="space-container"></div>
-        <div id="report-left-side">
-            <div id="report-text">Read our report</div>
-            <br>
-            <div id="report-abstract-title">1. Abstarct</div>
-            <div id="report-abstract">
-                This paper describes a data visualization tool for in the browser. It
-                allows anyone with access to the site to upload data sets and visualize
-                them in their browser using various kinds of graphs. The tool is written
-                in Python and makes use of Bokeh and NetworkX.
-                Before explaining more about the tool, I will briefly describe what a
-                graph is.
-                Graphs consist of vertices and edges. The vertices represent the ’things’
-                the graph is about. When the graph is about people, every vertex would
-                represent a person. The edges denote the relationships between the
-                vertices. Every edge connects 2 vertices with each other. In a graph
-                where the vertices are people, the edges could for instance show which
-                people like each other.
-                This tool can be used to create node-link diagrams and adjacency matrices.
-                In a node-link diagram, the vertices are shown usually as small dots
-                and the edges are shown as lines or arrows. The vertices can be located
-                anywhere in the graph and they can often be moved around by the
-                user to make it easier to find insights. In a node-link diagram, you can
-                quickly see relations in your data set since human eyes are good at
-                seeing patterns.
-                Adjacency matrices show the vertices and graphs in a completely different
-                way. The vertices are no longer scattered across the screen, but
-                are placed on the left and top of the screen. Every vertex on top of the
-                screen has its own column and every vertex on the left of the screen has
-                its own row. Usually, all vertices appear once on the top and once on
-                the left. This way, they create some kind of table where a small place
-                is reserved for the (optional) connection between the vertex right above
-                the spot and the vertex left of the spot. These spots are usually very
-                small and are filled with a color that denotes the connection between
-                its vertices. In simple cases, black could indicate that the vertices are
-                connected and white could indicate that they are not.
-                This tool lets the user upload a data set and allows the user to view the
-                node-link diagram or adjacency matrix of that data set. These views
-                also allow several interactions with the data set to study it more in
-                depth. This paper will explain in more detail what exactly the tool is
-                capable of.
-                <br>
-                <a href="downloads/Report.pdf" download>
-                    <button type="button" class="download-report-button">DOWNLOAD REPORT</button>
-                </a>
-            </div>
-        </div>
-        <div id="report-right-side">
-            <img src="images/Report.jpg" alt="report-img" id="report-img">
-        </div>
-    </div>
-    
-</body>
+        </section>
+    </body>
 </html>
