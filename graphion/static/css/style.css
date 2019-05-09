@@ -1,14 +1,9 @@
 /*######################
         ALL
 ######################*/
-* {
-    margin: 0;
-    padding: 0;
+html {
+    scroll-behavior: smooth;
 }
-
-
-
-
 
 /*######################
         FONTS
@@ -19,16 +14,9 @@
 }
 
 @font-face {
-    font-family: Roboto;
-    src: url(Roboto-Thin.ttf);
-}
-
-@font-face {
     font-family: Caviar;
     src: url(CaviarDreams.ttf);
 }
-
-
 
 /*######################
         AID TOOLS
@@ -36,10 +24,6 @@
 .space-container {
     height: 7vh;
 }
-
-
-
-
 
 /*######################
         HEADER
@@ -90,7 +74,6 @@
 #logo-text-bold {
 	font-weight: bold;
 }
-
 
 .header-buttons-container {
 	height: 100%;
@@ -148,10 +131,6 @@
 	color: white;
 	background-color: rgba(0, 0, 0, 0.8);
 }
-
-
-
-
 
 /*######################
         MAIN PAGE
@@ -215,13 +194,13 @@
     letter-spacing: 5px;
 }
 
-@media (max-width: 767px) {                  
+@media (max-width: 767px) {
     #cross-image {
        display: none;
     }
  }
 
- @media (min-width: 767px) {                  
+ @media (min-width: 767px) {
     #ctrl-menu-break {
        display: none;
     }
@@ -295,10 +274,6 @@
 	background-color: rgba(0, 0, 0, 0);
 }
 
-
-
-
-
 /*######################
         TEAM PAGE
 ######################*/
@@ -310,10 +285,6 @@
     color: #747474;
     height: 93vh;
 }
-
-
-
-
 
 /*######################
         REPORT PAGE
@@ -387,10 +358,6 @@
     width: 30vw;
     margin-left: 10vw;
 }
-
-
-
-
 
 /*######################
         VIDEO PAGE

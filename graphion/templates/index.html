@@ -1,148 +1,145 @@
+<!--
+Author(s): Tom Udding, Anton Vellikok, Sam Baggen
+Created: 2019-04-29
+Edited: 2019-05-09
+-->
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>graphion</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>graphion</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/grid.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/grid_style.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+        <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
+    </head>
+    <body>
+    <!-- Header area, ID for -->
+        <div class="header" id="home">
+            <div class="header-85-percent">
 
-<!-- Header area, ID for -->
-    <div class="header" id="home">
-        <div class="header-85-percent">
-            
-            <!--Left-side of the header: logo-->
-            <div class="logo-container">
-                <img src="{{ url_for('static', filename='images/network.png') }}" alt="graphion logo" class="logo">
-            </div>
+                <!--Left-side of the header: logo-->
+                <div class="logo-container">
+                    <img src="{{ url_for('static', filename='images/network.png') }}" alt="graphion logo" class="logo">
+                </div>
 
-            <!--Left-side of the header: logo text-->
-            <div class="logo-text-container">
-                <a class="logo-text" href="#main-page" style="text-decoration:none">graph<span class="logo-text" id="logo-text-bold">ion</span></a>
-            </div> 
-            
+                <!--Left-side of the header: logo text-->
+                <div class="logo-text-container">
+                    <a class="logo-text" href="#main-page" style="text-decoration:none">graph<span class="logo-text" id="logo-text-bold">ion</span></a>
+                </div>
 
-            <!--Right-side of the header: buttons-->
-            <div class="header-buttons-container">
+                <!--Right-side of the header: buttons-->
+                <div class="header-buttons-container">
 
-                <!--Team jump-button-->
-                <button type="button" class="header-button" onclick="location.href='#meet-the-team'">TEAM</button>
-                        
-                <!--Submit jump-button-->
-                <button type="button" class="header-button" onclick="location.href='#video'">VIDEO</button>
+                    <!--Team jump-button-->
+                    <a class="header-button" href="#meet-the-team">TEAM</a>
 
-                <!--Video jump-button-->
-                <button type="button" class="header-button" onclick="location.href='#report'">REPORT</button>
+                    <!--Submit jump-button-->
+                    <a class="header-button" onclick="location.href='#video'">VIDEO</a>
 
-                <!--Launch jump-button-->
-                <button type="button" id="launch-btn-header" class="header-button" onclick="location.href='main.html'">LAUNCH</button>
+                    <!--Video jump-button-->
+                    <a class="header-button" onclick="location.href='#report'">REPORT</a>
 
+                    <!--Launch jump-button-->
+                    <a class="header-button" id="launch-btn-header" href="selection">LAUNCH</a>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Main Page -->
-    <div id="main-page">
-        <div class="central-container">
-            <div class="black-box">
-                <div class="black-box-text">
-                    <span class="bb-n025">
-                        N0.25
-                    </span>
-                    <br>
-                    <span class="bb-graphion"> 
-                        GRAPHION
-                    </span>
-                    <br>
-                    <span class="bb-your">
-                        YOUR DATA VISUALIZATION EXPERT
-                    </span>
-                    <br>
-                    <div class="control-menu">
-                        <button type="button" onclick="location.href='main.html'" id="launch-btn">LAUNCH</button>
+        <!-- Main Page -->
+        <div id="main-page">
+            <div class="central-container">
+                <div class="black-box">
+                    <div class="black-box-text">
+                        <span class="bb-n025">N0.25</span>
                         <br>
-                        <button type="button" class="header-button" onclick="location.href='#meet-the-team'">TEAM</button>
-                        <img src="{{ url_for('static', filename='images/cancel.jpg') }}" alt="cross" id="cross-image">
-                        <br id="ctrl-menu-break">
-                        <button type="button" class="header-button" onclick="location.href='#video'">VIDEO</button>
+                        <span class="bb-graphion">GRAPHION</span>
                         <br>
-                        <button type="button" class="header-button" onclick="location.href='#report'">REPORT</button>
+                        <span class="bb-your">YOUR DATA VISUALIZATION EXPERT</span>
+                        <br>
+                        <div class="control-menu">
+                            <a href="selection" id="launch-btn">LAUNCH</a>
+                            <br>
+                            <a class="header-button" href="#meet-the-team">TEAM</a>
+                            <img src="{{ url_for('static', filename='images/cancel.jpg') }}" alt="cross" id="cross-image">
+                            <br id="ctrl-menu-break">
+                            <a class="header-button" href="#video">VIDEO</a>
+                            <br>
+                            <a class="header-button" href="#report">REPORT</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Team page -->
-    <div id="meet-the-team">
-        <div class="space-container"></div>
-        <span id="team-text">Meet the team:</span>
-    </div>
-
-    <!-- Video page -->
-    <div id="video">
+        <!-- Team page -->
+        <div id="meet-the-team">
             <div class="space-container"></div>
-            <iframe width="560" height="315" id="iframe" frameborder="0"
-            src="https://www.youtube-nocookie.com/embed/9YffrCViTVk" 
-            allow="accelerometer; autoplay; encrypted-media; gyroscope; 
-            picture-in-picture" allowfullscreen></iframe>
+            <span id="team-text">Meet the team:</span>
         </div>
 
+        <!-- Video page -->
+        <div id="video">
+                <div class="space-container"></div>
+                <!-- <iframe width="560" height="315" id="iframe" frameborder="0"
+                src="https://www.youtube-nocookie.com/embed/9YffrCViTVk"
+                allow="accelerometer; autoplay; encrypted-media; gyroscope;
+                picture-in-picture" allowfullscreen></iframe> -->
+            </div>
 
-    <!-- Report page -->
-    <div id="report">
-        <div class="space-container"></div>
-        <div id="report-left-side">
-            <div id="report-text">READ OUR REPORT</div>
-            <br>
-            <div id="report-abstract">
-                This paper describes a data visualization tool for in the browser. It
-                allows anyone with access to the site to upload data sets and visualize
-                them in their browser using various kinds of graphs. The tool is written
-                in Python and makes use of Bokeh and NetworkX.
-                Before explaining more about the tool, I will briefly describe what a
-                graph is.
-                Graphs consist of vertices and edges. The vertices represent the ’things’
-                the graph is about. When the graph is about people, every vertex would
-                represent a person. The edges denote the relationships between the
-                vertices. Every edge connects 2 vertices with each other. In a graph
-                where the vertices are people, the edges could for instance show which
-                people like each other.
-                This tool can be used to create node-link diagrams and adjacency matrices.
-                In a node-link diagram, the vertices are shown usually as small dots
-                and the edges are shown as lines or arrows. The vertices can be located
-                anywhere in the graph and they can often be moved around by the
-                user to make it easier to find insights. In a node-link diagram, you can
-                quickly see relations in your data set since human eyes are good at
-                seeing patterns.
-                Adjacency matrices show the vertices and graphs in a completely different
-                way. The vertices are no longer scattered across the screen, but
-                are placed on the left and top of the screen. Every vertex on top of the
-                screen has its own column and every vertex on the left of the screen has
-                its own row. Usually, all vertices appear once on the top and once on
-                the left. This way, they create some kind of table where a small place
-                is reserved for the (optional) connection between the vertex right above
-                the spot and the vertex left of the spot. These spots are usually very
-                small and are filled with a color that denotes the connection between
-                its vertices. In simple cases, black could indicate that the vertices are
-                connected and white could indicate that they are not.
-                This tool lets the user upload a data set and allows the user to view the
-                node-link diagram or adjacency matrix of that data set. These views
-                also allow several interactions with the data set to study it more in
-                depth. This paper will explain in more detail what exactly the tool is
-                capable of.
+        <!-- Report page -->
+        <div id="report">
+            <div class="space-container"></div>
+            <div id="report-left-side">
+                <div id="report-text">READ OUR REPORT</div>
                 <br>
-                <a href="downloads/Report.pdf" download>
-                    <button type="button" id="download-report-button">DOWNLOAD REPORT</button>
-                </a>
+                <div id="report-abstract">
+                    This paper describes a data visualization tool for in the browser. It
+                    allows anyone with access to the site to upload data sets and visualize
+                    them in their browser using various kinds of graphs. The tool is written
+                    in Python and makes use of Bokeh and NetworkX.
+                    Before explaining more about the tool, I will briefly describe what a
+                    graph is.
+                    Graphs consist of vertices and edges. The vertices represent the ’things’
+                    the graph is about. When the graph is about people, every vertex would
+                    represent a person. The edges denote the relationships between the
+                    vertices. Every edge connects 2 vertices with each other. In a graph
+                    where the vertices are people, the edges could for instance show which
+                    people like each other.
+                    This tool can be used to create node-link diagrams and adjacency matrices.
+                    In a node-link diagram, the vertices are shown usually as small dots
+                    and the edges are shown as lines or arrows. The vertices can be located
+                    anywhere in the graph and they can often be moved around by the
+                    user to make it easier to find insights. In a node-link diagram, you can
+                    quickly see relations in your data set since human eyes are good at
+                    seeing patterns.
+                    Adjacency matrices show the vertices and graphs in a completely different
+                    way. The vertices are no longer scattered across the screen, but
+                    are placed on the left and top of the screen. Every vertex on top of the
+                    screen has its own column and every vertex on the left of the screen has
+                    its own row. Usually, all vertices appear once on the top and once on
+                    the left. This way, they create some kind of table where a small place
+                    is reserved for the (optional) connection between the vertex right above
+                    the spot and the vertex left of the spot. These spots are usually very
+                    small and are filled with a color that denotes the connection between
+                    its vertices. In simple cases, black could indicate that the vertices are
+                    connected and white could indicate that they are not.
+                    This tool lets the user upload a data set and allows the user to view the
+                    node-link diagram or adjacency matrix of that data set. These views
+                    also allow several interactions with the data set to study it more in
+                    depth. This paper will explain in more detail what exactly the tool is
+                    capable of.
+                    <br>
+                    <a href="downloads/Report.pdf" download>
+                        <button type="button" id="download-report-button">DOWNLOAD REPORT</button>
+                    </a>
+                </div>
+            </div>
+            <div id="report-right-side">
+                <img src="{{ url_for('static', filename='images/Report.jpg') }}" alt="report-img" id="report-img">
             </div>
         </div>
-        <div id="report-right-side">
-            <img src="{{ url_for('static', filename='images/Report.jpg') }}" alt="report-img" id="report-img">
-        </div>
-    </div>
-    
-</body>
+    </body>
 </html>

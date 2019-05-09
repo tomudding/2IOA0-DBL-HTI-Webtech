@@ -1,7 +1,7 @@
 <!--
 Author(s): Tom Udding
 Created: 2019-04-29
-Edited: 2019-05-01
+Edited: 2019-05-09
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -10,7 +10,10 @@ Edited: 2019-05-01
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta http-equiv="X-UA-Compatible" content="ie=edge">
 		<title>graphion - file selection</title>
-		<!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}"> -->
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/grid.css') }}">
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/grid_style.css') }}">
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+	    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
 	</head>
 	<body>
 		<!--Header-->
@@ -28,27 +31,46 @@ Edited: 2019-05-01
 			THIS SECTION IS BASED ON MY OWN HTML/CSS FRAMEWORK
 			NEEDS TO BE ADJUSTED TO WHAT ANTON COMES UP WITH
 			UNLESS WE WANT TO USE THIS
+			- Tom Udding
 		-->
 		<section class="body-wrapper">
 			<div class="container">
 				<div class="row">
-					<div class="col-s-12"></div>
+					<div class="col-s-12">
+						<h1 class="text-center">Select or upload</h1>
+						<p class="text-center">Please select a previously uploaded data set from the list or upload a new data set.</p>
+					</div>
 				</div>
 				<div class="row">
 					<div class="col-s-6">
 						<!-- existing file selection -->
-
+						<div class="file-selection-container">
+							<h3>Select a data set:</h3>
+							<hr>
+						</div>
 					</div>
 					<div class="col-s-6">
 						<!-- file upload -->
-						<div class="upload-file-container">
+						<div class="file-upload-container">
+							<h3>Upload a data set:</h3>
+							<hr>
 							<form action="/upload" method="POST" enctype="multipart/form-data">
-								<label for="file-upload" class="button">Upload File</label>
-							    <input type="file" name="file" id="file-upload" hidden>
-								<!--Text displaying the file name of the uploaded file-->
-								<span class="button-text" id="button-text-bold">File chosen:</span>
-								<span class="button-text" id="display-file-name">no file selected</span>
-							    <input type="submit" value="Submit" name="submit">
+								<div class="row">
+									<div class="col-s-6">
+										<label for="file-upload" class="button button-secondary">Upload File</label>
+									    <input type="file" name="file" id="file-upload" hidden>
+									</div>
+									<div class="col-s-6">
+										<!--Text displaying the file name of the uploaded file-->
+										<span class="button-text" id="button-text-bold">File chosen:</span>
+										<span class="button-text" id="display-file-name">no file selected</span>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-s-12">
+							    		<input type="submit" class="button button-secondary" value="Submit" name="submit">
+									</div>
+								</div>
 							</form>
 						</div>
 					</div>
