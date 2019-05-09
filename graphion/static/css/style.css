@@ -1,25 +1,24 @@
 /*######################
-        ALL
-######################*/
+  ########  ALL  #######
+  ######################*/
 * {
-    padding: 0;
     margin: 0;
+    padding: 0;
 }
 
-html {
-    scroll-behavior: smooth;
-}
 
-a, a:visited, a:hover, a:focus {
-    text-decoration: none;
-}
 
 /*######################
-        FONTS
-######################*/
+  ######  FONTS  #######
+  ######################*/
 @font-face {
     font-family: Kiona;
     src: url(Kiona-Regular.ttf);
+}
+
+@font-face {
+    font-family: Roboto;
+    src: url(Roboto-Thin.ttf);
 }
 
 @font-face {
@@ -27,16 +26,20 @@ a, a:visited, a:hover, a:focus {
     src: url(CaviarDreams.ttf);
 }
 
+
+
 /*######################
-        AID TOOLS
-######################*/
+  ####  HELP TOOLS  ####
+  ######################*/
 .space-container {
     height: 7vh;
 }
 
+
+
 /*######################
-        HEADER
-######################*/
+  ######  HEADER  ######
+  ######################*/
 .header {
 	background-color: white;
 	height: 7vh;
@@ -78,6 +81,7 @@ a, a:visited, a:hover, a:focus {
     font-family: Roboto;
     letter-spacing: 3px;
     font-size: 25px;
+    display: inline-block;
 
 }
 
@@ -91,29 +95,42 @@ a, a:visited, a:hover, a:focus {
 }
 
 .header-button {
-	color: black;
-	margin: 10px;
+	height: 40px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	margin-right: 10px;
 	border-radius: 0px;
 	cursor: pointer;
-    padding: 10px;
-    display: inline-block;
+	padding: 5px;
+	padding-left: 20px;
+	padding-right: 20px;
+    border: 3px solid white;
     font-size: 12px;
     font-family: Roboto;
     font-weight: bold;
-    border: 3px solid white;
 	color: #5D5C60;
-    background-color: rgba(0, 0, 0, 0);
     letter-spacing: 2px;
+    background-color: rgba(0, 0, 0, 0);
     transition: 0.6s;
+}
+
+.header-button:hover {
+	border: 3px solid white;
+	color: white;
+	background-color: rgba(0, 0, 0, 0.8);
 }
 
 #launch-btn-header {
     color: black;
-	margin: 10px;
+	height: 40px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	margin-right: 10px;
 	border-radius: 0px;
 	cursor: pointer;
-    padding: 10px;
-    display: inline-block;
+	padding: 5px;
+	padding-left: 20px;
+	padding-right: 20px;
     font-size: 12px;
     font-family: Roboto;
     font-weight: bold;
@@ -129,23 +146,81 @@ a, a:visited, a:hover, a:focus {
 	background-color: rgba(0, 0, 0, 0.8);
 }
 
-.header-button:hover {
-	border: 3px solid white;
-	color: white;
-	background-color: rgba(0, 0, 0, 0.8);
+#menu-button {
+    display: none;
+    height: 40px;
+    margin: 0 auto;
+    margin-top: 1vh;
+    text-align: center;
+    float: none;
 }
 
+.mobile-nav {
+    margin: 0 auto;
+}
+
+.mobile-nav label{
+    cursor: pointer;
+    margin: 0 auto;
+}
+
+#menu-button-checkbox {
+    display: none;
+}
+
+.mobile-menu {
+    display: none;
+    text-align: center;
+    width: 100%;
+    background-color: black;
+}
+
+.mobile-menu a {
+    text-decoration: none;
+    font-size: 12px;
+    font-family: Roboto;
+    font-weight: bold;
+	color: white;
+    letter-spacing: 2px;
+    display: block;
+    padding: 30px;
+    text-align: center;
+}
+
+@media (max-width: 400px) {
+    .logo-text {
+        display: none;
+    } 
+}
+
+@media (max-width: 850px) {                  
+    #menu-button {
+       display: block;
+       text-align: center;
+    }
+
+    .header-button {
+        display: none;
+    }
+
+    .mobile-menu {
+        display: none;
+    }
+
+    #menu-button-checkbox:checked + .mobile-menu {
+        display: block;
+    }
+ }
+
+
+
 /*######################
-        MAIN PAGE
-######################*/
+  ####  MAIN PAGE  #####
+  ######################*/
 #main-page {
-    /*
-    * INSERT MAIN BACKGROUND IMAGE HERE
-    *
-    * background-image: url(home-background.jpg);
-    * background-size: cover;
-    * background-position: center;
-    */
+    background-image: url(images/First.png);
+    background-size: cover;
+    background-position: bottom;
     height: 100vh;
 }
 
@@ -197,13 +272,40 @@ a, a:visited, a:hover, a:focus {
     letter-spacing: 5px;
 }
 
-@media (max-width: 767px) {
+.ctlr-menu-button {
+	color: black;
+	height: 40px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	margin-right: 10px;
+	border-radius: 0px;
+	cursor: pointer;
+	padding: 5px;
+	padding-left: 20px;
+	padding-right: 20px;
+    font-size: 12px;
+    font-family: Roboto;
+    font-weight: bold;
+    border: 3px solid white;
+	color: #5D5C60;
+    background-color: rgba(0, 0, 0, 0);
+    letter-spacing: 2px;
+    transition: 0.6s;
+}
+
+.ctlr-menu-button:hover {
+	border: 3px solid white;
+	color: white;
+	background-color: rgba(0, 0, 0, 0.8);
+}
+
+@media (max-width: 767px) {                  
     #cross-image {
        display: none;
     }
  }
 
- @media (min-width: 767px) {
+ @media (min-width: 767px) {                  
     #ctrl-menu-break {
        display: none;
     }
@@ -211,20 +313,26 @@ a, a:visited, a:hover, a:focus {
 
 #launch-btn {
     color: #3189FF;
+	height: 40px;
 	margin-top: 5vh;
+	margin-bottom: 10px;
+	margin-right: 10px;
 	border-radius: 0px;
 	cursor: pointer;
-	padding: 10px;
-    display: inline-block;
+	padding: 5px;
+	padding-left: 20px;
+	padding-right: 20px;
     font-size: 14px;
     font-family: Roboto;
     font-weight: bold;
+    border: 0px solid white;
     background-color: rgba(0, 0, 0, 0);
     letter-spacing: 2px;
     transition: 0.6s;
 }
 
 #launch-btn:hover {
+    border: 3px solid white;
 	color: white;
 	background-color: rgba(0, 0, 0, 0.8);
 }
@@ -272,19 +380,22 @@ a, a:visited, a:hover, a:focus {
 	background-color: rgba(0, 0, 0, 0);
 }
 
+
+
 /*######################
-        TEAM PAGE
-######################*/
+  #####  TEAM PAGE  ####
+  ######################*/
 #meet-the-team {
     height: 93vh;
-    margin-left: 5vw;
-    margin-right: 5vw;
+    background-image: url(images/Second.png);
+    background-size: cover;
+    background-position: top;
 }
-
 
 #team-text {
     text-align: left;
     margin-top: 5vh;
+    margin-left: 5vw;
     font-size: 65px;
     letter-spacing: 15px;
     font-family: Roboto;
@@ -295,6 +406,8 @@ a, a:visited, a:hover, a:focus {
 .row {
     text-align: center;
     display: inline-block;
+    margin-left: 5vw;
+    margin-right: 5vw;
 }
 
 .photo-and-name {
@@ -321,11 +434,119 @@ a, a:visited, a:hover, a:focus {
     background-color: rgb(156, 156, 156);
 }
 
+.photo-and-name img {
+    width: 220px;
+    height: 220px;
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+@media (max-width: 1200px) {                  
+    .photo-and-name {
+        width: calc(100% / 3);
+    }
+
+    #meet-the-team {
+        height: 980px;
+    }
+
+    .photo-and-name img {
+        width: 190px;
+        height: 190px;
+    }
+}
+
+@media (max-width: 950px) {                  
+    .photo-and-name {
+        width: calc(100% / 2);
+    }
+
+    #meet-the-team {
+        height: 1400px;
+    }
+}
+
+@media (max-width: 600px) {                  
+    .photo-and-name {
+        width: calc(100% / 1);
+    }
+
+    #meet-the-team {
+        height: 2200px;
+    }
+}
+
+
+
 /*######################
-        REPORT PAGE
-######################*/
-#report {
+ ####  VIDEO PAGE  ####
+ ######################*/
+#video {
     font-weight: bold;
+    font-size: 75px;
+    text-align: left;
+    color: white;
+    height: 93vh;
+    display: none;
+}
+
+#play-button {
+    display: block;
+    position: relative;
+    text-align: center;
+    margin: 0 auto;
+    margin-bottom: calc(46.5vh - 20px);
+    margin-top: calc(46.5vh - 20px);
+    transition: 1s;
+}
+
+#close-video-button {
+    display: none;
+    position: absolute;
+    text-align: center;
+    margin-left: 1vw;
+    margin-top: 87vh;
+    transition: 1s;
+    z-index: 2;
+    color: black;
+	height: 40px;
+	border-radius: 0px;
+	cursor: pointer;
+	padding: 5px;
+	padding-left: 20px;
+	padding-right: 20px;
+    font-size: 12px;
+    font-family: Roboto;
+    font-weight: bold;
+    border: 3px solid #FD5050;
+	color: white;
+    background-color: #FD5050;
+    letter-spacing: 2px;
+    transition: 1s;
+}
+
+#close-video-button:hover {
+    border: 3px solid white;
+	color: white;
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+#iframe {
+    width: 98.9vw;
+    height: 93vh;
+    z-index: 1;
+    position: relative;
+}
+
+
+
+
+/*######################
+  ###  REPORT PAGE  ####
+  ######################*/
+#report {
+    margin-left: 5vw;
     font-size: 75px;
     text-align: left;
     color: white;
@@ -334,8 +555,8 @@ a, a:visited, a:hover, a:focus {
 }
 
 #report-text {
+    text-align: left;
     margin-top: 5vh;
-    margin-left: 5vw;
     font-size: 65px;
     letter-spacing: 15px;
     font-family: Roboto;
@@ -343,11 +564,18 @@ a, a:visited, a:hover, a:focus {
     line-height: 75px;
 }
 
+#report-abstract-title {
+    font-size: 20px;
+    letter-spacing: 5px;
+    font-family: Roboto;
+    color: rgb(67, 66, 68);
+    font-weight: bold;
+}
+
 #report-abstract {
     font-size: 12px;
     font-weight: normal;
     font-family: Roboto;
-    margin-left: 5vw;
     color: #5D5C60;
 }
 
@@ -390,69 +618,22 @@ a, a:visited, a:hover, a:focus {
 
 #report-img {
     margin-top: 5vh;
-    vertical-align: middle;
     width: 30vw;
     margin-left: 10vw;
-}
-
-/*######################
-        VIDEO PAGE
-######################*/
-
-
-#video {
-    font-weight: bold;
-    font-size: 75px;
-    text-align: left;
-    color: white;
-    height: 93vh;
-    display: none;
-}
-
-#play-button {
     display: block;
-    position: relative;
-    text-align: center;
-    margin: 0 auto;
-    margin-bottom: calc(46.5vh - 20px);
-    margin-top: calc(46.5vh - 20px);
-    transition: 1s;
 }
 
-#close-video-button {
-    display: none;
-    position: absolute;
-    text-align: center;
-    margin-left: 85vw;
-    margin-top: 85vh;
-    transition: 1s;
-    z-index: 2;
-    color: black;
-	height: 40px;
-	border-radius: 0px;
-	cursor: pointer;
-	padding: 5px;
-	padding-left: 20px;
-	padding-right: 20px;
-    font-size: 12px;
-    font-family: Roboto;
-    font-weight: bold;
-    border: 3px solid #FD5050;
-	color: white;
-    background-color: #FD5050;
-    letter-spacing: 2px;
-    transition: 1s;
-}
+@media (max-width: 1000px) {                  
+    #report-img {
+        display: none;
+    }
 
-#close-video-button:hover {
-    border: 3px solid rgba(0, 0, 0, 0.8);
-	color: white;
-    background-color: rgba(0, 0, 0, 0.8);
-}
+    #report-left-side {
+        width: 100%;
+        float: left;
+    }
 
-#iframe {
-    width: 98.9vw;
-    height: 93vh;
-    z-index: 1;
-    position: relative;
+    #report {
+        margin-right: 5vw;
+    }
 }
