@@ -1,8 +1,17 @@
 /*######################
         ALL
 ######################*/
+* {
+    padding: 0;
+    margin: 0;
+}
+
 html {
     scroll-behavior: smooth;
+}
+
+a, a:visited, a:hover, a:focus {
+    text-decoration: none;
 }
 
 /*######################
@@ -83,15 +92,11 @@ html {
 
 .header-button {
 	color: black;
-	height: 40px;
-	margin-top: 10px;
-	margin-bottom: 10px;
-	margin-right: 10px;
+	margin: 10px;
 	border-radius: 0px;
 	cursor: pointer;
-	padding: 5px;
-	padding-left: 20px;
-	padding-right: 20px;
+    padding: 10px;
+    display: inline-block;
     font-size: 12px;
     font-family: Roboto;
     font-weight: bold;
@@ -104,15 +109,11 @@ html {
 
 #launch-btn-header {
     color: black;
-	height: 40px;
-	margin-top: 10px;
-	margin-bottom: 10px;
-	margin-right: 10px;
+	margin: 10px;
 	border-radius: 0px;
 	cursor: pointer;
-	padding: 5px;
-	padding-left: 20px;
-	padding-right: 20px;
+    padding: 10px;
+    display: inline-block;
     font-size: 12px;
     font-family: Roboto;
     font-weight: bold;
@@ -210,26 +211,20 @@ html {
 
 #launch-btn {
     color: #3189FF;
-	height: 40px;
 	margin-top: 5vh;
-	margin-bottom: 10px;
-	margin-right: 10px;
 	border-radius: 0px;
 	cursor: pointer;
-	padding: 5px;
-	padding-left: 20px;
-	padding-right: 20px;
+	padding: 10px;
+    display: inline-block;
     font-size: 14px;
     font-family: Roboto;
     font-weight: bold;
-    border: 0px solid white;
     background-color: rgba(0, 0, 0, 0);
     letter-spacing: 2px;
     transition: 0.6s;
 }
 
 #launch-btn:hover {
-    border: 3px solid white;
 	color: white;
 	background-color: rgba(0, 0, 0, 0.8);
 }
