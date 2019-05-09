@@ -1,7 +1,7 @@
 # 2IOA0 DBL HTI + Webtech
 
 ## REQUIREMENTS
-Minimal requirements as described in VisProjectDescription.pdf and the kickoff slides. 
+Minimal requirements as described in VisProjectDescription.pdf and the kickoff slides.
 - [ ] At least **2** visual metaphors
   - [x] Node-link diagram with at least **3** different layouts:
     - [ ] Radial
@@ -10,7 +10,7 @@ Minimal requirements as described in VisProjectDescription.pdf and the kickoff s
     - [ ] Extra: others
   - [x] Adjacency matrix with at least **5** different reordering strategies
     - [x] Clustering
-      - [x] Agglomerative hierarchichal clustering 
+      - [x] Agglomerative hierarchichal clustering
         - Different ways of calculating the similarity between two clusters (aka. linkage criteria):
         - [x] Ward's method (minimizes the total within-cluster variance)
         - [x] single/minimum linkage clustering (dist(C1,C2) = min dist(Pi,Pj))
@@ -33,7 +33,7 @@ Minimal requirements as described in VisProjectDescription.pdf and the kickoff s
       - [ ] MatLink
     - [ ] [3D node-link diagram](https://plot.ly/python/3d-network-graph/)
     - [ ] [Arc diagram (combined with matrix reorderings maybe)](https://www.data-to-viz.com/graph/arc.html)
-    
+
 - [ ] **Web-based** visualization tool for networks (weighted and directed graphs)
   - [x] Accessable via URL ([graphion](https://graphion.uddi.ng))
   - [x] Upload graph data (in a specified data format)
@@ -71,7 +71,6 @@ To access the development environment:
 
 ### 3. Deployment
 To run the Flask app service locally execute the following commands (in the repository folder):
-1. ```pip install -e .```
-2. ```set FLASK_APP=graphion``` (or ```export FLASK_APP=graphion``` on UNIX-like systems)
-3. ```flask run```
+1. ```set FLASK_APP=graphion``` (or ```export FLASK_APP=graphion``` on UNIX-like systems)
+2. ```flask run```
 _The Flask service should now be running on localhost:5000._
