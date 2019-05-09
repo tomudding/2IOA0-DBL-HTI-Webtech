@@ -22,3 +22,23 @@ but we will tell it ourselves since everyone has to be in the video anyway.
 * Let Steven and Rain demonstrate the adjacency matrix and all its possibilities
 
 * Tim will show the dirty and fast javascript attempt
+
+To conclude the video, we will take a look at the problems we encountered and improvements that could be made.
+ ** TODO this only contains our current problems, more will be added once we encounter more problems
+We ran into 2 major problems: cooperation and performance.
+In order to cooperate well, all group members involved need to know exactly how the code of the others works,
+which means that whenever someone adds code, the other group members need to read it carefully and find out
+what it does and often ask the person who wrote it. Also, some group members are much more experienced than
+others.
+This often lead to the problem that team members would achieve more on their own than when they would get help.
+
+The other problem was performance. The datasets we were given are quite big and it looks like Bokeh is not made
+to handle such big datasets.
+
+** TODO change this later
+Talking about improvements in the initial video would be quite weird as we are simply not done yet. We will leave
+this empty until the end of the project.
+
+Thank you for watching this video!
+If you would like to try out project, you can do it at https://graphion.uddi.ng
+* Show that address at the screen or a board
