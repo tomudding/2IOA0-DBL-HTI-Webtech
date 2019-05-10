@@ -1,5 +1,7 @@
 # 2IOA0 DBL HTI + Webtech
 
+The website can be access through [https://graphion.uddi.ng](https://graphion.uddi.ng).
+
 ## REQUIREMENTS
 Minimal requirements as described in VisProjectDescription.pdf and the kickoff slides.
 - [ ] At least **2** visual metaphors
@@ -35,7 +37,7 @@ Minimal requirements as described in VisProjectDescription.pdf and the kickoff s
     - [ ] [Arc diagram (combined with matrix reorderings maybe)](https://www.data-to-viz.com/graph/arc.html)
 
 - [ ] **Web-based** visualization tool for networks (weighted and directed graphs)
-  - [x] Accessable via URL ([graphion](https://graphion.uddi.ng))
+  - [x] Accessable via URL ([graphion.uddi.ng](https://graphion.uddi.ng))
   - [x] Upload graph data (in a specified data format)
   - [ ] Visual interactions from each of the 7 categories of interactions (Yi et al.)
   - [ ] Data and insights should be sharable with all other people using the web tool
