@@ -24,11 +24,11 @@ def generateJSON(df, isDirected):
     extension('bokeh')
     renderer('bokeh').webgl = True
     reset_output()
-    defaults = dict(width=400, height=400, padding=0.1)
+    defaults = dict(width=200, height=200, padding=0.1)
     opts.defaults(opts.EdgePaths(**defaults), opts.Graph(**defaults), opts.Nodes(**defaults))
 
     G = from_pandas_adjacency(df)
-    graph = Graph.from_networkx(G, circular_layout).opts(directed=isDirected, width=600, height=600, arrowhead_length=0.0005)
+    graph = Graph.from_networkx(G, circular_layout).opts(directed=isDirected, width=400, height=400, arrowhead_length=0.0005)
 
     renderedGraph = renderer('bokeh').server_doc(graph)
     return renderedGraph.roots[0]
