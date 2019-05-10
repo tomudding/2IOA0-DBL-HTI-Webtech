@@ -31,7 +31,7 @@ def visualise(file=None):
     return render_template('visualise.html', fileName=file, script=script)
 
 def modify_doc(doc):
-    doc.add_root(generateBokehApp(file_global))
+    doc.add_root(generateBokehApp(doc, file_global))
 
 bkapp = Application(FunctionHandler(modify_doc))
 
