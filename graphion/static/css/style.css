@@ -535,3 +535,15 @@ a, a:visited, a:hover, a:focus {
         margin-right: 5vw;
     }
 }
+
+/*######################
+  ######  FOOTER  ######
+  ######################*/
+#footer {
+    font-family: Roboto, sans-serif;
+    font-size: 0.75rem;
+    font-weight: normal;
+    color: #5D5C60;
+    margin: 0 auto;
+    text-align: center;
+}
