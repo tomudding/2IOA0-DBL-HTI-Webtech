@@ -1,6 +1,7 @@
 # 2IOA0 DBL HTI + Webtech
 
-The website can be accessed through [https://graphion.uddi.ng](https://graphion.uddi.ng).
+~~The website can be accessed through [https://graphion.uddi.ng](https://graphion.uddi.ng).~~
+Please follow the steps under **DOCUMENTATION** for more information on how to locally run graphion.
 
 ## REQUIREMENTS
 Minimal requirements as described in VisProjectDescription.pdf and the kickoff slides.
