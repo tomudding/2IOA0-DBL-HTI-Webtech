@@ -1,6 +1,6 @@
 # 2IOA0 DBL HTI + Webtech
 
-The website can be access through [https://graphion.uddi.ng](https://graphion.uddi.ng).
+The website can be accessed through [https://graphion.uddi.ng](https://graphion.uddi.ng).
 
 ## REQUIREMENTS
 Minimal requirements as described in VisProjectDescription.pdf and the kickoff slides.
