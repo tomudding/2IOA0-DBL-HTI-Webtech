@@ -116,5 +116,3 @@ def makeMatrix(file):
 
     matrix = Matrix_dropdown(name='Adjacency Matrix')
     return pn.Column(matrix.param, matrix.view)
-
-

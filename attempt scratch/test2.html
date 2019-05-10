@@ -1,0 +1,355 @@
+<html>
+    <body onload="main()">
+        <button onclick="render()">Render</button>
+        <input type="file" id="file"></input>
+        <canvas id="canvas" width="600" height="600"></canvas>
+        <script>
+
+            const BUFFER_WIDTH = 3000;
+            const BUFFER_HEIGHT = 3000;
+
+            function main(){
+                console.log('main()');
+            }
+
+            function afterRender(){
+                if (!window.didAfterRender){
+                    const canvas = document.getElementById('canvas');
+                    const SPEED = 10;
+                    let minX = 0;
+                    let minY = 0;
+                    let maxX = canvas.width - 1;
+                    let maxY = canvas.height - 1;
+                    window.didAfterRender = true;
+                    function draw(){
+                        const startTime = performance.now();
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(window.fullImage, minX, minY, maxX - minX + 1, maxY - minY + 1, 0, 0, canvas.width, canvas.height);
+                        const endTime = performance.now();
+                    }
+                    window.draw = draw;
+                    window.resetCoords = function(){
+                        minX = 0;
+                        minY = 0;
+                        maxX = canvas.width - 1;
+                        maxY = canvas.height - 1;
+                    };
+                    window.addEventListener("keydown", function(event){
+                        if (!window.allowExploration){
+                            return;
+                        }
+                        if (event.key === 'a' && minX >= SPEED){
+                            minX -= SPEED;
+                            maxX -= SPEED;
+                            draw();
+                        }
+                        if (event.key === 'd' && maxX < BUFFER_WIDTH - SPEED) {
+                            minX += SPEED;
+                            maxX += SPEED;
+                            draw();
+                        }
+                        if (event.key === 's' && maxY < BUFFER_HEIGHT - SPEED) {
+                            minY += SPEED;
+                            maxY += SPEED;
+                            draw();
+                        }
+                        if (event.key === 'w' && minY >= SPEED){
+                            minY -= SPEED;
+                            maxY -= SPEED;
+                            draw();
+                        }
+                    });
+                    let mouseDown = false;
+                    window.addEventListener("mousedown", function(event){
+                        mouseDown = true;
+                    });
+                    window.addEventListener("mouseup", function(event){
+                        mouseDown = false;
+                    });
+                    window.addEventListener("mousemove", function(event){
+                        if (mouseDown && window.allowExploration){
+                            const speedFactorX = (maxX - minX + 1) / canvas.width;
+                            const speedFactorY = (maxY - minY + 1) / canvas.height;
+                            let movementX = -event.movementX * speedFactorX;
+                            if (minX + movementX < 0){
+                                movementX = -minX;
+                            }
+                            if (maxX + movementX >= BUFFER_WIDTH){
+                                movementX = BUFFER_WIDTH - maxX;
+                            }
+                            let movementY = -event.movementY * speedFactorY;
+                            if (minY + movementY < 0){
+                                movementY = -minY;
+                            }
+                            if (maxY + movementY >= BUFFER_HEIGHT){
+                                movementY = BUFFER_HEIGHT - maxY;
+                            }
+                            minX += movementX;
+                            minY += movementY;
+                            maxX += movementX;
+                            maxY += movementY;
+                            draw();
+                        }
+                    });
+                    canvas.addEventListener("wheel", function(event){
+                        if (!window.allowExploration) {
+                            return;
+                        }
+                        const SCROLL_SPEED = -0.8;
+                        const scrollSpeed = SCROLL_SPEED * event.deltaY;
+                        const factorX = event.offsetX / canvas.width;
+                        const factorY = event.offsetY / canvas.height;
+                        const newMinX = minX + factorX * scrollSpeed;
+                        const newMaxX = maxX - (1 - factorX) * scrollSpeed;
+                        const newMinY = minY + factorY * scrollSpeed;
+                        const newMaxY = maxY - (1 - factorY) * scrollSpeed;
+                        if (newMinX < newMaxX && newMinY < newMaxY){
+                            let extraMin = 0;
+                            if (newMinX < 0){
+                                extraMin = -newMinX;
+                            }
+                            if (newMinY < 0 && -newMinY > extraMin){
+                                extraMin = -newMinY;
+                            }
+                            let extraMax = 0;
+                            if (newMaxX >= BUFFER_WIDTH){
+                                extraMax = newMaxX - BUFFER_WIDTH + 1;
+                            }
+                            if (newMaxY >= BUFFER_HEIGHT && newMaxY - BUFFER_HEIGHT + 1 > extraMax){
+                                extraMax = newMaxY - BUFFER_HEIGHT + 1;
+                            }
+                            minX = newMinX + extraMin;
+                            maxX = newMaxX - extraMax;
+                            minY = newMinY + extraMin;
+                            maxY = newMaxY - extraMax;
+                            draw();
+                        }
+                    });
+                }
+            }
+
+            function renderNow(vertices, edgesFrom, edgesTo, edgesWeight){
+                console.log("renderNow");
+                const startTime1 = performance.now();
+                const VERTEX_COUNT = vertices.length;
+                const EDGE_COUNT = edgesFrom.length;
+                const verticesX = new Int32Array(VERTEX_COUNT);
+                const verticesY = new Int32Array(VERTEX_COUNT);
+                for (let index = 0; index < VERTEX_COUNT; index++){
+                    verticesX[index] = randomInt(BUFFER_WIDTH);
+                    verticesY[index] = randomInt(BUFFER_HEIGHT);
+                }
+
+                const startTimeClear = performance.now();
+                const bufferCanvas = document.createElement('canvas');
+                bufferCanvas.width = BUFFER_WIDTH;
+                bufferCanvas.height = BUFFER_HEIGHT;
+                const ctx = bufferCanvas.getContext('2d');
+                ctx.fillStyle = "red";
+                ctx.fillRect(0, 0, BUFFER_WIDTH, BUFFER_HEIGHT);
+                const startTime2 = performance.now();
+                console.log('clear took ' + (startTime2 - startTimeClear) + ' ms');
+                ctx.strokeStyle = "black";
+                ctx.lineWidth = Math.max(Math.min(0.001 * BUFFER_WIDTH * BUFFER_HEIGHT / EDGE_COUNT, 10),0.01);
+                for (let index = 0; index < EDGE_COUNT; index++){
+                    const v1 = edgesFrom[index];
+                    const v2 = edgesTo[index];
+                    ctx.beginPath();
+                    ctx.moveTo(verticesX[v1], verticesY[v1]);
+                    ctx.lineTo(verticesX[v2], verticesY[v2]);
+                    ctx.stroke();
+                }
+                const endTime2 = performance.now();
+                console.log('Edges took ' + (endTime2 - startTime2) + " ms");
+                for (let index = 0; index < VERTEX_COUNT; index++){
+                    ctx.beginPath();
+                    ctx.arc(verticesX[index], verticesY[index], 5, 0, 2 * Math.PI, false);
+                    ctx.fillStyle = "green";
+                    ctx.fill();
+                    ctx.lineWidth = 5;
+                    ctx.strokeStyle = "blue";
+                    ctx.stroke();
+                }
+                const endTime3 = performance.now();
+                console.log('Vertices took ' + (endTime3 - endTime2) + ' ms');
+
+                console.log('test0');
+
+                const fullImage = new Image();
+                fullImage.onload = function(){
+                    console.log('test3');
+                    const endTime4 = performance.now();
+                    window.fullImage = fullImage;
+                    console.log('loading the image took ' + (endTime4 - endTime3) + ' ms');
+                    draw();
+                    window.allowExploration = true;
+                    console.log('reall total time is ' + (performance.now() - startTimeClear) + ' ms');
+                    console.log('test4');
+                };
+                console.log('test1');
+                afterRender();
+                console.log('after setting onload');
+
+                const initRenderStart = performance.now();
+
+                console.log('test2');
+                const documentCanvas = document.getElementById('canvas');
+                const documentCtx = documentCanvas.getContext('2d');
+                const initImageData = ctx.getImageData(0, 0, documentCanvas.width, documentCanvas.height);
+            
+                documentCtx.putImageData(initImageData, 0, 0);
+                console.log('test5: time until first draw is ' + (performance.now() - startTimeClear) + " ms");
+                if (window.resetCoords){
+                    window.resetCoords();
+                }
+
+                const initRenderEnd = performance.now();
+                console.log('initial draw took ' + (initRenderEnd - initRenderStart) + ' ms');
+
+                window.setTimeout(function(){
+                    fullImage.src = bufferCanvas.toDataURL();
+                    console.log('test6');
+
+                    console.log('total render took ' + (endTime3 - startTime1) + ' ms');
+                }, 1000);
+
+            }
+
+            function render(){
+                window.allowExploration = false;
+                console.log('render()');
+                const parseStartTime = performance.now();
+
+                const fileButton = document.getElementById('file');
+                const file = fileButton.files[0];
+                if (file === undefined){
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function(event){
+                    const LINE_SEPARATOR = "\n";
+                    const SEPARATOR = ";";
+                    const result = event.target.result;
+                    const fileLength = result.length;
+                    if (result.charAt(fileLength - 1) !== LINE_SEPARATOR){
+                        window.alert("Invalid csv1");
+                        return;
+                    }
+                    console.log('file length is', fileLength);
+                    let lineEnd = result.indexOf(LINE_SEPARATOR);
+                    console.log('first line ends at' + lineEnd);
+
+                    let vertexCount = 0;
+                    for (let index = 0; index < lineEnd; index++){
+                        if (result.charAt(index) === SEPARATOR){
+                            vertexCount++;
+                        }
+                    }
+                    console.log('vertex count is', vertexCount);
+
+                    const vertices = new Array(vertexCount);
+                    let vertexIndex = 0;
+                    let prevSeparator = -1;
+                    for (let index = 0; index < lineEnd; index++){
+                        if (result.charAt(index) === SEPARATOR){
+                            if (prevSeparator !== -1){
+                                vertices[vertexIndex++] = result.substring(prevSeparator + 1, index);
+                            }
+                            prevSeparator = index;
+                        }
+                    }
+
+                    let edgeCount = 0;
+                    let rowIndex = 0;
+                    prevSeparator = -1;
+                    for (let index = lineEnd + 1; index < fileLength; index++){
+                        const currentChar = result.charAt(index);
+                        if (currentChar === SEPARATOR){
+                            if (prevSeparator !== -1){
+                                const currentValue = result.substring(prevSeparator + 1, index);
+                                if (currentValue !== "0"){
+                                    edgeCount++;
+                                }
+                            }
+                            prevSeparator = index;
+                        }
+                        if (currentChar === LINE_SEPARATOR){
+                            rowIndex++;
+                            prevSeparator = -1;
+                        }
+                    }
+                    if (rowIndex !== vertexCount){
+                        window.alert("Invalid csv2");
+                        return;
+                    }
+                    console.log('edge count is', edgeCount);
+                    const edgesFrom = new Int32Array(edgeCount);
+                    const edgesTo = new Int32Array(edgeCount);
+                    const edgesWeight = new Float32Array(edgeCount);
+                    rowIndex = 0;
+                    prevSeparator = -1;
+                    let edgeIndex = 0;
+                    let columnIndex = 0;
+                    for (let index = lineEnd + 1; index < fileLength; index++){
+                        const currentChar = result.charAt(index);
+                        if (currentChar === SEPARATOR){
+                            if (prevSeparator !== -1){
+                                const currentValue = parseFloat(result.substring(prevSeparator + 1, index));
+                                if (currentValue !== 0){
+
+                                    // Maybe swap these
+                                    edgesFrom[edgeIndex] = rowIndex;
+                                    edgesTo[edgeIndex] = columnIndex;
+                                    edgesWeight[edgeIndex] = currentValue;
+                                    edgeIndex++;
+                                }
+                                columnIndex++;
+                            }
+                            prevSeparator = index;
+                        }
+                        if (currentChar === LINE_SEPARATOR){
+                            rowIndex++;
+                            columnIndex = 0;
+                            prevSeparator = -1;
+                        }
+                    }
+
+                    const parseEndTime = performance.now();
+                    console.log('parsing took ' + (parseEndTime - parseStartTime) + ' ms');
+                    renderNow(vertices, edgesFrom, edgesTo, edgesWeight);
+                };
+                reader.readAsText(file);
+
+                // temporarily
+                if (true){
+                    return;
+                }
+                const startTime1 = performance.now();
+                const VERTEX_COUNT = 1000;
+                const EDGE_COUNT = 10000;
+                const vertices = new Array(VERTEX_COUNT);
+                for (let index = 0; index < VERTEX_COUNT; index++){
+                    vertices[index] = {
+                        index: index,
+                        x: randomInt(BUFFER_WIDTH),
+                        y: randomInt(BUFFER_HEIGHT)
+                    };
+                }
+                const edges = new Array(EDGE_COUNT);
+                for (let index = 0; index < EDGE_COUNT; index++){
+                    edges[index] = {
+                        from: randomInt(VERTEX_COUNT),
+                        to: randomInt(VERTEX_COUNT)
+                    };
+                }
+                const endTime1 = performance.now();
+                console.log('Init took ' + (endTime1 - startTime1) + ' ms');
+                
+            }
+
+            function randomInt(bound){
+                return Math.floor(Math.random() * bound);
+            }
+        </script>
+    </body>
+</html>

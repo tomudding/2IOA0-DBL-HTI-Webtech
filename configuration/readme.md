@@ -1,0 +1,1 @@
+This currently limits the Gunicorn instance to **1 worker**. This means that only 1 process is allocated and only one person can access the website and do something. This will hopefully change when we can successfully implement `flask_gunicorn_embed.py`.

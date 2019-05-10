@@ -1,57 +1,60 @@
 /**
- * Author(s): Anton Vellikok, Tom Udding
+ * Author(s): Tom Udding, Anton Vellikok
  * Created: 2019-04-29
- * Edited: 2019-05-03
+ * Edited: 2019-05-10
  */
-html, body, div, span, applet, object, iframe, input, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cit, code, del, dfn, em, img, ins, kbd, q, s,
- samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article,
- aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
-    margin: 0;
-    -webkit-margin-before: 0;
-    -webkit-margin-after: 0;
+
+/*######################
+  ########  ALL  #######
+  ######################*/
+* {
     padding: 0;
-    border: 0;
-    outline: 0;
-    font-size: 100%;
-    font: inherit;
-    vertical-align: baseline;
+    margin: 0;
 }
 
 html {
     background-color: rgb(255, 255, 255);
     height: 100%;
     position: relative;
+    scroll-behavior: smooth;
 }
 
 body {
-    color: rgb(51, 51, 51);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+    font-family: Roboto, sans-serif;
     font-size: 1em;
     font-weight: 400;
     line-height: 1.75;
-    min-height: 100%;
- }
-
-header {
-    background-image: url(home-background.jpg);
-    height: 100vh;
-    background-size: cover;
-    background-position: center;
 }
 
+a, a:visited, a:hover, a:focus {
+    text-decoration: none;
+}
+
+/*######################
+  ####  HELP TOOLS  ####
+  ######################*/
+.space-container {
+    height: 7vh;
+}
+
+/*######################
+  ######  HEADER  ######
+  ######################*/
 .header {
-	background-color: rgba(red, green, blue, 0);
-	height: 60px;
-	width: 100%;
-    display: block;
+	background-color: white;
+	height: 7vh;
+    width: 100%;
+    display: inline-block;
+    position: fixed;
+    margin: 0 auto;
+    z-index: 3;
 }
 
 .header-85-percent {
 	width: 85%;
 	height: 100%;
-	display: block;
+	display: inline-block;
     margin: 0 auto;
-    position: fixed;
 }
 
 .logo-container {
@@ -70,142 +73,477 @@ header {
     float: left;
     display: block;
     margin-left: 10px;
+    margin-top: 10px;
 }
 
 .logo-text {
-	color: #383838;
-	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 35px;
-
+	color: #5D5C60;
+    letter-spacing: 0.1875rem;
+    font-size: 1.5625rem;
+    display: inline-block;
 }
 
 #logo-text-bold {
 	font-weight: bold;
 }
 
-
 .header-buttons-container {
 	height: 100%;
 	float: right;
 }
 
-.header-button {
-	color: black;
-	height: 40px;
-	margin-top: 10px;
-	margin-bottom: 10px;
-	margin-right: 10px;
-	border: 3px solid #FD5050;
-	border-radius: 0px;
-	background-color:  rgba(0, 0, 0, 0.8);
+.header-button,
+.ctlr-menu-button {
+    display: inline-block;
+	margin: 10px;
+    padding: 5px 10px;
 	cursor: pointer;
-	padding: 10px;
-	padding-left: 20px;
-	padding-right: 20px;
-	font-size: 12px;
-	color: white;
+    border: 0.1875rem solid white;
+    font-size: 0.75rem;
+    font-weight: bold;
+	color: #5D5C60;
+    letter-spacing: 2px;
+    background-color: rgb(255, 255, 255);
+    transition: 0.6s;
 }
 
-.header-button:hover {
-	border: 3px solid black;
-	color: black;
-	background-color: rgba(0, 0, 0, 0);
+.header-button:hover,
+.launch-btn-header:hover,
+.ctlr-menu-button:hover {
+	border: 0.1875rem solid rgb(51, 51, 51);
+	color: white;
+	background-color: rgb(51, 51, 51);
+}
+
+.launch-btn-header {
+    display: inline-block;
+	margin: 10px;
+	padding: 5px 10px;
+    cursor: pointer;
+    border: 0.1875rem solid rgb(51, 51, 51);
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: #5D5C60;
+    letter-spacing: 2px;
+    background-color: rgb(255, 255, 255);
+    transition: 0.6s;
+}
+
+#menu-button {
+    display: none;
+    height: 40px;
+    margin: 0 auto;
+    margin-top: 1vh;
+    text-align: center;
+    float: none;
+}
+
+.mobile-nav {
+    margin: 0 auto;
+}
+
+.mobile-nav label{
+    cursor: pointer;
+    margin: 0 auto;
+}
+
+#menu-button-checkbox {
+    display: none;
+}
+
+.mobile-menu {
+    display: none;
+    text-align: center;
+    width: 100%;
+    background-color: black;
+}
+
+.mobile-menu a {
+    text-decoration: none;
+    font-size: 0.75rem;
+    font-weight: bold;
+	color: white;
+    letter-spacing: 2px;
+    display: block;
+    padding: 30px;
+    text-align: center;
+}
+
+@media (max-width: 400px) {
+    .logo-text {
+        display: none;
+    }
+}
+
+@media (max-width: 850px) {
+    #menu-button {
+       display: block;
+       text-align: center;
+    }
+
+    .header-button {
+        display: none;
+    }
+
+    .mobile-menu {
+        display: none;
+    }
+
+    #menu-button-checkbox:checked + .mobile-menu {
+        display: block;
+    }
+ }
+
+/*######################
+  ####  MAIN PAGE  #####
+  ######################*/
+#main-page {
+    background-image: url(/static/images/first.png);
+    background-size: cover;
+    background-position: bottom;
+    height: 100vh;
 }
 
 .central-container {
     height: 100vh;
+    color: white;
+    display: block;
 }
 
 .black-box {
     margin: 0 auto;
-    margin-top: 14vh;
-    margin-left: 24vw;
     height: 57vh;
-    width: 51vw;
+    width: 85vw;
     text-align: center;
-    background-color: rgba(0, 0, 0, 0.8);
     color: white;
+    display: block;
 }
 
 .black-box-text {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-weight: bold;
+    font-weight: normal;
+    display: block;
+    color: #5D5C60;
 }
 
-.bb-hi {
-    font-size: 70px;
-    margin-top: 40px;
+.bb-n025 {
+    font-size: 1.25rem;
+    margin-top: 30vh;
+    margin-bottom: 3vh;
     display: inline-block;
-}
+    letter-spacing: 5px;
 
-.bb-welcome {
-    font-size: 40px;
 }
 
 .bb-graphion {
-    color: #FD5050;
+    font-size: 6vw;
+    letter-spacing: 3vw;
+    font-weight: lighter;
+    margin-right: -3vw;
 }
 
-.bb-graphion-normal {
+.bb-your {
+    font-size: 0.75rem;
+    letter-spacing: 0.625rem;
+    margin-right: -0.625rem;
+}
+
+.control-menu {
+    letter-spacing: 5px;
+}
+
+@media (max-width: 767px) {
+    #cross-image {
+       display: none;
+    }
+ }
+
+ @media (min-width: 767px) {
+    #ctrl-menu-break {
+       display: none;
+    }
+ }
+
+.launch-btn {
+    display: inline-block;
+    color: #3189FF;
+	margin: 10px;
+    padding: 5px 10px;
+	cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: bold;
+    border: 0.1875rem solid white;
+    background-color: rgb(255, 255, 255);
+    letter-spacing: 2px;
+    transition: 0.6s;
+}
+
+.launch-btn:hover {
+    border: 0.1875rem solid #3189FF;
+	color: white;
+	background-color: #3189FF;
+}
+
+#report-btn {
+    margin-top: 3vh;
+    display: inline-block;
+}
+
+#team-btn {
+    margin-right: 3vh;
+    display: inline-block;
+}
+
+#video-btn {
+    margin-left: 3vh;
+    display: inline-block;
+}
+
+#cross-image {
+    height: 50px;
+    vertical-align: middle;
+}
+
+/*######################
+  #####  TEAM PAGE  ####
+  ######################*/
+#meet-the-team {
+    height: 93vh;
+    background-image: url(/static/images/second.png);
+    background-size: cover;
+    background-position: top;
+}
+
+#team-text {
+    text-align: left;
+    margin-top: 5vh;
+    margin-left: 5vw;
+    font-size: 4.0625rem;
+    letter-spacing: 15px;
+    color: #5D5C60;
+    line-height: 75px;
+}
+
+.row {
+    text-align: center;
+    display: inline-block;
+    margin-left: 5vw;
+    margin-right: 5vw;
+}
+
+.photo-and-name {
+    width: calc(100% / 4);
+    overflow: hidden;
+    float: left;
+    height: auto;
+    transition: 0.6s;
+}
+
+.photo-and-name h1 {
+    font-size: 1.125rem;
+}
+
+.photo-and-name p {
+    font-size: 0.9375rem;
+    color: #5D5C60;
+    margin-bottom: 20px;
+}
+
+.photo-and-name:hover {
+    background-color: rgb(156, 156, 156);
+}
+
+.photo-and-name img {
+    width: 220px;
+    height: 220px;
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+@media (max-width: 1200px) {
+    .photo-and-name {
+        width: calc(100% / 3);
+    }  #meet-the-team {
+        height: 980px;
+    }  .photo-and-name img {
+        width: 190px;
+        height: 190px;
+    }
+}
+
+@media (max-width: 950px) {
+    .photo-and-name {
+        width: calc(100% / 2);
+    }  #meet-the-team {
+        height: 1400px;
+    }
+}
+
+@media (max-width: 600px) {
+    .photo-and-name {
+        width: calc(100% / 1);
+    }  #meet-the-team {
+        height: 2200px;
+    }
+}
+
+
+
+/*######################
+ ####  VIDEO PAGE  ####
+ ######################*/
+#video {
+    font-weight: bold;
+    font-size: 4.6875rem;
+    text-align: left;
+    color: white;
+    height: 93vh;
+    display: none;
+}
+
+#play-button {
+    display: block;
+    position: relative;
+    text-align: center;
+    margin: 0 auto;
+    margin-bottom: calc(46.5vh - 20px);
+    margin-top: calc(46.5vh - 20px);
+    transition: 1s;
+}
+
+#close-video-button {
+    display: none;
+    position: absolute;
+    text-align: center;
+    margin-left: 1vw;
+    margin-top: 87vh;
+    transition: 1s;
+    z-index: 2;
+    color: black;
+	height: 40px;
+	cursor: pointer;
+	padding: 5px 10px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    border: 0.1875rem solid #FD5050;
+	color: white;
+    background-color: #FD5050;
+    letter-spacing: 2px;
+    transition: 1s;
+}
+
+#close-video-button:hover {
+    border: 0.1875rem solid white;
+	color: white;
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+#iframe {
+    width: 98.9vw;
+    height: 93vh;
+    z-index: 1;
+    position: relative;
+}
+
+
+
+
+/*######################
+  ###  REPORT PAGE  ####
+  ######################*/
+#report {
+    margin-left: 5vw;
+    font-size: 4.6875rem;
+    text-align: left;
+    color: white;
+    height: 100vh;
+    line-height: 25px;
+}
+
+#report-text {
+    text-align: left;
+    margin-top: 5vh;
+    font-size: 4.0625rem;
+    letter-spacing: 15px;
+    color: #5D5C60;
+    line-height: 75px;
+}
+
+#report-abstract-title {
+    font-size: 1.25rem;
+    letter-spacing: 5px;
+    color: rgb(67, 66, 68);
+    font-weight: bold;
+}
+
+#report-abstract {
+    font-size: 0.75rem;
     font-weight: normal;
+    color: #5D5C60;
 }
 
-.bb-begin {
-    font-size: 30px;
-    font-weight: normal;
+#report-left-side {
+    width: 50%;
+    float: left;
 }
 
-.launch-graphion-button {
+.download-report-button {
     color: black;
 	height: 40px;
 	margin-top: 10px;
 	margin-bottom: 10px;
 	margin-right: 10px;
-	border: 3px solid #FD5050;
 	border-radius: 0px;
-	background-color:  rgba(0, 0, 0, 0.8);
 	cursor: pointer;
-	padding: 10px;
+	padding: 5px;
 	padding-left: 20px;
 	padding-right: 20px;
-	font-size: 12px;
-	color: white;
-}
-
-.launch-graphion-button:hover {
-	border: 3px solid black;
-	color: black;
-	background-color: rgba(0, 0, 0, 0);
-}
-
-#meet-the-team {
-    font-size: 75px;
-    text-align: left;
-    color: #747474;
-    height: 100vh;
-}
-
-#team-text, #report-text, #video-text {
-    margin-left: 5vw;
+    font-size: 0.75rem;
     font-weight: bold;
+    border: 0.1875rem solid black;
+	color: #5D5C60;
+    background-color: rgba(0, 0, 0, 0);
+    letter-spacing: 2px;
+    transition: 1s;
 }
 
-#report {
-    font-size: 75px;
-    text-align: left;
-    color: white;
-    height: 100vh;
-    background-color: #818181;
+.download-report-button:hover {
+    border: 0.1875rem solid white;
+	color: white;
+    background-color: rgb(51, 51, 51);
 }
 
-#video {
-    font-size: 75px;
-    text-align: left;
-    color: white;
-    height: 100vh;
-    background-color: #FD5050;
+#report-right-side {
+    width: 50%;
+    float: right;
 }
 
-.space-container {
-    height: 5vh;
+#report-img {
+    margin-top: 5vh;
+    width: 30vw;
+    margin-left: 10vw;
+    display: block;
+}
+
+@media (max-width: 1000px) {
+    #report-img {
+        display: none;
+    }  #report-left-side {
+        width: 100%;
+        float: left;
+    }  #report {
+        margin-right: 5vw;
+    }
+}
+
+/*######################
+  ######  FOOTER  ######
+  ######################*/
+#footer {
+    font-family: Roboto, sans-serif;
+    font-size: 0.75rem;
+    font-weight: normal;
+    color: #5D5C60;
+    margin: 0 auto;
+    text-align: center;
 }

@@ -1,0 +1,13 @@
+[Unit]
+Description=Bokeh Server instance for node-link API
+After=network.target
+
+[Service]
+User=webserver
+Group=www-data
+WorkingDirectory=/home/webserver/2IOA0/graphion
+Environment="PATH=/home/webserver/anaconda3/envs/2ioa0/bin"
+ExecStart=/home/webserver/anaconda3/envs/2ioa0/bin/bokeh serve [insertfile].py --port 9500 --allow-websocket-origin='*' --use-xheaders
+
+[Install]
+WantedBy=multi-user.target
