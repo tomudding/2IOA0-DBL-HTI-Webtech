@@ -78,8 +78,8 @@ a, a:visited, a:hover, a:focus {
 
 .logo-text {
 	color: #5D5C60;
-    letter-spacing: 3px;
-    font-size: 25px;
+    letter-spacing: 0.1875rem;
+    font-size: 1.5625rem;
     display: inline-block;
 }
 
@@ -98,8 +98,8 @@ a, a:visited, a:hover, a:focus {
 	margin: 10px;
     padding: 5px 10px;
 	cursor: pointer;
-    border: 3px solid white;
-    font-size: 12px;
+    border: 0.1875rem solid white;
+    font-size: 0.75rem;
     font-weight: bold;
 	color: #5D5C60;
     letter-spacing: 2px;
@@ -110,7 +110,7 @@ a, a:visited, a:hover, a:focus {
 .header-button:hover,
 .launch-btn-header:hover,
 .ctlr-menu-button:hover {
-	border: 3px solid rgb(51, 51, 51);
+	border: 0.1875rem solid rgb(51, 51, 51);
 	color: white;
 	background-color: rgb(51, 51, 51);
 }
@@ -120,8 +120,8 @@ a, a:visited, a:hover, a:focus {
 	margin: 10px;
 	padding: 5px 10px;
     cursor: pointer;
-    border: 3px solid rgb(51, 51, 51);
-    font-size: 12px;
+    border: 0.1875rem solid rgb(51, 51, 51);
+    font-size: 0.75rem;
     font-weight: bold;
     color: #5D5C60;
     letter-spacing: 2px;
@@ -160,7 +160,7 @@ a, a:visited, a:hover, a:focus {
 
 .mobile-menu a {
     text-decoration: none;
-    font-size: 12px;
+    font-size: 0.75rem;
     font-weight: bold;
 	color: white;
     letter-spacing: 2px;
@@ -226,7 +226,7 @@ a, a:visited, a:hover, a:focus {
 }
 
 .bb-n025 {
-    font-size: 20px;
+    font-size: 1.25rem;
     margin-top: 30vh;
     margin-bottom: 3vh;
     display: inline-block;
@@ -237,12 +237,14 @@ a, a:visited, a:hover, a:focus {
 .bb-graphion {
     font-size: 6vw;
     letter-spacing: 3vw;
-    text-align: center;
+    font-weight: lighter;
+    margin-right: -3vw;
 }
 
 .bb-your {
-    font-size: 12px;
-    letter-spacing: 10px;
+    font-size: 0.75rem;
+    letter-spacing: 0.625rem;
+    margin-right: -0.625rem;
 }
 
 .control-menu {
@@ -267,16 +269,16 @@ a, a:visited, a:hover, a:focus {
 	margin: 10px;
     padding: 5px 10px;
 	cursor: pointer;
-    font-size: 14px;
+    font-size: 0.875rem;
     font-weight: bold;
-    border: 3px solid white;
+    border: 0.1875rem solid white;
     background-color: rgb(255, 255, 255);
     letter-spacing: 2px;
     transition: 0.6s;
 }
 
 .launch-btn:hover {
-    border: 3px solid #3189FF;
+    border: 0.1875rem solid #3189FF;
 	color: white;
 	background-color: #3189FF;
 }
@@ -315,7 +317,7 @@ a, a:visited, a:hover, a:focus {
     text-align: left;
     margin-top: 5vh;
     margin-left: 5vw;
-    font-size: 65px;
+    font-size: 4.0625rem;
     letter-spacing: 15px;
     color: #5D5C60;
     line-height: 75px;
@@ -336,10 +338,12 @@ a, a:visited, a:hover, a:focus {
     transition: 0.6s;
 }
 
-.photo-and-name h1 {  font-size: 18px;
+.photo-and-name h1 {
+    font-size: 1.125rem;
 }
 
-.photo-and-name p {  font-size: 15px;
+.photo-and-name p {
+    font-size: 0.9375rem;
     color: #5D5C60;
     margin-bottom: 20px;
 }
@@ -390,7 +394,7 @@ a, a:visited, a:hover, a:focus {
  ######################*/
 #video {
     font-weight: bold;
-    font-size: 75px;
+    font-size: 4.6875rem;
     text-align: left;
     color: white;
     height: 93vh;
@@ -417,13 +421,11 @@ a, a:visited, a:hover, a:focus {
     z-index: 2;
     color: black;
 	height: 40px;
-	border-radius: 0px;
 	cursor: pointer;
-	padding: 5px;
-	padding-left: 20px;
-	padding-right: 20px;
-    font-size: 12px;  font-weight: bold;
-    border: 3px solid #FD5050;
+	padding: 5px 10px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    border: 0.1875rem solid #FD5050;
 	color: white;
     background-color: #FD5050;
     letter-spacing: 2px;
@@ -431,7 +433,7 @@ a, a:visited, a:hover, a:focus {
 }
 
 #close-video-button:hover {
-    border: 3px solid white;
+    border: 0.1875rem solid white;
 	color: white;
     background-color: rgba(0, 0, 0, 0.9);
 }
@@ -451,7 +453,7 @@ a, a:visited, a:hover, a:focus {
   ######################*/
 #report {
     margin-left: 5vw;
-    font-size: 75px;
+    font-size: 4.6875rem;
     text-align: left;
     color: white;
     height: 100vh;
@@ -461,20 +463,23 @@ a, a:visited, a:hover, a:focus {
 #report-text {
     text-align: left;
     margin-top: 5vh;
-    font-size: 65px;
-    letter-spacing: 15px;  color: #5D5C60;
+    font-size: 4.0625rem;
+    letter-spacing: 15px;
+    color: #5D5C60;
     line-height: 75px;
 }
 
 #report-abstract-title {
-    font-size: 20px;
-    letter-spacing: 5px;  color: rgb(67, 66, 68);
+    font-size: 1.25rem;
+    letter-spacing: 5px;
+    color: rgb(67, 66, 68);
     font-weight: bold;
 }
 
 #report-abstract {
-    font-size: 12px;
-    font-weight: normal;  color: #5D5C60;
+    font-size: 0.75rem;
+    font-weight: normal;
+    color: #5D5C60;
 }
 
 #report-left-side {
@@ -493,8 +498,9 @@ a, a:visited, a:hover, a:focus {
 	padding: 5px;
 	padding-left: 20px;
 	padding-right: 20px;
-    font-size: 12px;  font-weight: bold;
-    border: 3px solid black;
+    font-size: 0.75rem;
+    font-weight: bold;
+    border: 0.1875rem solid black;
 	color: #5D5C60;
     background-color: rgba(0, 0, 0, 0);
     letter-spacing: 2px;
@@ -502,7 +508,7 @@ a, a:visited, a:hover, a:focus {
 }
 
 .download-report-button:hover {
-    border: 3px solid white;
+    border: 0.1875rem solid white;
 	color: white;
     background-color: rgb(51, 51, 51);
 }
