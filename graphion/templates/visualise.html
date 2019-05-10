@@ -73,54 +73,15 @@ Edited: 2019-05-10
 		var matrixContext = matrixCanvas.getContext('2d');
 		var matrixDiv = document.getElementById("matrix");
 		var matrixWidth = matrixDiv.clientWidth - 5;
-		var matrixHeight = (matrixDiv.clientHeight * 4) - 5;
+		var matrixHeight = (matrixDiv.clientHeight) - 5;
 		matrixCanvas.width = matrixWidth;
 		matrixCanvas.height = matrixHeight;
 		var matrix = {velocity : 1, minSize : 20, maxSize : 50, bounce : true, squares : (matrixWidth * matrixHeight) / (100 * 100)};
 		function drawMatrixBackground(){matrixContext.beginPath(); matrixContext.rect(0, 0, matrixWidth, matrixHeight); matrixContext.fillStyle = "rgba(255, 255, 255, 1)"; matrixContext.fill();}
-		function Square(){
-			this.size = random(matrix.minSize, matrix.maxSize); 
-			this.vx = random(-3, 3); 
-			this.vy = random(3, -3); 
-			this.x = random(0, matrixWidth); 
-			this.y = random(0, matrixHeight); 
-			this.color = "rgb(" + [round(random(100, 220)), round(random(100, 220)), round(random(100, 220))].join() + ")"; 
-			this.update = function(){
-				this.x += this.vx * matrix.velocity; 
-				this.y += this.vy * matrix.velocity; 
-				if(matrix.bounce){
-					if(this.x > matrixWidth) this.vx*=-1.0; 
-					if(this.y > matrixHeight) this.vy*=-1.0; 
-					if(this.x < 0) this.vx*=-1.0; 
-					if(this.y < 0) this.vy*=-1.0;} 
-					else {
-						if(this.x > matrixWidth) this.x -= matrixWidth; 
-						if(this.y > matrixHeight) this.y -= matrixHeight; 
-						if(this.x < 0) this.x += matrixWidth; 
-						if(this.y < 0) this.y += matrixHeight;
-					}
-				}; 
-				this.draw = function(){
-					matrixContext.fillStyle = this.color;
-					matrixContext.fillRect(this.x, this.y, this.size, this.size);
-				};
-			}
-		function createSquares(){
-			squares = []; 
-			for (var i = 0; i < graph.dots; i++){
-				squares.push(new Square());
-			}
-		}
-		function drawMatrix(){
-			drawMatrixBackground(); 
-			squares.forEach(function(square){square.update();}); 
-			squares.forEach(function(square){square.draw();});
-			requestAnimFrame(drawMatrix);
-		}
-		var squares = []; 
-		createSquares(); 
-		drawMatrix();
-
+		function Square(){this.size = random(matrix.minSize, matrix.maxSize); this.vx = random(-3, 3); this.vy = random(3, -3); this.x = random(0, matrixWidth); this.y = random(0, matrixHeight); this.color = "rgb(" + [round(random(100, 220)), round(random(100, 220)), round(random(100, 220))].join() + ")"; this.update = function(){this.x += this.vx * matrix.velocity; this.y += this.vy * matrix.velocity; if(matrix.bounce){if(this.x > matrixWidth) this.vx*=-1.0; if(this.y > matrixHeight) this.vy*=-1.0; if(this.x < 0) this.vx*=-1.0; if(this.y < 0) this.vy*=-1.0;} else {if(this.x > matrixWidth) this.x -= matrixWidth; if(this.y > matrixHeight) this.y -= matrixHeight; if(this.x < 0) this.x += matrixWidth; if(this.y < 0) this.y += matrixHeight;}}; this.draw = function(){matrixContext.fillStyle = this.color; matrixContext.fillRect(this.x, this.y, this.size, this.size);};}
+		function createSquares(){squares = []; for (var i = 0; i < graph.dots; i++){squares.push(new Square());}}
+		function drawMatrix(){drawMatrixBackground(); squares.forEach(function(square){square.update();}); squares.forEach(function(square){square.draw();});requestAnimFrame(drawMatrix);}
+		var squares = []; createSquares(); drawMatrix();
 		window.onresize=function(){width = div.clientWidth - 5; height = (div.clientHeight * 4) - 5; canvas.width = width; canvas.height = height; matrixWidth = matrixDiv.clientWidth - 5; matrixHeight = (matrixDiv.clientHeight * 4) - 5; matrixCanvas.width = matrixWidth; matrixCanvas.height = matrixHeight}
 	</script>
 </html>
