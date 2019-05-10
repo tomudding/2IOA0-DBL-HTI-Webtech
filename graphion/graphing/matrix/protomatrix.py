@@ -91,7 +91,9 @@ def makeMatrix(file):
     class Matrix_dropdown(param.Parameterized):
         reordering = param.ObjectSelector(default="ward",objects=["ward","single","average","complete"])
 
+        @param.depends('reordering')
         def view(self):
+            print("Reordering changed!")
             solid = pd.DataFrame(ordered_dist_mat[self.reordering])
             solid.index = names
             solid.columns = names
@@ -102,4 +104,4 @@ def makeMatrix(file):
                           height=500, width=600, flip_yaxis=True, xaxis=None, yaxis=None, cmap=palette['kbc'])
 
     matrix = Matrix_dropdown(name='Adjacency Matrix')
-    return pn.Column(matrix.param, matrix.view).get_root()
+    return pn.Column(matrix.param, matrix.view)
