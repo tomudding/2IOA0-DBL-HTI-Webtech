@@ -1,6 +1,6 @@
 # 2IOA0 DBL HTI + Webtech
 
-~~The website can be accessed through [https://graphion.uddi.ng](https://graphion.uddi.ng).~~
+~~The website can be accessed through [http://188.166.103.95:5000/](http://188.166.103.95:5000/).~~
 Please follow the steps under **DOCUMENTATION** for more information on how to locally run graphion.
 
 ## REQUIREMENTS
@@ -38,7 +38,7 @@ Minimal requirements as described in VisProjectDescription.pdf and the kickoff s
     - [ ] [Arc diagram (combined with matrix reorderings maybe)](https://www.data-to-viz.com/graph/arc.html)
 
 - [ ] **Web-based** visualization tool for networks (weighted and directed graphs)
-  - [x] Accessable via URL ([graphion.uddi.ng](https://graphion.uddi.ng))
+  - [x] Accessable via URL ([http://188.166.103.95:5000/](http://188.166.103.95:5000/))
   - [x] Upload graph data (in a specified data format)
   - [ ] Visual interactions from each of the 7 categories of interactions (Yi et al.)
   - [ ] Data and insights should be sharable with all other people using the web tool
