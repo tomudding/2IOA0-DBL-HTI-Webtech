@@ -27,7 +27,7 @@ def visualise(file=None):
         return redirect('/selection')
     global file_global
     file_global = file
-    script = server_document('http://localhost:%d/bkapp' % port)
+    script = server_document('http://localhost:%d/bkapp' % port, relative_urls=False, resources=None)
     return render_template('visualise.html', fileName=file, script=script)
 
 def modify_doc(doc):
