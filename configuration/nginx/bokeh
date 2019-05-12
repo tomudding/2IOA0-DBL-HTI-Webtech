@@ -1,0 +1,85 @@
+################################################################################
+server {
+    listen 35593;
+    server_name graphion.uddi.ng;
+
+    ssl on;
+    ssl_certificate /etc/letsencrypt/live/graphion.uddi.ng/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/graphion.uddi.ng/privkey.pem;
+
+    location / {
+        include proxy_params;
+        proxy_pass http://127.0.0.1:35593;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_http_version 1.1;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $host:$server_port;
+        proxy_buffering off;
+    }
+}
+################################################################################
+server {
+    listen 43823;
+    server_name graphion.uddi.ng;
+
+    ssl on;
+    ssl_certificate /etc/letsencrypt/live/graphion.uddi.ng/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/graphion.uddi.ng/privkey.pem;
+
+    location / {
+        include proxy_params;
+        proxy_pass http://127.0.0.1:43823;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_http_version 1.1;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $host:$server_port;
+        proxy_buffering off;
+    }
+}
+################################################################################
+server {
+    listen 36027;
+    server_name graphion.uddi.ng;
+
+    ssl on;
+    ssl_certificate /etc/letsencrypt/live/graphion.uddi.ng/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/graphion.uddi.ng/privkey.pem;
+
+    location / {
+        include proxy_params;
+        proxy_pass http://127.0.0.1:36027;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_http_version 1.1;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $host:$server_port;
+        proxy_buffering off;
+    }
+}
+################################################################################
+server {
+    listen 45245;
+    server_name graphion.uddi.ng;
+
+    ssl on;
+    ssl_certificate /etc/letsencrypt/live/graphion.uddi.ng/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/graphion.uddi.ng/privkey.pem;
+
+    location / {
+        include proxy_params;
+        proxy_pass http://127.0.0.1:45245;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_http_version 1.1;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $host:$server_port;
+        proxy_buffering off;
+    }
+}
+################################################################################

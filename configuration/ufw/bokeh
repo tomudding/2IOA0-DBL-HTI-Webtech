@@ -1,0 +1,4 @@
+[Bokeh]
+title=Bokeh Server Ports
+description=List of ports on which the Bokeh server is listening
+ports=35593,43823,36027,45245/tcp|35593,43823,36027,45245/udp

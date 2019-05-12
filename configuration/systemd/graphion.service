@@ -1,0 +1,14 @@
+[Unit]
+Description=Gunicorn instance to serve graphion
+After=network.target
+
+[Service]
+User=webserver
+Group=www-data
+WorkingDirectory=/home/webserver/2IOA0/graphion
+Environment="PATH=/home/webserver/anaconda3/envs/2ioa0/bin"
+# --bind 0.0.0.0:5000
+ExecStart=/home/webserver/anaconda3/envs/2ioa0/bin/gunicorn --workers 9 --bind 127.0.0.1:5000 --timeout 120 --log-file /home/webserver/2IOA0/logs/gunicorn.log -m 0700 graphion:server
+
+[Install]
+WantedBy=multi-user.target
