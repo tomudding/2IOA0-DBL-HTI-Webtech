@@ -15,10 +15,8 @@ visualiseBlueprint = Blueprint('visualiseBlueprint', __name__, template_folder='
 def visualise(file=None):
     if file is None:
         return redirect('/selection')
-    global file_global
-    file_global = file
-    script = server_document('http://localhost:%d/bkapp' % server.config['PORT'], relative_urls=False, resources=None)
+    script = server_document('http://localhost:%d/bkapp' % server.config['PORT'], relative_urls=False, resources=None, arguments={'file': file})
     return render_template('visualise.html', fileName=file, script=script)
 
 def modify_doc(doc):
-    doc.add_root(generateBokehApp(doc, file_global))
+    doc.add_root(generateBokehApp(doc))

@@ -10,8 +10,8 @@ from graphion.graphing.matrix.protomatrix import makeMatrix
 import os
 import panel as pn
 
-def generateBokehApp(doc, file):
-    path = getFilePath(file)
+def generateBokehApp(doc):
+    path = getFilePath(str(doc.session_context.request.arguments['file'][0].decode('utf-8')))
     # Put parameters in panel with param to change direction and type of graph.
     pane = pn.Row(makeMatrix(path), generateGraph(path))
     return pane.get_root(doc)
