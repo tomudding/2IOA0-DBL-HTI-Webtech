@@ -33,10 +33,7 @@ Edited: 2019-05-10
 		<section class="body-wrapper">
 			<div class="container">
 				<div class="row">
-					<div class="col-s-12">
-						{{ script|safe }}
-					</div>
-					<!-- <div class="col-s-6" id="nodelink">
+					<div class="col-s-6" id="nodelink">
 						<p id="nodelink-text">Loading nodelink diagram...</p>
 						<div id="nodelink-load"><canvas id = "nodelink-loading"></canvas></div>
 						<div id="nodelink-plot"></div>
@@ -45,46 +42,68 @@ Edited: 2019-05-10
 						<p id="matrix-text">Loading matrix...</p>
 						<div id="matrix-load"><canvas id = "matrix-loading"></canvas></div>
 						<div id="matrix-plot"></div>
-					</div> -->
+					</div>
+					<script>
+						var canvas = document.getElementById('nodelink-loading');
+						var context = canvas.getContext('2d');
+						var div = document.getElementById("nodelink");
+						var width = div.clientWidth - 5;
+						var height = (div.clientHeight * 4) - 5;
+						canvas.width = width;
+						canvas.height = height;
+						var graph = {velocity : 1, minRadius : 2, maxRadius : 5, bounce : true, connectDistance : 200, dots : width * height / (100 * 100), lineWidth : 2};
+						window.requestAnimFrame = (function(){ return  window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || function( callback ){ window.setTimeout(callback, 1000 / 60);};})();
+						function random(min, max){if(min > max){ min = [max, max = min][0];} return Math.random()*(max - min + 1) + min;}
+						function round(x){return Math.round(x);}
+						function drawBackground(){context.beginPath(); context.rect(0, 0, width, height); context.fillStyle = "rgba(255, 255, 255, 1)"; context.fill();}
+						function distance(dotA, dotB){var dX = dotA.x - dotB.x; var dY = dotA.y - dotB.y; return Math.sqrt(dX * dX + dY * dY);}
+						function line(dotA, dotB){var gradient = context.createLinearGradient(dotA.x, dotA.y, dotB.x, dotB.y); gradient.addColorStop(0, dotA.color); gradient.addColorStop(1, dotB.color); context.strokeStyle = gradient; context.lineWidth = graph.lineWidth; context.lineCap = "round"; context.beginPath(); context.moveTo(dotA.x, dotA.y); context.lineTo(dotB.x, dotB.y); context.stroke();}
+						function Dot(){this.r = random(graph.minRadius, graph.maxRadius); this.vx = random(-3,3); this.vy = random(-3,3); this.x = random(0, width); this.y = random(0, height); this.color = "rgb("+[round(random(100,220)), round(random(100,220)), round(random(100,220))].join() +")"; this.update = function(){this.x += this.vx * graph.velocity; this.y += this.vy * graph.velocity; if(graph.bounce){if(this.x > width) this.vx*=-1.0; if(this.y > height) this.vy*=-1.0; if(this.x < 0) this.vx*=-1.0; if(this.y < 0) this.vy*=-1.0;} else {if(this.x > width) this.x -= width; if(this.y > height) this.y -= height; if(this.x < 0) this.x += width; if(this.y < 0) this.y += height;}}; this.draw = function(){context.fillStyle = this.color; context.beginPath(); context.arc(this.x, this.y, this.r, 0, 2*Math.PI); context.fill();}; this.connect = function(i){for (var j = i; j < dots.length; j++){if(distance(this, dots[j])<graph.connectDistance){line(this, dots[j]);}}};}
+						function createDots(){dots=[]; for (var i = 0; i < graph.dots; i++){dots.push(new Dot());}}
+						function draw(){
+							drawBackground(); 
+							dots.forEach(function(dot){dot.update();}); 
+							dots.forEach(function(dot){dot.draw();}); 
+							dots.forEach(function(dot, i){
+								dot.connect(i);
+							}); 
+							if(document.getElementsByClassName('bk bk-canvas-events').length > 0){
+								div.remove();
+							} else {
+								requestAnimFrame(draw);
+							}
+						};
+						var dots=[]; createDots(); draw();
+							
+						var matrixCanvas = document.getElementById("matrix-loading");
+						var matrixContext = matrixCanvas.getContext('2d');
+						var matrixDiv = document.getElementById("matrix");
+						var matrixWidth = matrixDiv.clientWidth - 5;
+						var matrixHeight = (matrixDiv.clientHeight) - 5;
+						matrixCanvas.width = matrixWidth;
+						matrixCanvas.height = matrixHeight;
+						var matrix = {velocity : 1, minSize : 20, maxSize : 50, bounce : true, squares : (matrixWidth * matrixHeight) / (100 * 100)};
+						function drawMatrixBackground(){matrixContext.beginPath(); matrixContext.rect(0, 0, matrixWidth, matrixHeight); matrixContext.fillStyle = "rgba(255, 255, 255, 1)"; matrixContext.fill();}
+						function Square(){this.size = random(matrix.minSize, matrix.maxSize); this.vx = random(-3, 3); this.vy = random(3, -3); this.x = random(0, matrixWidth); this.y = random(0, matrixHeight); this.color = "rgb(" + [round(random(100, 220)), round(random(100, 220)), round(random(100, 220))].join() + ")"; this.update = function(){this.x += this.vx * matrix.velocity; this.y += this.vy * matrix.velocity; if(matrix.bounce){if(this.x > matrixWidth) this.vx*=-1.0; if(this.y > matrixHeight) this.vy*=-1.0; if(this.x < 0) this.vx*=-1.0; if(this.y < 0) this.vy*=-1.0;} else {if(this.x > matrixWidth) this.x -= matrixWidth; if(this.y > matrixHeight) this.y -= matrixHeight; if(this.x < 0) this.x += matrixWidth; if(this.y < 0) this.y += matrixHeight;}}; this.draw = function(){matrixContext.fillStyle = this.color; matrixContext.fillRect(this.x, this.y, this.size, this.size);};}
+						function createSquares(){squares = []; for (var i = 0; i < graph.dots; i++){squares.push(new Square());}}
+						function drawMatrix(){
+							drawMatrixBackground(); 
+							squares.forEach(function(square){square.update();}); 
+							squares.forEach(function(square){square.draw();});
+							if(document.getElementsByClassName('bk bk-canvas-events').length > 0){
+								matrixDiv.remove();
+							} else {
+								requestAnimFrame(drawMatrix)
+							}
+						};
+						var squares = []; createSquares(); drawMatrix();
+						window.onresize=function(){width = div.clientWidth - 5; height = (div.clientHeight * 4) - 5; canvas.width = width; canvas.height = height; matrixWidth = matrixDiv.clientWidth - 5; matrixHeight = (matrixDiv.clientHeight * 4) - 5; matrixCanvas.width = matrixWidth; matrixCanvas.height = matrixHeight}
+					</script>
+					<div class="col-s-12">
+						{{ script|safe }}
+					</div>
 				</div>
 			</div>
 		</section>
 	</body>
-	<script>
-		//fetch('/api/nodelink/radial/directed/{{ fileName }}').then(function(response) { document.getElementById('nodelink-text').innerHTML = 'Loaded!'; document.getElementById("nodelink-load").style.display = "none"; return response.json(); }).then(function(item) { Bokeh.embed.embed_item(item, "nodelink-plot"); });
-		//fetch('/api/matrix/matrix/{{ fileName }}').then(function(response) { document.getElementById('matrix-text').innerHTML = 'Loaded!'; document.getElementById("matrix-load").style.display = "none"; return response.json(); }).then(function(item) { Bokeh.embed.embed_item(item, "matrix-plot"); });
-		var canvas = document.getElementById('nodelink-loading');
-		var context = canvas.getContext('2d');
-		var div = document.getElementById("nodelink");
-		var width = div.clientWidth - 5;
-		var height = (div.clientHeight * 4) - 5;
-		canvas.width = width;
-		canvas.height = height;
-		var graph = {velocity : 1, minRadius : 2, maxRadius : 5, bounce : true, connectDistance : 200, dots : width * height / (100 * 100), lineWidth : 2};
-		window.requestAnimFrame = (function(){ return  window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || function( callback ){ window.setTimeout(callback, 1000 / 60);};})();
-		function random(min, max){if(min > max){ min = [max, max = min][0];} return Math.random()*(max - min + 1) + min;}
-		function round(x){return Math.round(x);}
-		function drawBackground(){context.beginPath(); context.rect(0, 0, width, height); context.fillStyle = "rgba(255, 255, 255, 1)"; context.fill();}
-		function distance(dotA, dotB){var dX = dotA.x - dotB.x; var dY = dotA.y - dotB.y; return Math.sqrt(dX * dX + dY * dY);}
-		function line(dotA, dotB){var gradient = context.createLinearGradient(dotA.x, dotA.y, dotB.x, dotB.y); gradient.addColorStop(0, dotA.color); gradient.addColorStop(1, dotB.color); context.strokeStyle = gradient; context.lineWidth = graph.lineWidth; context.lineCap = "round"; context.beginPath(); context.moveTo(dotA.x, dotA.y); context.lineTo(dotB.x, dotB.y); context.stroke();}
-		function Dot(){this.r = random(graph.minRadius, graph.maxRadius); this.vx = random(-3,3); this.vy = random(-3,3); this.x = random(0, width); this.y = random(0, height); this.color = "rgb("+[round(random(100,220)), round(random(100,220)), round(random(100,220))].join() +")"; this.update = function(){this.x += this.vx * graph.velocity; this.y += this.vy * graph.velocity; if(graph.bounce){if(this.x > width) this.vx*=-1.0; if(this.y > height) this.vy*=-1.0; if(this.x < 0) this.vx*=-1.0; if(this.y < 0) this.vy*=-1.0;} else {if(this.x > width) this.x -= width; if(this.y > height) this.y -= height; if(this.x < 0) this.x += width; if(this.y < 0) this.y += height;}}; this.draw = function(){context.fillStyle = this.color; context.beginPath(); context.arc(this.x, this.y, this.r, 0, 2*Math.PI); context.fill();}; this.connect = function(i){for (var j = i; j < dots.length; j++){if(distance(this, dots[j])<graph.connectDistance){line(this, dots[j]);}}};}
-		function createDots(){dots=[]; for (var i = 0; i < graph.dots; i++){dots.push(new Dot());}}
-		function draw(){drawBackground(); dots.forEach(function(dot){dot.update();}); dots.forEach(function(dot){dot.draw();}); dots.forEach(function(dot, i){dot.connect(i);}); requestAnimFrame(draw);}
-		var dots=[]; createDots(); draw();
-
-		var matrixCanvas = document.getElementById("matrix-loading");
-		var matrixContext = matrixCanvas.getContext('2d');
-		var matrixDiv = document.getElementById("matrix");
-		var matrixWidth = matrixDiv.clientWidth - 5;
-		var matrixHeight = (matrixDiv.clientHeight) - 5;
-		matrixCanvas.width = matrixWidth;
-		matrixCanvas.height = matrixHeight;
-		var matrix = {velocity : 1, minSize : 20, maxSize : 50, bounce : true, squares : (matrixWidth * matrixHeight) / (100 * 100)};
-		function drawMatrixBackground(){matrixContext.beginPath(); matrixContext.rect(0, 0, matrixWidth, matrixHeight); matrixContext.fillStyle = "rgba(255, 255, 255, 1)"; matrixContext.fill();}
-		function Square(){this.size = random(matrix.minSize, matrix.maxSize); this.vx = random(-3, 3); this.vy = random(3, -3); this.x = random(0, matrixWidth); this.y = random(0, matrixHeight); this.color = "rgb(" + [round(random(100, 220)), round(random(100, 220)), round(random(100, 220))].join() + ")"; this.update = function(){this.x += this.vx * matrix.velocity; this.y += this.vy * matrix.velocity; if(matrix.bounce){if(this.x > matrixWidth) this.vx*=-1.0; if(this.y > matrixHeight) this.vy*=-1.0; if(this.x < 0) this.vx*=-1.0; if(this.y < 0) this.vy*=-1.0;} else {if(this.x > matrixWidth) this.x -= matrixWidth; if(this.y > matrixHeight) this.y -= matrixHeight; if(this.x < 0) this.x += matrixWidth; if(this.y < 0) this.y += matrixHeight;}}; this.draw = function(){matrixContext.fillStyle = this.color; matrixContext.fillRect(this.x, this.y, this.size, this.size);};}
-		function createSquares(){squares = []; for (var i = 0; i < graph.dots; i++){squares.push(new Square());}}
-		function drawMatrix(){drawMatrixBackground(); squares.forEach(function(square){square.update();}); squares.forEach(function(square){square.draw();});requestAnimFrame(drawMatrix);}
-		var squares = []; createSquares(); drawMatrix();
-		window.onresize=function(){width = div.clientWidth - 5; height = (div.clientHeight * 4) - 5; canvas.width = width; canvas.height = height; matrixWidth = matrixDiv.clientWidth - 5; matrixHeight = (matrixDiv.clientHeight * 4) - 5; matrixCanvas.width = matrixWidth; matrixCanvas.height = matrixHeight}
-	</script>
 </html>
