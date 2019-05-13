@@ -3,9 +3,20 @@ Author(s): Tom Udding
 Created: 2019-04-29
 Edited: 2019-05-05
 """
-import os
 from flask import Flask
 server = Flask(__name__)
+
+# server needs to be defined before importing everything else
+from asyncio import set_event_loop, new_event_loop
+from bokeh.application import Application
+from bokeh.application.handlers import FunctionHandler
+from bokeh.server.server import BaseServer
+from bokeh.server.tornado import BokehTornado
+from bokeh.server.util import bind_sockets
+from os import mkdir
+from os.path import isdir
+from tornado.httpserver import HTTPServer
+from tornado.ioloop import IOLoop
 
 # constants
 UPLOAD_FOLDER = 'uploads'               #
@@ -36,5 +47,26 @@ server.register_blueprint(selectionBlueprint)
 server.register_blueprint(visualiseBlueprint)
 
 # other stuff
-if (not os.path.isdir(server.config['UPLOAD_FOLDER'])):
-    os.mkdir(server.config['UPLOAD_FOLDER'])
+if (not isdir(server.config['UPLOAD_FOLDER'])):
+    mkdir(server.config['UPLOAD_FOLDER'])
+
+# start Bokeh server
+sockets, port = bind_sockets("localhost", 0)
+server.config['PORT'] = port
+
+from graphion.visualise import modify_doc
+bkapp = Application(FunctionHandler(modify_doc))
+
+def bk_worker():
+    set_event_loop(new_event_loop())
+
+    bokeh_tornado = BokehTornado({'/bkapp': bkapp}, extra_websocket_origins=["localhost:5000"])
+    bokeh_http = HTTPServer(bokeh_tornado)
+    bokeh_http.add_sockets(sockets)
+
+    server = BaseServer(IOLoop.current(), bokeh_tornado, bokeh_http)
+    server.start()
+    server.io_loop.start()
+
+from threading import Thread
+Thread(target=bk_worker).start()
