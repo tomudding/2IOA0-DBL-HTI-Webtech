@@ -248,7 +248,7 @@ a, a:visited, a:hover, a:focus {
 .bb-n025 {
     font-size: 1.25rem;
     margin-top: 23vh;
-    display: block;
+    display: inline-block;
     letter-spacing: 5px;
 
 }
