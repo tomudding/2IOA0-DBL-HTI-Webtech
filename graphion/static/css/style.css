@@ -1,7 +1,7 @@
 /**
  * Author(s): Tom Udding, Anton Vellikok
  * Created: 2019-04-29
- * Edited: 2019-05-10
+ * Edited: 2019-05-14
  */
 
 /*######################
@@ -43,7 +43,7 @@ a, a:visited, a:hover, a:focus {
   ######################*/
 .header {
 	background-color: white;
-	height: 7vh;
+	height: 50px;
     width: 100%;
     display: inline-block;
     position: fixed;
@@ -64,9 +64,9 @@ a, a:visited, a:hover, a:focus {
 }
 
 .logo-container img {
-	height: 5vh;
+	height: 40px;
     margin-left: 10vw;
-    margin-top: 1vh;
+    margin-top: 5px;
 }
 
 .logo-text-container {
@@ -74,7 +74,7 @@ a, a:visited, a:hover, a:focus {
     float: left;
     display: block;
     margin-left: 10px;
-    margin-top: 0.5vh;
+    margin-top: 5px;
 }
 
 .logo-text {
@@ -89,7 +89,8 @@ a, a:visited, a:hover, a:focus {
 }
 
 .header-buttons-container {
-	height: 100%;
+    height: 100%;
+    float: right;
 }
 
 .header-button,
@@ -133,7 +134,7 @@ a, a:visited, a:hover, a:focus {
     display: none;
     height: 40px;
     margin: 0 auto;
-    margin-top: 1vh;
+    margin-top: 5px;
     text-align: center;
     float: none;
 }
@@ -246,8 +247,8 @@ a, a:visited, a:hover, a:focus {
 
 .bb-n025 {
     font-size: 1.25rem;
-    margin-top: 30vh;
-    display: inline-block;
+    margin-top: 23vh;
+    display: block;
     letter-spacing: 5px;
 
 }
@@ -325,12 +326,12 @@ a, a:visited, a:hover, a:focus {
   #####  TEAM PAGE  ####
   ######################*/
 #meet-the-team {
-    height: 100vh;
+    height: 93vh;
 }
 
 #team-text {
     text-align: left;
-    margin-top: 0vh;
+    margin: 0 auto;
     margin-left: 5vw;
     font-size: 4.0625rem;
     letter-spacing: 15px;
@@ -340,7 +341,7 @@ a, a:visited, a:hover, a:focus {
 
 .row {
     text-align: center;
-    display: inline-block;
+    display: block;
     margin-left: 5vw;
     margin-right: 5vw;
 }
@@ -360,7 +361,7 @@ a, a:visited, a:hover, a:focus {
 .photo-and-name p {
     font-size: 0.9375rem;
     color: #5D5C60;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .photo-and-name:hover {
@@ -368,18 +369,16 @@ a, a:visited, a:hover, a:focus {
 }
 
 .photo-and-name img {
-    width: 220px;
-    height: 220px;
-    margin-top: 20px;
-    margin-left: 20px;
-    margin-right: 20px;
+    height: 230px;
+    width: 230px;
+    margin-top: 10px;
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 1300px) {
     .photo-and-name {
         width: calc(100% / 3);
     }  #meet-the-team {
-        height: 980px;
+        height: 900px;
     }  .photo-and-name img {
         width: 190px;
         height: 190px;
@@ -390,7 +389,7 @@ a, a:visited, a:hover, a:focus {
     .photo-and-name {
         width: calc(100% / 2);
     }  #meet-the-team {
-        height: 1400px;
+        height: 1250px;
     }
 }
 
@@ -398,7 +397,7 @@ a, a:visited, a:hover, a:focus {
     .photo-and-name {
         width: calc(100% / 1);
     }  #meet-the-team {
-        height: 2200px;
+        height: 2150px;
     }
 }
 
@@ -482,6 +481,8 @@ a, a:visited, a:hover, a:focus {
     color: white;
     height: 100vh;
     line-height: 25px;
+    position: relative;
+    clear: both;
 }
 
 #report-text {
@@ -498,12 +499,20 @@ a, a:visited, a:hover, a:focus {
     letter-spacing: 5px;
     color: rgb(67, 66, 68);
     font-weight: bold;
+    margin-top: 5vh;
 }
 
 #report-abstract {
     font-size: 0.75rem;
     font-weight: normal;
     color: #5D5C60;
+    text-align: justify;
+}
+
+#report-abstract:after {
+    content: "";
+    display: inline-block;
+    width: 100%;
 }
 
 #report-left-side {
@@ -512,7 +521,7 @@ a, a:visited, a:hover, a:focus {
 }
 
 .download-report-button-div {
-	margin-top: 5vh;
+	margin-top: 2vh;
 }
 
 .download-report-button {
@@ -540,7 +549,7 @@ a, a:visited, a:hover, a:focus {
     background-color: rgb(51, 51, 51);
 }
 
-div.report-right-side {
+.report-right-side {
     width: calc(500px + 10vw);
     float: right;
     position: -webkit-sticky;
@@ -579,4 +588,7 @@ div.report-right-side {
     color: #5D5C60;
     margin: 0 auto;
     text-align: center;
+    position: relative;
+    clear: both;
 }
+
