@@ -10,6 +10,7 @@ dependencies:
   - backcall=0.1.0=py36_0
   - blas=1.0=mkl
   - bleach=3.1.0=py36_0
+  - blosc=1.16.3=h6538335_0
   - bokeh=1.1.0=py36_0
   - bzip2=1.0.6=hfa6e2cd_5
   - ca-certificates=2019.3.9=hecc5488_0
@@ -106,6 +107,7 @@ dependencies:
   - mkl=2019.3=203
   - mkl_fft=1.0.10=py36h14836fe_0
   - mkl_random=1.0.2=py36h343c172_0
+  - mock=3.0.5=py36_0
   - msgpack-python=0.6.1=py36h74a9793_1
   - msys2-conda-epoch=20160418=1
   - multipledispatch=0.6.0=py36_0
@@ -116,6 +118,7 @@ dependencies:
   - networkx=2.3=py_0
   - notebook=5.7.8=py36_0
   - numba=0.43.1=py36hf9181ef_0
+  - numexpr=2.6.9=py36h6538335_1000
   - numpy=1.16.3=py36h19fb1c0_0
   - numpy-base=1.16.3=py36hc3f5095_0
   - olefile=0.46=py36_0
@@ -154,6 +157,7 @@ dependencies:
   - pyrsistent=0.14.11=py36he774522_0
   - pyshp=2.1.0=py_0
   - pysocks=1.6.8=py36_0
+  - pytables=3.5.1=py36hb9ab341_1
   - python=3.6.8=h9f7ef89_7
   - python-dateutil=2.8.0=py36_0
   - python-snappy=0.5.4=py36ha925a31_0
