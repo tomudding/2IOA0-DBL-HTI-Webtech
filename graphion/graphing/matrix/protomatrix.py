@@ -11,12 +11,13 @@ import hvplot.pandas
 from colorcet import palette
 from scipy.spatial.distance import pdist, squareform
 from fastcluster import linkage
+from pandas import read_hdf
 
 # Graphion imports
 from graphion.graphing.parser import processCSVMatrix
 
 def makeMatrix(file):
-    df = processCSVMatrix(file)
+    df = read_hdf(file)
     names = df.columns.tolist()
     if (len(names) > 150):
         df = df.head(150)[names[0:150]]

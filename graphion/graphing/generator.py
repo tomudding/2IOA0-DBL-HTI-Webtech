@@ -1,7 +1,7 @@
 """
 Author(s): Tom Udding
 Created: 2019-05-03
-Edited: 2019-05-04
+Edited: 2019-05-15
 """
 from graphion import server
 from graphion.graphing.nodelink.graph import generateGraph, generate3D
@@ -18,5 +18,5 @@ def generateBokehApp(doc):
     return pane.get_root(doc)
 
 def getFilePath(file):
-    file = file + '.csv'
+    file = file + '.h5'
     return os.path.join(server.config['UPLOAD_FOLDER'], file)

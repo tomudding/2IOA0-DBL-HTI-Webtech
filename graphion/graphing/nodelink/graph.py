@@ -1,23 +1,23 @@
 """
 Author(s): Tom Udding, Steven van den Broek
 Created: 2019-05-03
-Edited: 2019-05-13
+Edited: 2019-05-15
 """
 from bokeh.plotting import reset_output
-from holoviews.element.graphs import Graph
-from holoviews import opts, renderer, extension
-from networkx.drawing.layout import circular_layout
 from graphion.graphing.parser import processCSVMatrix
-from holoviews import opts
+from holoviews import opts, renderer, extension
+from holoviews.element.graphs import Graph
 import networkx as nx
 from networkx import from_pandas_adjacency
-import panel as pn
+from networkx.drawing.layout import circular_layout
 import numpy as np
+from pandas import read_hdf
+import panel as pn
 import plotly.graph_objs as go
 
 # Generate graph
 def generateGraph(file):
-    df = processCSVMatrix(file)
+    df = read_hdf(file)
     names = df.columns
     # submatrix for quicker development
     if (len(names) > 150):
@@ -36,7 +36,7 @@ def generateGraph(file):
 
 # Generate 3D graph
 def generate3D(file):
-    df = processCSVMatrix(file)
+    df = read_hdf(file)
     names = df.columns.tolist()
     # submatrix for quicker development
 

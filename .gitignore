@@ -3,4 +3,5 @@ __pycache__/
 *.egg
 *.vscode
 uploads/
+temp/
 .ipynb_checkpoints

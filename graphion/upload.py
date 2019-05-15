@@ -1,11 +1,12 @@
 """
 Author(s): Tom Udding
 Created: 2019-05-01
-Edited: 2019-05-01
+Edited: 2019-05-15
 """
 import os, secrets
 from flask import flash, request, redirect, url_for
 from graphion import server
+from graphion.graphing.parser import processCSVMatrix
 from werkzeug.utils import secure_filename
 
 def allowed_file(filename):
@@ -23,12 +24,9 @@ def upload_file():
             return redirect('/selection')
         if file and allowed_file(file.filename):
             fileUniqueHash = secrets.token_hex(server.config['TOKEN_SIZE'])
-            fileName = fileUniqueHash + '.' + file.filename.split('.')[-1]
-            fileNameInfo = fileUniqueHash + '.info'
-            file.save(os.path.join(server.config['UPLOAD_FOLDER'], fileName))
+            file.save(os.path.join(server.config['TEMP_FOLDER'], (fileUniqueHash + '.csv')))
             fileOriginalName = secure_filename(file.filename)
-            fileOriginalInformation = open(os.path.join(server.config['UPLOAD_FOLDER'], fileNameInfo), 'w')
-            fileOriginalInformation.write(fileOriginalName)
-            fileOriginalInformation.close()
+            df = processCSVMatrix(os.path.join(server.config['TEMP_FOLDER'], (fileUniqueHash + '.csv')))
+            df.to_hdf(os.path.join(server.config['UPLOAD_FOLDER'], (fileUniqueHash + '.h5')), fileOriginalName)
             return redirect('/visualise/' + fileUniqueHash)
     return redirect('/selection')
