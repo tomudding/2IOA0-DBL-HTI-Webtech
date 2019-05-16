@@ -1,7 +1,7 @@
 """
-Author(s): Tom Udding, Steven van den Broek
+Author(s): Tom Udding, Steven van den Broek, Yuqing Zeng
 Created: 2019-05-03
-Edited: 2019-05-15
+Edited: 2019-05-16
 """
 from bokeh.plotting import reset_output
 from graphion.graphing.parser import processCSVMatrix
@@ -10,18 +10,42 @@ from holoviews.element.graphs import Graph
 import networkx as nx
 from networkx import from_pandas_adjacency
 from networkx.drawing.layout import circular_layout
+from networkx.drawing.nx_agraph import graphviz_layout
 import numpy as np
 from pandas import read_hdf
 import panel as pn
 import plotly.graph_objs as go
 
-# Generate graph
-def generateGraph(file):
-    df = read_hdf(file)
+# Function to decrease the size of the submatrix
+def decreaseDiagramSize(file):
+    df = read_hdf(file) # !!! TODO: Change implementation, reads whole file into memory, will work for the test datasets but not for larger datasets
     names = df.columns
     # submatrix for quicker development
     if (len(names) > 150):
         df = df.head(150)[names[0:150]]
+    return df
+
+# Generate a hierarchical node-link diagram
+def generateHierarchicalDiagram(file):
+    df = decreaseDiagramSize(file)
+    # set defaults for HoloViews
+    extension('bokeh')
+    renderer('bokeh').webgl = True
+    reset_output()
+    defaults = dict(width=400, height=400, padding=0.1)
+    opts.defaults(opts.EdgePaths(**defaults), opts.Graph(**defaults), opts.Nodes(**defaults))
+
+    G = from_pandas_adjacency(df)
+    cutoff = 2 #adjust this parameter to filter edges
+    SG = nx.Graph([(u, v, d) for u, v, d in G.edges(data=True) if d['weight'] > cutoff])
+
+    graph = Graph.from_networkx(SG, positions = nx.nx_agraph.graphviz_layout(SG, prog ='dot')).opts(directed=isDirected, width=600, height=600, arrowhead_length=0.0005)
+    # Make a panel and widgets with param for choosing a layout
+    return pn.Column(graph)
+
+# Generate a radial node-link diagram
+def generateRadialDiagram(file):
+    df = decreaseDiagramSize(file)
     # set defaults for HoloViews
     extension('bokeh')
     renderer('bokeh').webgl = True
@@ -35,13 +59,8 @@ def generateGraph(file):
     return pn.Column(graph)
 
 # Generate 3D graph
-def generate3D(file):
-    df = read_hdf(file)
-    names = df.columns.tolist()
-    # submatrix for quicker development
-
-    if (len(names) > 150):
-        df = df.head(150)[names[0:150]]
+def generate3DDiagram(file):
+    df = decreaseDiagramSize(file)
     names = df.columns.tolist()
     N = len(names)
 

@@ -1,10 +1,10 @@
 """
-Author(s): Tom Udding
+Author(s): Tom Udding, Steven van den Broek
 Created: 2019-05-03
-Edited: 2019-05-15
+Edited: 2019-05-16
 """
 from graphion import server
-from graphion.graphing.nodelink.graph import generateGraph, generate3D
+from graphion.graphing.nodelink.graph import generateHierarchicalDiagram, generateRadialDiagram, generate3DDiagram
 from graphion.graphing.matrix.protomatrix import makeMatrix
 
 import os
@@ -14,7 +14,7 @@ def generateBokehApp(doc):
     path = getFilePath(str(doc.session_context.request.arguments['file'][0].decode('utf-8')))
     # Put parameters in panel with param to change direction and type of graph.
     pn.extension('plotly')
-    pane = pn.Row(makeMatrix(path), generateGraph(path), generate3D(path))
+    pane = pn.Row(makeMatrix(path), generateRadialDiagram(path), generateHierarchicalDiagram(path))
     return pane.get_root(doc)
 
 def getFilePath(file):
