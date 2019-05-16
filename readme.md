@@ -3,6 +3,43 @@
 ~~The website can be accessed through [http://188.166.103.95:5000/](http://188.166.103.95:5000/).~~
 Please follow the steps under **DOCUMENTATION** for more information on how to locally run graphion.
 
+## DEADLINES
+Given project deadlines:
+
+| Task                   | Deadline date |
+-------------------------|----------------
+| Interim video          | 24th of May  |
+| Interim report         | 24th of May  |
+| Nearly final tool      | 12th of June |
+| Final tool/report/video| 21st of June |
+
+Our own deadlines:
+
+| Task                              | Deadline date |
+------------------------------------|----------------
+| Draft of interim report           | 20th of May   |
+| Filming video                     | 22nd of May   |
+| Checking interim report           | 24th of May   |
+| Editing video                     | 24th of May   |
+------------------------------------|----------------
+| Filtering page v1                 | 31st of May   |
+| Visualization page v1             | 31st of May   |
+| Visualizations/interactions v1    | 31st of May   |
+------------------------------------|----------------
+| Filtering page v2                 | 7th of June   |
+| Visualization page v2             | 7th of June   |
+| Visualizations/interactions v2    | 7th of June   |
+------------------------------------|----------------
+| Filtering page v3                 | 14th of June  |
+| Visualization page v3             | 14th of June  |
+| Visualizations/interactions v3    | 14th of June  |
+| Filming video                     | 14th of June  |
+| Draft of final report             | 14th of June  |
+------------------------------------|----------------
+| Final touches on our tool         | 21st of June  |
+| Editing video                     | 21st of June  |
+| Checking and correcting report    | 21st of June  |
+
 ## REQUIREMENTS
 Minimal requirements as described in VisProjectDescription.pdf and the kickoff slides.
 - [ ] At least **2** visual metaphors
