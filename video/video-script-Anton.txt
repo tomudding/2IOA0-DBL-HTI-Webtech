@@ -1,1 +1,7 @@
-Hi, my name is Anton. During the first two sprints I have mostly focused on the design and implementation of our website together with Sofia and Tom. This also included making the website responsive so that it would respond to the user's device's screen size and orientation. The website has been built by using standard tools like HTML, CSS and JavaScript, but no libraries have been used so far.
+Hi, my name is Anton. 
+During the first two sprints I have mostly focused on the design 
+and implementation of our website together with Sofia and Tom. 
+This also included making the website responsive so that it would
+respond to the user's device's screen size and orientation. 
+The website has been built by using standard tools like HTML, 
+CSS and JavaScript, but no libraries have been used so far.
