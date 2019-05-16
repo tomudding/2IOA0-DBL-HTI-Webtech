@@ -1,7 +1,7 @@
 """
 Author(s): Tom Udding
 Created: 2019-05-01
-Edited: 2019-05-15
+Edited: 2019-05-16
 """
 import os, secrets
 from flask import flash, request, redirect, url_for
@@ -26,10 +26,10 @@ def upload_file():
             fileUniqueHash = secrets.token_hex(server.config['TOKEN_SIZE'])
             file.save(os.path.join(server.config['TEMP_FOLDER'], (fileUniqueHash + '.csv')))
             fileOriginalName = secure_filename(file.filename)
-            fileOriginalInformation = open(os.path.join(server.config['UPLOAD_FOLDER'], fileNameInfo), 'w')
+            fileOriginalInformation = open(os.path.join(server.config['UPLOAD_FOLDER'], (fileUniqueHash + '.info')), 'w')
             fileOriginalInformation.write(fileOriginalName)
             fileOriginalInformation.close()
             df = processCSVMatrix(os.path.join(server.config['TEMP_FOLDER'], (fileUniqueHash + '.csv')))
-            df.to_hdf(os.path.join(server.config['UPLOAD_FOLDER'], (fileUniqueHash + '.h5')))
+            df.to_hdf(os.path.join(server.config['UPLOAD_FOLDER'], (fileUniqueHash + '.h5')), key=fileUniqueHash)
             return redirect('/visualise/' + fileUniqueHash)
     return redirect('/selection')

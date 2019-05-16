@@ -39,7 +39,7 @@ def generateHierarchicalDiagram(file):
     cutoff = 2 #adjust this parameter to filter edges
     SG = nx.Graph([(u, v, d) for u, v, d in G.edges(data=True) if d['weight'] > cutoff])
 
-    graph = Graph.from_networkx(SG, positions = nx.nx_agraph.graphviz_layout(SG, prog ='dot')).opts(directed=isDirected, width=600, height=600, arrowhead_length=0.0005)
+    graph = Graph.from_networkx(SG, positions = graphviz_layout(SG, prog ='dot')).opts(directed=isDirected, width=600, height=600, arrowhead_length=0.0005)
     # Make a panel and widgets with param for choosing a layout
     return pn.Column(graph)
 
