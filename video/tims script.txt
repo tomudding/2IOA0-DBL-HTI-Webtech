@@ -1,0 +1,8 @@
+I'm Tim, I did multiple smaller tasks rather than a single big focus. My biggest task was the following:
+
+When we were having trouble with Bokeh performance, I tried to do a quick and simple implementation of the assignment on a
+javascript canvas.
+This approach indeed resulted in much better performance, it was more than 20 times as fast as Bokeh although it didn't
+have many features.
+The big drawback of this approach was that we would have to program everything ourselves. We agreed that this was not
+worth the performance benefits so we didn't continue this approach.
