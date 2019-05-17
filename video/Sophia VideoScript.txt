@@ -1,0 +1,3 @@
+I'm Sophia, I am the scrum master of the team. I carry out scrum organization and I took on individual tasks.  
+Initially focused on the front end, I worked with Anton on the design of our website.
+Later I moved to the back end,  and implemented the Hierachical layout of node-link diagram as well as weight based edge filter. We filter out edges with weight outside of selected range, it is a crucial part of our data processing method, and will be further implemented as a customizable UI. 
