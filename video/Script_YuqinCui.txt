@@ -1,0 +1,4 @@
+Hi, I am Yuqin, in the project, I focused on the adjacency matrix with Steven.
+I modified and improved the adjacency matrix re-order algorithm and fix the problem 
+that the no-show of original matrix.
+Besides that, I wrote part of report, mainly in implementation of re-ordering algorithm.
