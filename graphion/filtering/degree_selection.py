@@ -28,7 +28,9 @@ def generate_selection(file, kind="degree"):
     kde = grid.best_estimator_
     log_dens = kde.score_samples(deg_plot)
     X = np.append(deg_plot[:, 0], deg_plot[:, 0][-1])
+    X = np.insert(X, 0, X[0])
     Y = np.append(np.exp(log_dens), 0)
+    Y = np.insert(Y, 0, 0)
     complete = ColumnDataSource(data=dict(x=X, y=Y))
     before = ColumnDataSource(data=dict(x=[], y=[]))
     middle = ColumnDataSource(data=dict(x=X, y=Y))
@@ -79,13 +81,19 @@ def generate_selection(file, kind="degree"):
     }
     }
     
-    bYs[0] = 0
-    bYs[bYs.length-1] = 0
-    mYs[0] = 0
-    mYs[mYs.length-1] = 0
-    aYs[0] = 0
-    aYs[aYs.length-1] = 0
-    
+    bXs.unshift(bXs[0])
+    bYs.unshift(0)
+    bXs.push(bXs[bXs.length-1])
+    bYs[bYs.length] = 0
+    mXs.unshift(mXs[0])
+    mYs.unshift(0)
+    mXs.push(mXs[mXs.length-1])
+    mYs[mYs.length] = 0
+    aXs.unshift(aXs[0])
+    aYs.unshift(0)
+    aXs.push(aXs[aXs.length-1])
+    aYs[aYs.length] = 0
+        
     before.data.x = bXs
     before.data.y = bYs
     middle.data.x = mXs
