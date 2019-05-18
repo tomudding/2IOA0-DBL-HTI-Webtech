@@ -1,5 +1,6 @@
 #%%
 from sklearn.neighbors import KernelDensity
+from sklearn.model_selection import GridSearchCV
 import numpy as np
 from bokeh.plotting import figure, show
 from bokeh.models import BoxSelectTool, Circle, CustomJS, ColumnDataSource
@@ -18,8 +19,13 @@ def generate_selection(file, kind="degree"):
         deg.append([df[name][df[name] > 0].count()])
 
     deg_plot = np.linspace(-max(deg)[0]/30, max(deg)+max(deg)[0]/30, 1000)
-
-    kde = KernelDensity(kernel="gaussian", bandwidth=1).fit(deg)
+    # Calculate 'pretty good' (since best takes a long time) bandwidth
+    grid = GridSearchCV(KernelDensity(),
+                        {'bandwidth': np.linspace(0.1, 10.0, 20)},
+                        cv=5,
+                        iid=False)  # 5-fold cross-validation
+    grid.fit(deg)
+    kde = grid.best_estimator_
     log_dens = kde.score_samples(deg_plot)
     X = np.append(deg_plot[:, 0], deg_plot[:, 0][-1])
     Y = np.append(np.exp(log_dens), 0)
@@ -98,15 +104,15 @@ def generate_selection(file, kind="degree"):
     }
     }
     
-    colored_amount = "<span style='color:red'>" + amount + "</span>"
+    colored_amount = "<span style='color:red; font-weight:bold'>" + amount + "</span>"
     if (amount < 600){
-    colored_amount = "<span style='color:orange'>" + amount + "</span>"
+    colored_amount = "<span style='color:orange; font-weight:bold'>" + amount + "</span>"
     }
     if (amount < 150){
-    colored_amount = "<span style='color:green'>" + amount + "</span>"
+    colored_amount = "<span style='color:green; font-weight:bold'>" + amount + "</span>"
     }
     
-    p.innerHTML = "Selected " + colored_amount + " nodes with degree between " + Math.ceil(geometry.x0) + " and " + Math.floor(geometry.x1)
+    p.innerHTML = "Selected " + colored_amount + " nodes with degree between " + Math.ceil(geometry.x0) + " and " + Math.floor(geometry.x1) + "."
     """)
 
     p = figure(plot_width=700, plot_height=700)

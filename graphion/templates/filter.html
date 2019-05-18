@@ -25,14 +25,15 @@ Edited: 2019-05-18
 	</head>
 	<body>
 		<h1>Filtering</h1>
-	<div id="degree-selection">Loading...</div>
+	<div id="degree-selection">Calculating best KDE bandwidth...</div>
 	<div id="degree-plot"></div>
+		<p id="between">Select nodes by dragging the mouse.</p>
 	<a href="/visualise/{{fileName}}">Go to visualization page</a>
 	</body>
 	<script>
  fetch('/api/filter/distribution/degree/{{ fileName }}').then(
  		function(response) {
- 			document.getElementById('degree-selection').innerHTML = 'Loaded!';
+ 			document.getElementById('degree-selection').setAttribute("hidden", true);
  			return response.json(); })
 		 .then(function(item) {
 		 	Bokeh.embed.embed_item(item, "degree-plot");
