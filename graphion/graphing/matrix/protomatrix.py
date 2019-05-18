@@ -13,9 +13,6 @@ from scipy.spatial.distance import pdist, squareform
 from fastcluster import linkage
 from pandas import read_hdf
 
-# Graphion imports
-from graphion.graphing.parser import processCSVMatrix
-
 def makeMatrix(file):
     df = read_hdf(file)
     names = df.columns.tolist()

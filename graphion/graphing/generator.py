@@ -14,7 +14,7 @@ def generateBokehApp(doc):
     path = getFilePath(str(doc.session_context.request.arguments['file'][0].decode('utf-8')))
     # Put parameters in panel with param to change direction and type of graph.
     pn.extension('plotly')
-    pane = pn.Row(makeMatrix(path), generateRadialDiagram(path), generateHierarchicalDiagram(path))
+    pane = pn.Row(makeMatrix(path), generateRadialDiagram(path))
     return pane.get_root(doc)
 
 def getFilePath(file):

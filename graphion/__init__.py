@@ -42,11 +42,15 @@ import graphion.upload
 from graphion.index import indexBlueprint
 from graphion.selection import selectionBlueprint
 from graphion.visualise import visualiseBlueprint
+from graphion.filter import filterBlueprint
+from graphion.api.filter.distribution import apiDegreeBlueprint
 
 # register views as blueprints
 server.register_blueprint(indexBlueprint)
 server.register_blueprint(selectionBlueprint)
 server.register_blueprint(visualiseBlueprint)
+server.register_blueprint(filterBlueprint)
+server.register_blueprint(apiDegreeBlueprint)
 
 # other stuff
 if (not isdir(server.config['UPLOAD_FOLDER'])):

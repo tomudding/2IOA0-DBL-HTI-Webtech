@@ -31,5 +31,5 @@ def upload_file():
             fileOriginalInformation.close()
             df = processCSVMatrix(os.path.join(server.config['TEMP_FOLDER'], (fileUniqueHash + '.csv')))
             df.to_hdf(os.path.join(server.config['UPLOAD_FOLDER'], (fileUniqueHash + '.h5')), key=fileUniqueHash)
-            return redirect('/visualise/' + fileUniqueHash)
+            return redirect('/filter/' + fileUniqueHash)
     return redirect('/selection')

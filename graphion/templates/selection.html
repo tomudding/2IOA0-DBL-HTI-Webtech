@@ -41,7 +41,7 @@ Edited: 2019-05-10
 										<li>No files have been uploaded</li>
 									{% else %}
 										{% for key, value in filesList.items() %}
-											<li><a href="visualise/{{ key|e }}">{{ value|e }}</a></li>
+											<li><a href="filter/{{ key|e }}">{{ value|e }}</a></li>
 										{% endfor %}
 									{% endif %}
 								</ul>
