@@ -1,9 +1,10 @@
 """
-Author(s): Tom Udding, Steven van den Broek, Yuqing Zeng
+Author(s): Tom Udding, Steven van den Broek, Yuqing Zeng, Tim van de Klundert
 Created: 2019-05-03
-Edited: 2019-05-16
+Edited: 2019-05-19
 """
 from bokeh.plotting import reset_output
+from bokeh.models import Circle
 from graphion.graphing.parser import processCSVMatrix
 from holoviews import opts, renderer, extension
 from holoviews.element.graphs import Graph
@@ -12,7 +13,7 @@ from networkx import from_pandas_adjacency
 from networkx.drawing.layout import circular_layout
 from networkx.drawing.nx_agraph import graphviz_layout
 import numpy as np
-from pandas import read_hdf
+from pandas import read_hdf, Series
 import panel as pn
 import plotly.graph_objs as go
 
@@ -46,6 +47,22 @@ def generateHierarchicalDiagram(file):
 # Generate a radial node-link diagram
 def generateRadialDiagram(file):
     df = decreaseDiagramSize(file)
+
+    node_count = df.shape[0]
+
+    degree_array = node_count * [0]
+    degree_index = 0
+    #row_index = 0
+    for _index,row in df.iterrows():
+        degree = 0
+        for value in row:
+            if value > 0:
+                degree += 1
+        degree_array[degree_index] = degree
+        degree_index += 1
+
+
+    print(df.head())
     # set defaults for HoloViews
     extension('bokeh')
     renderer('bokeh').webgl = True
@@ -54,7 +71,14 @@ def generateRadialDiagram(file):
     opts.defaults(opts.EdgePaths(**defaults), opts.Graph(**defaults), opts.Nodes(**defaults))
 
     G = from_pandas_adjacency(df)
-    graph = Graph.from_networkx(G, circular_layout).opts(directed=False, width=600, height=600, arrowhead_length=0.0005)
+
+    graph = Graph.from_networkx(G, circular_layout)
+
+    graph.nodes.data['degree'] = Series(degree_array)
+    
+    # I tried simply using node_size='degree', but if it only were that easy...
+    graph = graph.opts(opts.Graph(node_size=35, directed=True, width=600, height=600, arrowhead_length=0.05))
+    print(graph.nodes.data.head())
     # Make a panel and widgets with param for choosing a layout
     return pn.Column(graph)
 
