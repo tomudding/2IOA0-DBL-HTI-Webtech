@@ -6,19 +6,32 @@ from bokeh.plotting import figure, show
 from bokeh.models import BoxSelectTool, Circle, CustomJS, ColumnDataSource
 import pandas
 from pandas import read_hdf
+import random
 
 def generate_selection(file, kind="degree"):
+    if (kind == "degree"):
+        edges=False
+    else:
+        edges=True
+
     df = read_hdf(file)
     names = df.columns.tolist()
 
     ### BASIC DEGREE COUNTING
-    deg = []
-
-    N = len(names)
-    for name in names:
-        deg.append([df[name][df[name] > 0].count()])
-
-    deg_plot = np.linspace(-max(deg)[0]/30, max(deg)+max(deg)[0]/30, 1000)
+    if (not edges):
+        deg = []
+        for name in names:
+            deg.append([df[name][df[name] > 0].count()])
+        deg_all = deg
+    else:
+        deg_all = [[item] for sublist in df.values for item in sublist]
+        if (len(deg_all) > 1000):
+            deg = random.sample(deg_all, 1000)
+            deg.append(max(deg_all))
+            deg.append(min(deg_all))
+        else:
+            deg = deg_all
+    deg_plot = np.linspace(-max(deg)[0] / 30, max(deg) + max(deg)[0] / 30, 1000)
     # Calculate 'pretty good' (since best takes a long time) bandwidth
     grid = GridSearchCV(KernelDensity(),
                         {'bandwidth': np.linspace(0.1, 10.0, 20)},
@@ -36,17 +49,49 @@ def generate_selection(file, kind="degree"):
     middle = ColumnDataSource(data=dict(x=X, y=Y))
     after = ColumnDataSource(data=dict(x=[], y=[]))
 
-    geometry_callback = CustomJS(args=dict(complete=complete, before=before, middle=middle, after=after, degrees=[item for sublist in deg for item in sublist]), code="""
-    let p = document.getElementById('between')
+    if (not edges):
+        type_dependent = """
+            let p = document.getElementById('between-degree')
+            
+            if(!p){
+                p = document.createElement("p")
+                p.id = "between-degree"
+                document.getElementsByClassName("bk-root")[0].appendChild(p)
+            }
+            
+            let colored_amount = "<span style='color:red; font-weight:bold'>" + amount + "</span>"
+            if (amount < 600){
+                colored_amount = "<span style='color:orange; font-weight:bold'>" + amount + "</span>"
+            }
+            if (amount < 150){
+                colored_amount = "<span style='color:green; font-weight:bold'>" + amount + "</span>"
+            }
+
+            p.innerHTML = "Selected " + colored_amount + " nodes with degree between " + Math.ceil(geometry.x0) + " and " + Math.floor(geometry.x1) + "."
+        """
+    else:
+        type_dependent = """
+            let p = document.getElementById('between-weight')
+            
+            if(!p){
+                p = document.createElement("p")
+                p.id = "between-weight"
+                document.getElementsByClassName("bk-root")[0].appendChild(p)
+            }
+            
+            let colored_amount = "<span style='color:red; font-weight:bold'>" + amount + "</span>"
+            if (amount < 4000){
+                colored_amount = "<span style='color:orange; font-weight:bold'>" + amount + "</span>"
+            }
+            if (amount < 1500){
+                colored_amount = "<span style='color:green; font-weight:bold'>" + amount + "</span>"
+            }
+
+            p.innerHTML = "Selected " + colored_amount + " edges with weight between " + Math.ceil(geometry.x0*100)/100 + " and " + Math.floor(geometry.x1*100)/100 + "."
+        """
+
+    geometry_callback = CustomJS(args=dict(complete=complete, before=before, middle=middle, after=after, degrees=[item for sublist in deg_all for item in sublist]), code="""   
     let geometry = cb_data["geometry"]
-    
-    if(!p){
-    p = document.createElement("p")
-    p.id = "between"
-    document.getElementsByClassName("bk-root")[0].appendChild(p)
-    }
-    
-    
     let Xs = complete.data.x
     let Ys = complete.data.y
     
@@ -107,21 +152,11 @@ def generate_selection(file, kind="degree"):
     
     let amount = 0
     for (let i = 0; i < degrees.length; i++){
-    if (degrees[i] >= geometry.x0 && degrees[i] <= geometry.x1){
-    amount++;
+      if (degrees[i] >= geometry.x0 && degrees[i] <= geometry.x1){
+        amount++;
+      }
     }
-    }
-    
-    colored_amount = "<span style='color:red; font-weight:bold'>" + amount + "</span>"
-    if (amount < 600){
-    colored_amount = "<span style='color:orange; font-weight:bold'>" + amount + "</span>"
-    }
-    if (amount < 150){
-    colored_amount = "<span style='color:green; font-weight:bold'>" + amount + "</span>"
-    }
-    
-    p.innerHTML = "Selected " + colored_amount + " nodes with degree between " + Math.ceil(geometry.x0) + " and " + Math.floor(geometry.x1) + "."
-    """)
+    """ + type_dependent)
 
     p = figure(plot_width=700, plot_height=700)
 
@@ -132,7 +167,11 @@ def generate_selection(file, kind="degree"):
     p.patch("x", "y", source=middle, alpha=1, line_width=0, color="orange")
     p.patch("x", "y", source=after, alpha=0.3, line_width=0)
 
-    p.xaxis.axis_label = "Degree"
+    if (not edges):
+        p.xaxis.axis_label = "Degree"
+    else:
+        p.xaxis.axis_label = "Edge weight"
+
     p.yaxis.visible = False
     p.grid.visible = False
 

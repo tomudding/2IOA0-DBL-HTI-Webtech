@@ -11,8 +11,7 @@ from graphion.graphing.generator import getFilePath
 
 apiDegreeBlueprint = Blueprint('apiMatrixBlueprint', __name__, template_folder='templates')
 
-@apiDegreeBlueprint.route('/api/filter/distribution/degree/<file>', methods=['GET'], strict_slashes=False)
-@apiDegreeBlueprint.route('/api/filter/distribution/degree/', methods=['GET'], strict_slashes=False)
-def degreeAPI(file=None):
-    print("Hi")
-    return dumps(json_item(generate_selection(getFilePath(file), kind="degree")))
+@apiDegreeBlueprint.route('/api/filter/distribution/<type>/<file>', methods=['GET'], strict_slashes=False)
+@apiDegreeBlueprint.route('/api/filter/distribution/<type>/', methods=['GET'], strict_slashes=False)
+def degreeAPI(file=None, type=None):
+    return dumps(json_item(generate_selection(getFilePath(file), kind=type)))
