@@ -10,6 +10,8 @@ from os import mkdir
 from os.path import isdir
 if (not isdir('logs')):
     mkdir('logs')
+if (not isdir('graphion/api/filter/cached_plots')):
+    mkdir('graphion/api/filter/cached_plots')
 
 import logging
 logging.basicConfig(filename='logs/error.log', level=logging.DEBUG)
