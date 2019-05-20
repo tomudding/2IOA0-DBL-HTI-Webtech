@@ -27,7 +27,7 @@ TEMP_FOLDER = 'temp'
 TOKEN_SIZE = 16                         #
 ALLOWED_EXTENSIONS = set(['csv'])       #
 BUFFER_SIZE = 64000                     #
-MAX_CONTENT_LENGTH = 20 * 1024 * 1024   # limit file upload size to 20 MB
+MAX_CONTENT_LENGTH = 100 * 1024 * 1024   # limit file upload size to 20 MB
 
 # app configurations
 server.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
