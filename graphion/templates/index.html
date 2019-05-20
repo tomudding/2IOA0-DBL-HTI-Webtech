@@ -1,7 +1,7 @@
 <!--
-Author(s): Tom Udding, Anton Vellikok
+Author(s): Tom Udding, Anton Vellikok, Sam Baggen
 Created: 2019-04-29
-Edited: 2019-05-14
+Edited: 2019-05-20
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -153,41 +153,8 @@ Edited: 2019-05-14
                 <br>
                 <div id="report-abstract-title">1. Abstract</div>
                 <div id="report-abstract">
-                    This paper describes a data visualization tool for in the browser. It
-                    allows anyone with access to the site to upload data sets and visualize
-                    them in their browser using various kinds of graphs. The tool is written
-                    in Python and makes use of Bokeh and NetworkX.
-                    Before explaining more about the tool, I will briefly describe what a
-                    graph is.
-                    Graphs consist of vertices and edges. The vertices represent the ’things’
-                    the graph is about. When the graph is about people, every vertex would
-                    represent a person. The edges denote the relationships between the
-                    vertices. Every edge connects 2 vertices with each other. In a graph
-                    where the vertices are people, the edges could for instance show which
-                    people like each other.
-                    This tool can be used to create node-link diagrams and adjacency matrices.
-                    In a node-link diagram, the vertices are shown usually as small dots
-                    and the edges are shown as lines or arrows. The vertices can be located
-                    anywhere in the graph and they can often be moved around by the
-                    user to make it easier to find insights. In a node-link diagram, you can
-                    quickly see relations in your data set since human eyes are good at
-                    seeing patterns.
-                    Adjacency matrices show the vertices and graphs in a completely different
-                    way. The vertices are no longer scattered across the screen, but
-                    are placed on the left and top of the screen. Every vertex on top of the
-                    screen has its own column and every vertex on the left of the screen has
-                    its own row. Usually, all vertices appear once on the top and once on
-                    the left. This way, they create some kind of table where a small place
-                    is reserved for the (optional) connection between the vertex right above
-                    the spot and the vertex left of the spot. These spots are usually very
-                    small and are filled with a color that denotes the connection between
-                    its vertices. In simple cases, black could indicate that the vertices are
-                    connected and white could indicate that they are not.
-                    This tool lets the user upload a data set and allows the user to view the
-                    node-link diagram or adjacency matrix of that data set. These views
-                    also allow several interactions with the data set to study it more in
-                    depth. This paper will explain in more detail what exactly the tool is
-                    capable of.
+                    This paper describes our online data visualization tool. It allows anyone with access to the internet to upload data sets and visualize them in their browser using various kinds of graphs. The tool is written in Python and makes use of various packages like Bokeh, HoloViews and NetworkX.
+                    Our tool lets the user upload a data set and allows the user to view the node-link diagram and/or adjacency matrix of that data set. These views also allow several interactions with the data set to study it more in depth, like zooming and panning. Furthermore, our tool features a filtering step to let the user decide what part of the data is used to generate the visualizations and thus what the focus is of the visualizations.
                     <br>
                     <div class="download-report-button-div">
                         <a href="downloads/report.pdf" class="download-report-button" download>DOWNLOAD REPORT</a>
