@@ -6,6 +6,11 @@ Edited: 2019-05-20
 from flask import Flask
 server = Flask(__name__)
 
+from os import mkdir
+from os.path import isdir
+if (not isdir('logs')):
+    mkdir('logs')
+
 import logging
 logging.basicConfig(filename='logs/error.log', level=logging.DEBUG)
 
@@ -16,8 +21,6 @@ from bokeh.application.handlers import FunctionHandler
 from bokeh.server.server import BaseServer
 from bokeh.server.tornado import BokehTornado
 from bokeh.server.util import bind_sockets
-from os import mkdir
-from os.path import isdir
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
 
