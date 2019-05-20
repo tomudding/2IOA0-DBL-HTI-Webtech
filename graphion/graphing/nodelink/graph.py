@@ -77,7 +77,7 @@ def generateRadialDiagram(file):
     graph.nodes.data['degree'] = Series(degree_array)
     
     # I tried simply using node_size='degree', but if it only were that easy...
-    graph = graph.opts(opts.Graph(node_size=35, directed=True, width=600, height=600, arrowhead_length=0.05))
+    graph = graph.opts(opts.Graph(node_size=35, directed=False, width=600, height=600, arrowhead_length=0.0005))
     print(graph.nodes.data.head())
     # Make a panel and widgets with param for choosing a layout
     return pn.Column(graph)
