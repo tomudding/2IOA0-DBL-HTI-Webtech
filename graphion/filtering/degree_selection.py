@@ -18,6 +18,8 @@ def generate_selection(file, kind="degree", dir="in"):
     else:
         edges=True
 
+    limit = 1000
+
     df = read_hdf(file)
     names = df.columns.tolist()
 
@@ -34,8 +36,8 @@ def generate_selection(file, kind="degree", dir="in"):
     else:
         deg_all = [[item] for sublist in df.values for item in sublist]
 
-    if (len(deg_all) > 1000):
-        deg = random.sample(deg_all, 1000)
+    if (len(deg_all) > limit):
+        deg = random.sample(deg_all, limit)
         deg.append(max(deg_all))
         deg.append(min(deg_all))
     else:
