@@ -4,4 +4,5 @@ __pycache__/
 *.vscode
 uploads/
 temp/
+logs/
 .ipynb_checkpoints

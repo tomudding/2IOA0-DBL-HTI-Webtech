@@ -1,10 +1,13 @@
 """
 Author(s): Tom Udding
 Created: 2019-04-29
-Edited: 2019-05-15
+Edited: 2019-05-20
 """
 from flask import Flask
 server = Flask(__name__)
+
+import logging
+logging.basicConfig(filename='logs/error.log', level=logging.DEBUG)
 
 # server needs to be defined before importing everything else
 from asyncio import set_event_loop, new_event_loop
