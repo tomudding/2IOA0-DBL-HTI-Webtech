@@ -1,4 +1,8 @@
-#%%
+"""
+Author(s): Steven van den Broek
+Created: 2019-05-18
+Edited: 2019-05-20
+"""
 from sklearn.neighbors import KernelDensity
 from sklearn.model_selection import GridSearchCV
 import numpy as np
@@ -8,7 +12,7 @@ import pandas
 from pandas import read_hdf
 import random
 
-def generate_selection(file, kind="degree"):
+def generate_selection(file, kind="degree", dir="in"):
     if (kind == "degree"):
         edges=False
     else:
@@ -19,18 +23,23 @@ def generate_selection(file, kind="degree"):
 
     ### BASIC DEGREE COUNTING
     if (not edges):
-        deg = []
-        for name in names:
-            deg.append([df[name][df[name] > 0].count()])
-        deg_all = deg
+        deg_all = []
+        if (dir == "in"):
+            for name in names:
+                deg_all.append([df[name][df[name] > 0].count()])
+        if (dir == "out"):
+            for name in names:
+                deg_all.append([df.loc[name, : ][df.loc[name, : ] > 0].count()])
+
     else:
         deg_all = [[item] for sublist in df.values for item in sublist]
-        if (len(deg_all) > 1000):
-            deg = random.sample(deg_all, 1000)
-            deg.append(max(deg_all))
-            deg.append(min(deg_all))
-        else:
-            deg = deg_all
+
+    if (len(deg_all) > 1000):
+        deg = random.sample(deg_all, 1000)
+        deg.append(max(deg_all))
+        deg.append(min(deg_all))
+    else:
+        deg = deg_all
     deg_plot = np.linspace(-max(deg)[0] / 30, max(deg) + max(deg)[0] / 30, 1000)
     # Calculate 'pretty good' (since best takes a long time) bandwidth
     grid = GridSearchCV(KernelDensity(),
@@ -50,12 +59,11 @@ def generate_selection(file, kind="degree"):
     after = ColumnDataSource(data=dict(x=[], y=[]))
 
     if (not edges):
-        type_dependent = """
-            let p = document.getElementById('between-degree')
-            
+
+        type_dependent = "let p = document.getElementById('between-{}-degree')".format(dir) + """
             if(!p){
                 p = document.createElement("p")
-                p.id = "between-degree"
+                """ + 'p.id = "between-{}-degree"'.format(dir) + """
                 document.getElementsByClassName("bk-root")[0].appendChild(p)
             }
             
@@ -66,9 +74,8 @@ def generate_selection(file, kind="degree"):
             if (amount < 150){
                 colored_amount = "<span style='color:green; font-weight:bold'>" + amount + "</span>"
             }
+            """ + 'p.innerHTML = "Selected " + colored_amount + " nodes with {}-degree between " + Math.ceil(geometry.x0) + " and " + Math.floor(geometry.x1) + "."'.format(dir)
 
-            p.innerHTML = "Selected " + colored_amount + " nodes with degree between " + Math.ceil(geometry.x0) + " and " + Math.floor(geometry.x1) + "."
-        """
     else:
         type_dependent = """
             let p = document.getElementById('between-weight')
@@ -168,7 +175,7 @@ def generate_selection(file, kind="degree"):
     p.patch("x", "y", source=after, alpha=0.3, line_width=0)
 
     if (not edges):
-        p.xaxis.axis_label = "Degree"
+        p.xaxis.axis_label = "{}-degree".format(dir)
     else:
         p.xaxis.axis_label = "Edge weight"
 
