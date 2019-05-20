@@ -1,7 +1,7 @@
 <!--
 Author(s): Tom Udding
 Created: 2019-04-29
-Edited: 2019-05-10
+Edited: 2019-05-20
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -57,14 +57,24 @@ Edited: 2019-05-10
 							<hr>
 							<form action="/upload" method="POST" enctype="multipart/form-data">
 								<div class="row">
-									<div class="col-s-6">
+									<div class="col-s-4">
 										<label for="file-upload" class="button button-secondary">Upload File</label>
 									    <input type="file" name="file" id="file-upload" hidden>
 									</div>
-									<div class="col-s-6">
+									<div class="col-s-8">
 										<!--Text displaying the file name of the uploaded file-->
-										<span class="button-text" id="button-text-bold">File chosen:</span>
-										<span class="button-text" id="display-file-name">no file selected</span>
+										<div class="row">
+											<div class="col-s-12">
+												<span class="button-text" id="button-text-bold">File chosen:</span>
+												<span class="button-text" id="display-file-name">no file selected</span>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-s-12">
+												<span class="button-text" id="button-text-bold">File size:</span>
+												<span class="button-text" id="display-file-size">no file selected</span>
+											</div>
+										</div>
 									</div>
 								</div>
 								<div class="row">
@@ -81,12 +91,27 @@ Edited: 2019-05-10
 	</body>
 	<script>
 		var fileInputButton = document.getElementById('file-upload');
-		fileInputButton.addEventListener('change', showFileName);
+		fileInputButton.addEventListener('change', updateFileInformation);
 
-		function showFileName(event) {
+		function updateFileInformation(event) {
 			var input = event.srcElement;
 			var fileName = input.files[0].name;
+			var fileSize = input.files[0].size;
 			document.getElementById('display-file-name').textContent = fileName;
+			document.getElementById('display-file-size').textContent = beautifyNumbers(fileSize);
+		}
+
+		function beautifyNumbers(number) {
+			var output = 0;
+
+			if (number > 999 && number <= 9999) {
+				output = Number.parseFloat(number / 1000).toFixed(2) + 'KB';
+			} else if (number > 9999) {
+				output = Number.parseFloat(number / 1000000).toFixed(2) + 'MB';
+			} else {
+				output = number;
+			}
+			return output;
 		}
 	</script>
 </html>
