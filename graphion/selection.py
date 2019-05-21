@@ -16,6 +16,11 @@ def selection():
     recentlyUploadedFiles = getRecentlyUploaded()
     return render_template('selection.html', filesList=recentlyUploadedFiles)
 
+#temporarily for testing
+@selectionBlueprint.route('/testfilter', methods=['GET'])
+def testfilter():
+        return render_template('testfilter.html')
+
 def getRecentlyUploaded():
     listOfFiles = sorted([join(server.config['UPLOAD_FOLDER'], f) for f in listdir(server.config['UPLOAD_FOLDER']) if f.endswith('.info')], key=getctime, reverse=True)[:10]
     finalListOfFiles = {}
