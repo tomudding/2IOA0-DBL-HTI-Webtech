@@ -275,11 +275,6 @@
                     newIndex++;
                 }
                 const inverted = toCsv(vertices, newEdgesFrom, newEdgesTo, newEdgesWeights);
-                for (let index = 0; index < inverted.length; index++){
-                    if (inverted.charAt(index) === '4'){
-                        console.log('4 at ' + index);
-                    }
-                }
 
                 const request = new XMLHttpRequest();
                 request.open('POST', '/uploadnow', true);
