@@ -33,3 +33,27 @@ def upload_file():
             df.to_hdf(os.path.join(server.config['UPLOAD_FOLDER'], (fileUniqueHash + '.h5')), key=fileUniqueHash)
             return redirect('/filter/' + fileUniqueHash)
     return redirect('/selection')
+
+
+# Dirty test code for javascript filtering, this is basically the old way of doing things
+@server.route('/uploadnow', methods=['GET', 'POST'])
+def upload_file_now():
+    if request.method == 'POST':
+        if 'file' not in request.files:
+            # throw exception because file is not in submitted form
+            return redirect('/selection')
+        file = request.files['file']
+        if file.filename == '':
+            # throw exception because file is still not submitted
+            return redirect('/selection')
+        if file and allowed_file(file.filename):
+            fileUniqueHash = secrets.token_hex(server.config['TOKEN_SIZE'])
+            file.save(os.path.join(server.config['TEMP_FOLDER'], (fileUniqueHash + '.csv')))
+            fileOriginalName = secure_filename(file.filename)
+            fileOriginalInformation = open(os.path.join(server.config['UPLOAD_FOLDER'], (fileUniqueHash + '.info')), 'w')
+            fileOriginalInformation.write(fileOriginalName)
+            fileOriginalInformation.close()
+            df = processCSVMatrix(os.path.join(server.config['TEMP_FOLDER'], (fileUniqueHash + '.csv')))
+            df.to_hdf(os.path.join(server.config['UPLOAD_FOLDER'], (fileUniqueHash + '.h5')), key=fileUniqueHash)
+            return redirect('/visualise/' + fileUniqueHash)
+    return redirect('/selection')
