@@ -275,6 +275,11 @@
                     newIndex++;
                 }
                 const inverted = toCsv(vertices, newEdgesFrom, newEdgesTo, newEdgesWeights);
+                for (let index = 0; index < inverted.length; index++){
+                    if (inverted.charAt(index) === '4'){
+                        console.log('4 at ' + index);
+                    }
+                }
 
                 const request = new XMLHttpRequest();
                 request.open('POST', '/uploadnow', true);
@@ -524,14 +529,37 @@
                 const vertexCount = vertices.length;
                 const edgeCount = edgesFrom.length;
 
+                const order = new Int32Array(edgeCount);
+                for (let index = 0; index < edgeCount; index++){
+                    order[index] = index;
+                }
+                order.sort(function(a, b){
+                    if (edgesFrom[a] > edgesFrom[b]){
+                        return 1;
+                    } 
+                    if (edgesFrom[a] < edgesFrom[b]){
+                        return -1;
+                    }
+                    if (edgesTo[a] > edgesTo[b]){
+                        return 1;
+                    }
+                    if (edgesTo[a] < edgesTo[b]){
+                        return -1;
+                    }
+                    return 0;
+                });
+
                 // The edges are guaranteed to be sorted, so take advantage of that!
                 let edgeIndex = 0;
+
+                // TODO do some sorting
 
                 for(let rowIndex = 0; rowIndex < vertexCount; rowIndex++){
                     let currentLine = vertices[rowIndex] + ';';
                     for (let columnIndex = 0; columnIndex < vertexCount; columnIndex++){
-                        if (edgesFrom[edgeIndex] === rowIndex && edgesTo[edgeIndex] === columnIndex){
-                            currentLine += edgesWeight[edgeIndex] + ';';
+                        const effIndex = order[edgeIndex];
+                        if (edgesFrom[effIndex] === rowIndex && edgesTo[effIndex] === columnIndex){
+                            currentLine += edgesWeight[effIndex] + ';';
                             edgeIndex++;
                         } else {
                             currentLine += '0;';
