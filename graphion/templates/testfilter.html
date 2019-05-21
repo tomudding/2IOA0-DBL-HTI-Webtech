@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <div id="file-select-div">
+            <input type="file" id="file-upload"/>
+            <button onclick="confirmFile()">Confirm</button>
+        </div>
+
+        <div id="filter-div" hidden>
+            <canvas id="edge-weights"></canvas><br>
+            <div id="edge-count"></div><br>
+            <button onclick="uploadGraph()">Upload</button>
+        </div>
+
+        <script>
+
+            const GraphIon = {
+                fileName: null,
+                Edges: {
+                    from: null,
+                    to: null,
+                    weights: null,
+
+                    roughMinWeight: 0.0,
+                    roughMaxWeight: 0.0,
+                    roughWeightDifference: 0.0,
+
+                    sortedWeights: null,
+
+                    distributionAmounts: null,
+                    sortedAmounts: null,
+
+                    roughMaxAmount: 0,
+                    binWidth: 0,
+
+                    filterX1: 0,
+                    filterX2: Number.MAX_SAFE_INTEGER,
+                    mouseDown: false,
+
+                    canvasWidth: 0,
+                    canvasHeight: 0,
+
+                    filteredIndices: function(){
+
+                        const width = GraphIon.Edges.canvasWidth;
+
+                        const minActiveX = Math.min(GraphIon.Edges.filterX1, GraphIon.Edges.filterX2) - GraphIon.Edges.binWidth / 2;
+                        const maxActiveX = Math.max(GraphIon.Edges.filterX1, GraphIon.Edges.filterX2) + GraphIon.Edges.binWidth / 2;
+                        // Reverse the following line:
+                        //const indexToIncrease = Math.floor(width * (sortedWeights[index].weight - minValue) / maxDifference);
+
+                        // minActiveX = width * (sortedWeights[index].weight - minWeight) / maxWeightDifference
+                        // minActiveX * maxWeightDifference / width = sortedWeights[index].weight - minWeight
+                        // sortedWeights[index].weight = minWeight + minActiveX * maxWeightDifference / width
+                        const minWeight = GraphIon.Edges.roughMinWeight + minActiveX * GraphIon.Edges.roughWeightDifference / width;
+                        const maxWeight = GraphIon.Edges.roughMinWeight + (maxActiveX + 1) * GraphIon.Edges.roughWeightDifference / width;
+                        const sortedWeights = GraphIon.Edges.sortedWeights;
+                        const minIndex = binarySearch(sortedWeights, minWeight, false);
+                        const maxIndex = binarySearch(sortedWeights, maxWeight, true);
+                        return {
+                            minIndex: Math.max(0, minIndex),
+                            maxIndex: Math.min(GraphIon.Edges.from.length - 1, maxIndex)
+                        };
+                    },
+                    maxEdgeIndex: function(){
+
+                    }
+                },
+                Vertices: {
+                    all: null
+                }
+            };
+
+            function confirmFile(){
+                
+                const upload = document.getElementById('file-upload');
+                const file = upload.files[0];
+                if (file === undefined){
+                    window.alert('Select a file first');
+                    return;
+                }
+
+                parseCsv(file, function(vertices, edgesFrom, edgesTo, edgesWeight, rawString){
+                    const startTime = performance.now();
+
+                    GraphIon.fileName = file.name;
+
+                    GraphIon.Vertices.all = vertices;
+
+                    GraphIon.Edges.from = edgesFrom;
+                    GraphIon.Edges.to = edgesTo;
+                    GraphIon.Edges.weights = edgesWeight;
+
+                    const edgeCount = edgesFrom.length;
+                    document.getElementById('file-select-div').hidden = true;
+                    document.getElementById('filter-div').hidden = false;
+
+                    // Edge weights
+                    {
+                        const sortedWeights = new Array(edgeCount);
+                        for (let index = 0; index < edgeCount; index++){
+                            sortedWeights[index] = {
+                                index: index,
+                                weight: edgesWeight[index]
+                            };
+                        }
+                        sortedWeights.sort(function(a, b){
+                            return a.weight - b.weight;
+                        });
+                        
+                        GraphIon.Edges.sortedWeights = sortedWeights;
+
+                        const minValue = sortedWeights[0].weight;
+                        let maxValueIndex = Math.ceil(edgeCount * 39 / 40);
+                        if (maxValueIndex === edgeCount){
+                            maxValueIndex = edgeCount - 1;
+                        }
+                        let maxValue = sortedWeights[maxValueIndex].weight;
+                        if (maxValue === minValue){
+                            if (edgeCount > 3){
+                                maxValue = sortedWeights[edgeCount - 2].weight;
+                            } else {
+                                maxValue = sortedWeights[edgeCount - 1].weight;
+                            }
+                        }
+                        const maxDifference = sortedWeights[maxValueIndex].weight - minValue;
+
+                        GraphIon.Edges.roughMinWeight = minValue;
+                        GraphIon.Edges.roughMaxWeight = maxValue;
+                        GraphIon.Edges.roughWeightDifference = maxDifference;
+
+                        const width = window.innerWidth - 50;
+                        const height = window.innerHeight / 2;
+
+                        GraphIon.Edges.canvasWidth = width;
+                        GraphIon.Edges.canvasHeight = height;
+
+                        const amounts = new Int32Array(width);
+                        for (let index = 0; index < edgeCount; index++){
+                            const indexToIncrease = Math.floor(width * (sortedWeights[index].weight - minValue) / maxDifference);
+                            if (indexToIncrease < width){
+                                amounts[indexToIncrease]++;
+                            } else {
+                                amounts[width - 1]++;
+                            }
+                        }
+
+                        GraphIon.Edges.distributionAmounts = amounts;
+
+                        const sortedAmounts = new Array(width);
+                        for (let index = 0; index < width; index++){
+                            sortedAmounts[index] = {
+                                index: index,
+                                amount: amounts[index]
+                            };
+                        }
+                        sortedAmounts.sort(function(a, b){
+                            return a.amount - b.amount;
+                        });
+
+                        GraphIon.Edges.sortedAmounts = sortedAmounts;
+
+                        // Use the 90% percentile as maxAmount, so 10% of the plot will reach the full height of the canvas
+                        let maxIndex = Math.ceil(width * 39 / 40);
+                        if (maxIndex === width){
+                            maxIndex = width - 1;
+                        }
+                        const there = sortedAmounts[maxIndex];
+
+                        let maxAmount = sortedAmounts[maxIndex].amount;
+
+                        // For the pathetic cases where the vast majority is 0
+                        if (maxAmount === 0){
+                            maxAmount = sortedAmounts[width - 2].amount;
+
+                            // For the pathetic case with only 1 non-zero amount
+                            // Maybe, we should disable the edge weight filtering here
+                            if (maxAmount === 0){
+                                maxAmount = sortedAmounts[width - 1].amount;
+                                if (maxAmount === 0){
+
+                                    // Everything is 0, fuck this shit
+                                    return;
+                                }
+                            }
+                        }
+
+                        GraphIon.Edges.roughMaxAmount = maxAmount;
+
+                        let bins = 1;
+                        for (let index = 1; index < width; index++){
+                            if (sortedAmounts[index].amount !== sortedAmounts[index - 1].amount){
+                                bins++;
+                            }
+                        }
+
+                        console.log('bins is ' + bins);
+
+                        const binWidth = Math.max(1, Math.floor(width / bins));
+                        GraphIon.Edges.binWidth = binWidth;
+
+                        renderEdgeWeightDistribution();
+
+                        const canvas = document.getElementById('edge-weights');
+                        canvas.addEventListener('mousedown', function(event){
+                            if (!GraphIon.Edges.mouseDown){
+                                GraphIon.Edges.mouseDown = true;
+                                GraphIon.Edges.filterX1 = event.offsetX;
+                            }
+                        });
+                        canvas.addEventListener('mouseup', function(event){
+                            GraphIon.Edges.mouseDown = false;
+                        });
+                        canvas.addEventListener('mousemove', function(event){
+                            if (GraphIon.Edges.mouseDown){
+                                GraphIon.Edges.filterX2 = event.offsetX;
+                                renderEdgeWeightDistribution();
+                            }
+                        });
+                        canvas.addEventListener('mouseout', function(event){
+                            if (GraphIon.Edges.mouseDown){
+                                GraphIon.Edges.filterX2 = event.offsetX;
+                                renderEdgeWeightDistribution();
+                                GraphIon.Edges.mouseDown = false;
+                            }
+                        });
+                        canvas.addEventListener('mouseenter', function(event){
+                            if (event.buttons === 1){
+                                GraphIon.Edges.mouseDown = true;
+                                GraphIon.Edges.filterX1 = event.offsetX;
+                            }
+                        });
+                    }
+
+                    const endTime = performance.now();
+                    console.log('Preparing after parsing took ' + (endTime - startTime) + ' ms');
+
+                    /*
+                    let inverted = toCsv(vertices, edgesFrom.subarray(0, edgeCount / 2), edgesTo.subarray(0, edgeCount / 2), edgesWeight.subarray(0, edgeCount / 2));
+
+                    const request = new XMLHttpRequest();
+                    request.open('POST', '/uploadnow', true);
+                    request.onreadystatechange = function() {
+                        if (request.readyState == 4 && request.status == 200){
+                            window.location.assign(request.responseURL);
+                        }
+                    };
+
+                    const form = new FormData();
+                    form.append('file', new File([inverted], file.name));
+                    request.send(form);
+                    */
+                });
+            }
+
+            function uploadGraph(){
+                const vertices = GraphIon.Vertices.all;
+                const edgesFrom = GraphIon.Edges.from;
+                const edgesTo = GraphIon.Edges.to;
+                const edgesWeights = GraphIon.Edges.weights;
+                const edgeIndices = GraphIon.Edges.filteredIndices();
+                const boundIndex = edgeIndices.maxIndex + 1;
+                const filteredEdgeCount = boundIndex - edgeIndices.minIndex;
+                const filteredWeights = GraphIon.Edges.sortedWeights;
+
+                const newEdgesFrom = new Int32Array(filteredEdgeCount);
+                const newEdgesTo = new Int32Array(filteredEdgeCount);
+                const newEdgesWeights = new Int32Array(filteredEdgeCount);
+                let newIndex = 0;
+                for (let index = edgeIndices.minIndex; index < boundIndex; index++){
+                    const i = filteredWeights[index].index;
+                    newEdgesFrom[newIndex] = edgesFrom[i];
+                    newEdgesTo[newIndex] = edgesTo[i];
+                    newEdgesWeights[newIndex] = edgesWeights[i];
+                    newIndex++;
+                }
+                const inverted = toCsv(vertices, newEdgesFrom, newEdgesTo, newEdgesWeights);
+
+                const request = new XMLHttpRequest();
+                request.open('POST', '/uploadnow', true);
+                request.onreadystatechange = function() {
+                    if (request.readyState == 4 && request.status == 200){
+                        window.location.assign(request.responseURL);
+                    }
+                };
+
+                const form = new FormData();
+                form.append('file', new File([inverted], GraphIon.fileName));
+                request.send(form);
+            }
+
+            function renderEdgeWeightDistribution(){
+                const startTime = performance.now();
+
+                const width = GraphIon.Edges.canvasWidth;
+                const height = GraphIon.Edges.canvasHeight;
+                const binWidth = GraphIon.Edges.binWidth;
+                const maxAmount = GraphIon.Edges.roughMaxAmount;
+                const amounts = GraphIon.Edges.distributionAmounts;
+
+                const minActiveX = Math.min(GraphIon.Edges.filterX1, GraphIon.Edges.filterX2) - GraphIon.Edges.binWidth / 2;
+                const maxActiveX = Math.max(GraphIon.Edges.filterX1, GraphIon.Edges.filterX2) + GraphIon.Edges.binWidth / 2;
+
+                const canvas = document.getElementById('edge-weights');
+                canvas.width = width;
+                canvas.height = height;
+
+                const ctx = canvas.getContext('2d');
+                for (let index = 0; index < width; index++){
+                    const currentHeight = Math.ceil(height * amounts[index] / maxAmount);
+                    if (currentHeight >= 1){
+                        if (index >= minActiveX && index <= maxActiveX){
+                            ctx.fillStyle = "red";
+                        } else {
+                            ctx.fillStyle = "gray";
+                        }
+                        ctx.fillRect(index - Math.ceil(binWidth / 2), 0, binWidth, currentHeight);
+                    }
+                }
+
+                const edgeCountDiv = document.getElementById('edge-count');
+
+                const filtered = GraphIon.Edges.filteredIndices();
+                edgeCountDiv.innerText = (filtered.maxIndex - filtered.minIndex + 1) + " edges are selected";
+
+                console.log('Rendering took ' + (performance.now() - startTime) + ' ms');
+            }
+
+            // Modified version of iterativeFunction from https://www.geeksforgeeks.org/binary-search-in-javascript/
+            function binarySearch(arr, x, moveUp) { 
+                
+                let start=0, end=arr.length-1; 
+         
+                // Iterate while start not meets end 
+                while (start<=end){ 
+ 
+                    // Find the mid index 
+                    let mid=Math.floor((start + end)/2);
+                    const weight = arr[mid].weight;
+
+                    if (!moveUp){
+                        if (weight === x){
+                            if (mid > 0 && arr[mid - 1].weight === x){
+                                end = mid - 1;
+                            } else {
+                                return mid;
+                            }
+                        } else if (weight < x){
+                            start = mid + 1;
+                        } else {
+                            end = mid - 1;
+                        }
+                    } else {
+                        if (weight === x){
+                            if (mid + 1 < arr.length && arr[mid + 1].weight === x){
+                                start = mid + 1;
+                            } else {
+                                return mid;
+                            }
+                        } else if (weight < x){
+                            start = mid + 1;
+                        } else {
+                            end = mid - 1;
+                        }
+                    }
+                }
+
+                if (!moveUp){
+                    if (end >= 0 && arr[end].weight >= x){
+                        return end;
+                    } else {
+                        return start;
+                    }
+                } else {
+                    if (start < arr.length && arr[start].weight <= x){
+                        return start;
+                    } else {
+                        return end;
+                    }
+                }
+  
+                return false; 
+            }
+
+            function parseCsv(file, callback){
+                const parseStartTime = performance.now();
+                const reader = new FileReader();
+                reader.onload = function(event){
+
+                    // Why are there 3 different ways to encode line terminations?
+                    const LINE_SEPARATOR = "\r";
+                    const LINE_SEPARATOR2 = "\n";
+                    const SEPARATOR = ";";
+                    const result = event.target.result;
+                    const fileLength = result.length;
+                    if (result.charAt(fileLength - 2) !== LINE_SEPARATOR && result.charAt(fileLength - 1) !== LINE_SEPARATOR2){
+                        window.alert("Invalid csv1");
+                        return;
+                    }
+                    console.log('file length is', fileLength);
+                    let lineEnd = result.indexOf(LINE_SEPARATOR);
+                    if (lineEnd === -1){
+                        lineEnd = result.indexOf(LINE_SEPARATOR2);
+                    }
+                    console.log('first line ends at', lineEnd);
+
+                    let vertexCount = 0;
+                    for (let index = 0; index < lineEnd; index++){
+                        if (result.charAt(index) === SEPARATOR){
+                            vertexCount++;
+                        }
+                    }
+                    console.log('vertex count is', vertexCount);
+
+                    const vertices = new Array(vertexCount);
+                    let vertexIndex = 0;
+                    let prevSeparator = -1;
+                    for (let index = 0; index < lineEnd; index++){
+                        if (result.charAt(index) === SEPARATOR){
+                            if (prevSeparator !== -1){
+                                vertices[vertexIndex++] = result.substring(prevSeparator + 1, index);
+                            }
+                            prevSeparator = index;
+                        }
+                    }
+                    vertices[vertexIndex] = result.substring(prevSeparator + 1, lineEnd);
+
+                    let edgeCount = 0;
+                    let rowIndex = 0;
+                    prevSeparator = -1;
+                    for (let index = lineEnd + 1; index < fileLength; index++){
+                        const currentChar = result.charAt(index);
+                        if (currentChar === SEPARATOR){
+                            if (prevSeparator !== -1){
+                                const currentValue = result.substring(prevSeparator + 1, index);
+                                if (currentValue !== "0"){
+                                    edgeCount++;
+                                }
+                            }
+                            prevSeparator = index;
+                        }
+                        if (index !== lineEnd + 1 && (currentChar === LINE_SEPARATOR || currentChar === LINE_SEPARATOR2)){
+                            rowIndex++;
+                            prevSeparator = -1;
+                            if (currentChar === LINE_SEPARATOR && result.charAt(index + 1) === LINE_SEPARATOR2){
+                                index += 1;
+                            }
+                        }
+                    }
+                    if (rowIndex !== vertexCount){
+                        window.alert("Invalid csv2");
+                        return;
+                    }
+                    console.log('edge count is', edgeCount);
+                    const edgesFrom = new Int32Array(edgeCount);
+                    const edgesTo = new Int32Array(edgeCount);
+                    const edgesWeight = new Float32Array(edgeCount);
+                    rowIndex = 0;
+                    prevSeparator = -1;
+                    let edgeIndex = 0;
+                    let columnIndex = 0;
+                    for (let index = lineEnd + 1; index < fileLength; index++){
+                        const currentChar = result.charAt(index);
+                        if (currentChar === SEPARATOR){
+                            if (prevSeparator !== -1){
+                                const currentValue = parseFloat(result.substring(prevSeparator + 1, index));
+                                if (currentValue !== 0){
+
+                                    // Maybe swap these
+                                    edgesFrom[edgeIndex] = rowIndex;
+                                    edgesTo[edgeIndex] = columnIndex;
+                                    edgesWeight[edgeIndex] = currentValue;
+                                    edgeIndex++;
+                                }
+                                columnIndex++;
+                            }
+                            prevSeparator = index;
+                        }
+                        if (index !== lineEnd + 1 && (currentChar === LINE_SEPARATOR || currentChar === LINE_SEPARATOR2)){
+                            rowIndex++;
+                            prevSeparator = -1;
+                            columnIndex = 0;
+                            if (currentChar === LINE_SEPARATOR && result.charAt(index + 1) === LINE_SEPARATOR2){
+                                index += 1;
+                            }
+                        }
+                    }
+
+                    const parseEndTime = performance.now();
+                    console.log('parsing took ' + (parseEndTime - parseStartTime) + ' ms');
+
+                    callback(vertices, edgesFrom, edgesTo, edgesWeight, result);
+                };
+                reader.readAsText(file);
+            }
+
+            function stringFromUint16Array(array){
+		        const length = array.length;
+   	 	        let result = '';
+    	        const addition = Math.pow(2,16)-1;
+
+    	        for (let i = 0; i < length; i += addition){
+
+        	        if (i + addition > length) {
+            	        addition = length - i;
+        	        }
+        	        result += String.fromCharCode.apply(null, array.subarray(i,i+addition));
+    	        }
+
+    	        return result;
+	        }
+
+            function toCsv(vertices, edgesFrom, edgesTo, edgesWeight){
+                const startTime = performance.now();
+                let firstLine = '';
+                for(vertex in vertices){
+                    firstLine += ';' + vertices[vertex];
+                    //console.log('vertex is ' + vertices[vertex]);
+                }
+                //console.log('firstLine has become ' + firstLine);
+                firstLine += '\r\n';
+
+                let result = firstLine;
+                const vertexCount = vertices.length;
+                const edgeCount = edgesFrom.length;
+
+                // The edges are guaranteed to be sorted, so take advantage of that!
+                let edgeIndex = 0;
+
+                for(let rowIndex = 0; rowIndex < vertexCount; rowIndex++){
+                    let currentLine = vertices[rowIndex] + ';';
+                    for (let columnIndex = 0; columnIndex < vertexCount; columnIndex++){
+                        if (edgesFrom[edgeIndex] === rowIndex && edgesTo[edgeIndex] === columnIndex){
+                            currentLine += edgesWeight[edgeIndex] + ';';
+                            edgeIndex++;
+                        } else {
+                            currentLine += '0;';
+                        }
+                    }
+                    result += currentLine + '\r\n';
+                }
+
+                const endTime = performance.now();
+
+                console.log('creating csv took ' + (endTime - startTime) + ' ms');
+
+                return result;
+            }
+        </script>
+    </body>
+</html>
