@@ -1,5 +1,5 @@
 """
-Author(s): Steven van den Broek
+Author(s): Steven van den Broek, Tom Udding
 Created: 2019-05-18
 Edited: 2019-05-20
 """
@@ -25,31 +25,20 @@ def generate_selection(file, kind="degree", dir="in"):
     begin = time.time()
     df = read_hdf(file)
     names = df.columns.tolist()
-    adj_matrix = df.to_numpy(copy=True)  # convert dataframe to numpy array for efficiency
 
     print("Reading data {}-{}: ".format(dir, kind) + str(time.time()-begin))
 
     begin = time.time()
     ### BASIC DEGREE COUNTING
     if (not edges):
-        deg_all = []
         if (dir == "in"):
-            for row in adj_matrix:
-                degree = 0
-                for value in row:
-                    if (value > 0):
-                        degree += 1
-                deg_all.append(degree)
+            deg_all = (df.ne(0).sum(axis=1)).to_numpy(copy=True)
         if (dir == "out"):
-            for column in adj_matrix.T:
-                degree = 0
-                for value in column:
-                    if (value > 0):
-                        degree += 1
-                deg_all.append(degree)
-        deg_all = np.array(deg_all)
+            deg_all = (df[df.columns].ne(0).sum(axis=1)).to_numpy(copy=True)
     else:
+        adj_matrix = df.to_numpy(copy=True)  # convert dataframe to numpy array for efficiency
         deg_all = adj_matrix.flatten()
+
     print("Degree counting/edge weights {}-{}: ".format(dir, kind) + str(time.time() - begin))
     begin = time.time()
     if (len(deg_all) > limit):
@@ -104,7 +93,7 @@ def generate_selection(file, kind="degree", dir="in"):
                 """ + 'p.id = "between-{}-degree"'.format(dir) + """
                 document.getElementsByClassName("bk-root")[0].appendChild(p)
             }
-            
+
             let colored_amount = "<span style='color:red; font-weight:bold'>" + amount + "</span>"
             if (amount < 600){
                 colored_amount = "<span style='color:orange; font-weight:bold'>" + amount + "</span>"
@@ -117,13 +106,13 @@ def generate_selection(file, kind="degree", dir="in"):
     else:
         type_dependent = """
             let p = document.getElementById('between-weight')
-            
+
             if(!p){
                 p = document.createElement("p")
                 p.id = "between-weight"
                 document.getElementsByClassName("bk-root")[0].appendChild(p)
             }
-            
+
             let colored_amount = "<span style='color:red; font-weight:bold'>" + amount + "</span>"
             if (amount < 4000){
                 colored_amount = "<span style='color:orange; font-weight:bold'>" + amount + "</span>"
@@ -135,11 +124,11 @@ def generate_selection(file, kind="degree", dir="in"):
             p.innerHTML = "Selected " + colored_amount + " edges with weight between " + Math.ceil(geometry.x0*100)/100 + " and " + Math.floor(geometry.x1*100)/100 + "."
         """
 
-    geometry_callback = CustomJS(args=dict(complete=complete, before=before, middle=middle, after=after), code="""   
+    geometry_callback = CustomJS(args=dict(complete=complete, before=before, middle=middle, after=after), code="""
     let geometry = cb_data["geometry"]
     let Xs = complete.data.x
     let Ys = complete.data.y
-    
+
     let bXs = before.data.x
     let bYs = before.data.y
     bXs = []
@@ -152,7 +141,7 @@ def generate_selection(file, kind="degree", dir="in"):
     let aYs = after.data.y
     aXs = []
     aYs = []
-    
+
     for (let i = 0; i < Xs.length; i++){
     // should use binary search
     let x = Xs[i]
@@ -170,7 +159,7 @@ def generate_selection(file, kind="degree", dir="in"):
     mYs.push(y)
     }
     }
-    
+
     bXs.unshift(bXs[0])
     bYs.unshift(0)
     bXs.push(bXs[bXs.length-1])
@@ -183,14 +172,14 @@ def generate_selection(file, kind="degree", dir="in"):
     aYs.unshift(0)
     aXs.push(aXs[aXs.length-1])
     aYs[aYs.length] = 0
-        
+
     before.data.x = bXs
     before.data.y = bYs
     middle.data.x = mXs
     middle.data.y = mYs
     after.data.x = aXs
     after.data.y = aYs
-    
+
     before.change.emit()
     middle.change.emit()
     after.change.emit()
