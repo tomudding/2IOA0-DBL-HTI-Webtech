@@ -10,7 +10,6 @@ from bokeh.plotting import figure, show
 from bokeh.models import BoxSelectTool, Circle, CustomJS, ColumnDataSource
 import pandas
 from pandas import read_hdf
-import random
 import time
 
 def generate_selection(file, kind="degree", dir="in"):
@@ -38,24 +37,27 @@ def generate_selection(file, kind="degree", dir="in"):
                 for value in row:
                     if (value > 0):
                         degree += 1
-                deg_all.append([degree])
+                deg_all.append(degree)
         if (dir == "out"):
             for column in adj_matrix.T:
                 degree = 0
                 for value in column:
                     if (value > 0):
                         degree += 1
-                deg_all.append([degree])
+                deg_all.append(degree)
+        deg_all = np.array(deg_all)
     else:
-        deg_all = [[item] for sublist in df.values for item in sublist]
+        deg_all = adj_matrix.flatten()
     print("Degree counting/edge weights {}-{}: ".format(dir, kind) + str(time.time() - begin))
     begin = time.time()
     if (len(deg_all) > limit):
-        deg = random.sample(deg_all, limit)
-        deg.append(max(deg_all))
-        deg.append(min(deg_all))
+        deg = np.random.choice(deg_all, limit)
+        np.append(deg, np.array([max(deg_all)]))
+        np.append(deg, np.array([min(deg_all)]))
     else:
         deg = deg_all
+    deg_all = np.reshape(deg_all, (-1, 1))
+    deg = np.reshape(deg, (-1, 1))
     print("Random sampling: {}-{}: ".format(dir, kind) + str(time.time() - begin))
     deg_plot = np.linspace(-max(deg)[0] / 30, max(deg)[0] + max(deg)[0] / 30, 1000)
     # Calculate 'pretty good' (since best takes a long time) bandwidth
@@ -72,7 +74,6 @@ def generate_selection(file, kind="degree", dir="in"):
         kde = KernelDensity(kernel="gaussian", bandwidth=5.3).fit(deg)
     if (edges):
         kde = KernelDensity(kernel="gaussian", bandwidth=0.2).fit(deg)
-    print(deg_plot)
     try:
         print(deg_plot[0][0])
     except IndexError:
@@ -126,7 +127,7 @@ def generate_selection(file, kind="degree", dir="in"):
             p.innerHTML = "Selected " + colored_amount + " edges with weight between " + Math.ceil(geometry.x0*100)/100 + " and " + Math.floor(geometry.x1*100)/100 + "."
         """
 
-    geometry_callback = CustomJS(args=dict(complete=complete, before=before, middle=middle, after=after, degrees=[item for sublist in deg_all for item in sublist]), code="""   
+    geometry_callback = CustomJS(args=dict(complete=complete, before=before, middle=middle, after=after), code="""   
     let geometry = cb_data["geometry"]
     let Xs = complete.data.x
     let Ys = complete.data.y
@@ -186,12 +187,7 @@ def generate_selection(file, kind="degree", dir="in"):
     middle.change.emit()
     after.change.emit()
     let amount = 0
-    for (let i = 0; i < degrees.length; i++){
-      if (degrees[i] >= geometry.x0 && degrees[i] <= geometry.x1){
-        amount++;
-      }
-    }
-    """ + type_dependent)
+    """)
 
     p = figure(plot_width=700, plot_height=700)
 
