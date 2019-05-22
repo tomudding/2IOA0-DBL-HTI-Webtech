@@ -1,7 +1,7 @@
 """
 Author(s): Tom Udding, Steven van den Broek, Yuqing Zeng, Tim van de Klundert
 Created: 2019-05-03
-Edited: 2019-05-19
+Edited: 2019-05-22
 """
 from bokeh.plotting import reset_output
 from bokeh.models import Circle
@@ -10,7 +10,7 @@ from holoviews import opts, renderer, extension
 from holoviews.element.graphs import Graph
 import networkx as nx
 from networkx import from_pandas_adjacency
-from networkx.drawing.layout import circular_layout
+from networkx.drawing.layout import circular_layout, spring_layout
 from networkx.drawing.nx_agraph import graphviz_layout
 import numpy as np
 from pandas import read_hdf, Series
@@ -26,8 +26,23 @@ def decreaseDiagramSize(file):
         df = df.head(150)[names[0:150]]
     return df
 
+# Generate a force-directed node-link diagram
+def generateForceDirectedDiagram(file, isDirected):
+    df = decreaseDiagramSize(file)
+    # set defaults for HoloViews
+    extension('bokeh')
+    renderer('bokeh').webgl = True
+    reset_output()
+    defaults = dict(width=400, height=400, padding=0.1)
+    opts.defaults(opts.EdgePaths(**defaults), opts.Graph(**defaults), opts.Nodes(**defaults))
+
+    G = from_pandas_adjacency(df)
+    graph = Graph.from_networkx(G, spring_layout).opts(directed=isDirected, width=600, height=600, arrowhead_length=0.0005)
+
+    return pn.Column(graph)
+
 # Generate a hierarchical node-link diagram
-def generateHierarchicalDiagram(file):
+def generateHierarchicalDiagram(file, isDirected):
     df = decreaseDiagramSize(file)
     # set defaults for HoloViews
     extension('bokeh')
@@ -45,7 +60,7 @@ def generateHierarchicalDiagram(file):
     return pn.Column(graph)
 
 # Generate a radial node-link diagram
-def generateRadialDiagram(file):
+def generateRadialDiagram(file, isDirected):
     df = decreaseDiagramSize(file)
 
     node_count = df.shape[0]
@@ -71,14 +86,12 @@ def generateRadialDiagram(file):
     opts.defaults(opts.EdgePaths(**defaults), opts.Graph(**defaults), opts.Nodes(**defaults))
 
     G = from_pandas_adjacency(df)
-
     graph = Graph.from_networkx(G, circular_layout)
-
     graph.nodes.data['degree'] = Series(degree_array)
-    
+
     # I tried simply using node_size='degree', but if it only were that easy...
-    graph = graph.opts(opts.Graph(node_size=35, directed=False, width=600, height=600, arrowhead_length=0.0005))
-    print(graph.nodes.data.head())
+    graph = graph.opts(opts.Graph(node_size=35, directed=isDirected, width=600, height=600, arrowhead_length=0.0005))
+
     # Make a panel and widgets with param for choosing a layout
     return pn.Column(graph)
 
