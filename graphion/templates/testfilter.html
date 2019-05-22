@@ -265,7 +265,7 @@
 
                 const newEdgesFrom = new Int32Array(filteredEdgeCount);
                 const newEdgesTo = new Int32Array(filteredEdgeCount);
-                const newEdgesWeights = new Int32Array(filteredEdgeCount);
+                const newEdgesWeights = new Float32Array(filteredEdgeCount);
                 let newIndex = 0;
                 for (let index = edgeIndices.minIndex; index < boundIndex; index++){
                     const i = filteredWeights[index].index;
