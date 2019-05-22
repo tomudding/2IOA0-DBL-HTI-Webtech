@@ -67,7 +67,7 @@ def generate_selection(file, kind="degree", dir="in"):
     print(deg_plot)
     try:
         print(deg_plot[0][0])
-    except TypeError:
+    except IndexError:
         deg_plot = [[item] for item in deg_plot]
     log_dens = kde.score_samples(deg_plot)
     X = np.append(deg_plot[:, 0], deg_plot[:, 0][-1])
