@@ -13,6 +13,8 @@ from pandas import read_hdf
 import time
 
 def generate_selection(file, kind="degree", dir="in"):
+    big_bang = time.time()
+
     if (kind == "degree"):
         edges=False
     else:
@@ -51,23 +53,29 @@ def generate_selection(file, kind="degree", dir="in"):
     print("Degree counting/edge weights {}-{}: ".format(dir, kind) + str(time.time() - begin))
     begin = time.time()
     if (len(deg_all) > limit):
-        deg = np.random.choice(deg_all, limit)
-        np.append(deg, np.array([max(deg_all)]))
-        np.append(deg, np.array([min(deg_all)]))
+        deg = np.random.choice(deg_all, limit, replace=False)
+        #deg = deg_all[:limit]
+        print("Random sampling: {}-{}: ".format(dir, kind) + str(time.time() - begin))
+        begin = time.time()
+        #np.append(deg, np.array([max(deg_all)]))
+        #np.append(deg, np.array([min(deg_all)]))
+        print("Appending: {}-{}: ".format(dir, kind) + str(time.time() - begin))
     else:
         deg = deg_all
+
+    begin = time.time()
     deg_all = np.reshape(deg_all, (-1, 1))
     deg = np.reshape(deg, (-1, 1))
-    print("Random sampling: {}-{}: ".format(dir, kind) + str(time.time() - begin))
-    deg_plot = np.linspace(-max(deg)[0] / 30, max(deg)[0] + max(deg)[0] / 30, 1000)
+    print("Reshaping: {}-{}: ".format(dir, kind) + str(time.time() - begin))
+    deg_plot = np.linspace(-max(deg)[0] / 15, max(deg)[0] + max(deg)[0] / 15, 1000)
     # Calculate 'pretty good' (since best takes a long time) bandwidth
-    begin = time.time()
+    #begin = time.time()
     # grid = GridSearchCV(KernelDensity(),
     #                     {'bandwidth': np.linspace(0.1, 10.0, 20)},
     #                     cv=5,
     #                     iid=False)  # 5-fold cross-validation
     # grid.fit(deg)
-    print("Bandwidth: {}-{}: ".format(dir, kind) + str(time.time()-begin))
+    #print("Bandwidth: {}-{}: ".format(dir, kind) + str(time.time()-begin))
     begin = time.time()
     # kde = grid.best_estimator_
     if (not edges):
@@ -209,4 +217,5 @@ def generate_selection(file, kind="degree", dir="in"):
     p.toolbar.active_drag = select_tool
     p.toolbar.autohide = True
     print("KDE + plotting: {}-{}: ".format(dir, kind) + str(time.time()-begin))
+    print("Total {}-{}: ".format(dir, kind) + str(time.time()-big_bang))
     return p
