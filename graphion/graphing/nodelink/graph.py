@@ -3,15 +3,19 @@ Author(s): Tom Udding, Steven van den Broek, Yuqing Zeng, Tim van de Klundert
 Created: 2019-05-03
 Edited: 2019-05-22
 """
-from bokeh.plotting import reset_output
-from bokeh.models import Circle
+from bokeh.plotting import figure, reset_output
+from bokeh.models import Circle, ColumnDataSource
+from community import best_partition
 from graphion.graphing.parser import processCSVMatrix
 from holoviews import opts, renderer, extension
 from holoviews.element.graphs import Graph
+from math import sqrt
 import networkx as nx
 from networkx import from_pandas_adjacency
+from networkx.algorithms.centrality import degree_centrality
 from networkx.drawing.layout import circular_layout, spring_layout
 from networkx.drawing.nx_agraph import graphviz_layout
+from networkx.classes.function import number_of_nodes
 import numpy as np
 from pandas import read_hdf, Series
 import panel as pn
@@ -29,17 +33,51 @@ def decreaseDiagramSize(file):
 # Generate a force-directed node-link diagram
 def generateForceDirectedDiagram(file, isDirected):
     df = decreaseDiagramSize(file)
-    # set defaults for HoloViews
-    extension('bokeh')
-    renderer('bokeh').webgl = True
-    reset_output()
-    defaults = dict(width=400, height=400, padding=0.1)
-    opts.defaults(opts.EdgePaths(**defaults), opts.Graph(**defaults), opts.Nodes(**defaults))
-
+    # convert Pandas DataFrame (Matrix) to NetworkX graph
     G = from_pandas_adjacency(df)
-    graph = Graph.from_networkx(G, spring_layout).opts(directed=isDirected, width=600, height=600, arrowhead_length=0.0005)
+    layout = spring_layout(G, k=0.42/sqrt(number_of_nodes(G)))
 
-    return pn.Column(graph)
+    # get node and edge information from graph
+    nodes, nodes_coordinates = zip(*sorted(layout.items()))
+    nodes_xs, nodes_ys = list(zip(*nodes_coordinates))
+    nodeDataSource = ColumnDataSource(dict(x=nodes_xs, y=nodes_ys, name=nodes))
+    lineDataSource = ColumnDataSource(getEdgeInformation(G, layout))
+
+    # create plot
+    plot = figure(plot_width=400, plot_height=400, tools=['pan', 'tap', 'wheel_zoom', 'reset', 'box_zoom'])#, hover])
+    nodeGlyph = plot.circle('x', 'y', source=nodeDataSource, size=10, line_width=1, line_color="#000000", level='overlay')
+    lineGlyph = plot.multi_line('xs', 'ys', source=lineDataSource, line_width=1.3, alpha='alphas', color='#000000')
+
+    # calculate centrality
+    centrality = degree_centrality(G)
+    _, nodeCentralities = zip(*sorted(centrality.items()))
+    nodeDataSource.add([10 + 12 * t / max(nodeCentralities) for t in nodeCentralities], 'centrality')
+
+    # create partitions
+    partition = best_partition(G)
+    _, nodePartitions = zip(*sorted(partition.items()))
+    nodeDataSource.add(nodePartitions, 'partition')
+    partitionColours = ["#b2182b","#d6604d","#f4a582","#fddbc7","#f7f7f7","#d1e5f0","#92c5de","#4393c3","#2166ac"] # safe to use for colourblind people
+    nodeDataSource.add([partitionColours[t % len(partitionColours)] for t in nodePartitions], 'partition_colour')
+
+    # colour the nodes based on the partition
+    nodeGlyph.glyph.size = 'centrality'
+    nodeGlyph.glyph.fill_color = 'partition_colour'
+
+    return pn.Column(plot)
+
+# edge information calculator - helper function for generateForceDirectedDiagram()
+def getEdgeInformation(G, layout):
+    d = dict(xs=[], ys=[], alphas=[])
+    weights = [d['weight'] for u, v, d in G.edges(data=True)]
+    maxWeight = max(weights)
+    calculateAlpha = lambda h: 0.1 + 0.6 * (h / maxWeight)
+
+    for u, v, data in G.edges(data=True):
+        d['xs'].append([layout[u][0], layout[v][0]])
+        d['ys'].append([layout[u][1], layout[v][1]])
+        d['alphas'].append(calculateAlpha(data['weight']))
+    return d
 
 # Generate a hierarchical node-link diagram
 def generateHierarchicalDiagram(file, isDirected):

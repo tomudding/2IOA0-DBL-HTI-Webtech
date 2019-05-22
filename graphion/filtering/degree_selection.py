@@ -11,6 +11,7 @@ from bokeh.models import BoxSelectTool, Circle, CustomJS, ColumnDataSource
 import pandas
 from pandas import read_hdf
 import random
+import time
 
 def generate_selection(file, kind="degree", dir="in"):
     if (kind == "degree"):
@@ -20,9 +21,12 @@ def generate_selection(file, kind="degree", dir="in"):
 
     limit = 1000
 
+    begin = time.time()
     df = read_hdf(file)
     names = df.columns.tolist()
+    print("Reading data {}-{}: ".format(dir, kind) + str(time.time()-begin))
 
+    begin = time.time()
     ### BASIC DEGREE COUNTING
     if (not edges):
         deg_all = []
@@ -32,24 +36,33 @@ def generate_selection(file, kind="degree", dir="in"):
         if (dir == "out"):
             for name in names:
                 deg_all.append([df.loc[name, : ][df.loc[name, : ] > 0].count()])
-
     else:
         deg_all = [[item] for sublist in df.values for item in sublist]
-
+    print("Degree counting/edge weights {}-{}: ".format(dir, kind) + str(time.time() - begin))
+    begin = time.time()
     if (len(deg_all) > limit):
         deg = random.sample(deg_all, limit)
         deg.append(max(deg_all))
         deg.append(min(deg_all))
     else:
         deg = deg_all
+    print("Random sampling: {}-{}: ".format(dir, kind) + str(time.time() - begin))
     deg_plot = np.linspace(-max(deg)[0] / 30, max(deg) + max(deg)[0] / 30, 1000)
     # Calculate 'pretty good' (since best takes a long time) bandwidth
+    begin = time.time()
     grid = GridSearchCV(KernelDensity(),
                         {'bandwidth': np.linspace(0.1, 10.0, 20)},
                         cv=5,
                         iid=False)  # 5-fold cross-validation
     grid.fit(deg)
+    print("Bandwidth: {}-{}: ".format(dir, kind) + str(time.time()-begin))
+    begin = time.time()
     kde = grid.best_estimator_
+    # if (not edges):
+    #     kde = KernelDensity(kernel="gaussian", bandwidth=5.3).fit(deg)
+    # if (edges):
+    #     kde = KernelDensity(kernel="gaussian", bandwidth=0.2).fit(deg)
+
     log_dens = kde.score_samples(deg_plot)
     X = np.append(deg_plot[:, 0], deg_plot[:, 0][-1])
     X = np.insert(X, 0, X[0])
@@ -158,7 +171,6 @@ def generate_selection(file, kind="degree", dir="in"):
     before.change.emit()
     middle.change.emit()
     after.change.emit()
-    
     let amount = 0
     for (let i = 0; i < degrees.length; i++){
       if (degrees[i] >= geometry.x0 && degrees[i] <= geometry.x1){
@@ -186,5 +198,5 @@ def generate_selection(file, kind="degree", dir="in"):
 
     p.toolbar.active_drag = select_tool
     p.toolbar.autohide = True
-
+    print("KDE + plotting: {}-{}: ".format(dir, kind) + str(time.time()-begin))
     return p
