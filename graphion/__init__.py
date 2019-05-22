@@ -6,7 +6,7 @@ Edited: 2019-05-22
 from flask import Flask
 server = Flask(__name__)
 
-from os import mkdir
+from os import mkdir, makedirs
 from os.path import isdir
 if (not isdir('logs')):
     mkdir('logs')
@@ -60,7 +60,7 @@ server.register_blueprint(apiDegreeBlueprint)
 
 # other stuff
 if (not isdir('api/filter/cached_plots')):
-    mkdir('api/filter/cached_plots')
+    makedirs('api/filter/cached_plots')
 if (not isdir(server.config['UPLOAD_FOLDER'])):
     mkdir(server.config['UPLOAD_FOLDER'])
 if (not isdir(server.config['TEMP_FOLDER'])):
