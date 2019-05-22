@@ -1,7 +1,7 @@
 """
 Author(s): Tom Udding
 Created: 2019-04-29
-Edited: 2019-05-20
+Edited: 2019-05-22
 """
 from flask import Flask
 server = Flask(__name__)
@@ -10,8 +10,6 @@ from os import mkdir
 from os.path import isdir
 if (not isdir('logs')):
     mkdir('logs')
-if (not isdir('graphion/api/filter/cached_plots')):
-    mkdir('graphion/api/filter/cached_plots')
 
 import logging
 logging.basicConfig(filename='logs/error.log', level=logging.DEBUG)
@@ -61,6 +59,8 @@ server.register_blueprint(filterBlueprint)
 server.register_blueprint(apiDegreeBlueprint)
 
 # other stuff
+if (not isdir('api/filter/cached_plots')):
+    mkdir('api/filter/cached_plots')
 if (not isdir(server.config['UPLOAD_FOLDER'])):
     mkdir(server.config['UPLOAD_FOLDER'])
 if (not isdir(server.config['TEMP_FOLDER'])):

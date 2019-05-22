@@ -1,7 +1,7 @@
 """
 Author(s): Steven van den Broek
 Created: 2019-05-18
-Edited: 2019-05-20
+Edited: 2019-05-22
 """
 from bokeh.embed import json_item
 from flask import Blueprint
@@ -18,7 +18,7 @@ apiDegreeBlueprint = Blueprint('apiMatrixBlueprint', __name__, template_folder='
 @apiDegreeBlueprint.route('/api/filter/distribution/<type>/<file>', methods=['GET'], strict_slashes=False)
 @apiDegreeBlueprint.route('/api/filter/distribution/<type>/', methods=['GET'], strict_slashes=False)
 def degreeAPI(file=None, type=None, dir=None):
-    filePath = 'graphion/api/filter/cached_plots/{}-{}-{}.json'.format(file, type, dir)
+    filePath = 'api/filter/cached_plots/{}-{}-{}.json'.format(file, type, dir)
     try:
         with open(filePath, 'r') as json_file:
             return json_file.read()
