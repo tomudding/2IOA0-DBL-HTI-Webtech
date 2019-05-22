@@ -512,7 +512,7 @@
             function stringFromUint16Array(array){
 		        const length = array.length;
    	 	        let result = '';
-    	        const addition = Math.pow(2,16)-1;
+    	        let addition = Math.pow(2,16)-1;
 
     	        for (let i = 0; i < length; i += addition){
 
