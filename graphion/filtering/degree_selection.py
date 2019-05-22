@@ -24,6 +24,8 @@ def generate_selection(file, kind="degree", dir="in"):
     begin = time.time()
     df = read_hdf(file)
     names = df.columns.tolist()
+    adj_matrix = df.to_numpy(copy=True)  # convert dataframe to numpy array for efficiency
+
     print("Reading data {}-{}: ".format(dir, kind) + str(time.time()-begin))
 
     begin = time.time()
@@ -50,19 +52,23 @@ def generate_selection(file, kind="degree", dir="in"):
     deg_plot = np.linspace(-max(deg)[0] / 30, max(deg) + max(deg)[0] / 30, 1000)
     # Calculate 'pretty good' (since best takes a long time) bandwidth
     begin = time.time()
-    grid = GridSearchCV(KernelDensity(),
-                        {'bandwidth': np.linspace(0.1, 10.0, 20)},
-                        cv=5,
-                        iid=False)  # 5-fold cross-validation
-    grid.fit(deg)
+    # grid = GridSearchCV(KernelDensity(),
+    #                     {'bandwidth': np.linspace(0.1, 10.0, 20)},
+    #                     cv=5,
+    #                     iid=False)  # 5-fold cross-validation
+    # grid.fit(deg)
     print("Bandwidth: {}-{}: ".format(dir, kind) + str(time.time()-begin))
     begin = time.time()
-    kde = grid.best_estimator_
-    # if (not edges):
-    #     kde = KernelDensity(kernel="gaussian", bandwidth=5.3).fit(deg)
-    # if (edges):
-    #     kde = KernelDensity(kernel="gaussian", bandwidth=0.2).fit(deg)
-
+    # kde = grid.best_estimator_
+    if (not edges):
+        kde = KernelDensity(kernel="gaussian", bandwidth=5.3).fit(deg)
+    if (edges):
+        kde = KernelDensity(kernel="gaussian", bandwidth=0.2).fit(deg)
+    print(deg_plot)
+    try:
+        print(deg_plot[0][0])
+    except TypeError:
+        deg_plot = [[item] for item in deg_plot]
     log_dens = kde.score_samples(deg_plot)
     X = np.append(deg_plot[:, 0], deg_plot[:, 0][-1])
     X = np.insert(X, 0, X[0])
