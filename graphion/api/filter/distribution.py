@@ -8,6 +8,7 @@ from flask import Blueprint
 from json import dump, dumps
 from graphion.filtering.degree_selection import generate_selection
 from graphion.graphing.generator import getFilePath
+import time
 import os
 
 apiDegreeBlueprint = Blueprint('apiMatrixBlueprint', __name__, template_folder='templates')
@@ -24,6 +25,9 @@ def degreeAPI(file=None, type=None, dir=None):
     except FileNotFoundError:
 
         with open(filePath, 'w+') as json_file:
-            item = json_item(generate_selection(getFilePath(file), kind=type, dir=dir))
+            plot = generate_selection(getFilePath(file), kind=type, dir=dir)
+            start = time.time()
+            item = json_item(plot)
             dump(item, json_file)
+            print("To json {}-{}: ".format(dir, type) + str(time.time()-start))
         return dumps(item)
