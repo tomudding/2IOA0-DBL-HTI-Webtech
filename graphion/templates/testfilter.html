@@ -390,7 +390,11 @@
                     // Why are there 3 different ways to encode line terminations?
                     const LINE_SEPARATOR = "\r";
                     const LINE_SEPARATOR2 = "\n";
+                    const LINE_SEPARATOR_CODE = LINE_SEPARATOR.charCodeAt(0);
+                    const LINE_SEPARATOR_CODE2 = LINE_SEPARATOR2.charCodeAt(0);
                     const SEPARATOR = ";";
+                    const SEPARATOR_CODE = SEPARATOR.charCodeAt(0);
+                    const CODE_0 = "0".charCodeAt(0);
                     const result = event.target.result;
                     const fileLength = result.length;
                     if (result.charAt(fileLength - 2) !== LINE_SEPARATOR && result.charAt(fileLength - 1) !== LINE_SEPARATOR2){
@@ -406,7 +410,7 @@
 
                     let vertexCount = 0;
                     for (let index = 0; index < lineEnd; index++){
-                        if (result.charAt(index) === SEPARATOR){
+                        if (result.charCodeAt(index) === SEPARATOR_CODE){
                             vertexCount++;
                         }
                     }
@@ -416,7 +420,7 @@
                     let vertexIndex = 0;
                     let prevSeparator = -1;
                     for (let index = 0; index < lineEnd; index++){
-                        if (result.charAt(index) === SEPARATOR){
+                        if (result.charCodeAt(index) === SEPARATOR_CODE){
                             if (prevSeparator !== -1){
                                 vertices[vertexIndex++] = result.substring(prevSeparator + 1, index);
                             }
@@ -429,20 +433,25 @@
                     let rowIndex = 0;
                     prevSeparator = -1;
                     for (let index = lineEnd + 1; index < fileLength; index++){
-                        const currentChar = result.charAt(index);
-                        if (currentChar === SEPARATOR){
+                        //const currentChar = result.charAt(index);
+                        const currentCharCode = result.charCodeAt(index);
+                        if (currentCharCode === SEPARATOR_CODE){
                             if (prevSeparator !== -1){
+                                if (prevSeparator + 2 !== index || result.charCodeAt(index - 1) !== CODE_0){
+                                    edgeCount++;
+                                }
+                                /*
                                 const currentValue = result.substring(prevSeparator + 1, index);
                                 if (currentValue !== "0"){
                                     edgeCount++;
-                                }
+                                }*/
                             }
                             prevSeparator = index;
                         }
-                        if (index !== lineEnd + 1 && (currentChar === LINE_SEPARATOR || currentChar === LINE_SEPARATOR2)){
+                        if (index !== lineEnd + 1 && (currentCharCode === LINE_SEPARATOR_CODE || currentCharCode === LINE_SEPARATOR_CODE2)){
                             rowIndex++;
                             prevSeparator = -1;
-                            if (currentChar === LINE_SEPARATOR && result.charAt(index + 1) === LINE_SEPARATOR2){
+                            if (currentCharCode === LINE_SEPARATOR_CODE && result.charCodeAt(index + 1) === LINE_SEPARATOR_CODE2){
                                 index += 1;
                             }
                         }
@@ -460,10 +469,16 @@
                     let edgeIndex = 0;
                     let columnIndex = 0;
                     for (let index = lineEnd + 1; index < fileLength; index++){
-                        const currentChar = result.charAt(index);
-                        if (currentChar === SEPARATOR){
+                        //const currentChar = result.charAt(index);
+                        const currentCharCode = result.charCodeAt(index);
+                        if (currentCharCode === SEPARATOR_CODE){
                             if (prevSeparator !== -1){
-                                const currentValue = parseFloat(result.substring(prevSeparator + 1, index));
+                                let currentValue = 0.0;
+                                if (index === prevSeparator + 2){
+                                    currentValue = result.charCodeAt(index - 1) - CODE_0;
+                                } else {
+                                    currentValue = parseFloat(result.substring(prevSeparator + 1, index));
+                                }
                                 if (currentValue !== 0){
 
                                     // Maybe swap these
@@ -476,11 +491,11 @@
                             }
                             prevSeparator = index;
                         }
-                        if (index !== lineEnd + 1 && (currentChar === LINE_SEPARATOR || currentChar === LINE_SEPARATOR2)){
+                        if (index !== lineEnd + 1 && (currentCharCode === LINE_SEPARATOR_CODE || currentCharCode === LINE_SEPARATOR_CODE2)){
                             rowIndex++;
                             prevSeparator = -1;
                             columnIndex = 0;
-                            if (currentChar === LINE_SEPARATOR && result.charAt(index + 1) === LINE_SEPARATOR2){
+                            if (currentCharCode === LINE_SEPARATOR_CODE && result.charCodeAt(index + 1) === LINE_SEPARATOR_CODE2){
                                 index += 1;
                             }
                         }
