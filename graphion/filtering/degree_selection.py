@@ -38,14 +38,14 @@ def generate_selection(file, kind="degree", dir="in"):
                 for value in row:
                     if (value > 0):
                         degree += 1
-                deg_all.append(degree)
+                deg_all.append([degree])
         if (dir == "out"):
             for column in adj_matrix.T:
                 degree = 0
                 for value in column:
                     if (value > 0):
                         degree += 1
-                deg_all.append(degree)
+                deg_all.append([degree])
     else:
         deg_all = [[item] for sublist in df.values for item in sublist]
     print("Degree counting/edge weights {}-{}: ".format(dir, kind) + str(time.time() - begin))
@@ -57,7 +57,7 @@ def generate_selection(file, kind="degree", dir="in"):
     else:
         deg = deg_all
     print("Random sampling: {}-{}: ".format(dir, kind) + str(time.time() - begin))
-    deg_plot = np.linspace(-max(deg)[0] / 30, max(deg) + max(deg)[0] / 30, 1000)
+    deg_plot = np.linspace(-max(deg)[0] / 30, max(deg)[0] + max(deg)[0] / 30, 1000)
     # Calculate 'pretty good' (since best takes a long time) bandwidth
     begin = time.time()
     # grid = GridSearchCV(KernelDensity(),
