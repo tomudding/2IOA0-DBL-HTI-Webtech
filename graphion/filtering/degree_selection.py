@@ -33,11 +33,19 @@ def generate_selection(file, kind="degree", dir="in"):
     if (not edges):
         deg_all = []
         if (dir == "in"):
-            for name in names:
-                deg_all.append([df[name][df[name] > 0].count()])
+            for row in adj_matrix:
+                degree = 0
+                for value in row:
+                    if (value > 0):
+                        degree += 1
+                deg_all.append(degree)
         if (dir == "out"):
-            for name in names:
-                deg_all.append([df.loc[name, : ][df.loc[name, : ] > 0].count()])
+            for column in adj_matrix.T:
+                degree = 0
+                for value in column:
+                    if (value > 0):
+                        degree += 1
+                deg_all.append(degree)
     else:
         deg_all = [[item] for sublist in df.values for item in sublist]
     print("Degree counting/edge weights {}-{}: ".format(dir, kind) + str(time.time() - begin))
@@ -68,7 +76,7 @@ def generate_selection(file, kind="degree", dir="in"):
     try:
         print(deg_plot[0][0])
     except IndexError:
-        deg_plot = [[item] for item in deg_plot]
+        deg_plot = np.array([[item] for item in deg_plot])
     log_dens = kde.score_samples(deg_plot)
     X = np.append(deg_plot[:, 0], deg_plot[:, 0][-1])
     X = np.insert(X, 0, X[0])
