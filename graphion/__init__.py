@@ -1,7 +1,7 @@
 """
-Author(s): Tom Udding
+Author(s): Tom Udding, Steven van den Broek
 Created: 2019-04-29
-Edited: 2019-05-22
+Edited: 2019-05-23
 """
 from flask import Flask
 server = Flask(__name__)
@@ -30,7 +30,7 @@ TEMP_FOLDER = 'temp'
 TOKEN_SIZE = 16                         #
 ALLOWED_EXTENSIONS = set(['csv'])       #
 BUFFER_SIZE = 64000                     #
-MAX_CONTENT_LENGTH = 100 * 1024 * 1024   # limit file upload size to 20 MB
+MAX_CONTENT_LENGTH = 1000 * 1024 * 1024   # limit file upload size to 1 GB
 
 # app configurations
 server.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
