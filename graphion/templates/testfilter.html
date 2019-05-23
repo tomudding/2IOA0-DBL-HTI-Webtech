@@ -8,11 +8,17 @@
 
         <div id="filter-div" hidden>
             <canvas id="edge-weights"></canvas><br>
-            <div id="edge-count"></div><br>
+            <div id="weight-selection-info"></div><br>
             <button onclick="uploadGraph()">Upload</button>
         </div>
 
         <script>
+
+            /*
+            Author: Tim van de Klundert
+            Created at 20-05-2019
+            Last modified at 23-05-2019
+            */
 
             const GraphIon = {
                 fileName: null,
@@ -29,6 +35,7 @@
 
                     distributionAmounts: null,
                     sortedAmounts: null,
+                    plotHeights: null,
 
                     roughMaxAmount: 0,
                     binWidth: 0,
@@ -44,8 +51,11 @@
 
                         const width = GraphIon.Edges.canvasWidth;
 
-                        const minActiveX = Math.min(GraphIon.Edges.filterX1, GraphIon.Edges.filterX2) - GraphIon.Edges.binWidth / 2;
-                        const maxActiveX = Math.max(GraphIon.Edges.filterX1, GraphIon.Edges.filterX2) + GraphIon.Edges.binWidth / 2;
+                        const minFilterX = Math.min(GraphIon.Edges.filterX1, GraphIon.Edges.filterX2);
+                        const maxFilterX = Math.max(GraphIon.Edges.filterX1, GraphIon.Edges.filterX2);
+
+                        const minActiveX = minFilterX - GraphIon.Edges.binWidth / 2;
+                        const maxActiveX = maxFilterX + GraphIon.Edges.binWidth / 2;
                         // Reverse the following line:
                         //const indexToIncrease = Math.floor(width * (sortedWeights[index].weight - minValue) / maxDifference);
 
@@ -59,7 +69,11 @@
                         const maxIndex = binarySearch(sortedWeights, maxWeight, true);
                         return {
                             minIndex: Math.max(0, minIndex),
-                            maxIndex: Math.min(GraphIon.Edges.from.length - 1, maxIndex)
+                            maxIndex: Math.min(GraphIon.Edges.from.length - 1, maxIndex),
+                            minActiveX: minActiveX,
+                            maxActiveX: maxActiveX,
+                            minFilterX: minFilterX,
+                            maxFilterX: maxFilterX
                         };
                     },
                     maxEdgeIndex: function(){
@@ -110,6 +124,7 @@
                         
                         GraphIon.Edges.sortedWeights = sortedWeights;
 
+                        /*
                         const minValue = sortedWeights[0].weight;
                         let maxValueIndex = Math.ceil(edgeCount * 39 / 40);
                         if (maxValueIndex === edgeCount){
@@ -124,13 +139,17 @@
                             }
                         }
                         const maxDifference = sortedWeights[maxValueIndex].weight - minValue;
+                        */
+                        const minValue = sortedWeights[0].weight;
+                        const maxValue = sortedWeights[edgeCount - 1].weight;
+                        const maxDifference = maxValue - minValue;
 
                         GraphIon.Edges.roughMinWeight = minValue;
                         GraphIon.Edges.roughMaxWeight = maxValue;
                         GraphIon.Edges.roughWeightDifference = maxDifference;
 
-                        const width = window.innerWidth - 50;
-                        const height = window.innerHeight / 2;
+                        const width = Math.floor(window.innerWidth / 2);
+                        const height = Math.floor(window.innerHeight * 4 / 5);
 
                         GraphIon.Edges.canvasWidth = width;
                         GraphIon.Edges.canvasHeight = height;
@@ -160,14 +179,7 @@
 
                         GraphIon.Edges.sortedAmounts = sortedAmounts;
 
-                        // Use the 90% percentile as maxAmount, so 10% of the plot will reach the full height of the canvas
-                        let maxIndex = Math.ceil(width * 39 / 40);
-                        if (maxIndex === width){
-                            maxIndex = width - 1;
-                        }
-                        const there = sortedAmounts[maxIndex];
-
-                        let maxAmount = sortedAmounts[maxIndex].amount;
+                        let maxAmount = sortedAmounts[Math.min(width - 1, Math.ceil(width * 39 / 40))].amount;
 
                         // For the pathetic cases where the vast majority is 0
                         if (maxAmount === 0){
@@ -199,6 +211,50 @@
                         const binWidth = Math.max(1, Math.floor(width / bins));
                         GraphIon.Edges.binWidth = binWidth;
 
+                        function median(array){
+                            const length = array.length;
+                            // First do insertion sort (quite effective for small arrays which we know is the case)
+                            let i = 0;
+                            while (i < length){
+                                let j = i;
+                                while (j > 0 && array[j - 1] > array[j]){
+                                    const oldAtJ = array[j];
+                                    array[j] = array[j - 1];
+                                    array[j - 1] = oldAtJ;
+                                    j--;
+                                }
+                                i++;
+                            }
+                            return array[Math.floor(length / 2)];
+                        }
+
+                        const plotHeights = new Int32Array(width);
+                        for (let index = 0; index < width; index++){
+                            const currentHeight = Math.ceil(height * amounts[index] / maxAmount);
+                            if (currentHeight >= 1){
+                                const startRectIndex = Math.max(index - Math.ceil(binWidth / 2), 0);
+                                //const startRectIndex = index;
+                                const endRectIndex = Math.min(width, index + Math.ceil(binWidth / 2));
+                                for (let rectIndex = startRectIndex; rectIndex < endRectIndex; rectIndex++){
+                                    if (currentHeight > plotHeights[rectIndex]){
+                                        plotHeights[rectIndex] = currentHeight;
+                                    }
+                                }
+                            }
+                        }
+
+                        if (bins > 400){
+                            const plotHeightCopy = plotHeights.slice(0, width);
+
+                            // Apply some kind of median filter (notice that the borders remain the same)
+                            const MEDIAN_RANGE = 15;
+                            for (let index = MEDIAN_RANGE; index < width - MEDIAN_RANGE; index++){
+                                plotHeights[index] = median(plotHeightCopy.slice(index - MEDIAN_RANGE, index + MEDIAN_RANGE));
+                            }
+                        }
+
+                        GraphIon.Edges.plotHeights = plotHeights;
+
                         renderEdgeWeightDistribution();
 
                         const canvas = document.getElementById('edge-weights');
@@ -221,35 +277,25 @@
                             if (GraphIon.Edges.mouseDown){
                                 GraphIon.Edges.filterX2 = event.offsetX;
                                 renderEdgeWeightDistribution();
-                                GraphIon.Edges.mouseDown = false;
                             }
                         });
                         canvas.addEventListener('mouseenter', function(event){
-                            if (event.buttons === 1){
+                            if (event.buttons === 1 && !GraphIon.Edges.mouseDown){
                                 GraphIon.Edges.mouseDown = true;
-                                GraphIon.Edges.filterX1 = event.offsetX;
+                                if (event.offsetX < 20){
+                                    GraphIon.Edges.filterX1 = 0;
+                                }
+                                else if (event.offsetX > width - 20){
+                                    GraphIon.Edges.filterX1 = width;
+                                } else {
+                                    GraphIon.Edges.filterX1 = event.offsetX;
+                                }
                             }
                         });
                     }
 
                     const endTime = performance.now();
                     console.log('Preparing after parsing took ' + (endTime - startTime) + ' ms');
-
-                    /*
-                    let inverted = toCsv(vertices, edgesFrom.subarray(0, edgeCount / 2), edgesTo.subarray(0, edgeCount / 2), edgesWeight.subarray(0, edgeCount / 2));
-
-                    const request = new XMLHttpRequest();
-                    request.open('POST', '/uploadnow', true);
-                    request.onreadystatechange = function() {
-                        if (request.readyState == 4 && request.status == 200){
-                            window.location.assign(request.responseURL);
-                        }
-                    };
-
-                    const form = new FormData();
-                    form.append('file', new File([inverted], file.name));
-                    request.send(form);
-                    */
                 });
             }
 
@@ -296,32 +342,33 @@
                 const height = GraphIon.Edges.canvasHeight;
                 const binWidth = GraphIon.Edges.binWidth;
                 const maxAmount = GraphIon.Edges.roughMaxAmount;
-                const amounts = GraphIon.Edges.distributionAmounts;
+                //const amounts = GraphIon.Edges.distributionAmounts;
+                const plotHeights = GraphIon.Edges.plotHeights;
 
-                const minActiveX = Math.min(GraphIon.Edges.filterX1, GraphIon.Edges.filterX2) - GraphIon.Edges.binWidth / 2;
-                const maxActiveX = Math.max(GraphIon.Edges.filterX1, GraphIon.Edges.filterX2) + GraphIon.Edges.binWidth / 2;
+                const filtered = GraphIon.Edges.filteredIndices();
+                const minActiveX = filtered.minFilterX;
+                const maxActiveX = filtered.maxFilterX;
 
                 const canvas = document.getElementById('edge-weights');
                 canvas.width = width;
                 canvas.height = height;
 
                 const ctx = canvas.getContext('2d');
+
                 for (let index = 0; index < width; index++){
-                    const currentHeight = Math.ceil(height * amounts[index] / maxAmount);
-                    if (currentHeight >= 1){
-                        if (index >= minActiveX && index <= maxActiveX){
-                            ctx.fillStyle = "red";
-                        } else {
-                            ctx.fillStyle = "gray";
-                        }
-                        ctx.fillRect(index - Math.ceil(binWidth / 2), 0, binWidth, currentHeight);
+                    if (index >= minActiveX && index <= maxActiveX){
+                        ctx.fillStyle = "red";
+                    } else {
+                        ctx.fillStyle = "gray";
                     }
+                    const currentHeight = plotHeights[index];
+                    ctx.fillRect(index, height - currentHeight, 1, currentHeight);
                 }
 
-                const edgeCountDiv = document.getElementById('edge-count');
+                const weightSelectDiv = document.getElementById('weight-selection-info');
 
-                const filtered = GraphIon.Edges.filteredIndices();
-                edgeCountDiv.innerText = (filtered.maxIndex - filtered.minIndex + 1) + " edges are selected";
+                const weights = GraphIon.Edges.sortedWeights;
+                weightSelectDiv.innerText = 'You have selected ' + (filtered.maxIndex - filtered.minIndex + 1) + ' edges with weight between ' + weights[filtered.minIndex].weight + ' and ' + weights[filtered.maxIndex].weight;
 
                 console.log('Rendering took ' + (performance.now() - startTime) + ' ms');
             }
