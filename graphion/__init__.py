@@ -1,17 +1,15 @@
 """
-Author(s): Tom Udding
+Author(s): Tom Udding, Steven van den Broek
 Created: 2019-04-29
-Edited: 2019-05-20
+Edited: 2019-05-23
 """
 from flask import Flask
 server = Flask(__name__)
 
-from os import mkdir
+from os import mkdir, makedirs
 from os.path import isdir
 if (not isdir('logs')):
     mkdir('logs')
-if (not isdir('graphion/api/filter/cached_plots')):
-    mkdir('graphion/api/filter/cached_plots')
 
 import logging
 logging.basicConfig(filename='logs/error.log', level=logging.DEBUG)
@@ -32,7 +30,7 @@ TEMP_FOLDER = 'temp'
 TOKEN_SIZE = 16                         #
 ALLOWED_EXTENSIONS = set(['csv'])       #
 BUFFER_SIZE = 64000                     #
-MAX_CONTENT_LENGTH = 100 * 1024 * 1024   # limit file upload size to 20 MB
+MAX_CONTENT_LENGTH = 1000 * 1024 * 1024   # limit file upload size to 1 GB
 
 # app configurations
 server.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -61,6 +59,8 @@ server.register_blueprint(filterBlueprint)
 server.register_blueprint(apiDegreeBlueprint)
 
 # other stuff
+if (not isdir('api/filter/cached_plots')):
+    makedirs('api/filter/cached_plots')
 if (not isdir(server.config['UPLOAD_FOLDER'])):
     mkdir(server.config['UPLOAD_FOLDER'])
 if (not isdir(server.config['TEMP_FOLDER'])):

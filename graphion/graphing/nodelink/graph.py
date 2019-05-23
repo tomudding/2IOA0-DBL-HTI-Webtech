@@ -15,6 +15,7 @@ from networkx import from_pandas_adjacency
 from networkx.algorithms.centrality import degree_centrality
 from networkx.drawing.layout import circular_layout, spring_layout
 from networkx.drawing.nx_agraph import graphviz_layout
+from networkx.drawing.nx_pylab import draw_networkx_edges
 from networkx.classes.function import number_of_nodes
 import numpy as np
 from pandas import read_hdf, Series
@@ -35,18 +36,19 @@ def generateForceDirectedDiagram(file, isDirected):
     df = decreaseDiagramSize(file)
     # convert Pandas DataFrame (Matrix) to NetworkX graph
     G = from_pandas_adjacency(df)
-    layout = spring_layout(G, k=0.42/sqrt(number_of_nodes(G)))
+    layout = spring_layout(G, k=1.42/sqrt(number_of_nodes(G)))
 
     # get node and edge information from graph
     nodes, nodes_coordinates = zip(*sorted(layout.items()))
     nodes_xs, nodes_ys = list(zip(*nodes_coordinates))
     nodeDataSource = ColumnDataSource(dict(x=nodes_xs, y=nodes_ys, name=nodes))
-    lineDataSource = ColumnDataSource(getEdgeInformation(G, layout))
+    lineDataSource = ColumnDataSource(calculateEdgePositions(G, layout))
+    #lineDataSource = ColumnDataSource(G.edges)
 
     # create plot
     plot = figure(plot_width=400, plot_height=400, tools=['pan', 'tap', 'wheel_zoom', 'reset', 'box_zoom'])#, hover])
     nodeGlyph = plot.circle('x', 'y', source=nodeDataSource, size=10, line_width=1, line_color="#000000", level='overlay')
-    lineGlyph = plot.multi_line('xs', 'ys', source=lineDataSource, line_width=1.3, alpha='alphas', color='#000000')
+    lineGlyph = plot.multi_line('xs', 'ys', source=lineDataSource, line_width=1.3, color='#000000')#, alpha='alphas')
 
     # calculate centrality
     centrality = degree_centrality(G)
@@ -67,16 +69,11 @@ def generateForceDirectedDiagram(file, isDirected):
     return pn.Column(plot)
 
 # edge information calculator - helper function for generateForceDirectedDiagram()
-def getEdgeInformation(G, layout):
-    d = dict(xs=[], ys=[], alphas=[])
-    weights = [d['weight'] for u, v, d in G.edges(data=True)]
-    maxWeight = max(weights)
-    calculateAlpha = lambda h: 0.1 + 0.6 * (h / maxWeight)
-
-    for u, v, data in G.edges(data=True):
+def calculateEdgePositions(G, layout):
+    d = dict(xs=[], ys=[])
+    for u, v, _ in G.edges(data=True):
         d['xs'].append([layout[u][0], layout[v][0]])
         d['ys'].append([layout[u][1], layout[v][1]])
-        d['alphas'].append(calculateAlpha(data['weight']))
     return d
 
 # Generate a hierarchical node-link diagram

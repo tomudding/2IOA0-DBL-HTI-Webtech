@@ -6,6 +6,5 @@ uploads/
 temp/
 logs/
 .ipynb_checkpoints
-graphion/filter/api/cached_plots
-graphion/api/filter/cached_plots/
 testing/tom/
+api/filter/cached_plots/

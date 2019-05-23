@@ -1,5 +1,5 @@
 """
-Author(s): Steven van den Broek
+Author(s): Steven van den Broek, Tom Udding
 Created: 2019-05-18
 Edited: 2019-05-20
 """
@@ -10,10 +10,11 @@ from bokeh.plotting import figure, show
 from bokeh.models import BoxSelectTool, Circle, CustomJS, ColumnDataSource
 import pandas
 from pandas import read_hdf
-import random
 import time
 
 def generate_selection(file, kind="degree", dir="in"):
+    big_bang = time.time()
+
     if (kind == "degree"):
         edges=False
     else:
@@ -24,45 +25,56 @@ def generate_selection(file, kind="degree", dir="in"):
     begin = time.time()
     df = read_hdf(file)
     names = df.columns.tolist()
+
     print("Reading data {}-{}: ".format(dir, kind) + str(time.time()-begin))
 
     begin = time.time()
     ### BASIC DEGREE COUNTING
     if (not edges):
-        deg_all = []
         if (dir == "in"):
-            for name in names:
-                deg_all.append([df[name][df[name] > 0].count()])
+            deg_all = (df.ne(0).sum(axis=1)).to_numpy(copy=True)
         if (dir == "out"):
-            for name in names:
-                deg_all.append([df.loc[name, : ][df.loc[name, : ] > 0].count()])
+            deg_all = (df[df.columns].ne(0).sum(axis=1)).to_numpy(copy=True)
     else:
-        deg_all = [[item] for sublist in df.values for item in sublist]
+        adj_matrix = df.to_numpy(copy=True)  # convert dataframe to numpy array for efficiency
+        deg_all = adj_matrix.flatten()
+
     print("Degree counting/edge weights {}-{}: ".format(dir, kind) + str(time.time() - begin))
     begin = time.time()
     if (len(deg_all) > limit):
-        deg = random.sample(deg_all, limit)
-        deg.append(max(deg_all))
-        deg.append(min(deg_all))
+        deg = np.random.choice(deg_all, limit, replace=False)
+        #deg = deg_all[:limit]
+        print("Random sampling: {}-{}: ".format(dir, kind) + str(time.time() - begin))
+        begin = time.time()
+        #np.append(deg, np.array([max(deg_all)]))
+        #np.append(deg, np.array([min(deg_all)]))
+        print("Appending: {}-{}: ".format(dir, kind) + str(time.time() - begin))
     else:
         deg = deg_all
-    print("Random sampling: {}-{}: ".format(dir, kind) + str(time.time() - begin))
-    deg_plot = np.linspace(-max(deg)[0] / 30, max(deg) + max(deg)[0] / 30, 1000)
-    # Calculate 'pretty good' (since best takes a long time) bandwidth
-    begin = time.time()
-    grid = GridSearchCV(KernelDensity(),
-                        {'bandwidth': np.linspace(0.1, 10.0, 20)},
-                        cv=5,
-                        iid=False)  # 5-fold cross-validation
-    grid.fit(deg)
-    print("Bandwidth: {}-{}: ".format(dir, kind) + str(time.time()-begin))
-    begin = time.time()
-    kde = grid.best_estimator_
-    # if (not edges):
-    #     kde = KernelDensity(kernel="gaussian", bandwidth=5.3).fit(deg)
-    # if (edges):
-    #     kde = KernelDensity(kernel="gaussian", bandwidth=0.2).fit(deg)
 
+    begin = time.time()
+    deg_all = np.reshape(deg_all, (-1, 1))
+    deg = np.reshape(deg, (-1, 1))
+    print("Reshaping: {}-{}: ".format(dir, kind) + str(time.time() - begin))
+    deg_plot = np.linspace(-max(deg)[0] / 15, max(deg)[0] + max(deg)[0] / 15, 1000)
+    # Calculate 'pretty good' (since best takes a long time) bandwidth
+    #begin = time.time()
+    # grid = GridSearchCV(KernelDensity(),
+    #                     {'bandwidth': np.linspace(0.1, 10.0, 20)},
+    #                     cv=5,
+    #                     iid=False)  # 5-fold cross-validation
+    # grid.fit(deg)
+    #print("Bandwidth: {}-{}: ".format(dir, kind) + str(time.time()-begin))
+    begin = time.time()
+    # kde = grid.best_estimator_
+    if (not edges):
+        kde = KernelDensity(kernel="gaussian", bandwidth=5.3).fit(deg)
+    if (edges):
+        kde = KernelDensity(kernel="gaussian", bandwidth=0.2).fit(deg)
+    try:
+        print(deg_plot[0][0])
+    except IndexError:
+        deg_plot = np.array([[item] for item in deg_plot])
     log_dens = kde.score_samples(deg_plot)
     X = np.append(deg_plot[:, 0], deg_plot[:, 0][-1])
     X = np.insert(X, 0, X[0])
@@ -81,7 +93,7 @@ def generate_selection(file, kind="degree", dir="in"):
                 """ + 'p.id = "between-{}-degree"'.format(dir) + """
                 document.getElementsByClassName("bk-root")[0].appendChild(p)
             }
-            
+
             let colored_amount = "<span style='color:red; font-weight:bold'>" + amount + "</span>"
             if (amount < 600){
                 colored_amount = "<span style='color:orange; font-weight:bold'>" + amount + "</span>"
@@ -94,13 +106,13 @@ def generate_selection(file, kind="degree", dir="in"):
     else:
         type_dependent = """
             let p = document.getElementById('between-weight')
-            
+
             if(!p){
                 p = document.createElement("p")
                 p.id = "between-weight"
                 document.getElementsByClassName("bk-root")[0].appendChild(p)
             }
-            
+
             let colored_amount = "<span style='color:red; font-weight:bold'>" + amount + "</span>"
             if (amount < 4000){
                 colored_amount = "<span style='color:orange; font-weight:bold'>" + amount + "</span>"
@@ -112,11 +124,11 @@ def generate_selection(file, kind="degree", dir="in"):
             p.innerHTML = "Selected " + colored_amount + " edges with weight between " + Math.ceil(geometry.x0*100)/100 + " and " + Math.floor(geometry.x1*100)/100 + "."
         """
 
-    geometry_callback = CustomJS(args=dict(complete=complete, before=before, middle=middle, after=after, degrees=[item for sublist in deg_all for item in sublist]), code="""   
+    geometry_callback = CustomJS(args=dict(complete=complete, before=before, middle=middle, after=after), code="""
     let geometry = cb_data["geometry"]
     let Xs = complete.data.x
     let Ys = complete.data.y
-    
+
     let bXs = before.data.x
     let bYs = before.data.y
     bXs = []
@@ -129,7 +141,7 @@ def generate_selection(file, kind="degree", dir="in"):
     let aYs = after.data.y
     aXs = []
     aYs = []
-    
+
     for (let i = 0; i < Xs.length; i++){
     // should use binary search
     let x = Xs[i]
@@ -147,7 +159,7 @@ def generate_selection(file, kind="degree", dir="in"):
     mYs.push(y)
     }
     }
-    
+
     bXs.unshift(bXs[0])
     bYs.unshift(0)
     bXs.push(bXs[bXs.length-1])
@@ -160,24 +172,19 @@ def generate_selection(file, kind="degree", dir="in"):
     aYs.unshift(0)
     aXs.push(aXs[aXs.length-1])
     aYs[aYs.length] = 0
-        
+
     before.data.x = bXs
     before.data.y = bYs
     middle.data.x = mXs
     middle.data.y = mYs
     after.data.x = aXs
     after.data.y = aYs
-    
+
     before.change.emit()
     middle.change.emit()
     after.change.emit()
     let amount = 0
-    for (let i = 0; i < degrees.length; i++){
-      if (degrees[i] >= geometry.x0 && degrees[i] <= geometry.x1){
-        amount++;
-      }
-    }
-    """ + type_dependent)
+    """)
 
     p = figure(plot_width=700, plot_height=700)
 
@@ -199,4 +206,5 @@ def generate_selection(file, kind="degree", dir="in"):
     p.toolbar.active_drag = select_tool
     p.toolbar.autohide = True
     print("KDE + plotting: {}-{}: ".format(dir, kind) + str(time.time()-begin))
+    print("Total {}-{}: ".format(dir, kind) + str(time.time()-big_bang))
     return p
