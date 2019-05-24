@@ -87,24 +87,26 @@ def generate_selection(file, kind="degree", dir="in"):
 
     if (not edges):
 
-        type_dependent = "let p = document.getElementById('between-{}-degree')".format(dir) + """
-            if(!p){
+        type_dependent1 = "let p = document.getElementById('between-{}-degree')".format(dir) + """
+                if(!p){
                 p = document.createElement("p")
                 """ + 'p.id = "between-{}-degree"'.format(dir) + """
                 document.getElementsByClassName("bk-root")[0].appendChild(p)
             }
+            """
+        type_dependent2 = """
+             colored_amount = "<span style='color:red; font-weight:bold'>" + amount + "</span>"
+                    if (amount < 600){
+                        colored_amount = "<span style='color:orange; font-weight:bold'>" + amount + "</span>"
+                    }
+                    if (amount < 150){
+                        colored_amount = "<span style='color:green; font-weight:bold'>" + amount + "</span>"
+                    }
 
-            let colored_amount = "<span style='color:red; font-weight:bold'>" + amount + "</span>"
-            if (amount < 600){
-                colored_amount = "<span style='color:orange; font-weight:bold'>" + amount + "</span>"
-            }
-            if (amount < 150){
-                colored_amount = "<span style='color:green; font-weight:bold'>" + amount + "</span>"
-            }
             """ + 'p.innerHTML = "Selected " + colored_amount + " nodes with {}-degree between " + Math.ceil(geometry.x0) + " and " + Math.floor(geometry.x1) + "."'.format(dir)
 
     else:
-        type_dependent = """
+        type_dependent1 = """
             let p = document.getElementById('between-weight')
 
             if(!p){
@@ -112,14 +114,16 @@ def generate_selection(file, kind="degree", dir="in"):
                 p.id = "between-weight"
                 document.getElementsByClassName("bk-root")[0].appendChild(p)
             }
+            """
 
-            let colored_amount = "<span style='color:red; font-weight:bold'>" + amount + "</span>"
-            if (amount < 4000){
-                colored_amount = "<span style='color:orange; font-weight:bold'>" + amount + "</span>"
-            }
-            if (amount < 1500){
-                colored_amount = "<span style='color:green; font-weight:bold'>" + amount + "</span>"
-            }
+        type_dependent2 = """            
+            colored_amount = "<span style='color:red; font-weight:bold'>" + amount + "</span>"
+        if (amount < 4000){
+        colored_amount = "<span style='color:orange; font-weight:bold'>" + amount + "</span>"
+        }
+        if (amount < 1500){
+        colored_amount = "<span style='color:green; font-weight:bold'>" + amount + "</span>"
+        }
 
             p.innerHTML = "Selected " + colored_amount + " edges with weight between " + Math.ceil(geometry.x0*100)/100 + " and " + Math.floor(geometry.x1*100)/100 + "."
         """
@@ -183,8 +187,13 @@ def generate_selection(file, kind="degree", dir="in"):
     before.change.emit()
     middle.change.emit()
     after.change.emit()
-    let amount = 0
-    """)
+    var amount = 0
+    let data = {
+        left: geometry.x0,
+        right: geometry.x1,
+        """ + "type: '{}', dir: '{}'".format(kind, dir) + """
+    }
+    $.post("/postmethod", data, function(result){amount = result; """ + type_dependent2 + "});" + type_dependent1)
 
     p = figure(plot_width=700, plot_height=700)
 
