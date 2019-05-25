@@ -4,11 +4,12 @@ Created: 2019-05-18
 Edited: 2019-05-22
 """
 from bokeh.embed import json_item
-from flask import Blueprint
+from flask import Flask, render_template, request, redirect, Response, Blueprint
 from json import dump, dumps
 from graphion.filtering.degree_selection import generate_selection
 from graphion.graphing.generator import getFilePath
 import time
+import json
 from os.path import exists
 
 apiDegreeBlueprint = Blueprint('apiMatrixBlueprint', __name__, template_folder='templates')
@@ -30,3 +31,16 @@ def degreeAPI(file=None, type=None, dir=None):
             dump(item, json_file)
             print("To json {}-{}: ".format(dir, type) + str(time.time()-start))
         return dumps(item)
+
+@apiDegreeBlueprint.route('/')
+
+@apiDegreeBlueprint.route('/postmethod', methods = ['POST'])
+def worker():
+	# read json + reply
+	left = request.form['left']
+	right = request.form['right']
+	type = request.form['type']
+	dir = request.form['dir']
+	# length = filter_data(left, right, type, dir)
+	# return length
+	return "42"
