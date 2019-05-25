@@ -23,7 +23,7 @@ import panel as pn
 import plotly.graph_objs as go
 
 """
-Function to decrease the size of the submatrix
+Function to decrease the size of the submatrix.
 """
 def decreaseDiagramSize(file):
     df = read_hdf(file) # !!! TODO: Change implementation, reads whole file into memory, will work for the test datasets but not for larger datasets
@@ -34,7 +34,21 @@ def decreaseDiagramSize(file):
     return df
 
 """
+Function to calculate edge information (positions).
+TODO: implement weights
+"""
+def calculateEdgePositions(G, layout):
+    d = dict(xs=[], ys=[])
+    for u, v, _ in G.edges(data=True):
+        d['xs'].append([layout[u][0], layout[v][0]])
+        d['ys'].append([layout[u][1], layout[v][1]])
+    return d
 
+"""
+Function to generate a node-link diagram based on a
+```filePath```, a ```diagramType```, and ```isDirected```.
+
+Returns a Panel.Column of the diagram.
 """
 def generateNodeLinkDiagram(filePath, diagramType, isDirected):
     diagramType = diagramType.upper()
@@ -118,14 +132,6 @@ def generateForceDirectedDiagram(file, isDirected):
     nodeGlyph.glyph.fill_color = 'partition_colour'
 
     return pn.Column(plot)
-
-# edge information calculator - helper function for generateForceDirectedDiagram()
-def calculateEdgePositions(G, layout):
-    d = dict(xs=[], ys=[])
-    for u, v, _ in G.edges(data=True):
-        d['xs'].append([layout[u][0], layout[v][0]])
-        d['ys'].append([layout[u][1], layout[v][1]])
-    return d
 
 # Generate a hierarchical node-link diagram
 def generateHierarchicalDiagram(file, isDirected):
