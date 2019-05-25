@@ -77,6 +77,7 @@ def generateNodeLinkDiagram(filePath, diagramType, isDirected):
         layout = spring_layout(G, k=1.42/sqrt(number_of_nodes(G)))
     elif diagramType == "HIERARCHICAL":
         # TODO: refactor hierarchical code from Sophia
+        pass
     elif diagramType == "RADIAL":
         layout = circular_layout(G)
     else:
