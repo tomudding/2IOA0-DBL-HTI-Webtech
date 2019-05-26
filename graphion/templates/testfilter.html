@@ -321,11 +321,15 @@
 
                 // Prepare mapping old vertex indices to the filtered vertex indices
                 const oldToNewIndex = new Int32Array(mostVertexLength);
+                // Fill all the non-existent ones with -1
+                for (let index = 0; index < mostVertexLength; index++){
+                    oldToNewIndex[index] = -1;
+                }
                 {
                     let newIndex = 0;
                     for (let index = 0; index < mostVertexLength; index++){
                         if (keepVertices[index]){
-                            oldToNewIndex[newIndex++] = index;
+                            oldToNewIndex[index] = newIndex++;
                         }
                     }
                 }
