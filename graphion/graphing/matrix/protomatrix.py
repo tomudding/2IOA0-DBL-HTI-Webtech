@@ -95,8 +95,8 @@ def makeMatrix(file):
         solid.index = names
         solid.columns = names
         solid.reset_index(inplace=True)
-        liquid = solid.melt(id_vars='index', value_vars=list(df.columns[1:]), var_name="name2")
-        liquid.columns = ['index1', 'index2', 'value']
+        liquid = solid.melt(id_vars='index', value_vars=list(df.columns), var_name="name2")
+        liquid.columns = ['index2', 'index1', 'value']
         return liquid
 
     # %%
@@ -125,7 +125,7 @@ def makeMatrix(file):
                 liquid = to_liquid(df_original.values)
                 print("Matrix, melting matrix: " + str(time.time() - begin))
                 begin = time.time()
-                result = liquid.hvplot.heatmap('index1', 'index2', 'value',
+                result = liquid.hvplot.heatmap('index1', 'index2', 'value', invert=True,
                                              height=500, width=600, flip_yaxis=True, xaxis=None, yaxis=None,
                                              cmap=palette['kbc'])
                 print("Matrix, generating heatmap: " + str(time.time() - begin))
@@ -147,7 +147,7 @@ def makeMatrix(file):
                 liquid = to_liquid(reordered_matrix)
                 print("Matrix, melting matrix: " + str(time.time() - begin))
                 begin = time.time()
-                result = liquid.hvplot.heatmap('index1', 'index2', 'value',
+                result = liquid.hvplot.heatmap('index1', 'index2', 'value', invert=True,
                                              height=500, width=600, flip_yaxis=True, xaxis=None, yaxis=None,
                                              cmap=palette['kbc'])
                 print("Matrix, generating heatmap: " + str(time.time() - begin))
