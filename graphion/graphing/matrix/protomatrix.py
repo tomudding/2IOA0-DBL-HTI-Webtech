@@ -12,18 +12,29 @@ from colorcet import palette
 from scipy.spatial.distance import pdist, squareform
 from fastcluster import linkage
 from pandas import read_hdf
+import time
 
 def makeMatrix(file):
+
     df = read_hdf(file)
+    big_bang = time.time()
     names = df.columns.tolist()
-    if (len(names) > 150):
-        df = df.head(150)[names[0:150]]
+    if (len(names) > 400):
+        df = df.head(400)[names[0:400]]
     names = df.columns.tolist()
     names = [name.replace('_', ' ') for name in names]
     df.columns = names
-    #convert similarity into unsimilarity (1.0 - similarity)
+
+    df_original = df.copy()
+    # %%
+    # convert similarity into unsimilarity (1.0 - similarity)
+    begin = time.time()
     for name in names:
         df[name] = 1 - df[name]
+    print("Matrix, inverting values took: " + str(time.time()-begin))
+    # %%
+    # This is just the method online: https://gmarti.gitlab.io/ml/2017/09/07/how-to-sort-distance-matrix.html
+    # We have to clean data and modified the method
 
     # %%
     # The output of linkage is stepwise dendrogram,
@@ -56,10 +67,7 @@ def makeMatrix(file):
 
     # linkage(squareform(pdist(df, metric="euclidean")), method="ward",preserve_input=True)
     # %%
-    def reorderrow(df, order):
-        a = df.values
-        permutation = order
-        return a[:, permutation]
+    # order original matrix based on index provided
 
     def reordercol(df, order):
         secondIndex = []
@@ -71,6 +79,16 @@ def makeMatrix(file):
         a = new_df.reindex(index=secondIndex)
         return a
 
+    def reorderrow(df, order):
+        a = df.values
+        permutation = order
+        return a[:, permutation]
+
+    def reorder_input_df(df, order):
+        reorder_col = reordercol(df, order)
+        finish = reorderrow(reorder_col, order)
+        return finish
+
     # %%
     def to_liquid(matrix):
         solid = pd.DataFrame(matrix)
@@ -78,8 +96,7 @@ def makeMatrix(file):
         solid.columns = names
         solid.reset_index(inplace=True)
         liquid = solid.melt(id_vars='index', value_vars=list(df.columns[1:]), var_name="name2")
-        liquid.columns = ['name1', 'name2', 'similarity']
-        # print(liquid)
+        liquid.columns = ['index1', 'index2', 'value']
         return liquid
 
     # %%
@@ -89,28 +106,56 @@ def makeMatrix(file):
         for i in range(nrows):
             for j in range(ncols):
                 grid[i][j] = 1 - grid[i][j]
+                # %%
 
-    # %%
     pn.extension()
 
     class Matrix_dropdown(param.Parameterized):
-        reordering = param.ObjectSelector(default="ward",
-                                          objects=["ward", "single", "average", "complete", "centroid", "weighted",
-                                                   "median"])
+        reordering = param.ObjectSelector(default="none",
+                                          objects=["none", "single", "average", "complete", "centroid", "weighted",
+                                                   "median", "ward"])
         metric = param.ObjectSelector(default="euclidean",
                                       objects=["euclidean", "minkowski", "cityblock", "sqeuclidean", "cosine",
                                                "correlation", "hamming", "jaccard", "chebyshev", "canberra",
                                                "braycurtis"])
 
         def view(self):
-            res_order, res_linkage = compute_serial_matrix(df, self.reordering, dist_metric=self.metric)
-            reordered_matrix_col = reordercol(df, res_order)
-            reordered_matrix = reorderrow(reordered_matrix_col, res_order)
-            dis_to_similarity(reordered_matrix)
-            result = to_liquid(reordered_matrix)
-            return result.hvplot.heatmap('name1', 'name2', 'similarity',
-                                         height=500, width=600, flip_yaxis=True, xaxis=None, yaxis=None,
-                                         cmap=palette['kbc'])
-
+            if self.reordering == "none":
+                begin = time.time()
+                liquid = to_liquid(df_original.values)
+                print("Matrix, melting matrix: " + str(time.time() - begin))
+                begin = time.time()
+                result = liquid.hvplot.heatmap('index1', 'index2', 'value',
+                                             height=500, width=600, flip_yaxis=True, xaxis=None, yaxis=None,
+                                             cmap=palette['kbc'])
+                print("Matrix, generating heatmap: " + str(time.time() - begin))
+                return result
+            else:
+                small_bang = time.time()
+                res_order, res_linkage = compute_serial_matrix(df, self.reordering, dist_metric=self.metric)
+                print("Matrix, calculating reordering: " + str(time.time() - small_bang))
+                begin = time.time()
+                reordered_matrix_col = reordercol(df, res_order)
+                print("Matrix, reordering columns: " + str(time.time() - begin))
+                begin = time.time()
+                reordered_matrix = reorderrow(reordered_matrix_col, res_order)
+                print("Matrix, reordering rows: " + str(time.time() - begin))
+                begin = time.time()
+                dis_to_similarity(reordered_matrix)
+                print("Matrix, to similarity: " + str(time.time() - begin))
+                begin = time.time()
+                liquid = to_liquid(reordered_matrix)
+                print("Matrix, melting matrix: " + str(time.time() - begin))
+                begin = time.time()
+                result = liquid.hvplot.heatmap('index1', 'index2', 'value',
+                                             height=500, width=600, flip_yaxis=True, xaxis=None, yaxis=None,
+                                             cmap=palette['kbc'])
+                print("Matrix, generating heatmap: " + str(time.time() - begin))
+                print("------------------------------------")
+                print("Matrix, reordering took in total: " + str(time.time() - small_bang))
+                print()
+                return result
+    begin = time.time()
     matrix = Matrix_dropdown(name='Adjacency Matrix')
-    return pn.Column(matrix.param, matrix.view)
+    pane = pn.Column(matrix.param, matrix.view)
+    return pane
