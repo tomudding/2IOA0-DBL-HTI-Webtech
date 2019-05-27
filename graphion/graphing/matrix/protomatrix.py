@@ -68,6 +68,9 @@ def makeMatrix(file):
     # linkage(squareform(pdist(df, metric="euclidean")), method="ward",preserve_input=True)
     # %%
     # order original matrix based on index provided
+    def author_reorder_list(df, order):
+        new_names = df.columns
+        return [new_names[i] for i in order]
 
     def reordercol(df, order):
         secondIndex = []
@@ -97,6 +100,17 @@ def makeMatrix(file):
         solid.reset_index(inplace=True)
         liquid = solid.melt(id_vars='index', value_vars=list(df.columns), var_name="name2")
         liquid.columns = ['index2', 'index1', 'value']
+        return liquid
+
+    def to_liquid_2(matrix, df, order):
+        solid = pd.DataFrame(matrix)
+        name_list = author_reorder_list(df, order)
+        solid.index = name_list
+        solid.columns = name_list
+        solid.reset_index(inplace=True)
+        liquid = solid.melt(id_vars='index', value_vars=list(name_list[0:]), var_name="name2")
+        liquid.columns = ['index2', 'index1', 'value']
+        # print(liquid)
         return liquid
 
     # %%
@@ -144,7 +158,7 @@ def makeMatrix(file):
                 dis_to_similarity(reordered_matrix)
                 print("Matrix, to similarity: " + str(time.time() - begin))
                 begin = time.time()
-                liquid = to_liquid(reordered_matrix)
+                liquid = to_liquid_2(reordered_matrix, df, res_order)
                 print("Matrix, melting matrix: " + str(time.time() - begin))
                 begin = time.time()
                 result = liquid.hvplot.heatmap('index1', 'index2', 'value', invert=True,
