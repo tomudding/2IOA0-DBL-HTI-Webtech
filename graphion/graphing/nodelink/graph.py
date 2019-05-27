@@ -29,8 +29,8 @@ def decreaseDiagramSize(file):
     df = read_hdf(file) # !!! TODO: Change implementation, reads whole file into memory, will work for the test datasets but not for larger datasets
     names = df.columns
     # submatrix for quicker development
-    if (len(names) > 150):
-        df = df.head(150)[names[0:150]]
+    if (len(names) > 400):
+        df = df.head(400)[names[0:400]]
     return df
 
 """

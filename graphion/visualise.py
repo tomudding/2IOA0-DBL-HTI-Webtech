@@ -7,6 +7,7 @@ from flask import Blueprint, redirect, render_template
 from graphion import server
 from graphion.graphing.generator import generateBokehApp
 from bokeh.embed import server_document
+import time
 
 visualiseBlueprint = Blueprint('visualiseBlueprint', __name__, template_folder='templates')
 
@@ -19,4 +20,8 @@ def visualise(file=None):
     return render_template('visualise.html', fileName=file, script=script)
 
 def modify_doc(doc):
+    begin = time.time()
     doc.add_root(generateBokehApp(doc))
+    print("------------------------------------")
+    print("Generating bokeh app in total: " + str(time.time() - begin))
+    print()

@@ -58,19 +58,23 @@ def generate_selection(file, kind="degree", dir="in"):
     print("Reshaping: {}-{}: ".format(dir, kind) + str(time.time() - begin))
     deg_plot = np.linspace(-max(deg)[0] / 15, max(deg)[0] + max(deg)[0] / 15, 1000)
     # Calculate 'pretty good' (since best takes a long time) bandwidth
-    #begin = time.time()
+    # begin = time.time()
+    #
     # grid = GridSearchCV(KernelDensity(),
     #                     {'bandwidth': np.linspace(0.1, 10.0, 20)},
-    #                     cv=5,
+    #                     cv=min(len(deg), 5),
     #                     iid=False)  # 5-fold cross-validation
     # grid.fit(deg)
-    #print("Bandwidth: {}-{}: ".format(dir, kind) + str(time.time()-begin))
+    # print("Bandwidth: {}-{}: ".format(dir, kind) + str(time.time()-begin))
     begin = time.time()
     # kde = grid.best_estimator_
-    if (not edges):
-        kde = KernelDensity(kernel="gaussian", bandwidth=5.3).fit(deg)
-    if (edges):
-        kde = KernelDensity(kernel="gaussian", bandwidth=0.2).fit(deg)
+    print(np.std(deg))
+    bandwidth = max(1.06 * np.std(deg) * len(deg)**(-1/5), 0.05)
+    kde = KernelDensity(kernel="gaussian", bandwidth=bandwidth).fit(deg)
+    # if (not edges):
+    #     kde = KernelDensity(kernel="gaussian", bandwidth=5.3).fit(deg)
+    # if (edges):
+    #     kde = KernelDensity(kernel="gaussian", bandwidth=0.2).fit(deg)
     try:
         print(deg_plot[0][0])
     except IndexError:
