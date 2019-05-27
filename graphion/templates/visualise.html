@@ -11,9 +11,13 @@ Edited: 2019-05-10
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title>graphion - visualisation</title>
+	<!-- Stylesheets for the loading screen-->
 	<link rel="stylesheet" type="text/css" href="/static/css/grid.css">
 	<link rel="stylesheet" type="text/css" href="/static/css/grid_style.css">
 	<link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700" rel="stylesheet">
+	<!-- Stylesheet for the tool after the loading -->
+	<link rel="stylesheet" type="text/css" href="/static/css/tool_ui.css">
+	<script src="/static/scripts/toolUI.js"></script>
 	<!-- Bokeh files from Cloudflare CDN -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh.min.css" integrity="sha256-kmX/Nb5PazwKydPmaZjEb9sOg8BWh1v5eP14IzXJUkU=" crossorigin="anonymous" />
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh-tables.min.css" integrity="sha256-RL9kShsLcf2jHG2zzLh1peDLvWOEK0wPFWSZTiYykc4=" crossorigin="anonymous" />
@@ -32,7 +36,7 @@ Edited: 2019-05-10
 			UNLESS WE WANT TO USE THIS
 			- Tom Udding
 		-->
-	<section class="body-wrapper">
+	<section class="body-wrapper" id="loading-screen">
 		<div class="container">
 			<div class="row">
 				<div class="col-s-6" id="nodelink">
@@ -47,6 +51,7 @@ Edited: 2019-05-10
 				</div>
 				<script>
 					var canvas = document.getElementById('nodelink-loading');
+					var container = document.getElementById('loading-screen');
 					var context = canvas.getContext('2d');
 					var div = document.getElementById("nodelink");
 					var width = div.clientWidth - 5;
@@ -165,7 +170,8 @@ Edited: 2019-05-10
 							dot.connect(i);
 						});
 						if (document.getElementsByClassName('bk bk-canvas-events').length > 0) {
-							div.remove();
+							container.remove();
+							document.getElementById('after-loading').hidden = false;
 						} else {
 							requestAnimFrame(draw);
 						}
@@ -244,7 +250,8 @@ Edited: 2019-05-10
 							square.draw();
 						});
 						if (document.getElementsByClassName('bk bk-canvas-events').length > 0) {
-							matrixDiv.remove();
+							container.remove();
+							document.getElementById('after-loading').hidden = false;
 						} else {
 							requestAnimFrame(drawMatrix)
 						}
@@ -253,12 +260,66 @@ Edited: 2019-05-10
 					createSquares();
 					drawMatrix();
 				</script>
-				<div class="col-s-12">
-					{{ script|safe }}
-				</div>
 			</div>
 		</div>
 	</section>
+	<div id="after-loading" hidden>
+		<div class="left-bar-shown" id="left-bar-shown">
+			<div class="left-bar-small-links">
+				<a href="index.html"><- home</a><br>
+				<a href="filter.html"><- pre-filter</a>
+			</div>
+			<div class="left-bar-graphion">
+				graph<b>ion</b>
+			</div>
+			<div class="left-bar-choose-vis">Choose a vizualisation type:</div>
+			<div class="left-bar-screen-big" style="top: 27vh;">Screen 1:</div>
+			<div class="left-bar-screen-small" style="top: 27vh; left: 9vw;">Radial</div>
+			<div class="left-bar-screen-small" style="top: 27vh; left: 15vw;">Force-directed</div>
+			<div class="left-bar-screen-small" style="top: 39vh; left: 9vw;">Hierarchical</div>
+			<div class="left-bar-screen-small" style="top: 39vh; left: 15vw;">3D node-link diagram</div>
+			<div class="left-bar-screen-separator">---------------------------------------------</div>
+			<div class="left-bar-hide-button" onclick="hideLeftBar()"><</div>
+			<div class="left-bar-screen-big" style="top: 45vh;">Screen 2:</div>
+			<div class="left-bar-screen-small" style="top: 50vh; left: 10vw;">Select ordering:</div>
+			<div class="left-bar-screen-small" style="top: 55vh; left: 1.5vw;">Adjacency</div>
+			<div class="left-bar-screen-small" style="top: 57vh; left: 1.75vw;">matrix</div>
+			<div class="left-bar-node-labels" style="top: 64vh;">Resize the nodes by:</div>
+			<div class="left-bar-node-labels" style="top: 74vh;">Recolor the nodes by:</div>
+			<div class="left-bar-dark-mode-label">Dark mode:</div>
+		</div>
+		<div class="left-bar-hidden" id="left-bar-hidden" hidden>
+			<div class="left-bar-show-button" onclick="showLeftBar()">></div>
+		</div>
+		<div class="right-bar-shown" id="right-bar-shown">
+			<div class="right-bar-big" style="top: 5.6vh;">Children of the current node:</div>
+			<div class="right-bar-small" style="top: 10vh;">Select ordering:</div>
+			<div class="right-bar-info-block" style="top: 14.4vh;">
+				<div class="right-bar-info-title">The info title of this ordering</div>
+				<div class="right-bar-info-text">
+					Line1<br>
+					Line2<br>
+					Line3<br>
+					Line4<br>
+				</div>
+			</div>
+			<div class="right-bar-hide-button" onclick="hideRightBar()">></div>
+			<div class="right-bar-big" style="top: 53vh;">Some other information:</div>
+			<div class="right-bar-small" style="top: 57vh;">Select ordering:</div>
+			<div class="right-bar-info-block" style="top: 62vh;">
+				<div class="right-bar-info-title">The second info title about this</div>
+				<div class="right-bar-info-text">
+					Line1<br>
+					Line2<br>
+					Line3<br>
+					Line4<br>
+				</div>
+			</div>
+		</div>
+		<div class="right-bar-hidden" id="right-bar-hidden" hidden>
+			<div class="right-bar-show-button" onclick="showRightBar()"><</div>
+		</div>
+	</div>
+	<div style="z-index: 1; position: absolute; left: 4vw;">{{ script|safe }}</div>
 </body>
-
 </html>
