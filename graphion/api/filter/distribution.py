@@ -41,6 +41,9 @@ def worker():
 	right = request.form['right']
 	type = request.form['type']
 	dir = request.form['dir']
-	# length = filter_data(left, right, type, dir)
-	# return length
-	return "42"
+	length = filter_data(left, right, type, dir)
+	return length
+
+
+def filter_data(left, right, type, dir):
+    return "42"
