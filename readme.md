@@ -14,6 +14,7 @@ Given project deadlines:
 | Final tool/report/video| 21st of June |
 
 Our own deadlines:
+
 | Task                              | Deadline date |
 ------------------------------------|----------------
 | Filtering page v1                 | 31st of May   |
