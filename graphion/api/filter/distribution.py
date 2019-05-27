@@ -50,9 +50,11 @@ def worker():
 def filter_data(left, right, type, dir, file):
 	filepath = getFilePath(file)
 	if(type == 'degree'):
-		return generate_degree_selection(filepath, left, right, dir).size
+		filtered_df, filtered_names = generate_degree_selection(filepath, left, right, dir)
+		return len(filtered_names)
 	elif(type == 'weight'):
-		return generate_edge_selection(filepath, left, right, keep_edges = False).size
+		filtered_df = generate_edge_selection(filepath, left, right, keep_edges = False)
+		return filtered_df.size
 
 
 

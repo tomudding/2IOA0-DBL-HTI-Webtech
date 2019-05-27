@@ -153,6 +153,6 @@ def generate_degree_selection(file, cutoff_l = 2, cutoff_r = 900, dir = "in"):
     output_df = pandas.DataFrame(result_matrix, index=rem_names, columns=rem_names)
     # print(output_df)
 
-    return output_df
+    return output_df, rem_names
 
 #generate_edge_selection("../../datasets/GephiMatrix_author_similarity.csv")
