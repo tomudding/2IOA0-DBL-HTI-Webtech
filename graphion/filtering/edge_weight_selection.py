@@ -25,13 +25,8 @@ def processCSVMatrix(file):
     return df
 
 def generate_edge_selection(file, kind = "edge", cutoff_l = 0.6, cutoff_r = 10.0, keep_edges = False):
-    df = processCSVMatrix(file)
-    fileUniqueHash ='test1'
-    df.to_hdf(os.path.join("../../datasets/", (fileUniqueHash + '.h5')), key=fileUniqueHash)
-    df = read_hdf(os.path.join("../../datasets/", (fileUniqueHash + '.h5')))
-
     #if file is already in hdf format, apply the following read method
-    #df = read_hdf(file)
+    df = read_hdf(file)
     # print(df[-20:])
 
     adj_matrix = df.to_numpy(copy = True)  #convert dataframe to numpy array for efficiency
@@ -105,13 +100,7 @@ def intersection(lst1, lst2):
 
 
 def generate_degree_selection(file, cutoff_l = 2, cutoff_r = 900, dir = "in"):
-    df = processCSVMatrix(file)
-    fileUniqueHash = 'test1'
-    df.to_hdf(os.path.join("../../datasets/", (fileUniqueHash + '.h5')), key=fileUniqueHash)
-    df = read_hdf(os.path.join("../../datasets/", (fileUniqueHash + '.h5')))
-
-    # if file is already in hdf format, apply the following read method
-    # df = read_hdf(file)
+    df = read_hdf(file)
 
     adj_matrix = df.to_numpy(copy=True)  # convert dataframe to numpy array for efficiency
 
@@ -167,4 +156,3 @@ def generate_degree_selection(file, cutoff_l = 2, cutoff_r = 900, dir = "in"):
     return output_df
 
 #generate_edge_selection("../../datasets/GephiMatrix_author_similarity.csv")
-generate_degree_selection("../../datasets/GephiMatrix_author_similarity.csv")

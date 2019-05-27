@@ -195,6 +195,7 @@ def generate_selection(file, kind="degree", dir="in"):
     let data = {
         left: geometry.x0,
         right: geometry.x1,
+        file: window.location.pathname.substring(8),
         """ + "type: '{}', dir: '{}'".format(kind, dir) + """
     }
     $.post("/postmethod", data, function(result){amount = result; """ + type_dependent2 + "});" + type_dependent1)

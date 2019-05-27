@@ -7,6 +7,7 @@ from bokeh.embed import json_item
 from flask import Flask, render_template, request, redirect, Response, Blueprint
 from json import dump, dumps
 from graphion.filtering.degree_selection import generate_selection
+from graphion.filtering.edge_weight_selection import generate_degree_selection, generate_edge_selection
 from graphion.graphing.generator import getFilePath
 import time
 import json
@@ -19,31 +20,39 @@ apiDegreeBlueprint = Blueprint('apiMatrixBlueprint', __name__, template_folder='
 @apiDegreeBlueprint.route('/api/filter/distribution/<type>/<file>', methods=['GET'], strict_slashes=False)
 @apiDegreeBlueprint.route('/api/filter/distribution/<type>/', methods=['GET'], strict_slashes=False)
 def degreeAPI(file=None, type=None, dir=None):
-    filePath = 'api/filter/cached_plots/{}-{}-{}.json'.format(file, type, dir)
-    if (exists(filePath)):
-        with open(filePath, 'r') as json_file:
-            return json_file.read()
-    else:
-        with open(filePath, 'w+') as json_file:
-            plot = generate_selection(getFilePath(file), kind=type, dir=dir)
-            start = time.time()
-            item = json_item(plot)
-            dump(item, json_file)
-            print("To json {}-{}: ".format(dir, type) + str(time.time()-start))
-        return dumps(item)
+	filePath = 'api/filter/cached_plots/{}-{}-{}.json'.format(file, type, dir)
+	if (exists(filePath)):
+		with open(filePath, 'r') as json_file:
+			return json_file.read()
+	else:
+		with open(filePath, 'w+') as json_file:
+			plot = generate_selection(getFilePath(file), kind=type, dir=dir)
+			start = time.time()
+			item = json_item(plot)
+			dump(item, json_file)
+			print("To json {}-{}: ".format(dir, type) + str(time.time()-start))
+		return dumps(item)
 
 @apiDegreeBlueprint.route('/')
 
 @apiDegreeBlueprint.route('/postmethod', methods = ['POST'])
 def worker():
 	# read json + reply
-	left = request.form['left']
-	right = request.form['right']
+	left = float(request.form['left'])
+	right = float(request.form['right'])
 	type = request.form['type']
 	dir = request.form['dir']
-	length = filter_data(left, right, type, dir)
-	return length
+	file = request.form['file']
+	length = filter_data(left, right, type, dir, file)
+	return str(length)
 
 
-def filter_data(left, right, type, dir):
-    return "42"
+def filter_data(left, right, type, dir, file):
+	filepath = getFilePath(file)
+	if(type == 'degree'):
+		return generate_degree_selection(filepath, left, right, dir).size
+	elif(type == 'weight'):
+		return generate_edge_selection(filepath, left, right, keep_edges = False).size
+
+
+
