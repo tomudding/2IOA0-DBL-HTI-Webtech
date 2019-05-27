@@ -12,6 +12,10 @@ from graphion.graphing.generator import getFilePath
 import time
 import json
 from os.path import exists
+import os, secrets
+from graphion import server
+
+df = 0
 
 apiDegreeBlueprint = Blueprint('apiMatrixBlueprint', __name__, template_folder='templates')
 
@@ -43,7 +47,8 @@ def worker():
 	type = request.form['type']
 	dir = request.form['dir']
 	file = request.form['file']
-	length = filter_data(left, right, type, dir, file)
+	length,fileUniqueHash = filter_data(left, right, type, dir, file)
+    updateHash(fileUniqueHash)
 	return str(length)
 
 
@@ -51,10 +56,14 @@ def filter_data(left, right, type, dir, file):
 	filepath = getFilePath(file)
 	if(type == 'degree'):
 		filtered_df, filtered_names = generate_degree_selection(filepath, left, right, dir)
-		return len(filtered_names)
+        global df
+        df = filtered_df
+		return len(filtered_names), fileUniqueHash
 	elif(type == 'weight'):
 		filtered_df = generate_edge_selection(filepath, left, right, keep_edges = False)
-		return filtered_df.size
+        global df
+        df = filtered_df
+		return filtered_df.size, fileUniqueHash
 
 
 

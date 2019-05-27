@@ -98,8 +98,11 @@ def generateNodeLinkDiagram(filePath, diagramType, isDirected):
     return pn.Column(plot)
 
 # Generate a force-directed node-link diagram
-def generateForceDirectedDiagram(file, isDirected):
-    df = decreaseDiagramSize(file)
+def generateForceDirectedDiagram(file, isDirected, df=False):
+    if not df:
+        df = decreaseDiagramSize(file)
+    else:
+        df = file
     # convert Pandas DataFrame (Matrix) to NetworkX graph
     G = from_pandas_adjacency(df)
     layout = spring_layout(G, k=1.42/sqrt(number_of_nodes(G)))
