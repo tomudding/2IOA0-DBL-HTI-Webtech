@@ -1,6 +1,6 @@
 # 2IOA0 DBL HTI + Webtech
 
-~~The website can be accessed through [http://188.166.103.95:5000/](http://188.166.103.95:5000/).~~
+The website can be accessed through [https://2ioa0.uddi.ng/](https://2ioa0.uddi.ng/).
 Please follow the steps under **DOCUMENTATION** for more information on how to locally run graphion.
 
 ## DEADLINES
@@ -8,45 +8,42 @@ Given project deadlines:
 
 | Task                   | Deadline date |
 -------------------------|----------------
-| Interim video          | 24th of May  |
-| Interim report         | 24th of May  |
+| ~~Interim video~~         | ~~24th of May~~  |
+| ~~Interim report~~         | ~~24th of May~~  |
 | Nearly final tool      | 12th of June |
 | Final tool/report/video| 21st of June |
 
 Our own deadlines:
-
-| Task                              | Deadline date | On Time?  |
-------------------------------------|----------------------------
-| Draft of interim report           | 20th of May   | Yes       |
-| Filming video                     | 22nd of May   |           |
-| Checking interim report           | 24th of May   |           |
-| Editing video                     | 24th of May   |           |
-------------------------------------|----------------------------
-| Filtering page v1                 | 31st of May   |           |
-| Visualization page v1             | 31st of May   |           |
-| Visualizations/interactions v1    | 31st of May   |           |
-------------------------------------|----------------------------
-| Filtering page v2                 | 7th of June   |           |
-| Visualization page v2             | 7th of June   |           |
-| Visualizations/interactions v2    | 7th of June   |           |
-------------------------------------|----------------------------
-| Filtering page v3                 | 14th of June  |           |
-| Visualization page v3             | 14th of June  |           |
-| Visualizations/interactions v3    | 14th of June  |           |
-| Filming video                     | 14th of June  |           |
-| Draft of final report             | 14th of June  |           |
-------------------------------------|----------------------------
-| Final touches on our tool         | 21st of June  |           |
-| Editing video                     | 21st of June  |           |
-| Checking and correcting report    | 21st of June  |           |
+| Task                              | Deadline date |
+------------------------------------|----------------
+| Filtering page v1                 | 31st of May   |
+| Visualization page v1             | 31st of May   |
+| Visualizations/interactions v1    | 31st of May   |
+------------------------------------|----------------
+| Filtering page v2                 | 7th of June   |
+| Visualization page v2             | 7th of June   |
+| Visualizations/interactions v2    | 7th of June   |
+------------------------------------|----------------
+| Filtering page v3                 | 14th of June  |
+| Visualization page v3             | 14th of June  |
+| Visualizations/interactions v3    | 14th of June  |
+| Filming video                     | 14th of June  |
+| Draft of final report             | 14th of June  |
+------------------------------------|----------------
+| Final touches on our tool         | 21st of June  |
+| Editing video                     | 21st of June  |
+| Checking and correcting report    | 21st of June  |
 
 ## REQUIREMENTS
 Minimal requirements as described in VisProjectDescription.pdf and the kickoff slides.
 - [ ] At least **2** visual metaphors
   - [x] Node-link diagram with at least **3** different layouts:
     - [x] Radial
-    - [ ] Force-directed
-    - [ ] Hierarchical
+    - [x] Force-directed
+    - [x] Hierarchical
+    - [ ] Spectral
+    - [ ] Orthogonal
+    - [ ] [Circular tree](https://networkx.github.io/documentation/stable/auto_examples/drawing/plot_circular_tree.html)
     - [ ] Extra: others
   - [x] Adjacency matrix with at least **5** different reordering strategies
     - [x] Clustering
@@ -74,8 +71,8 @@ Minimal requirements as described in VisProjectDescription.pdf and the kickoff s
     - [ ] [3D node-link diagram](https://plot.ly/python/3d-network-graph/)
     - [ ] [Arc diagram (combined with matrix reorderings maybe)](https://www.data-to-viz.com/graph/arc.html)
 
-- [ ] **Web-based** visualization tool for networks (weighted and directed graphs)
-  - [x] Accessable via URL ([http://188.166.103.95:5000/](http://188.166.103.95:5000/))
+- [x] **Web-based** visualization tool for networks (weighted and directed graphs)
+  - [x] Accessable via URL ([https://2ioa0.uddi.ng/](https://2ioa0.uddi.ng/))
   - [x] Upload graph data (in a specified data format)
   - [ ] Visual interactions from each of the 7 categories of interactions (Yi et al.)
   - [ ] Data and insights should be sharable with all other people using the web tool

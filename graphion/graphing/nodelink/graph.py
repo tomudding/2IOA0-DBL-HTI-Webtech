@@ -1,7 +1,7 @@
 """
 Author(s): Tom Udding, Steven van den Broek, Yuqing Zeng, Tim van de Klundert
 Created: 2019-05-03
-Edited: 2019-05-22
+Edited: 2019-05-25
 """
 from bokeh.plotting import figure, reset_output
 from bokeh.models import Circle, ColumnDataSource
@@ -11,7 +11,7 @@ from holoviews import opts, renderer, extension
 from holoviews.element.graphs import Graph
 from math import sqrt
 import networkx as nx
-from networkx import from_pandas_adjacency
+from networkx import DiGraph, Graph, from_pandas_adjacency
 from networkx.algorithms.centrality import degree_centrality
 from networkx.drawing.layout import circular_layout, spring_layout
 from networkx.drawing.nx_agraph import graphviz_layout
@@ -22,14 +22,80 @@ from pandas import read_hdf, Series
 import panel as pn
 import plotly.graph_objs as go
 
-# Function to decrease the size of the submatrix
+"""
+Function to decrease the size of the submatrix.
+"""
 def decreaseDiagramSize(file):
     df = read_hdf(file) # !!! TODO: Change implementation, reads whole file into memory, will work for the test datasets but not for larger datasets
     names = df.columns
     # submatrix for quicker development
-    if (len(names) > 150):
-        df = df.head(150)[names[0:150]]
+    if (len(names) > 400):
+        df = df.head(400)[names[0:400]]
     return df
+
+"""
+Function to calculate edge information (positions).
+TODO: implement weights
+"""
+def calculateEdgePositions(G, layout):
+    d = dict(xs=[], ys=[])
+    for u, v, _ in G.edges(data=True):
+        d['xs'].append([layout[u][0], layout[v][0]])
+        d['ys'].append([layout[u][1], layout[v][1]])
+    return d
+
+"""
+Function to generate a node-link diagram based on a
+```filePath```, a ```diagramType```, and ```isDirected```.
+
+Returns a Panel.Column of the diagram.
+"""
+def generateNodeLinkDiagram(filePath, diagramType, isDirected):
+    diagramType = diagramType.upper()
+
+    """
+    Decrease the size of the requested node-link diagram
+    TODO: Refactor and implement pre-filtering features
+    """
+    df = decreaseDiagramSize(filePath)
+
+    """
+    Create NetworkX graph object
+    """
+    if isDirected == False:
+        G = Graph(from_pandas_adjacency(df))
+    elif isDirected == True:
+        G = DiGraph(from_pandas_adjacency(df))
+    else:
+        # TODO: throw exception
+        pass
+
+    """
+    Create NetworkX graph layout manager
+    """
+    if diagramType == "FORCEDIRECTED":
+        layout = spring_layout(G, k=1.42/sqrt(number_of_nodes(G)))
+    elif diagramType == "HIERARCHICAL":
+        # TODO: refactor hierarchical code from Sophia
+        pass
+    elif diagramType == "RADIAL":
+        layout = circular_layout(G)
+    else:
+        # TODO: throw exception
+        pass
+
+    # get node and edge information from graph
+    nodes, nodes_coordinates = zip(*sorted(layout.items()))
+    nodes_xs, nodes_ys = list(zip(*nodes_coordinates))
+    nodeDataSource = ColumnDataSource(dict(x=nodes_xs, y=nodes_ys, name=nodes))
+    lineDataSource = ColumnDataSource(calculateEdgePositions(G, layout))
+
+    # create plot
+    plot = figure(plot_width=400, plot_height=400, tools=['pan', 'tap', 'wheel_zoom', 'reset', 'box_zoom'])
+    nodeGlyph = plot.circle('x', 'y', source=nodeDataSource, size=10, line_width=1, line_color="#000000", level='overlay')
+    lineGlyph = plot.multi_line('xs', 'ys', source=lineDataSource, line_width=1.3, color='#000000')
+
+    return pn.Column(plot)
 
 # Generate a force-directed node-link diagram
 def generateForceDirectedDiagram(file, isDirected):
@@ -46,9 +112,9 @@ def generateForceDirectedDiagram(file, isDirected):
     #lineDataSource = ColumnDataSource(G.edges)
 
     # create plot
-    plot = figure(plot_width=400, plot_height=400, tools=['pan', 'tap', 'wheel_zoom', 'reset', 'box_zoom'])#, hover])
+    plot = figure(plot_width=400, plot_height=400, tools=['pan', 'tap', 'wheel_zoom', 'reset', 'box_zoom'])
     nodeGlyph = plot.circle('x', 'y', source=nodeDataSource, size=10, line_width=1, line_color="#000000", level='overlay')
-    lineGlyph = plot.multi_line('xs', 'ys', source=lineDataSource, line_width=1.3, color='#000000')#, alpha='alphas')
+    lineGlyph = plot.multi_line('xs', 'ys', source=lineDataSource, line_width=1.3, color='#000000')
 
     # calculate centrality
     centrality = degree_centrality(G)
@@ -67,14 +133,6 @@ def generateForceDirectedDiagram(file, isDirected):
     nodeGlyph.glyph.fill_color = 'partition_colour'
 
     return pn.Column(plot)
-
-# edge information calculator - helper function for generateForceDirectedDiagram()
-def calculateEdgePositions(G, layout):
-    d = dict(xs=[], ys=[])
-    for u, v, _ in G.edges(data=True):
-        d['xs'].append([layout[u][0], layout[v][0]])
-        d['ys'].append([layout[u][1], layout[v][1]])
-    return d
 
 # Generate a hierarchical node-link diagram
 def generateHierarchicalDiagram(file, isDirected):

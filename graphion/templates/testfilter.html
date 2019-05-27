@@ -1,37 +1,169 @@
 <!DOCTYPE html>
 <html>
-    <body>
-        <div id="file-select-div">
-            <input type="file" id="file-upload"/>
-            <button onclick="confirmFile()">Confirm</button>
-        </div>
 
-        <div id="filter-div" hidden>
-            <canvas id="edge-weights"></canvas><br>
-            <div id="weight-selection-info"></div><br>
-            <button onclick="uploadGraph()">Upload</button>
-        </div>
+<body>
+    <div id="file-select-div">
+        <input type="file" id="file-upload" />
+        <button onclick="confirmFile()">Confirm</button>
+    </div>
 
-        <script>
+    <div id="edge-filter-div" hidden>
+        <canvas id="edge-weights"></canvas><br>
+        <div id="weight-selection-info"></div><br>
+        <button onclick="toInDegreeFilter()">Next</button>
+    </div>
+    <div id="indegree-filter-div" hidden>
+        <canvas id="node-indegrees"></canvas><br>
+        <div id="indegree-selection-info"></div><br>
+        <button onclick="backToEdgeFilter()">Back</button><button onclick="toOutDegreeFilter()">Next</button>
+    </div>
+    <div id="outdegree-filter-div" hidden>
+        <canvas id="node-outdegrees"></canvas><br>
+        <div id="outdegree-selection-info"></div><br>
+        <button onclick="backToInDegreeFilter()">Back</button><button onclick="toFinalize()">Next</button>
+    </div>
+    <div id="finalize-div" hidden>
+        <input type="checkbox" id="checkbox" onclick="updateFinalInfo()" />Keep all edges of remaining nodes<br>
+        <div id="final-info"></div>
+        <button onclick="backToOutDegreeFilter()">Back</button><button onclick="uploadGraph()">Upload</button>
+    </div>
 
-            /*
-            Author: Tim van de Klundert
-            Created at 20-05-2019
-            Last modified at 23-05-2019
-            */
+    <script>
 
-            const GraphIon = {
-                fileName: null,
-                Edges: {
-                    from: null,
-                    to: null,
-                    weights: null,
+        /*
+        Author: Tim van de Klundert
+        Created at 20-05-2019
+        Last modified at 23-05-2019
+        */
 
-                    roughMinWeight: 0.0,
-                    roughMaxWeight: 0.0,
-                    roughWeightDifference: 0.0,
+        function backToEdgeFilter() {
+            document.getElementById('indegree-filter-div').hidden = true;
+            document.getElementById('edge-filter-div').hidden = false;
+        }
 
-                    sortedWeights: null,
+        function toInDegreeFilter() {
+            document.getElementById('edge-filter-div').hidden = true;
+            document.getElementById('indegree-filter-div').hidden = false;
+            prepareInDegrees();
+        }
+
+        function backToInDegreeFilter() {
+            document.getElementById('outdegree-filter-div').hidden = true;
+            document.getElementById('indegree-filter-div').hidden = false;
+        }
+
+        function toOutDegreeFilter() {
+            document.getElementById('indegree-filter-div').hidden = true;
+            document.getElementById('outdegree-filter-div').hidden = false;
+            prepareOutDegrees();
+        }
+
+        function backToOutDegreeFilter() {
+            document.getElementById('finalize-div').hidden = true;
+            document.getElementById('outdegree-filter-div').hidden = false;
+        }
+
+        function toFinalize() {
+            document.getElementById('outdegree-filter-div').hidden = true;
+            document.getElementById('finalize-div').hidden = false;
+            document.getElementById('checkbox').checked = false;
+            prepareUpload();
+        }
+
+        function updateFinalInfo(){
+            if (document.getElementById('checkbox').checked){
+                if (GraphIon.Upload.KeepEdges.edgesFrom === null){
+                    prepareKeepEdges();
+                }
+                document.getElementById('final-info').innerText = GraphIon.Upload.KeepEdges.text;
+            } else {
+                document.getElementById('final-info').innerText = GraphIon.Upload.FilterEdges.text;
+            }
+        }
+
+        const GraphIon = {
+            fileName: null,
+            Edges: {
+                from: null,
+                to: null,
+                weights: null,
+
+                roughMinWeight: 0.0,
+                roughMaxWeight: 0.0,
+                roughWeightDifference: 0.0,
+
+                sortedWeights: null,
+
+                distributionAmounts: null,
+                sortedAmounts: null,
+                plotHeights: null,
+
+                roughMaxAmount: 0,
+                binWidth: 0,
+
+                filterX1: 0,
+                filterX2: Number.MAX_SAFE_INTEGER / 2, // prevent inaccuracy
+                mouseDown: false,
+
+                canvasWidth: 0,
+                canvasHeight: 0,
+
+                filteredIndices: function () {
+
+                    const width = GraphIon.Edges.canvasWidth;
+
+                    const minFilterX = Math.min(GraphIon.Edges.filterX1, GraphIon.Edges.filterX2);
+                    const maxFilterX = Math.max(GraphIon.Edges.filterX1, GraphIon.Edges.filterX2);
+
+                    const minActiveX = minFilterX - GraphIon.Edges.binWidth / 2;
+                    const maxActiveX = maxFilterX + GraphIon.Edges.binWidth / 2;
+                    // Reverse the following line:
+                    //const indexToIncrease = Math.floor(width * (sortedWeights[index].weight - minValue) / maxDifference);
+
+                    // minActiveX = width * (sortedWeights[index].weight - minWeight) / maxWeightDifference
+                    // minActiveX * maxWeightDifference / width = sortedWeights[index].weight - minWeight
+                    // sortedWeights[index].weight = minWeight + minActiveX * maxWeightDifference / width
+                    const minWeight = GraphIon.Edges.roughMinWeight + minActiveX * GraphIon.Edges.roughWeightDifference / width;
+                    const maxWeight = GraphIon.Edges.roughMinWeight + (maxActiveX + 1) * GraphIon.Edges.roughWeightDifference / width;
+                    const sortedWeights = GraphIon.Edges.sortedWeights;
+                    const minIndex = binarySearch(sortedWeights, minWeight, 'weight', false);
+                    const maxIndex = binarySearch(sortedWeights, maxWeight, 'weight', true);
+                    return {
+                        minIndex: Math.max(0, minIndex),
+                        maxIndex: Math.min(GraphIon.Edges.from.length - 1, maxIndex),
+                        minActiveX: minActiveX,
+                        maxActiveX: maxActiveX,
+                        minFilterX: minFilterX,
+                        maxFilterX: maxFilterX
+                    };
+                }
+            },
+            Vertices: {
+                all: null,
+
+                // The filtered edges,
+                edgesFrom: null,
+                edgesTo: null,
+                edgesWeights: null,
+                OutDegrees: {
+                    array: null,
+                    names: null,
+                    sorted: null,
+
+                    /** A boolean array of size vertex count such that 
+                    hasVertexArray[i] is true if and only if the vertex
+                    with index i is not filtered out
+                    */
+                    hasVertexArray: null,
+
+                    // This has been filtered twice: once by the edge weight filter and once by the indegree filter
+                    edgesFrom: null,
+                    edgesTo: null,
+                    edgesWeights: null,
+
+                    minDegree: 0,
+                    maxDegree: 0,
+                    maxDegreeDifference: 0,
 
                     distributionAmounts: null,
                     sortedAmounts: null,
@@ -41,266 +173,495 @@
                     binWidth: 0,
 
                     filterX1: 0,
-                    filterX2: Number.MAX_SAFE_INTEGER,
+                    filterX2: Number.MAX_SAFE_INTEGER / 2, //prevent inaccuracy
                     mouseDown: false,
 
                     canvasWidth: 0,
                     canvasHeight: 0,
 
-                    filteredIndices: function(){
+                    filteredIndices: function () {
 
-                        const width = GraphIon.Edges.canvasWidth;
+                        const width = this.canvasWidth;
 
-                        const minFilterX = Math.min(GraphIon.Edges.filterX1, GraphIon.Edges.filterX2);
-                        const maxFilterX = Math.max(GraphIon.Edges.filterX1, GraphIon.Edges.filterX2);
+                        const minFilterX = Math.min(this.filterX1, this.filterX2);
+                        const maxFilterX = Math.max(this.filterX1, this.filterX2);
 
-                        const minActiveX = minFilterX - GraphIon.Edges.binWidth / 2;
-                        const maxActiveX = maxFilterX + GraphIon.Edges.binWidth / 2;
-                        // Reverse the following line:
+                        const minActiveX = minFilterX - this.binWidth / 2;
+                        const maxActiveX = maxFilterX + this.binWidth / 2;
+                        // Reverse the node indegree variant of the following line:
                         //const indexToIncrease = Math.floor(width * (sortedWeights[index].weight - minValue) / maxDifference);
 
                         // minActiveX = width * (sortedWeights[index].weight - minWeight) / maxWeightDifference
                         // minActiveX * maxWeightDifference / width = sortedWeights[index].weight - minWeight
                         // sortedWeights[index].weight = minWeight + minActiveX * maxWeightDifference / width
-                        const minWeight = GraphIon.Edges.roughMinWeight + minActiveX * GraphIon.Edges.roughWeightDifference / width;
-                        const maxWeight = GraphIon.Edges.roughMinWeight + (maxActiveX + 1) * GraphIon.Edges.roughWeightDifference / width;
-                        const sortedWeights = GraphIon.Edges.sortedWeights;
-                        const minIndex = binarySearch(sortedWeights, minWeight, false);
-                        const maxIndex = binarySearch(sortedWeights, maxWeight, true);
+                        const minDegree = this.minDegree + minActiveX * this.maxDegreeDifference / width;
+                        const maxDegree = this.minDegree + (maxActiveX + 1) * this.maxDegreeDifference / width;
+                        const sortedDegrees = this.sorted;
+                        const minIndex = binarySearch(sortedDegrees, minDegree, 'degree', false);
+                        const maxIndex = binarySearch(sortedDegrees, maxDegree, 'degree', true);
                         return {
                             minIndex: Math.max(0, minIndex),
-                            maxIndex: Math.min(GraphIon.Edges.from.length - 1, maxIndex),
-                            minActiveX: minActiveX,
-                            maxActiveX: maxActiveX,
+                            maxIndex: Math.min(this.array.length - 1, maxIndex),
+                            minDegree: minDegree,
+                            maxDegree: maxDegree,
                             minFilterX: minFilterX,
-                            maxFilterX: maxFilterX
+                            maxFilterX: maxFilterX,
+                            minActiveX: minActiveX,
+                            maxActiveX: maxActiveX
                         };
-                    },
-                    maxEdgeIndex: function(){
-
                     }
                 },
-                Vertices: {
-                    all: null
-                }
-            };
+                InDegree: {
+                    array: null,
+                    sorted: null,
 
-            function confirmFile(){
-                
-                const upload = document.getElementById('file-upload');
-                const file = upload.files[0];
-                if (file === undefined){
-                    window.alert('Select a file first');
-                    return;
-                }
+                    minDegree: 0,
+                    maxDegree: 0,
+                    maxDegreeDifference: 0,
 
-                parseCsv(file, function(vertices, edgesFrom, edgesTo, edgesWeight, rawString){
-                    const startTime = performance.now();
+                    distributionAmounts: null,
+                    sortedAmounts: null,
+                    plotHeights: null,
 
-                    GraphIon.fileName = file.name;
+                    roughMaxAmount: 0,
+                    binWidth: 0,
 
-                    GraphIon.Vertices.all = vertices;
+                    filterX1: 0,
+                    filterX2: 0,
+                    mouseDown: false,
 
-                    GraphIon.Edges.from = edgesFrom;
-                    GraphIon.Edges.to = edgesTo;
-                    GraphIon.Edges.weights = edgesWeight;
+                    canvasWidth: 0,
+                    canvasHeight: 0,
 
-                    const edgeCount = edgesFrom.length;
-                    document.getElementById('file-select-div').hidden = true;
-                    document.getElementById('filter-div').hidden = false;
+                    filteredIndices: function () {
 
-                    // Edge weights
-                    {
-                        const sortedWeights = new Array(edgeCount);
-                        for (let index = 0; index < edgeCount; index++){
-                            sortedWeights[index] = {
-                                index: index,
-                                weight: edgesWeight[index]
-                            };
-                        }
-                        sortedWeights.sort(function(a, b){
-                            return a.weight - b.weight;
-                        });
-                        
-                        GraphIon.Edges.sortedWeights = sortedWeights;
+                        const width = this.canvasWidth;
 
-                        /*
-                        const minValue = sortedWeights[0].weight;
-                        let maxValueIndex = Math.ceil(edgeCount * 39 / 40);
-                        if (maxValueIndex === edgeCount){
-                            maxValueIndex = edgeCount - 1;
-                        }
-                        let maxValue = sortedWeights[maxValueIndex].weight;
-                        if (maxValue === minValue){
-                            if (edgeCount > 3){
-                                maxValue = sortedWeights[edgeCount - 2].weight;
-                            } else {
-                                maxValue = sortedWeights[edgeCount - 1].weight;
-                            }
-                        }
-                        const maxDifference = sortedWeights[maxValueIndex].weight - minValue;
-                        */
-                        const minValue = sortedWeights[0].weight;
-                        const maxValue = sortedWeights[edgeCount - 1].weight;
-                        const maxDifference = maxValue - minValue;
+                        const minFilterX = Math.min(this.filterX1, this.filterX2);
+                        const maxFilterX = Math.max(this.filterX1, this.filterX2);
 
-                        GraphIon.Edges.roughMinWeight = minValue;
-                        GraphIon.Edges.roughMaxWeight = maxValue;
-                        GraphIon.Edges.roughWeightDifference = maxDifference;
+                        const minActiveX = minFilterX - this.binWidth / 2;
+                        const maxActiveX = maxFilterX + this.binWidth / 2;
+                        // Reverse the node indegree variant of the following line:
+                        //const indexToIncrease = Math.floor(width * (sortedWeights[index].weight - minValue) / maxDifference);
 
-                        const width = Math.floor(window.innerWidth / 2);
-                        const height = Math.floor(window.innerHeight * 4 / 5);
-
-                        GraphIon.Edges.canvasWidth = width;
-                        GraphIon.Edges.canvasHeight = height;
-
-                        const amounts = new Int32Array(width);
-                        for (let index = 0; index < edgeCount; index++){
-                            const indexToIncrease = Math.floor(width * (sortedWeights[index].weight - minValue) / maxDifference);
-                            if (indexToIncrease < width){
-                                amounts[indexToIncrease]++;
-                            } else {
-                                amounts[width - 1]++;
-                            }
-                        }
-
-                        GraphIon.Edges.distributionAmounts = amounts;
-
-                        const sortedAmounts = new Array(width);
-                        for (let index = 0; index < width; index++){
-                            sortedAmounts[index] = {
-                                index: index,
-                                amount: amounts[index]
-                            };
-                        }
-                        sortedAmounts.sort(function(a, b){
-                            return a.amount - b.amount;
-                        });
-
-                        GraphIon.Edges.sortedAmounts = sortedAmounts;
-
-                        let maxAmount = sortedAmounts[Math.min(width - 1, Math.ceil(width * 39 / 40))].amount;
-
-                        // For the pathetic cases where the vast majority is 0
-                        if (maxAmount === 0){
-                            maxAmount = sortedAmounts[width - 2].amount;
-
-                            // For the pathetic case with only 1 non-zero amount
-                            // Maybe, we should disable the edge weight filtering here
-                            if (maxAmount === 0){
-                                maxAmount = sortedAmounts[width - 1].amount;
-                                if (maxAmount === 0){
-
-                                    // Everything is 0, fuck this shit
-                                    return;
-                                }
-                            }
-                        }
-
-                        GraphIon.Edges.roughMaxAmount = maxAmount;
-
-                        let bins = 1;
-                        for (let index = 1; index < width; index++){
-                            if (sortedAmounts[index].amount !== sortedAmounts[index - 1].amount){
-                                bins++;
-                            }
-                        }
-
-                        console.log('bins is ' + bins);
-
-                        const binWidth = Math.max(1, Math.floor(width / bins));
-                        GraphIon.Edges.binWidth = binWidth;
-
-                        function median(array){
-                            const length = array.length;
-                            // First do insertion sort (quite effective for small arrays which we know is the case)
-                            let i = 0;
-                            while (i < length){
-                                let j = i;
-                                while (j > 0 && array[j - 1] > array[j]){
-                                    const oldAtJ = array[j];
-                                    array[j] = array[j - 1];
-                                    array[j - 1] = oldAtJ;
-                                    j--;
-                                }
-                                i++;
-                            }
-                            return array[Math.floor(length / 2)];
-                        }
-
-                        const plotHeights = new Int32Array(width);
-                        for (let index = 0; index < width; index++){
-                            const currentHeight = Math.ceil(height * amounts[index] / maxAmount);
-                            if (currentHeight >= 1){
-                                const startRectIndex = Math.max(index - Math.ceil(binWidth / 2), 0);
-                                //const startRectIndex = index;
-                                const endRectIndex = Math.min(width, index + Math.ceil(binWidth / 2));
-                                for (let rectIndex = startRectIndex; rectIndex < endRectIndex; rectIndex++){
-                                    if (currentHeight > plotHeights[rectIndex]){
-                                        plotHeights[rectIndex] = currentHeight;
-                                    }
-                                }
-                            }
-                        }
-
-                        if (bins > 400){
-                            const plotHeightCopy = plotHeights.slice(0, width);
-
-                            // Apply some kind of median filter (notice that the borders remain the same)
-                            const MEDIAN_RANGE = 15;
-                            for (let index = MEDIAN_RANGE; index < width - MEDIAN_RANGE; index++){
-                                plotHeights[index] = median(plotHeightCopy.slice(index - MEDIAN_RANGE, index + MEDIAN_RANGE));
-                            }
-                        }
-
-                        GraphIon.Edges.plotHeights = plotHeights;
-
-                        renderEdgeWeightDistribution();
-
-                        const canvas = document.getElementById('edge-weights');
-                        canvas.addEventListener('mousedown', function(event){
-                            if (!GraphIon.Edges.mouseDown){
-                                GraphIon.Edges.mouseDown = true;
-                                GraphIon.Edges.filterX1 = event.offsetX;
-                            }
-                        });
-                        canvas.addEventListener('mouseup', function(event){
-                            GraphIon.Edges.mouseDown = false;
-                        });
-                        canvas.addEventListener('mousemove', function(event){
-                            if (GraphIon.Edges.mouseDown){
-                                GraphIon.Edges.filterX2 = event.offsetX;
-                                renderEdgeWeightDistribution();
-                            }
-                        });
-                        canvas.addEventListener('mouseout', function(event){
-                            if (GraphIon.Edges.mouseDown){
-                                GraphIon.Edges.filterX2 = event.offsetX;
-                                renderEdgeWeightDistribution();
-                            }
-                        });
-                        canvas.addEventListener('mouseenter', function(event){
-                            if (event.buttons === 1 && !GraphIon.Edges.mouseDown){
-                                GraphIon.Edges.mouseDown = true;
-                                if (event.offsetX < 20){
-                                    GraphIon.Edges.filterX1 = 0;
-                                }
-                                else if (event.offsetX > width - 20){
-                                    GraphIon.Edges.filterX1 = width;
-                                } else {
-                                    GraphIon.Edges.filterX1 = event.offsetX;
-                                }
-                            }
-                        });
+                        // minActiveX = width * (sortedWeights[index].weight - minWeight) / maxWeightDifference
+                        // minActiveX * maxWeightDifference / width = sortedWeights[index].weight - minWeight
+                        // sortedWeights[index].weight = minWeight + minActiveX * maxWeightDifference / width
+                        const minDegree = this.minDegree + minActiveX * this.maxDegreeDifference / width;
+                        const maxDegree = this.minDegree + (maxActiveX + 1) * this.maxDegreeDifference / width;
+                        const sortedDegrees = this.sorted;
+                        const minIndex = binarySearch(sortedDegrees, minDegree, 'degree', false);
+                        const maxIndex = binarySearch(sortedDegrees, maxDegree, 'degree', true);
+                        return {
+                            minIndex: Math.max(0, minIndex),
+                            maxIndex: Math.min(this.sorted.length - 1, maxIndex),
+                            minDegree: minDegree,
+                            maxDegree: maxDegree,
+                            minFilterX: minFilterX,
+                            maxFilterX: maxFilterX,
+                            minActiveX: minActiveX,
+                            maxActiveX: maxActiveX
+                        };
                     }
+                }
+            },
+            Upload: {
+                vertices: null,
+                vertexIndices: null,
+                KeepEdges: {
+                    edgesFrom: null,
+                    edgesTo: null,
+                    edgesWeights: null,
+                    text: null
+                },
+                FilterEdges: {
+                    edgesFrom: null,
+                    edgesTo: null,
+                    edgesWeights: null,
+                    text: null
+                }
+            }
+        };
 
-                    const endTime = performance.now();
-                    console.log('Preparing after parsing took ' + (endTime - startTime) + ' ms');
-                });
+        function prepareUpload(){
+            const startTime = performance.now();
+            GraphIon.Upload.KeepEdges.edgesFrom = null;
+            GraphIon.Upload.KeepEdges.edgesTo = null;
+            GraphIon.Upload.KeepEdges.edgesWeights = null;
+            GraphIon.Upload.KeepEdges.vertices = null;
+
+            {
+
+                // Notice: in this block, 'most' refers to the vertices and edges
+                // that passed the edge weight and indegree filtering, but not yet
+                // the outdegree filtering
+                const mostVertexIndices = GraphIon.Vertices.OutDegrees.array;
+                const allVertices = GraphIon.Vertices.all;
+                //const mostVertices = GraphIon.Vertices.OutDegrees.names;
+                const sortedMostVertices = GraphIon.Vertices.OutDegrees.sorted;
+                const mostVertexLength = sortedMostVertices.length;
+                const outFilter = GraphIon.Vertices.OutDegrees.filteredIndices();
+                const minOutFilterIndex = outFilter.minIndex;
+                const newVertexCount = outFilter.maxIndex - minOutFilterIndex + 1;
+
+                const newVertexIndices = new Int32Array(newVertexCount);
+
+                // Keep track of which vertices will be kept and which not
+                const keepVertices = new Array(mostVertexLength);
+                // First fill with false, thereafter set the right ones to true
+                for (let index = 0; index < mostVertexLength; index++){
+                    keepVertices[index] = false;
+                }
+                for (let index = 0; index < newVertexCount; index++){
+                    const vertexIndex = sortedMostVertices[index + minOutFilterIndex].index;
+                    newVertexIndices[index] = vertexIndex;
+                    keepVertices[vertexIndex] = true;
+                }
+
+                // Prepare mapping old vertex indices to the filtered vertex indices
+                const oldToNewIndex = new Int32Array(mostVertexLength);
+                // Fill all the non-existent ones with -1
+                for (let index = 0; index < mostVertexLength; index++){
+                    oldToNewIndex[index] = -1;
+                }
+                {
+                    let newIndex = 0;
+                    for (let index = 0; index < mostVertexLength; index++){
+                        if (keepVertices[index]){
+                            oldToNewIndex[index] = newIndex++;
+                        }
+                    }
+                }
+
+                const newVertices = new Array(newVertexCount);
+                const fullVertexIndices = new Int32Array(newVertexCount);
+                for (let index = 0; index < newVertexCount; index++){
+                    newVertices[index] = allVertices[mostVertexIndices[newVertexIndices[index]]];
+                    fullVertexIndices[index] = mostVertexIndices[newVertexIndices[index]];
+                }
+
+                GraphIon.Upload.vertices = newVertices;
+                GraphIon.Upload.vertexIndices = fullVertexIndices;
+
+                const mostEdgesFrom = GraphIon.Vertices.OutDegrees.edgesFrom;
+                const mostEdgesTo = GraphIon.Vertices.OutDegrees.edgesTo;
+                const mostEdgesWeights = GraphIon.Vertices.OutDegrees.edgesWeights;
+                const mostEdgeCount = mostEdgesFrom.length;
+                let filteredEdgeCount = 0;
+                for (let index = 0; index < mostEdgeCount; index++){
+                    if (keepVertices[mostEdgesFrom[index]] && keepVertices[mostEdgesTo[index]]){
+                        filteredEdgeCount++;
+                    }
+                }
+
+                const filteredEdgesFrom = new Int32Array(filteredEdgeCount);
+                const filteredEdgesTo = new Int32Array(filteredEdgeCount);
+                const filteredEdgesWeights = new Float32Array(filteredEdgeCount);
+                {
+                    let newIndex = 0;
+                    for (let index = 0; index < mostEdgeCount; index++){
+                        if (keepVertices[mostEdgesFrom[index]] && keepVertices[mostEdgesTo[index]]){
+                            filteredEdgesFrom[newIndex] = oldToNewIndex[mostEdgesFrom[index]];
+                            filteredEdgesTo[newIndex] = oldToNewIndex[mostEdgesTo[index]];
+                            filteredEdgesWeights[newIndex] = mostEdgesWeights[index];
+                            newIndex++;
+                        }
+                    }
+                }
+
+                GraphIon.Upload.FilterEdges.edgesFrom = filteredEdgesFrom;
+                GraphIon.Upload.FilterEdges.edgesTo = filteredEdgesTo;
+                GraphIon.Upload.FilterEdges.edgesWeights = filteredEdgesWeights;
+                GraphIon.Upload.FilterEdges.text = 'You have selected ' + newVertexCount + ' vertices and ' + filteredEdgeCount + ' edges';
             }
 
-            function uploadGraph(){
-                const vertices = GraphIon.Vertices.all;
+            document.getElementById('final-info').innerText = GraphIon.Upload.FilterEdges.text;
+            const endTime = performance.now();
+            console.log('Finalizing for filter took ' + (endTime - startTime) + ' ms');
+        }
+
+        function prepareKeepEdges(){
+            const startTime = performance.now();
+
+            const allEdgesFrom = GraphIon.Edges.from;
+            const allEdgesTo = GraphIon.Edges.to;
+            const allEdgesWeights = GraphIon.Edges.weights;
+            const edgeCountAll = allEdgesFrom.length;
+            const vertexCountAll = GraphIon.Vertices.all.length;
+
+            const keepVertices = new Array(vertexCountAll);
+            // First fill with false, then set the right ones to true
+            for (let index = 0; index < vertexCountAll; index++){
+                keepVertices[index] = false;
+            }
+
+            /*
+            const filterIn = GraphIon.Vertices.InDegree.filteredIndices();
+            const filterOut = GraphIon.Vertices.OutDegrees.filteredIndices();
+            const sortedIn = GraphIon.Vertices.InDegree.sorted;
+            const maxIndexIn = filterIn.maxIndex;
+            const minIndexOut = filterOut.minIndex;
+            const maxIndexOut = filterOut.maxIndex;
+            const arrayOut = GraphIon.Vertices.OutDegrees.array;
+            for (let index = filterIn.minIndex; index <= maxIndexIn; index++){
+                const indexIn = sortedIn[index].index;
+
+            }*/
+            const fullVertexIndices = GraphIon.Upload.vertexIndices;
+            const vertexCount = fullVertexIndices.length;
+            for (let index = 0; index < vertexCount; index++){
+                keepVertices[fullVertexIndices[index]] = true;
+            }
+
+            const oldToNewIndex = new Int32Array(vertexCountAll);
+            for (let index = 0; index < vertexCountAll; index++){
+                oldToNewIndex[index] = -1;
+            }
+
+            {
+                let remainingIndex = 0;
+                for (let index = 0; index < vertexCountAll; index++){
+                    if (keepVertices[index]){
+                        oldToNewIndex[index] = remainingIndex++;
+                    }
+                }
+            }
+
+            let edgeCount = 0;
+            for (let index = 0; index < edgeCountAll; index++){
+                if (keepVertices[allEdgesFrom[index]] && keepVertices[allEdgesTo[index]]){
+                    edgeCount++;
+                }
+            }
+
+            const remainingEdgesFrom = new Int32Array(edgeCount);
+            const remainingEdgesTo = new Int32Array(edgeCount);
+            const remainingEdgesWeights = new Float32Array(edgeCount);
+
+            {
+                let remainingIndex = 0;
+                for (let index = 0; index < edgeCountAll; index++){
+                    if (keepVertices[allEdgesFrom[index]] && keepVertices[allEdgesTo[index]]){
+                        remainingEdgesFrom[remainingIndex] = oldToNewIndex[allEdgesFrom[index]];
+                        remainingEdgesTo[remainingIndex] = oldToNewIndex[allEdgesTo[index]];
+                        remainingEdgesWeights[remainingIndex] = allEdgesWeights[index];
+                        remainingIndex++;
+                    }
+                }
+            }
+
+            GraphIon.Upload.KeepEdges.edgesFrom = remainingEdgesFrom;
+            GraphIon.Upload.KeepEdges.edgesTo = remainingEdgesTo;
+            GraphIon.Upload.KeepEdges.edgesWeights = remainingEdgesWeights;
+            GraphIon.Upload.KeepEdges.text = 'You have selected ' + vertexCount + ' nodes and ' + edgeCount + ' edges.';
+        }
+
+        function confirmFile() {
+
+            const upload = document.getElementById('file-upload');
+            const file = upload.files[0];
+            if (file === undefined) {
+                window.alert('Select a file first');
+                return;
+            }
+
+            parseCsv(file, function (vertices, edgesFrom, edgesTo, edgesWeight, rawString) {
+                const startTime = performance.now();
+
+                GraphIon.fileName = file.name;
+
+                GraphIon.Vertices.all = vertices;
+
+                GraphIon.Edges.from = edgesFrom;
+                GraphIon.Edges.to = edgesTo;
+                GraphIon.Edges.weights = edgesWeight;
+
+                const edgeCount = edgesFrom.length;
+                document.getElementById('file-select-div').hidden = true;
+                document.getElementById('edge-filter-div').hidden = false;
+
+                // Edge weights
+                {
+                    const sortedWeights = new Array(edgeCount);
+                    for (let index = 0; index < edgeCount; index++) {
+                        sortedWeights[index] = {
+                            index: index,
+                            weight: edgesWeight[index]
+                        };
+                    }
+                    sortedWeights.sort(function (a, b) {
+                        return a.weight - b.weight;
+                    });
+
+                    GraphIon.Edges.sortedWeights = sortedWeights;
+
+                    const minValue = sortedWeights[0].weight;
+                    const maxValue = sortedWeights[edgeCount - 1].weight;
+                    const maxDifference = maxValue - minValue;
+
+                    GraphIon.Edges.roughMinWeight = minValue;
+                    GraphIon.Edges.roughMaxWeight = maxValue;
+                    GraphIon.Edges.roughWeightDifference = maxDifference;
+
+                    const width = Math.floor(window.innerWidth / 2);
+                    const height = Math.floor(window.innerHeight * 4 / 5);
+
+                    GraphIon.Edges.canvasWidth = width;
+                    GraphIon.Edges.canvasHeight = height;
+
+                    const amounts = new Int32Array(width);
+                    for (let index = 0; index < edgeCount; index++) {
+                        const indexToIncrease = Math.floor(width * (sortedWeights[index].weight - minValue) / maxDifference);
+                        if (indexToIncrease < width) {
+                            amounts[indexToIncrease]++;
+                        } else {
+                            amounts[width - 1]++;
+                        }
+                    }
+
+                    GraphIon.Edges.distributionAmounts = amounts;
+
+                    const sortedAmounts = new Array(width);
+                    for (let index = 0; index < width; index++) {
+                        sortedAmounts[index] = {
+                            index: index,
+                            amount: amounts[index]
+                        };
+                    }
+                    sortedAmounts.sort(function (a, b) {
+                        return a.amount - b.amount;
+                    });
+
+                    GraphIon.Edges.sortedAmounts = sortedAmounts;
+
+                    const zeroAmounts = binarySearch(sortedAmounts, 0, 'amount', true) + 1;
+                    const nonZeroAmounts = width - zeroAmounts;
+
+                    let maxAmount = sortedAmounts[Math.min(width - 1, zeroAmounts + Math.ceil(nonZeroAmounts * 39 / 40))].amount;
+
+                    // For the pathetic cases where the vast majority is 0
+                    if (maxAmount === 0) {
+                        maxAmount = sortedAmounts[width - 2].amount;
+
+                        // For the pathetic case with only 1 non-zero amount
+                        // Maybe, we should disable the edge weight filtering here
+                        if (maxAmount === 0) {
+                            maxAmount = sortedAmounts[width - 1].amount;
+                            if (maxAmount === 0) {
+
+                                // Everything is 0, fuck this shit
+                                return;
+                            }
+                        }
+                    }
+
+                    GraphIon.Edges.roughMaxAmount = maxAmount;
+
+                    let bins = 1;
+                    for (let index = 1; index < width; index++) {
+                        if (amounts[index] !== amounts[index - 1]) {
+                            bins++;
+                        }
+                    }
+
+                    console.log('bins is ' + bins);
+
+                    const binWidth = Math.max(1, Math.floor(width / bins));
+                    GraphIon.Edges.binWidth = binWidth;
+
+                    function median(array) {
+                        const length = array.length;
+                        // First do insertion sort (quite effective for small arrays which we know is the case)
+                        let i = 0;
+                        while (i < length) {
+                            let j = i;
+                            while (j > 0 && array[j - 1] > array[j]) {
+                                const oldAtJ = array[j];
+                                array[j] = array[j - 1];
+                                array[j - 1] = oldAtJ;
+                                j--;
+                            }
+                            i++;
+                        }
+                        return array[Math.floor(length / 2)];
+                    }
+
+                    const plotHeights = new Int32Array(width);
+                    for (let index = 0; index < width; index++) {
+                        const currentHeight = Math.ceil(height * amounts[index] / maxAmount);
+                        if (currentHeight >= 1) {
+                            const startRectIndex = Math.max(index - Math.ceil(binWidth / 2), 0);
+                            //const startRectIndex = index;
+                            const endRectIndex = Math.min(width, index + Math.ceil(binWidth / 2));
+                            for (let rectIndex = startRectIndex; rectIndex < endRectIndex; rectIndex++) {
+                                if (currentHeight > plotHeights[rectIndex]) {
+                                    plotHeights[rectIndex] = currentHeight;
+                                }
+                            }
+                        }
+                    }
+
+                    if (bins > 400) {
+                        const plotHeightCopy = plotHeights.slice(0, width);
+
+                        // Apply some kind of median filter (notice that the borders remain the same)
+                        const MEDIAN_RANGE = 15;
+                        for (let index = MEDIAN_RANGE; index < width - MEDIAN_RANGE; index++) {
+                            plotHeights[index] = median(plotHeightCopy.slice(index - MEDIAN_RANGE, index + MEDIAN_RANGE));
+                        }
+                    }
+
+                    GraphIon.Edges.plotHeights = plotHeights;
+
+                    renderEdgeWeightDistribution();
+
+                    const canvas = document.getElementById('edge-weights');
+                    canvas.addEventListener('mousedown', function (event) {
+                        if (!GraphIon.Edges.mouseDown) {
+                            GraphIon.Edges.mouseDown = true;
+                            GraphIon.Edges.filterX1 = event.offsetX;
+                        }
+                    });
+                    canvas.addEventListener('mouseup', function (event) {
+                        GraphIon.Edges.mouseDown = false;
+                    });
+                    canvas.addEventListener('mousemove', function (event) {
+                        if (GraphIon.Edges.mouseDown) {
+                            GraphIon.Edges.filterX2 = event.offsetX;
+                            renderEdgeWeightDistribution();
+                        }
+                    });
+                    canvas.addEventListener('mouseout', function (event) {
+                        if (GraphIon.Edges.mouseDown) {
+                            GraphIon.Edges.filterX2 = event.offsetX;
+                            renderEdgeWeightDistribution();
+                        }
+                    });
+                    canvas.addEventListener('mouseenter', function (event) {
+                        if (event.buttons === 1 && !GraphIon.Edges.mouseDown) {
+                            GraphIon.Edges.mouseDown = true;
+                            if (event.offsetX < 20) {
+                                GraphIon.Edges.filterX1 = 0;
+                            }
+                            else if (event.offsetX > width - 20) {
+                                GraphIon.Edges.filterX1 = width;
+                            } else {
+                                GraphIon.Edges.filterX1 = event.offsetX;
+                            }
+                        }
+                    });
+                }
+
+                const endTime = performance.now();
+                console.log('Preparing after parsing took ' + (endTime - startTime) + ' ms');
+            });
+        }
+
+        function prepareInDegrees() {
+            const startTime = performance.now();
+
+            {
                 const edgesFrom = GraphIon.Edges.from;
                 const edgesTo = GraphIon.Edges.to;
                 const edgesWeights = GraphIon.Edges.weights;
@@ -313,324 +674,869 @@
                 const newEdgesTo = new Int32Array(filteredEdgeCount);
                 const newEdgesWeights = new Float32Array(filteredEdgeCount);
                 let newIndex = 0;
-                for (let index = edgeIndices.minIndex; index < boundIndex; index++){
+                for (let index = edgeIndices.minIndex; index < boundIndex; index++) {
                     const i = filteredWeights[index].index;
                     newEdgesFrom[newIndex] = edgesFrom[i];
                     newEdgesTo[newIndex] = edgesTo[i];
                     newEdgesWeights[newIndex] = edgesWeights[i];
                     newIndex++;
                 }
-                const inverted = toCsv(vertices, newEdgesFrom, newEdgesTo, newEdgesWeights);
+                GraphIon.Vertices.edgesFrom = newEdgesFrom;
+                GraphIon.Vertices.edgesTo = newEdgesTo;
+                GraphIon.Vertices.edgesWeights = newEdgesWeights;
+                GraphIon.Vertices.InDegree.filterX1 = 0;
+                GraphIon.Vertices.InDegree.filterX2 = Number.MAX_SAFE_INTEGER / 2;
+            }
 
-                const request = new XMLHttpRequest();
-                request.open('POST', '/uploadnow', true);
-                request.onreadystatechange = function() {
-                    if (request.readyState == 4 && request.status == 200){
-                        window.location.assign(request.responseURL);
-                    }
+            const edgesTo = GraphIon.Vertices.edgesTo;
+
+            const edgeCount = edgesTo.length;
+            const vertexCount = GraphIon.Vertices.all.length;
+            const sortedInDegrees = new Array(vertexCount);
+
+            // First initialize the array, then fill the indegrees
+            for (let index = 0; index < vertexCount; index++) {
+                sortedInDegrees[index] = {
+                    index: index,
+                    degree: 0
                 };
-
-                const form = new FormData();
-                form.append('file', new File([inverted], GraphIon.fileName));
-                request.send(form);
             }
 
-            function renderEdgeWeightDistribution(){
-                const startTime = performance.now();
-
-                const width = GraphIon.Edges.canvasWidth;
-                const height = GraphIon.Edges.canvasHeight;
-                const binWidth = GraphIon.Edges.binWidth;
-                const maxAmount = GraphIon.Edges.roughMaxAmount;
-                //const amounts = GraphIon.Edges.distributionAmounts;
-                const plotHeights = GraphIon.Edges.plotHeights;
-
-                const filtered = GraphIon.Edges.filteredIndices();
-                const minActiveX = filtered.minFilterX;
-                const maxActiveX = filtered.maxFilterX;
-
-                const canvas = document.getElementById('edge-weights');
-                canvas.width = width;
-                canvas.height = height;
-
-                const ctx = canvas.getContext('2d');
-
-                for (let index = 0; index < width; index++){
-                    if (index >= minActiveX && index <= maxActiveX){
-                        ctx.fillStyle = "red";
-                    } else {
-                        ctx.fillStyle = "gray";
-                    }
-                    const currentHeight = plotHeights[index];
-                    ctx.fillRect(index, height - currentHeight, 1, currentHeight);
-                }
-
-                const weightSelectDiv = document.getElementById('weight-selection-info');
-
-                const weights = GraphIon.Edges.sortedWeights;
-                weightSelectDiv.innerText = 'You have selected ' + (filtered.maxIndex - filtered.minIndex + 1) + ' edges with weight between ' + weights[filtered.minIndex].weight + ' and ' + weights[filtered.maxIndex].weight;
-
-                console.log('Rendering took ' + (performance.now() - startTime) + ' ms');
+            // First find the degrees
+            for (let index = 0; index < edgeCount; index++) {
+                sortedInDegrees[edgesTo[index]].degree++;
             }
 
-            // Modified version of iterativeFunction from https://www.geeksforgeeks.org/binary-search-in-javascript/
-            function binarySearch(arr, x, moveUp) { 
-                
-                let start=0, end=arr.length-1; 
-         
-                // Iterate while start not meets end 
-                while (start<=end){ 
- 
-                    // Find the mid index 
-                    let mid=Math.floor((start + end)/2);
-                    const weight = arr[mid].weight;
+            // Then sort it
+            sortedInDegrees.sort(function (a, b) {
+                return a.degree - b.degree;
+            });
 
-                    if (!moveUp){
-                        if (weight === x){
-                            if (mid > 0 && arr[mid - 1].weight === x){
-                                end = mid - 1;
-                            } else {
-                                return mid;
-                            }
-                        } else if (weight < x){
-                            start = mid + 1;
-                        } else {
-                            end = mid - 1;
+            GraphIon.Vertices.InDegree.sorted = sortedInDegrees;
+
+            const minDegree = sortedInDegrees[0].degree;
+            const maxDegree = sortedInDegrees[vertexCount - 1].degree;
+            const maxDegreeDifference = maxDegree - minDegree;
+
+            GraphIon.Vertices.InDegree.minDegree = minDegree;
+            GraphIon.Vertices.InDegree.maxDegree = maxDegree;
+            GraphIon.Vertices.InDegree.maxDegreeDifference = maxDegreeDifference;
+
+            const width = Math.floor(window.innerWidth / 2);
+            const height = Math.floor(window.innerHeight * 4 / 5);
+
+            GraphIon.Vertices.InDegree.canvasWidth = width;
+            GraphIon.Vertices.InDegree.canvasHeight = height;
+
+            const amounts = new Int32Array(width);
+            for (let index = 0; index < vertexCount; index++) {
+                const indexToIncrease = Math.floor(width * (sortedInDegrees[index].degree - minDegree) / maxDegreeDifference);
+                if (indexToIncrease < width) {
+                    amounts[indexToIncrease]++;
+                } else {
+                    amounts[width - 1]++;
+                }
+            }
+
+            GraphIon.Vertices.InDegree.distributionAmounts = amounts;
+
+            const sortedAmounts = new Array(width);
+            for (let index = 0; index < width; index++) {
+                sortedAmounts[index] = {
+                    index: index,
+                    amount: amounts[index]
+                };
+            }
+            sortedAmounts.sort(function (a, b) {
+                return a.amount - b.amount;
+            });
+
+            GraphIon.Vertices.InDegree.sortedAmounts = sortedAmounts;
+
+            const zeroAmounts = binarySearch(sortedAmounts, 0, 'amount', true) + 1;
+            const nonZeroAmounts = width - zeroAmounts;
+
+            let maxAmount = sortedAmounts[Math.min(width - 1, zeroAmounts + Math.ceil(nonZeroAmounts * 39 / 40))].amount;
+
+            // For the pathetic cases where the vast majority is 0
+            if (maxAmount === 0) {
+                maxAmount = sortedAmounts[width - 2].amount;
+
+                // For the pathetic case with only 1 non-zero amount
+                // Maybe, we should disable the edge weight filtering here
+                if (maxAmount === 0) {
+                    maxAmount = sortedAmounts[width - 1].amount;
+                    if (maxAmount === 0) {
+                        // Everything is 0, fuck this shit
+                        return;
+                    }
+                }
+            }
+
+            GraphIon.Vertices.InDegree.roughMaxAmount = maxAmount;
+
+            let bins = 1;
+            for (let index = 1; index < width; index++) {
+                if (amounts[index] !== amounts[index - 1]) {
+                    bins++;
+                }
+            }
+
+            console.log('bins is ' + bins);
+
+            const binWidth = Math.max(1, Math.floor(width / bins));
+            GraphIon.Vertices.InDegree.binWidth = binWidth;
+
+            const plotHeights = new Int32Array(width);
+            for (let index = 0; index < width; index++) {
+                const currentHeight = Math.ceil(height * amounts[index] / maxAmount);
+                if (currentHeight >= 1) {
+                    const startRectIndex = Math.max(index - Math.ceil(binWidth / 2), 0);
+                    const endRectIndex = Math.min(width, index + Math.ceil(binWidth / 2));
+                    for (let rectIndex = startRectIndex; rectIndex < endRectIndex; rectIndex++) {
+                        if (currentHeight > plotHeights[rectIndex]) {
+                            plotHeights[rectIndex] = currentHeight;
                         }
+                    }
+                    if (bins < 50){
+                        plotHeights[startRectIndex] -= currentHeight;
+                        if (plotHeights[startRectIndex] < 0){
+                            plotHeights[startRectIndex] = 0;
+                        }
+                    }
+                }
+            }
+
+            if (bins > 400) {
+                const plotHeightCopy = plotHeights.slice(0, width);
+
+                // Apply some kind of median filter (notice that the borders remain the same)
+                const MEDIAN_RANGE = 15;
+                for (let index = MEDIAN_RANGE; index < width - MEDIAN_RANGE; index++) {
+                    plotHeights[index] = median(plotHeightCopy.slice(index - MEDIAN_RANGE, index + MEDIAN_RANGE));
+                }
+            }
+
+            GraphIon.Vertices.InDegree.plotHeights = plotHeights;
+
+            renderNodeInDegreeDistribution();
+
+            const canvas = document.getElementById('node-indegrees');
+            canvas.addEventListener('mousedown', function (event) {
+                if (!GraphIon.Vertices.InDegree.mouseDown) {
+                    GraphIon.Vertices.InDegree.mouseDown = true;
+                    GraphIon.Vertices.InDegree.filterX1 = event.offsetX;
+                }
+            });
+            canvas.addEventListener('mouseup', function (event) {
+                GraphIon.Vertices.InDegree.mouseDown = false;
+            });
+            canvas.addEventListener('mousemove', function (event) {
+                if (GraphIon.Vertices.InDegree.mouseDown) {
+                    GraphIon.Vertices.InDegree.filterX2 = event.offsetX;
+                    renderNodeInDegreeDistribution();
+                }
+            });
+            canvas.addEventListener('mouseout', function (event) {
+                if (GraphIon.Vertices.InDegree.mouseDown) {
+                    GraphIon.Vertices.InDegree.filterX2 = event.offsetX;
+                    renderNodeInDegreeDistribution();
+                }
+            });
+            canvas.addEventListener('mouseenter', function (event) {
+                if (event.buttons === 1 && !GraphIon.Vertices.InDegree.mouseDown) {
+                    GraphIon.Vertices.InDegree.mouseDown = true;
+                    if (event.offsetX < 20) {
+                        GraphIon.Vertices.InDegree.filterX1 = 0;
+                    }
+                    else if (event.offsetX > width - 20) {
+                        GraphIon.Vertices.InDegree.filterX1 = width;
                     } else {
-                        if (weight === x){
-                            if (mid + 1 < arr.length && arr[mid + 1].weight === x){
-                                start = mid + 1;
-                            } else {
-                                return mid;
-                            }
-                        } else if (weight < x){
-                            start = mid + 1;
-                        } else {
-                            end = mid - 1;
+                        GraphIon.Vertices.InDegree.filterX1 = event.offsetX;
+                    }
+                }
+            });
+
+            const endTime = performance.now();
+            console.log('Preparing in-degrees took ' + (endTime - startTime) + ' ms');
+        }
+
+        function prepareOutDegrees() {
+            const startTime = performance.now();
+
+            {
+                const edgesFrom = GraphIon.Vertices.edgesFrom;
+                const edgesTo = GraphIon.Vertices.edgesTo;
+                const edgesWeights = GraphIon.Vertices.edgesWeights;
+                const vertexIndices = GraphIon.Vertices.InDegree.filteredIndices();
+                const minSelectedIndex = vertexIndices.minIndex;
+                const boundIndex = vertexIndices.maxIndex + 1;
+                const inSortedVertices = GraphIon.Vertices.InDegree.sorted;
+                const selectedVertexCount = boundIndex - minSelectedIndex;
+
+                const allVertexCount = GraphIon.Vertices.all.length;
+
+                // Use this array to map the old vertex indices in edgesFrom and edgesTo
+                // to the corresponding index in the selected vertices
+                const oldToNewIndex = new Int32Array(allVertexCount);
+                // Fill it initially with -1 and put the right values later
+                for (let index = 0; index < allVertexCount; index++) {
+                    oldToNewIndex[index] = -1;
+                }
+                const hasVertexArray = new Array(allVertexCount);
+                // First set everything to false, thereafter set the right ones to true
+                for (let index = 0; index < allVertexCount; index++) {
+                    hasVertexArray[index] = false;
+                }
+
+                // This is an array containing the indices of all vertices that were not filtered out previously
+                const selectedVertexIndices = new Int32Array(selectedVertexCount);
+                for (let index = 0; index < selectedVertexCount; index++) {
+                    const vertexIndex = inSortedVertices[index + minSelectedIndex].index;
+                    selectedVertexIndices[index] = vertexIndex;
+                    hasVertexArray[vertexIndex] = true;
+                }
+
+                {
+                    let newIndex = 0;
+                    for (let index = 0; index < allVertexCount; index++) {
+                        if (hasVertexArray[index]) {
+                            oldToNewIndex[index] = newIndex++;
                         }
                     }
                 }
 
-                if (!moveUp){
-                    if (end >= 0 && arr[end].weight >= x){
-                        return end;
+                const oldVertexNames = GraphIon.Vertices.all;
+                const newVertexNames = new Array(selectedVertexCount);
+                for (let index = 0; index < selectedVertexCount; index++){
+                    newVertexNames[index] = oldVertexNames[selectedVertexIndices[index]];
+                }
+
+                GraphIon.Vertices.OutDegrees.array = selectedVertexIndices;
+                GraphIon.Vertices.OutDegrees.names = newVertexNames;
+                GraphIon.Vertices.OutDegrees.hasVertexArray = hasVertexArray;
+
+                const previousEdgeCount = edgesTo.length;
+                const keepEdgeArray = new Array(previousEdgeCount);
+                for (let index = 0; index < previousEdgeCount; index++) {
+                    keepEdgeArray[index] = hasVertexArray[edgesTo[index]] && hasVertexArray[edgesFrom[index]];
+                }
+                let newEdgeCount = 0;
+                for (let index = 0; index < previousEdgeCount; index++) {
+                    if (keepEdgeArray[index]) {
+                        newEdgeCount++;
+                    }
+                }
+
+                const newEdgesFrom = new Int32Array(newEdgeCount);
+                const newEdgesTo = new Int32Array(newEdgeCount);
+                const newEdgesWeights = new Float32Array(newEdgeCount);
+                let newIndex = 0;
+                for (let index = 0; index < previousEdgeCount; index++) {
+                    if (keepEdgeArray[index]) {
+                        newEdgesFrom[newIndex] = oldToNewIndex[edgesFrom[index]];
+                        newEdgesTo[newIndex] = oldToNewIndex[edgesTo[index]];
+                        newEdgesWeights[newIndex] = edgesWeights[index];
+                        newIndex++;
+                    }
+                }
+                GraphIon.Vertices.OutDegrees.edgesFrom = newEdgesFrom;
+                GraphIon.Vertices.OutDegrees.edgesTo = newEdgesTo;
+                GraphIon.Vertices.OutDegrees.edgesWeights = newEdgesWeights;
+                GraphIon.Vertices.OutDegrees.filterX1 = 0;
+                GraphIon.Vertices.OutDegrees.filterX2 = Number.MAX_SAFE_INTEGER / 2;
+            }
+
+            const edgesFrom = GraphIon.Vertices.OutDegrees.edgesFrom;
+
+            const edgeCount = edgesFrom.length;
+            const vertexCount = GraphIon.Vertices.OutDegrees.array.length;
+            const sortedOutDegrees = new Array(vertexCount);
+
+            // First initialize the array, then fill the outdegrees
+            for (let index = 0; index < vertexCount; index++) {
+                sortedOutDegrees[index] = {
+                    index: index,
+                    degree: 0
+                };
+            }
+
+            // First find the degrees
+            for (let index = 0; index < edgeCount; index++) {
+                sortedOutDegrees[edgesFrom[index]].degree++;
+            }
+
+            // Then sort it
+            sortedOutDegrees.sort(function (a, b) {
+                return a.degree - b.degree;
+            });
+
+            GraphIon.Vertices.OutDegrees.sorted = sortedOutDegrees;
+
+            const minDegree = sortedOutDegrees[0].degree;
+            const maxDegree = sortedOutDegrees[vertexCount - 1].degree;
+            const maxDegreeDifference = maxDegree - minDegree;
+
+            GraphIon.Vertices.OutDegrees.minDegree = minDegree;
+            GraphIon.Vertices.OutDegrees.maxDegree = maxDegree;
+            GraphIon.Vertices.OutDegrees.maxDegreeDifference = maxDegreeDifference;
+
+            const width = Math.floor(window.innerWidth / 2);
+            const height = Math.floor(window.innerHeight * 4 / 5);
+
+            GraphIon.Vertices.OutDegrees.canvasWidth = width;
+            GraphIon.Vertices.OutDegrees.canvasHeight = height;
+
+            const amounts = new Int32Array(width);
+            for (let index = 0; index < vertexCount; index++) {
+                const indexToIncrease = Math.floor(width * (sortedOutDegrees[index].degree - minDegree) / maxDegreeDifference);
+                if (indexToIncrease < width) {
+                    amounts[indexToIncrease]++;
+                } else {
+                    amounts[width - 1]++;
+                }
+            }
+
+            GraphIon.Vertices.OutDegrees.distributionAmounts = amounts;
+
+            const sortedAmounts = new Array(width);
+            for (let index = 0; index < width; index++) {
+                sortedAmounts[index] = {
+                    index: index,
+                    amount: amounts[index]
+                };
+            }
+            sortedAmounts.sort(function (a, b) {
+                return a.amount - b.amount;
+            });
+
+            GraphIon.Vertices.OutDegrees.sortedAmounts = sortedAmounts;
+
+            const zeroAmounts = binarySearch(sortedAmounts, 0, 'amount', true) + 1;
+            const nonZeroAmounts = width - zeroAmounts;
+
+            let maxAmount = sortedAmounts[Math.min(width - 1, zeroAmounts + Math.ceil(nonZeroAmounts * 39 / 40))].amount;
+
+            // For the pathetic cases where the vast majority is 0
+            if (maxAmount === 0) {
+                maxAmount = sortedAmounts[width - 2].amount;
+
+                // For the pathetic case with only 1 non-zero amount
+                // Maybe, we should disable the edge weight filtering here
+                if (maxAmount === 0) {
+                    maxAmount = sortedAmounts[width - 1].amount;
+                    if (maxAmount === 0) {
+                        // Everything is 0, fuck this shit
+                        return;
+                    }
+                }
+            }
+
+            GraphIon.Vertices.OutDegrees.roughMaxAmount = maxAmount;
+
+            let bins = 1;
+            for (let index = 1; index < width; index++) {
+                if (amounts[index] !== amounts[index - 1]) {
+                    bins++;
+                }
+            }
+
+            console.log('bins is ' + bins);
+
+            const binWidth = Math.max(1, Math.floor(width / bins));
+            GraphIon.Vertices.OutDegrees.binWidth = binWidth;
+
+            const plotHeights = new Int32Array(width);
+            for (let index = 0; index < width; index++) {
+                const currentHeight = Math.ceil(height * amounts[index] / maxAmount);
+                if (currentHeight >= 1) {
+                    const startRectIndex = Math.max(index - Math.ceil(binWidth / 2), 0);
+                    //const startRectIndex = index;
+                    const endRectIndex = Math.min(width, index + Math.ceil(binWidth / 2));
+                    for (let rectIndex = startRectIndex; rectIndex < endRectIndex; rectIndex++) {
+                        if (currentHeight > plotHeights[rectIndex]) {
+                            plotHeights[rectIndex] = currentHeight;
+                        }
+                    }
+                }
+            }
+
+            if (bins > 400) {
+                const plotHeightCopy = plotHeights.slice(0, width);
+
+                // Apply some kind of median filter (notice that the borders remain the same)
+                const MEDIAN_RANGE = 15;
+                for (let index = MEDIAN_RANGE; index < width - MEDIAN_RANGE; index++) {
+                    plotHeights[index] = median(plotHeightCopy.slice(index - MEDIAN_RANGE, index + MEDIAN_RANGE));
+                }
+            }
+
+            GraphIon.Vertices.OutDegrees.plotHeights = plotHeights;
+
+            renderNodeOutDegreeDistribution();
+
+            const canvas = document.getElementById('node-outdegrees');
+            canvas.addEventListener('mousedown', function (event) {
+                if (!GraphIon.Vertices.OutDegrees.mouseDown) {
+                    GraphIon.Vertices.OutDegrees.mouseDown = true;
+                    GraphIon.Vertices.OutDegrees.filterX1 = event.offsetX;
+                }
+            });
+            canvas.addEventListener('mouseup', function (event) {
+                GraphIon.Vertices.OutDegrees.mouseDown = false;
+            });
+            canvas.addEventListener('mousemove', function (event) {
+                if (GraphIon.Vertices.OutDegrees.mouseDown) {
+                    GraphIon.Vertices.OutDegrees.filterX2 = event.offsetX;
+                    renderNodeOutDegreeDistribution();
+                }
+            });
+            canvas.addEventListener('mouseout', function (event) {
+                if (GraphIon.Vertices.OutDegrees.mouseDown) {
+                    GraphIon.Vertices.OutDegrees.filterX2 = event.offsetX;
+                    renderNodeOutDegreeDistribution();
+                }
+            });
+            canvas.addEventListener('mouseenter', function (event) {
+                if (event.buttons === 1 && !GraphIon.Vertices.OutDegrees.mouseDown) {
+                    GraphIon.Vertices.OutDegrees.mouseDown = true;
+                    if (event.offsetX < 20) {
+                        GraphIon.Vertices.OutDegrees.filterX1 = 0;
+                    }
+                    else if (event.offsetX > width - 20) {
+                        GraphIon.Vertices.OutDegrees.filterX1 = width;
                     } else {
-                        return start;
+                        GraphIon.Vertices.OutDegrees.filterX1 = event.offsetX;
+                    }
+                }
+            });
+
+            const endTime = performance.now();
+            console.log('Preparing out-degrees took ' + (endTime - startTime) + ' ms');
+        }
+
+        function median(array) {
+            const length = array.length;
+            // First do insertion sort (quite effective for small arrays which we know is the case)
+            let i = 0;
+            while (i < length) {
+                let j = i;
+                while (j > 0 && array[j - 1] > array[j]) {
+                    const oldAtJ = array[j];
+                    array[j] = array[j - 1];
+                    array[j - 1] = oldAtJ;
+                    j--;
+                }
+                i++;
+            }
+            return array[Math.floor(length / 2)];
+        }
+
+        function uploadGraph() {
+            const vertices = GraphIon.Upload.vertices;
+            let edgesFrom;
+            let edgesTo;
+            let edgesWeights;
+            if (document.getElementById('checkbox').checked){
+                edgesFrom = GraphIon.Upload.KeepEdges.edgesFrom;
+                edgesTo = GraphIon.Upload.KeepEdges.edgesTo;
+                edgesWeights = GraphIon.Upload.KeepEdges.edgesWeights;
+            } else {
+                edgesFrom = GraphIon.Upload.FilterEdges.edgesFrom;
+                edgesTo = GraphIon.Upload.FilterEdges.edgesTo;
+                edgesWeights = GraphIon.Upload.FilterEdges.edgesWeights;
+            }
+
+            const inverted = toCsv(vertices, edgesFrom, edgesTo, edgesWeights);
+
+            const request = new XMLHttpRequest();
+            request.open('POST', '/uploadnow', true);
+            request.onreadystatechange = function () {
+                if (request.readyState == 4 && request.status == 200) {
+                    window.location.assign(request.responseURL);
+                }
+            };
+
+            const form = new FormData();
+            //const invertedArray = new Array(1);
+            //invertedArray[0] = inverted;
+            const blob = new Blob([inverted], {type: 'text/csv'});
+            blob.lastModifiedDate = new Date();
+            blob.name = GraphIon.fileName;
+            //const file = new File(invertedArray, GraphIon.fileName);
+            form.append('file', blob, GraphIon.fileName);
+            request.send(form, GraphIon.fileName);
+        }
+
+        function renderEdgeWeightDistribution() {
+            const startTime = performance.now();
+
+            const width = GraphIon.Edges.canvasWidth;
+            const height = GraphIon.Edges.canvasHeight;
+            const binWidth = GraphIon.Edges.binWidth;
+            const maxAmount = GraphIon.Edges.roughMaxAmount;
+            const plotHeights = GraphIon.Edges.plotHeights;
+
+            const filtered = GraphIon.Edges.filteredIndices();
+            const minActiveX = filtered.minFilterX;
+            const maxActiveX = filtered.maxFilterX;
+
+            const canvas = document.getElementById('edge-weights');
+            canvas.width = width;
+            canvas.height = height;
+
+            const ctx = canvas.getContext('2d');
+
+            for (let index = 0; index < width; index++) {
+                if (index >= minActiveX && index <= maxActiveX) {
+                    ctx.fillStyle = "red";
+                } else {
+                    ctx.fillStyle = "gray";
+                }
+                const currentHeight = plotHeights[index];
+                ctx.fillRect(index, height - currentHeight, 1, currentHeight);
+            }
+
+            const weightSelectDiv = document.getElementById('weight-selection-info');
+
+            const weights = GraphIon.Edges.sortedWeights;
+            weightSelectDiv.innerText = 'You have selected ' + (filtered.maxIndex - filtered.minIndex + 1) + ' edges with weight between ' + weights[filtered.minIndex].weight + ' and ' + weights[filtered.maxIndex].weight;
+
+            console.log('Rendering took ' + (performance.now() - startTime) + ' ms');
+        }
+
+        function renderNodeInDegreeDistribution() {
+            const startTime = performance.now();
+
+            const width = GraphIon.Vertices.InDegree.canvasWidth;
+            const height = GraphIon.Vertices.InDegree.canvasHeight;
+            const binWidth = GraphIon.Vertices.InDegree.binWidth;
+            const maxAmount = GraphIon.Vertices.InDegree.roughMaxAmount;
+            const plotHeights = GraphIon.Vertices.InDegree.plotHeights;
+
+            const filtered = GraphIon.Vertices.InDegree.filteredIndices();
+            const minActiveX = filtered.minFilterX;
+            const maxActiveX = filtered.maxFilterX;
+
+            const canvas = document.getElementById('node-indegrees');
+            canvas.width = width;
+            canvas.height = height;
+
+            const ctx = canvas.getContext('2d');
+
+            for (let index = 0; index < width; index++) {
+                if (index >= minActiveX && index <= maxActiveX) {
+                    ctx.fillStyle = "red";
+                } else {
+                    ctx.fillStyle = "gray";
+                }
+                const currentHeight = plotHeights[index];
+                ctx.fillRect(index, height - currentHeight, 1, currentHeight);
+            }
+
+            const inDegreeSelectDiv = document.getElementById('indegree-selection-info');
+
+            const degrees = GraphIon.Vertices.InDegree.sorted;
+            inDegreeSelectDiv.innerText = 'You have selected ' + (filtered.maxIndex - filtered.minIndex + 1) + ' nodes with in-degree between ' + degrees[filtered.minIndex].degree + ' and ' + degrees[filtered.maxIndex].degree;
+
+            console.log('Rendering took ' + (performance.now() - startTime) + ' ms');
+        }
+
+        function renderNodeOutDegreeDistribution() {
+            const startTime = performance.now();
+
+            const width = GraphIon.Vertices.OutDegrees.canvasWidth;
+            const height = GraphIon.Vertices.OutDegrees.canvasHeight;
+            const binWidth = GraphIon.Vertices.OutDegrees.binWidth;
+            const maxAmount = GraphIon.Vertices.OutDegrees.roughMaxAmount;
+            const plotHeights = GraphIon.Vertices.OutDegrees.plotHeights;
+
+            const filtered = GraphIon.Vertices.OutDegrees.filteredIndices();
+            const minActiveX = filtered.minFilterX;
+            const maxActiveX = filtered.maxFilterX;
+
+            const canvas = document.getElementById('node-outdegrees');
+            canvas.width = width;
+            canvas.height = height;
+
+            const ctx = canvas.getContext('2d');
+
+            for (let index = 0; index < width; index++) {
+                if (index >= minActiveX && index <= maxActiveX) {
+                    ctx.fillStyle = "red";
+                } else {
+                    ctx.fillStyle = "gray";
+                }
+                const currentHeight = plotHeights[index];
+                ctx.fillRect(index, height - currentHeight, 1, currentHeight);
+            }
+
+            const outDegreeSelectDiv = document.getElementById('outdegree-selection-info');
+
+            const degrees = GraphIon.Vertices.OutDegrees.sorted;
+            outDegreeSelectDiv.innerText = 'You have selected ' + (filtered.maxIndex - filtered.minIndex + 1) + ' nodes with out-degree between ' + degrees[filtered.minIndex].degree + ' and ' + degrees[filtered.maxIndex].degree;
+
+            console.log('Rendering took ' + (performance.now() - startTime) + ' ms');
+        }
+
+        // Modified version of iterativeFunction from https://www.geeksforgeeks.org/binary-search-in-javascript/
+        function binarySearch(arr, x, attribute, moveUp) {
+
+            let start = 0, end = arr.length - 1;
+
+            // Iterate while start not meets end 
+            while (start <= end) {
+
+                // Find the mid index 
+                let mid = Math.floor((start + end) / 2);
+                const weight = arr[mid][attribute];
+
+                if (!moveUp) {
+                    if (weight === x) {
+                        if (mid > 0 && arr[mid - 1][attribute] === x) {
+                            end = mid - 1;
+                        } else {
+                            return mid;
+                        }
+                    } else if (weight < x) {
+                        start = mid + 1;
+                    } else {
+                        end = mid - 1;
                     }
                 } else {
-                    if (start < arr.length && arr[start].weight <= x){
-                        return start;
-                    } else {
-                        return end;
-                    }
-                }
-  
-                return false; 
-            }
-
-            function parseCsv(file, callback){
-                const parseStartTime = performance.now();
-                const reader = new FileReader();
-                reader.onload = function(event){
-
-                    // Why are there 3 different ways to encode line terminations?
-                    const LINE_SEPARATOR = "\r";
-                    const LINE_SEPARATOR2 = "\n";
-                    const LINE_SEPARATOR_CODE = LINE_SEPARATOR.charCodeAt(0);
-                    const LINE_SEPARATOR_CODE2 = LINE_SEPARATOR2.charCodeAt(0);
-                    const SEPARATOR = ";";
-                    const SEPARATOR_CODE = SEPARATOR.charCodeAt(0);
-                    const CODE_0 = "0".charCodeAt(0);
-                    const result = event.target.result;
-                    const fileLength = result.length;
-                    if (result.charAt(fileLength - 2) !== LINE_SEPARATOR && result.charAt(fileLength - 1) !== LINE_SEPARATOR2){
-                        window.alert("Invalid csv1");
-                        return;
-                    }
-                    console.log('file length is', fileLength);
-                    let lineEnd = result.indexOf(LINE_SEPARATOR);
-                    if (lineEnd === -1){
-                        lineEnd = result.indexOf(LINE_SEPARATOR2);
-                    }
-                    console.log('first line ends at', lineEnd);
-
-                    let vertexCount = 0;
-                    for (let index = 0; index < lineEnd; index++){
-                        if (result.charCodeAt(index) === SEPARATOR_CODE){
-                            vertexCount++;
-                        }
-                    }
-                    console.log('vertex count is', vertexCount);
-
-                    const vertices = new Array(vertexCount);
-                    let vertexIndex = 0;
-                    let prevSeparator = -1;
-                    for (let index = 0; index < lineEnd; index++){
-                        if (result.charCodeAt(index) === SEPARATOR_CODE){
-                            if (prevSeparator !== -1){
-                                vertices[vertexIndex++] = result.substring(prevSeparator + 1, index);
-                            }
-                            prevSeparator = index;
-                        }
-                    }
-                    vertices[vertexIndex] = result.substring(prevSeparator + 1, lineEnd);
-
-                    let edgeCount = 0;
-                    let rowIndex = 0;
-                    prevSeparator = -1;
-                    for (let index = lineEnd + 1; index < fileLength; index++){
-                        //const currentChar = result.charAt(index);
-                        const currentCharCode = result.charCodeAt(index);
-                        if (currentCharCode === SEPARATOR_CODE){
-                            if (prevSeparator !== -1){
-                                if (prevSeparator + 2 !== index || result.charCodeAt(index - 1) !== CODE_0){
-                                    edgeCount++;
-                                }
-                                /*
-                                const currentValue = result.substring(prevSeparator + 1, index);
-                                if (currentValue !== "0"){
-                                    edgeCount++;
-                                }*/
-                            }
-                            prevSeparator = index;
-                        }
-                        if (index !== lineEnd + 1 && (currentCharCode === LINE_SEPARATOR_CODE || currentCharCode === LINE_SEPARATOR_CODE2)){
-                            rowIndex++;
-                            prevSeparator = -1;
-                            if (currentCharCode === LINE_SEPARATOR_CODE && result.charCodeAt(index + 1) === LINE_SEPARATOR_CODE2){
-                                index += 1;
-                            }
-                        }
-                    }
-                    if (rowIndex !== vertexCount){
-                        window.alert("Invalid csv2");
-                        return;
-                    }
-                    console.log('edge count is', edgeCount);
-                    const edgesFrom = new Int32Array(edgeCount);
-                    const edgesTo = new Int32Array(edgeCount);
-                    const edgesWeight = new Float32Array(edgeCount);
-                    rowIndex = 0;
-                    prevSeparator = -1;
-                    let edgeIndex = 0;
-                    let columnIndex = 0;
-                    for (let index = lineEnd + 1; index < fileLength; index++){
-                        //const currentChar = result.charAt(index);
-                        const currentCharCode = result.charCodeAt(index);
-                        if (currentCharCode === SEPARATOR_CODE){
-                            if (prevSeparator !== -1){
-                                let currentValue = 0.0;
-                                if (index === prevSeparator + 2){
-                                    currentValue = result.charCodeAt(index - 1) - CODE_0;
-                                } else {
-                                    currentValue = parseFloat(result.substring(prevSeparator + 1, index));
-                                }
-                                if (currentValue !== 0){
-
-                                    // Maybe swap these
-                                    edgesFrom[edgeIndex] = rowIndex;
-                                    edgesTo[edgeIndex] = columnIndex;
-                                    edgesWeight[edgeIndex] = currentValue;
-                                    edgeIndex++;
-                                }
-                                columnIndex++;
-                            }
-                            prevSeparator = index;
-                        }
-                        if (index !== lineEnd + 1 && (currentCharCode === LINE_SEPARATOR_CODE || currentCharCode === LINE_SEPARATOR_CODE2)){
-                            rowIndex++;
-                            prevSeparator = -1;
-                            columnIndex = 0;
-                            if (currentCharCode === LINE_SEPARATOR_CODE && result.charCodeAt(index + 1) === LINE_SEPARATOR_CODE2){
-                                index += 1;
-                            }
-                        }
-                    }
-
-                    const parseEndTime = performance.now();
-                    console.log('parsing took ' + (parseEndTime - parseStartTime) + ' ms');
-
-                    callback(vertices, edgesFrom, edgesTo, edgesWeight, result);
-                };
-                reader.readAsText(file);
-            }
-
-            function stringFromUint16Array(array){
-		        const length = array.length;
-   	 	        let result = '';
-    	        let addition = Math.pow(2,16)-1;
-
-    	        for (let i = 0; i < length; i += addition){
-
-        	        if (i + addition > length) {
-            	        addition = length - i;
-        	        }
-        	        result += String.fromCharCode.apply(null, array.subarray(i,i+addition));
-    	        }
-
-    	        return result;
-	        }
-
-            function toCsv(vertices, edgesFrom, edgesTo, edgesWeight){
-                const startTime = performance.now();
-                let firstLine = '';
-                for(vertex in vertices){
-                    firstLine += ';' + vertices[vertex];
-                    //console.log('vertex is ' + vertices[vertex]);
-                }
-                //console.log('firstLine has become ' + firstLine);
-                firstLine += '\r\n';
-
-                let result = firstLine;
-                const vertexCount = vertices.length;
-                const edgeCount = edgesFrom.length;
-
-                const order = new Int32Array(edgeCount);
-                for (let index = 0; index < edgeCount; index++){
-                    order[index] = index;
-                }
-                order.sort(function(a, b){
-                    if (edgesFrom[a] > edgesFrom[b]){
-                        return 1;
-                    } 
-                    if (edgesFrom[a] < edgesFrom[b]){
-                        return -1;
-                    }
-                    if (edgesTo[a] > edgesTo[b]){
-                        return 1;
-                    }
-                    if (edgesTo[a] < edgesTo[b]){
-                        return -1;
-                    }
-                    return 0;
-                });
-
-                // The edges are guaranteed to be sorted, so take advantage of that!
-                let edgeIndex = 0;
-
-                // TODO do some sorting
-
-                for(let rowIndex = 0; rowIndex < vertexCount; rowIndex++){
-                    let currentLine = vertices[rowIndex] + ';';
-                    for (let columnIndex = 0; columnIndex < vertexCount; columnIndex++){
-                        const effIndex = order[edgeIndex];
-                        if (edgesFrom[effIndex] === rowIndex && edgesTo[effIndex] === columnIndex){
-                            currentLine += edgesWeight[effIndex] + ';';
-                            edgeIndex++;
+                    if (weight === x) {
+                        if (mid + 1 < arr.length && arr[mid + 1][attribute] === x) {
+                            start = mid + 1;
                         } else {
-                            currentLine += '0;';
+                            return mid;
                         }
+                    } else if (weight < x) {
+                        start = mid + 1;
+                    } else {
+                        end = mid - 1;
                     }
-                    result += currentLine + '\r\n';
+                }
+            }
+
+            if (!moveUp) {
+                if (end >= 0 && arr[end].weight >= x) {
+                    return end;
+                } else {
+                    return start;
+                }
+            } else {
+                if (start < arr.length && arr[start].weight <= x) {
+                    return start;
+                } else {
+                    return end;
+                }
+            }
+
+            return false;
+        }
+
+        function parseCsv(file, callback) {
+            const parseStartTime = performance.now();
+            const reader = new FileReader();
+            reader.onload = function (event) {
+
+                // Why are there 3 different ways to encode line terminations?
+                const LINE_SEPARATOR = "\r";
+                const LINE_SEPARATOR2 = "\n";
+                const LINE_SEPARATOR_CODE = LINE_SEPARATOR.charCodeAt(0);
+                const LINE_SEPARATOR_CODE2 = LINE_SEPARATOR2.charCodeAt(0);
+                const SEPARATOR = ";";
+                const SEPARATOR_CODE = SEPARATOR.charCodeAt(0);
+                const CODE_0 = "0".charCodeAt(0);
+                const result = event.target.result;
+                const fileLength = result.length;
+                if (result.charAt(fileLength - 2) !== LINE_SEPARATOR && result.charAt(fileLength - 1) !== LINE_SEPARATOR2 && result.charAt(fileLength - 1) !== LINE_SEPARATOR) {
+                    window.alert("Invalid csv1");
+                    return;
+                }
+                console.log('file length is', fileLength);
+                let lineEnd = result.indexOf(LINE_SEPARATOR);
+                if (lineEnd === -1) {
+                    lineEnd = result.indexOf(LINE_SEPARATOR2);
+                }
+                console.log('first line ends at', lineEnd);
+
+                let vertexCount = 0;
+                for (let index = 0; index < lineEnd; index++) {
+                    if (result.charCodeAt(index) === SEPARATOR_CODE && result.charCodeAt(index + 1) !== LINE_SEPARATOR_CODE && result.charCodeAt(index + 1) !== LINE_SEPARATOR2) {
+                        vertexCount++;
+                    }
+                }
+                console.log('vertex count is', vertexCount);
+
+                const vertices = new Array(vertexCount);
+                let vertexIndex = 0;
+                let prevSeparator = -1;
+                for (let index = 0; index < lineEnd; index++) {
+                    if (result.charCodeAt(index) === SEPARATOR_CODE && result.charCodeAt(index + 1) !== LINE_SEPARATOR_CODE && result.charCodeAt(index + 1) !== LINE_SEPARATOR2) {
+                        if (prevSeparator !== -1) {
+                            vertices[vertexIndex++] = result.substring(prevSeparator + 1, index);
+                        }
+                        prevSeparator = index;
+                    }
+                }
+                if (result.charCodeAt(lineEnd - 1) !== SEPARATOR_CODE){
+                    vertices[vertexIndex] = result.substring(prevSeparator + 1, lineEnd);
+                } else {
+                    vertices[vertexIndex] = result.substring(prevSeparator + 1, lineEnd - 1);
                 }
 
-                const endTime = performance.now();
+                let edgeCount = 0;
+                let rowIndex = 0;
+                prevSeparator = -1;
+                for (let index = lineEnd + 1; index < fileLength; index++) {
+                    //const currentChar = result.charAt(index);
+                    const currentCharCode = result.charCodeAt(index);
+                    if (currentCharCode === SEPARATOR_CODE) {
+                        if (prevSeparator !== -1) {
+                            if (prevSeparator + 2 !== index || result.charCodeAt(index - 1) !== CODE_0) {
+                                edgeCount++;
+                            }
+                        }
+                        prevSeparator = index;
+                    }
+                    if (index !== lineEnd + 1 && (currentCharCode === LINE_SEPARATOR_CODE || currentCharCode === LINE_SEPARATOR_CODE2)) {
+                        rowIndex++;
+                        prevSeparator = -1;
+                        if (currentCharCode === LINE_SEPARATOR_CODE && result.charCodeAt(index + 1) === LINE_SEPARATOR_CODE2) {
+                            index += 1;
+                        }
+                    }
+                }
+                if (rowIndex !== vertexCount) {
+                    window.alert("Invalid csv2");
+                    return;
+                }
+                console.log('edge count is', edgeCount);
+                const edgesFrom = new Int32Array(edgeCount);
+                const edgesTo = new Int32Array(edgeCount);
+                const edgesWeight = new Float32Array(edgeCount);
+                rowIndex = 0;
+                prevSeparator = -1;
+                let edgeIndex = 0;
+                let columnIndex = 0;
+                for (let index = lineEnd + 1; index < fileLength; index++) {
+                    //const currentChar = result.charAt(index);
+                    const currentCharCode = result.charCodeAt(index);
+                    if (currentCharCode === SEPARATOR_CODE) {
+                        if (prevSeparator !== -1) {
+                            let currentValue = 0.0;
+                            if (index === prevSeparator + 2) {
+                                currentValue = result.charCodeAt(index - 1) - CODE_0;
+                            } else {
+                                currentValue = parseFloat(result.substring(prevSeparator + 1, index));
+                            }
+                            if (currentValue !== 0) {
 
-                console.log('creating csv took ' + (endTime - startTime) + ' ms');
+                                // Maybe swap these
+                                edgesFrom[edgeIndex] = rowIndex;
+                                edgesTo[edgeIndex] = columnIndex;
+                                edgesWeight[edgeIndex] = currentValue;
+                                edgeIndex++;
+                            }
+                            columnIndex++;
+                        }
+                        prevSeparator = index;
+                    }
+                    if (index !== lineEnd + 1 && (currentCharCode === LINE_SEPARATOR_CODE || currentCharCode === LINE_SEPARATOR_CODE2)) {
+                        rowIndex++;
+                        prevSeparator = -1;
+                        columnIndex = 0;
+                        if (currentCharCode === LINE_SEPARATOR_CODE && result.charCodeAt(index + 1) === LINE_SEPARATOR_CODE2) {
+                            index += 1;
+                        }
+                    }
+                }
 
-                return result;
+                const parseEndTime = performance.now();
+                console.log('parsing took ' + (parseEndTime - parseStartTime) + ' ms');
+
+                callback(vertices, edgesFrom, edgesTo, edgesWeight, result);
+            };
+            reader.readAsText(file);
+        }
+
+        function stringFromUint16Array(array) {
+            const length = array.length;
+            let result = '';
+            let addition = Math.pow(2, 16) - 1;
+
+            for (let i = 0; i < length; i += addition) {
+
+                if (i + addition > length) {
+                    addition = length - i;
+                }
+                result += String.fromCharCode.apply(null, array.subarray(i, i + addition));
             }
-        </script>
-    </body>
+
+            return result;
+        }
+
+        function toCsv(vertices, edgesFrom, edgesTo, edgesWeight) {
+            const startTime = performance.now();
+            let firstLine = '';
+            for (vertex in vertices) {
+                firstLine += ';' + vertices[vertex];
+                //console.log('vertex is ' + vertices[vertex]);
+            }
+            //console.log('firstLine has become ' + firstLine);
+            firstLine += '\r\n';
+
+            let result = firstLine;
+            const vertexCount = vertices.length;
+            const edgeCount = edgesFrom.length;
+
+            const order = new Int32Array(edgeCount);
+            for (let index = 0; index < edgeCount; index++) {
+                order[index] = index;
+            }
+            order.sort(function (a, b) {
+                if (edgesFrom[a] > edgesFrom[b]) {
+                    return 1;
+                }
+                if (edgesFrom[a] < edgesFrom[b]) {
+                    return -1;
+                }
+                if (edgesTo[a] > edgesTo[b]) {
+                    return 1;
+                }
+                if (edgesTo[a] < edgesTo[b]) {
+                    return -1;
+                }
+                return 0;
+            });
+
+            // The edges are guaranteed to be sorted, so take advantage of that!
+            let edgeIndex = 0;
+
+            // TODO do some sorting
+
+            for (let rowIndex = 0; rowIndex < vertexCount; rowIndex++) {
+                let currentLine = vertices[rowIndex] + ';';
+                for (let columnIndex = 0; columnIndex < vertexCount; columnIndex++) {
+                    const effIndex = order[edgeIndex];
+                    if (edgesFrom[effIndex] === rowIndex && edgesTo[effIndex] === columnIndex) {
+                        currentLine += edgesWeight[effIndex] + ';';
+                        edgeIndex++;
+                    } else {
+                        currentLine += '0;';
+                    }
+                }
+                result += currentLine + '\r\n';
+            }
+
+            const endTime = performance.now();
+
+            console.log('creating csv took ' + (endTime - startTime) + ' ms');
+
+            return result;
+        }
+    </script>
+</body>
+
 </html>
