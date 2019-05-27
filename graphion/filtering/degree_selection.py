@@ -120,7 +120,7 @@ def generate_selection(file, kind="degree", dir="in"):
             }
             """
 
-        type_dependent2 = """            
+        type_dependent2 = """
             colored_amount = "<span style='color:red; font-weight:bold'>" + amount + "</span>"
         if (amount < 4000){
         colored_amount = "<span style='color:orange; font-weight:bold'>" + amount + "</span>"
