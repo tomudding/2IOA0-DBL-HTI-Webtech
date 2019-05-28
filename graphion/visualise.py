@@ -15,7 +15,9 @@ visualiseBlueprint = Blueprint('visualiseBlueprint', __name__, template_folder='
 @visualiseBlueprint.route('/visualise/<file>', methods=['GET'], strict_slashes=False)
 def visualise(file=None):
     if file is None:
-        return redirect('/selection')
+        script = server_document('http://localhost:%d/bkapp' % server.config['PORT'], relative_urls=False,
+                                 resources=None)
+        return render_template('visualise.html', script=script)
     script = server_document('http://localhost:%d/bkapp' % server.config['PORT'], relative_urls=False, resources=None, arguments={'file': file})
     return render_template('visualise.html', fileName=file, script=script)
 
