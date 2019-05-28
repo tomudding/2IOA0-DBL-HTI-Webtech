@@ -26,6 +26,7 @@ def makeMatrix(file, df=False):
     names = df.columns.tolist()
     names = [name.replace('_', ' ') for name in names]
     df.columns = names
+    df.set_index([df.columns], inplace=True)
 
     df_original = df.copy()
     # %%

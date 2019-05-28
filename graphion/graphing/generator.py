@@ -21,12 +21,11 @@ def generateBokehApp(doc):
     except KeyError:
         df = get_df()
         matrix = makeMatrix(df, df=True)
-        #graph = generateForceDirectedDiagram(df, False, df=True)
+        graph = generateForceDirectedDiagram(df, False, df=True)
     # Put parameters in panel with param to change direction and type of graph.
     pn.extension('plotly')
 
-    #pane = pn.Row(graph, matrix)
-    pane = pn.Row(matrix)
+    pane = pn.Row(graph, matrix)
     return pane.get_root(doc)
 
 def getFilePath(file):
