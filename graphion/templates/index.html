@@ -11,53 +11,26 @@ Edited: 2019-05-25
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>graphion</title>
         <link rel="stylesheet" type="text/css" href="static/css/style.css">
+        <link rel="stylesheet" type="text/css" href="static/css/header.css">
         <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700" rel="stylesheet">
     </head>
     <body>
-        <header class="header" id="home">
-
-            <!--Creates 7.5% margins on left and right-->
-            <div class="header-85-percent">
-
-                <!--Left-side of the header: logo-->
-                <div class="logo-container">
-                    <a class="logo" href="#main"><img src="static/images/network.png" alt="graphion logo" class="logo"></a>
-                </div>
-
-                <!--Left-side of the header: logo text-->
-                <div class="logo-text-container">
-                    <a class="logo-text" href="#main-page">graph<span class="logo-text" id="logo-text-bold">ion</span></a>
-                </div>
-
-                <!--Right-side of the header: buttons-->
-                <div class="header-buttons-container">
-
-                    <!--Menu-button for smaller displays (mobile devices)-->
-                    <div class="mobile-nav">
-                    <label for="menu-button-checkbox" class="mobile-nav-label">
-                        <img src="static/images/menu-button.png" alt="menu-button" id="menu-button">
-                    </label>
-                    <input type="checkbox" id="menu-button-checkbox">
-                    <div class="mobile-menu">
-                        <a href="#video-jump">VIDEO</a>
-                        <a href="#meet-the-team">TEAM</a>
-                        <a href="#report">REPORT</a>
-                        <a href="selection">LAUNCH</a>
+        <header class="navigation-wrapper">
+            <div class="navigation-container">
+                <div class="navigation-row">
+                    <div class="navigation-logo">
+                        <a href="#" class="graphion" title="graphion">graph<span class="navigation-logo-bold">ion</span></a>
                     </div>
-                    </div>
-
-                    <!--Video jump-button-->
-                    <a class="header-button" href="#video-jump">VIDEO</a>
-
-                    <!--Team jump-button-->
-                    <a class="header-button" href="#meet-the-team">TEAM</a>
-
-                    <!--Report jump-button-->
-                    <a class="header-button" href="#report">REPORT</a>
-
-                    <!--Launch jump-button-->
-                    <a class="header-button" href="selection">LAUNCH</a>
-
+                    <input type="checkbox" class="navigation-button" id="navigation-button">
+                    <label for="navigation-button" class="navigation-icon"><span class="navicon"></span></label>
+                    <nav class="navigation-links">
+                        <ul>
+                            <li><a href="#video-jump">VIDEO</a></li>
+                            <li><a href="#meet-the-team">TEAM</a></li>
+                            <li><a href="#report">REPORT</a></li>
+                            <li><a href="/selection" class="launch">LAUNCH</a></li>
+                        </ul>
+                    </nav>
                 </div>
             </div>
         </header>
@@ -73,12 +46,10 @@ Edited: 2019-05-25
                         <span class="bb-your">YOUR DATA VISUALIZATION EXPERT</span>
                         <br>
                         <div class="control-menu">
-                            <a class="launch-btn" href="selection">LAUNCH</a>
+                            <a class="ctrl-menu-launch-button" href="selection">LAUNCH</a>
                             <br>
                             <a class="ctlr-menu-button" href="#video-jump">VIDEO</a>
-                            <!--Cross image between buttons-->
-                            <img src="static/images/multiply.png" alt="cross" id="cross-image">
-                            <br id="ctrl-menu-break">
+                            <span class="ctrl-menu-cross"></span>
                             <a class="ctlr-menu-button" href="#meet-the-team">TEAM</a>
                             <br>
                             <a class="ctlr-menu-button" href="#report">REPORT</a>
@@ -148,35 +119,23 @@ Edited: 2019-05-25
         <section class="body-wrapper" id="report">
             <div class="space-container"></div>
             <div id="report-test">
-            <div id="report-left-side">
-                <span id="report-text">Read our report</span>
-                <br>
-                <div id="report-abstract-title">1. Abstract</div>
-                <div id="report-abstract">
-                    This paper describes our online data visualization tool. It allows anyone with access to the internet to upload data sets and visualize them in their browser using various kinds of graphs. The tool is written in Python and makes use of various packages like Bokeh, HoloViews and NetworkX.
-                    Our tool lets the user upload a data set and allows the user to view the node-link diagram and/or adjacency matrix of that data set. These views also allow several interactions with the data set to study it more in depth, like zooming and panning. Furthermore, our tool features a filtering step to let the user decide what part of the data is used to generate the visualizations and thus what the focus is of the visualizations.
+                <div id="report-left-side">
+                    <span id="report-text">Read our report</span>
                     <br>
-                    <div class="download-report-button-div">
-                        <a href="static/documents/report.pdf" class="download-report-button" download>DOWNLOAD REPORT</a>
+                    <div id="report-abstract-title">1. Abstract</div>
+                    <div id="report-abstract">
+                        This paper describes our online data visualization tool. It allows anyone with access to the internet to upload data sets and visualize them in their browser using various kinds of graphs. The tool is written in Python and makes use of various packages like Bokeh, HoloViews and NetworkX.
+                        Our tool lets the user upload a data set and allows the user to view the node-link diagram and/or adjacency matrix of that data set. These views also allow several interactions with the data set to study it more in depth, like zooming and panning. Furthermore, our tool features a filtering step to let the user decide what part of the data is used to generate the visualizations and thus what the focus is of the visualizations.
+                        <br>
+                        <div class="download-report-button-div">
+                            <a href="static/documents/report.pdf" class="download-report-button" download>DOWNLOAD REPORT</a>
+                        </div>
                     </div>
                 </div>
+                <div class="report-right-side">
+                    <img src="static/images/report.png" alt="report-img" id="report-img">
+                </div>
             </div>
-            <div class="report-right-side">
-                <img src="static/images/report.png" alt="report-img" id="report-img">
-            </div>
-        </div>
         </section>
-        <br>
-        <footer class="body-wrapper">
-            <div id="footer">
-                Icons made by <a href="https://www.flaticon.com/authors/smashicons"
-                title="Smashicons">Smashicons</a> and <a href="https://www.flaticon.com/authors/google"
-                title="Google">Google</a> from <a href="https://www.flaticon.com/"
-                title="Flaticon">www.flaticon.com</a> are licensed by <a href="http://creativecommons.org/licenses/by/3.0/"
-                title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a>
-                <br>
-                <a href="http://www.freepik.com">Designed by rawpixel.com / Freepik</a>
-            </div>
-        </footer>
     </body>
 </html>

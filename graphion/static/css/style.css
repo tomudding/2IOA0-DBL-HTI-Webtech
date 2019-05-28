@@ -39,182 +39,6 @@ a, a:visited, a:hover, a:focus {
 }
 
 /*######################
-  ######  HEADER  ######
-  ######################*/
-.header {
-	background-color: white;
-	height: 50px;
-    width: 100%;
-    display: inline-block;
-    position: fixed;
-    margin: 0 auto;
-    z-index: 3;
-}
-
-.header-85-percent {
-	width: 85%;
-	height: 100%;
-	display: inline-block;
-    margin: 0 auto;
-}
-
-.logo-container {
-	height: 100%;
-    float: left;
-}
-
-.logo-container img {
-	height: 40px;
-    margin-left: 10vw;
-    margin-top: 5px;
-}
-
-.logo-text-container {
-	height: 100%;
-    float: left;
-    display: block;
-    margin-left: 10px;
-    margin-top: 5px;
-}
-
-.logo-text {
-	color: #5D5C60;
-    letter-spacing: 0.1875rem;
-    font-size: 1.5625rem;
-    display: inline-block;
-}
-
-#logo-text-bold {
-	font-weight: bold;
-}
-
-.header-buttons-container {
-    height: 100%;
-    float: right;
-}
-
-.header-button,
-.ctlr-menu-button {
-    display: inline-block;
-	margin: 10px;
-    padding: 5px 10px;
-	cursor: pointer;
-    border: 0.1875rem solid white;
-    font-size: 0.75rem;
-    font-weight: 400;
-	color: #5D5C60;
-    letter-spacing: 2px;
-    background-color: rgba(255, 255, 255, 1);
-    transition: 0.6s;
-}
-
-.header-button:hover,
-.launch-btn-header:hover,
-.ctlr-menu-button:hover {
-	border: 0.1875rem solid rgb(51, 51, 51);
-	color: white;
-	background-color: rgb(51, 51, 51);
-}
-
-.launch-btn-header {
-    display: inline-block;
-	margin: 10px;
-	padding: 5px 10px;
-    cursor: pointer;
-    border: 0.1875rem solid rgb(51, 51, 51);
-    font-size: 0.75rem;
-    font-weight: bold;
-    color: #5D5C60;
-    letter-spacing: 2px;
-    background-color: rgb(255, 255, 255);
-    transition: 0.6s;
-}
-
-#menu-button {
-    display: none;
-    height: 40px;
-    margin: 0 auto;
-    margin-top: 5px;
-    text-align: center;
-    float: none;
-}
-
-.mobile-nav {
-    margin: 0 auto;
-    float: right;
-}
-
-.mobile-nav-label {
-    cursor: pointer;
-    margin: 0 auto;
-    display: none;
-}
-
-.space-30px {
-    width: 30px;
-    display: block;
-}
-
-#menu-button-checkbox {
-    display: none;
-}
-
-.mobile-menu {
-    display: none;
-    width: 100%;
-    background-color: black;
-}
-
-.mobile-menu a {
-    text-decoration: none;
-    font-size: 0.75rem;
-    font-weight: bold;
-	color: white;
-    letter-spacing: 2px;
-    display: block;
-    padding: 30px;
-    text-align: center;
-}
-
-@media (max-width: 400px) {
-    .logo-text {
-        display: none;
-    }
-}
-
-@media (max-width: 850px) {
-    #menu-button {
-       display: block;
-       text-align: right;
-    }
-
-    .header-button {
-        display: none;
-    }
-
-    .launch-btn-header {
-        display: none;
-    }
-
-    .mobile-menu {
-        display: none;
-    }
-
-    
-    .mobile-nav-label {
-        display: block;
-    }
-
-    #menu-button-checkbox:checked + .space-30px {
-        display: none;
-    }
-
-    #menu-button-checkbox:checked + .mobile-menu { 
-        display: block;
-    }
- }
-
-/*######################
   ####  MAIN PAGE  #####
   ######################*/
 #main-page {
@@ -270,56 +94,70 @@ a, a:visited, a:hover, a:focus {
     letter-spacing: 5px;
 }
 
-@media (max-width: 767px) {
-    #cross-image {
-       display: none;
-    }
- }
-
- @media (min-width: 767px) {
-    #ctrl-menu-break {
-       display: none;
-    }
- }
-
-.launch-btn {
+/* Copied from header.css (which uses Grid.CSS) */
+.ctlr-menu-button,
+.ctrl-menu-launch-button {
     display: inline-block;
-    color: #3189FF;
-	margin: 10px;
-    padding: 5px 10px;
-	cursor: pointer;
-    font-size: 0.875rem;
-    font-weight: bold;
-    border: 0.1875rem solid white;
+    padding: 0.125rem 0.75rem;
+    font-weight: 400;
+    color: rgb(85, 85, 85);
+    letter-spacing: 0.125rem;
+    border: 0.1875rem solid rgb(255, 255, 255);
     background-color: rgb(255, 255, 255);
-    letter-spacing: 2px;
+    -webkit-transition: 0.6s;
+    -moz-transition: 0.6s;
+    -ms-transition: 0.6s;
+    -o-transition: 0.6s;
     transition: 0.6s;
 }
 
-.launch-btn:hover {
-    border: 0.1875rem solid #3189FF;
-	color: white;
-	background-color: #3189FF;
+.ctrl-menu-launch-button {
+    color: rgb(49, 137, 255);
 }
 
-#report-btn {
-    margin-top: 3vh;
+.ctlr-menu-button:hover {
+    border: 0.1875rem solid rgb(51, 51, 51);
+	color: rgb(255, 255, 255);
+	background-color: rgb(51, 51, 51);
+}
+
+.ctrl-menu-launch-button:hover {
+    border: 0.1875rem solid rgb(49, 137, 255);
+	color: rgb(255, 255, 255);
+	background-color: rgb(49, 137, 255);
+}
+
+.ctrl-menu-cross {
     display: inline-block;
-}
-
-#team-btn {
-    margin-right: 3vh;
-    display: inline-block;
-}
-
-#video-btn {
-    margin-left: 3vh;
-    display: inline-block;
-}
-
-#cross-image {
-    height: 50px;
+    position: relative;
+    margin: 0 auto;
     vertical-align: middle;
+    width: 6rem;
+    height: 6rem;
+}
+
+.ctrl-menu-cross::after {
+    content: '';
+    height: 6rem;
+    border-left: 0.25rem solid rgb(51, 51, 51);
+    position: absolute;
+    transform: rotate(45deg);
+    left: 2.75rem;
+}
+
+.ctrl-menu-cross::before {
+    content: '';
+    height: 6rem;
+    border-left: 0.25rem solid rgb(51, 51, 51);
+    position: absolute;
+    transform: rotate(-45deg);
+    left: 2.75rem;
+}
+
+@media only screen and (max-width: 768px) {
+    .ctrl-menu-cross {
+        display: none;
+    }
 }
 
 /*######################
@@ -468,9 +306,6 @@ a, a:visited, a:hover, a:focus {
     position: relative;
 }
 
-
-
-
 /*######################
   ###  REPORT PAGE  ####
   ######################*/
@@ -577,18 +412,3 @@ a, a:visited, a:hover, a:focus {
         margin-right: 5vw;
     }
 }
-
-/*######################
-  ######  FOOTER  ######
-  ######################*/
-#footer {
-    width: 100%;
-    font-size: 0.75rem;
-    font-weight: normal;
-    color: #5D5C60;
-    margin: 0 auto;
-    text-align: center;
-    position: relative;
-    clear: both;
-}
-
