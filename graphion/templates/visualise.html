@@ -1,7 +1,7 @@
 <!--
 Author(s): Tom Udding, Sam Baggen, Tim van de Klundert
 Created: 2019-05-01
-Edited: 2019-05-10
+Edited: 2019-05-28
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -266,8 +266,8 @@ Edited: 2019-05-10
 	<div id="after-loading" hidden>
 		<div class="left-bar-shown" id="left-bar-shown">
 			<div class="left-bar-small-links">
-				<a href="index.html"><- home</a><br>
-				<a href="filter.html"><- pre-filter</a>
+				<a href="../"><- home</a><br>
+				<a onclick="window.history.back()" style="cursor: pointer;"><- pre-filter</a>
 			</div>
 			<div class="left-bar-graphion">
 				graph<b>ion</b>
@@ -281,12 +281,38 @@ Edited: 2019-05-10
 			<div class="left-bar-screen-separator">---------------------------------------------</div>
 			<div class="left-bar-hide-button" onclick="hideLeftBar()"><</div>
 			<div class="left-bar-screen-big" style="top: 45vh;">Screen 2:</div>
-			<div class="left-bar-screen-small" style="top: 50vh; left: 10vw;">Select ordering:</div>
-			<div class="left-bar-screen-small" style="top: 55vh; left: 1.5vw;">Adjacency</div>
-			<div class="left-bar-screen-small" style="top: 57vh; left: 1.75vw;">matrix</div>
+			<div class="left-bar-screen-small" style="top: 50vh; left: 10vw; width: 7.6vw;">Select ordering:</div>
+			<select class="dropdown" style="left: 8.4vw; top: 53vh; width: 11vw;">
+				<option>Option1</option>
+				<option>Option2</option>
+				<option>Option3</option>
+			</select>
+			<div class="left-bar-screen-small" style="top: 58.5vh; left: 1.5vw;">Adjacency</div>
+			<div class="left-bar-screen-small" style="top: 61vh; left: 1.75vw;">matrix</div>
 			<div class="left-bar-node-labels" style="top: 64vh;">Resize the nodes by:</div>
+			<select class="dropdown" style="left: 1.8vw; top: 67vh; width: 13.6vw;">
+				<option>In-degree</option>
+				<option>Out-degree</option>
+				<option>Total degree</option>
+				<option>Total out edge weight</option>
+				<option>Total in edge weight</option>
+				<option>Total edge weight</option>
+			</select>
 			<div class="left-bar-node-labels" style="top: 74vh;">Recolor the nodes by:</div>
+			<select class="dropdown" style="left: 1.8vw; top: 76.5vh; width: 13.6vw;">
+				<option>In-degree</option>
+				<option>Out-degree</option>
+				<option>Total degree</option>
+				<option>Total out edge weight</option>
+				<option>Total in edge weight</option>
+				<option selected="selected">Total edge weight</option>
+			</select>
+			<input type="color" class="left-bar-color-picker">
 			<div class="left-bar-dark-mode-label">Dark mode:</div>
+			<label class="dark-mode-switch">
+				<input type="checkbox">
+				<span class="slider round"></span>
+			</label>
 		</div>
 		<div class="left-bar-hidden" id="left-bar-hidden" hidden>
 			<div class="left-bar-show-button" onclick="showLeftBar()">></div>
@@ -294,6 +320,11 @@ Edited: 2019-05-10
 		<div class="right-bar-shown" id="right-bar-shown">
 			<div class="right-bar-big" style="top: 5.6vh;">Children of the current node:</div>
 			<div class="right-bar-small" style="top: 10vh;">Select ordering:</div>
+			<select class="dropdown" style="left: 9.4vw; top: 8.6vh; width: 10.3vw;">
+				<option>Option1</option>
+				<option>Option2</option>
+				<option>Option3</option>
+			</select>
 			<div class="right-bar-info-block" style="top: 14.4vh;">
 				<div class="right-bar-info-title">The info title of this ordering</div>
 				<div class="right-bar-info-text">
@@ -306,6 +337,11 @@ Edited: 2019-05-10
 			<div class="right-bar-hide-button" onclick="hideRightBar()">></div>
 			<div class="right-bar-big" style="top: 53vh;">Some other information:</div>
 			<div class="right-bar-small" style="top: 57vh;">Select ordering:</div>
+			<select class="dropdown" style="left: 9.4vw; top: 56vh; width: 10.3vw;">
+				<option>Option1</option>
+				<option>Option2</option>
+				<option>Option3</option>
+			</select>
 			<div class="right-bar-info-block" style="top: 62vh;">
 				<div class="right-bar-info-title">The second info title about this</div>
 				<div class="right-bar-info-text">

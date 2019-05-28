@@ -1,7 +1,7 @@
 /**
  * Author(s): Tim van de Klundert
  * Created: 2019-05-27
- * Edited: 2019-05-27
+ * Edited: 2019-05-28
  */
 
  .left-bar-shown {
@@ -35,13 +35,14 @@
      left: 1.5vw;
      top: 9vh;
      color: rgb(200,0,0);
-     font-size: 2vw;
-     line-height: 2vw;
+     font-size: 1.8vw;
+     line-height: 1.8vw;
  }
 
  .left-bar-choose-vis {
      position: absolute;
      left: 1.5vw;
+     width: 18vw;
      top: 13.6vh;
      font-size: 1.2vw;
      line-height: 1.2vw;
@@ -52,6 +53,7 @@
      position: absolute;
      color: rgb(133, 133, 133);
      font-size: 1.3vw;
+     width: 6vw;
      line-height: 1.3vw;
      left: 1.7vw;
  }
@@ -60,6 +62,7 @@
      position: absolute;
      color: rgb(133,133,133);
      font-size: 0.8vw;
+     width: 5.4vw;
      line-height: 0.8vw;
  }
 
@@ -82,14 +85,25 @@
      font-size: 3vw;
      line-height: 3vw;
      color: white;
+     cursor: pointer;
  }
 
  .left-bar-node-labels {
      position: absolute;
      color: white;
      left: 1.5vw;
-     font-size: 1.3vw;
-     line-height: 1.3vw;
+     width: 18vw;
+     font-size: 1.2vw;
+     line-height: 1.2vw;
+ }
+
+ .left-bar-color-picker {
+     position: absolute;
+     left: 1.5vw;
+     top: 81.5vh;
+     width: 5.4vw;
+     height: 10.4vh;
+     cursor: pointer;
  }
 
  .left-bar-dark-mode-label {
@@ -97,8 +111,8 @@
      color: white;
      left: 1.5vw;
      top: 94vh;
-     font-size: 1.3vw;
-     line-height: 1.3vw;
+     font-size: 1.2vw;
+     line-height: 1.2vw;
  }
 
  .left-bar-hidden {
@@ -120,7 +134,74 @@
     font-size: 3vw;
     line-height: 3vw;
     color: white;
+    cursor: pointer;
 }
+
+/* The dark mode switch is ripped from w3schools */
+.dark-mode-switch {
+    position: absolute;
+    display: inline-block;
+    left: 8.7vw;
+    top: 93.5vh;
+    width: 4.1vw;
+    height: 3.7vh;
+}
+
+.dark-mode-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 3vh;
+    width: 2vw;
+    left: 0;
+    bottom: 0.35vh;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  input:checked + .slider {
+    background-color: #2196F3;
+  }
+  
+  input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+  }
+  
+  input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+  }
+  
+  /* Rounded sliders */
+  .slider.round {
+    border-radius: 34px;
+  }
+  
+  .slider.round:before {
+    border-radius: 50%;
+  }
+
+  /* End of ripped content */
 
  .right-bar-shown {
      background-color: rgb(66,66,66);
@@ -135,15 +216,15 @@
  .right-bar-big {
      position: absolute;
      color: white;
-     left: 2vw;
-     font-size: 1.4vw;
-     line-height: 1.4vw;
+     left: 1.3vw;
+     font-size: 1.2vw;
+     line-height: 1.2vw;
  }
 
  .right-bar-small {
      position: absolute;
      color: rgb(133,133,133);
-     left: 2vw;
+     left: 1.3vw;
      font-size: 1.1vw;
      line-height: 1.1vw;
  }
@@ -156,6 +237,7 @@
      font-size: 2.5vw;
      line-height: 2.5vw;
      height: 3vh;
+     cursor: pointer;
  }
 
  .right-bar-info-block {
@@ -204,4 +286,18 @@
     font-size: 2.5vw;
     line-height: 2.5vw;
     height: 3vh;
+    cursor: pointer;
+}
+
+.dropdown {
+    position: absolute;
+    background-color: white;
+    color: rgb(133,133,133);
+    height: 4vh;
+    font-size: 1.1vw;
+
+    background-image: url("../images/dropdown.png");
+    background-position: right top;
+    background-size: cover;
+    background-repeat: no-repeat;
 }
