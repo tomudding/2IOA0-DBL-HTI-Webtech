@@ -6,25 +6,27 @@ Edited: 2019-05-22
 from graphion import server
 from graphion.graphing.nodelink.graph import generateForceDirectedDiagram, generateHierarchicalDiagram, generateRadialDiagram, generate3DDiagram
 from graphion.graphing.matrix.protomatrix import makeMatrix
-from graphion.api.filter.distribution import df
+from graphion.api.filter.distribution import get_df
 import os
 import panel as pn
 import time
 import pandas
 
 def generateBokehApp(doc):
-    if not doc.session_context.request.arguments['file'][0] == None :
+    try:
         path = doc.session_context.request.arguments['file'][0]
         path = getFilePath(str(doc.session_context.request.arguments['file'][0].decode('utf-8')))
         matrix = makeMatrix(path)
         graph = generateForceDirectedDiagram(path, False)
-    else:
+    except KeyError:
+        df = get_df()
         matrix = makeMatrix(df, df=True)
-        graph = generateForceDirectedDiagram(df, False, df=True)
+        #graph = generateForceDirectedDiagram(df, False, df=True)
     # Put parameters in panel with param to change direction and type of graph.
     pn.extension('plotly')
 
-    pane = pn.Row(graph, matrix)
+    #pane = pn.Row(graph, matrix)
+    pane = pn.Row(matrix)
     return pane.get_root(doc)
 
 def getFilePath(file):
