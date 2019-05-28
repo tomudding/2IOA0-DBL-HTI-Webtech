@@ -6,7 +6,7 @@ Edited: 2019-05-22
 from graphion import server
 from graphion.graphing.nodelink.graph import generateForceDirectedDiagram, generateHierarchicalDiagram, generateRadialDiagram, generate3DDiagram
 from graphion.graphing.matrix.protomatrix import makeMatrix
-from graphion.api.filter.distribution import get_df
+from graphion.api.filter.distribution import get_filtered_df
 import os
 import panel as pn
 import time
@@ -19,7 +19,7 @@ def generateBokehApp(doc):
         matrix = makeMatrix(path)
         graph = generateForceDirectedDiagram(path, False)
     except KeyError:
-        df = get_df()
+        df = get_filtered_df()
         matrix = makeMatrix(df, df=True)
         graph = generateForceDirectedDiagram(df, False, df=True)
     # Put parameters in panel with param to change direction and type of graph.

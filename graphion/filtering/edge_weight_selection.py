@@ -24,9 +24,9 @@ def processCSVMatrix(file):
 
     return df
 
-def generate_edge_selection(file, cutoff_l = 0.6, cutoff_r = 10.0, keep_edges = False):
+def generate_edge_selection(df, cutoff_l = 0.6, cutoff_r = 10.0, keep_edges = False):
     #if file is already in hdf format, apply the following read method
-    df = read_hdf(file)
+    # df = read_hdf(file)
     # print(df[-20:])
     #print(cutoff_l)
     #print(cutoff_r)
@@ -100,8 +100,8 @@ def intersection(lst1, lst2):
     return lst3
 
 
-def generate_degree_selection(file, cutoff_l = 2, cutoff_r = 900, dir = "in"):
-    df = read_hdf(file)
+def generate_degree_selection(df, cutoff_l = 2, cutoff_r = 900, dir = "in"):
+    # df = read_hdf(file)
 
     adj_matrix = df.to_numpy(copy=True)  # convert dataframe to numpy array for efficiency
 
@@ -154,6 +154,6 @@ def generate_degree_selection(file, cutoff_l = 2, cutoff_r = 900, dir = "in"):
     output_df = pandas.DataFrame(result_matrix, index=rem_names, columns=rem_names)
     # print(output_df)
 
-    return output_df, rem_names
+    return output_df
 
 #generate_edge_selection("../../datasets/GephiMatrix_author_similarity.csv")

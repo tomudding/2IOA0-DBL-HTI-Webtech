@@ -8,6 +8,7 @@ from flask import Flask, render_template, request, redirect, Response, Blueprint
 from json import dump, dumps
 from graphion.filtering.degree_selection import generate_selection
 from graphion.filtering.edge_weight_selection import generate_degree_selection, generate_edge_selection
+from graphion.filter import get_df
 import time
 
 from os.path import exists
@@ -36,8 +37,6 @@ def degreeAPI(file=None, type=None, dir=None):
             print("To json {}-{}: ".format(dir, type) + str(time.time()-start))
         return dumps(item)
 
-@apiDegreeBlueprint.route('/')
-
 @apiDegreeBlueprint.route('/postmethod', methods = ['POST'])
 def worker():
     # read json + reply
@@ -51,19 +50,19 @@ def worker():
 
 
 def filter_data(left, right, type, dir, file):
-    filepath = getFilePath(file)
-    global df
+    df = get_df()
+    global filtered_df
     if(type == 'degree'):
-        filtered_df, filtered_names = generate_degree_selection(filepath, left, right, dir)
-        df = filtered_df
-        return len(filtered_names)
+        filtered_df = generate_degree_selection(df, left, right, dir)
+        return len(filtered_df.columns)
     elif(type == 'weight'):
-        filtered_df = generate_edge_selection(filepath, left, right, keep_edges = True)
-        df = filtered_df
+        filtered_df = generate_edge_selection(df, left, right, keep_edges = True)
         return filtered_df.size
 
-def get_df():
-    return df
+def get_filtered_df():
+    if 'filtered_df' in globals():
+        return filtered_df
+    return get_df()
 
 def getFilePath(file):
     file = file + '.h5'
