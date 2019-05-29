@@ -1,0 +1,162 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: Roboto, sans-serif;
+    font-weight: 300;
+}
+
+/*############################################
+  #########  Page X: General outlook  ########
+  ############################################*/
+
+.pop-up-window {
+    width: 1080px;
+    background-color: #E8E8E8;
+    border-radius: 15px;
+    margin: auto;
+    margin-top: 17vh;
+    height: 66vh;
+    margin-bottom: 17vh;
+}
+
+.pop-up-title {
+    text-align: center;
+    line-height: 150px;
+    font-size: 50px;
+    color: #C40000;
+}
+
+.pop-up-icon-area {
+    text-align: center;
+}
+
+.vertical-line {
+    height: 25vh;
+    width: 1px;
+    background-color: #929292;
+    display: inline-block;
+}
+
+.pop-up-icon-area-left, .pop-up-icon-area-right {
+    height: 20vh;
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+.pop-up-icon-area-left img, .pop-up-icon-area-right img {
+    height: 100%;
+}
+
+.pop-up-button {
+    margin-top: 5vh;
+    background-color: #929292;
+    color: white;
+    border: 0;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    padding-left: 30px;
+    padding-right: 30px;
+    font-size: 20px;
+}
+
+.pop-up-button:hover {
+    background-color: black;
+    cursor: pointer;
+}
+
+.pop-up-footer-area {
+    margin-top: 70px;
+    text-align: center;
+}
+
+.pop-up-footer-button {
+    background-color: #E8E8E8;
+    border: 0;
+    color: #929292;
+    font-size: 17px;
+}
+
+.pop-up-footer-button:hover {
+    color: #C40000;
+    cursor: pointer;
+}
+
+.pop-up-footer-button-back {
+    float: left;
+    margin-left: 30px;
+}
+
+.pop-up-footer-button-help {
+    float: right;
+    margin-right: 30px;
+}
+
+/*############################################
+  ##########  Page 1: Select theme  ##########
+  ############################################*/
+
+#choose-theme {
+    display: block;
+}
+
+/*############################################
+  #######  Page 2: Select nodes/edges  #######
+  ############################################*/
+
+#choose-POI-nodes-edges {
+    display: none;
+}
+
+
+.multiple-choice-selection {
+    display: none;
+}
+
+.custom-checkbox {
+    display: inline-block;
+    height: 11px;
+    width: 11px;
+    background-color: white;
+    border: 3px solid white;
+    margin-right: 5px;
+    color: black;
+}
+
+#interesting-nodes-chk-box:checked ~ .custom-checkbox {
+    background-color: #C40000;
+}
+
+#interesting-edges-chk-box:checked ~ .custom-checkbox {
+    background-color:#C40000;
+}
+
+#interesting-nodes-button {
+    background-color: #929292;
+}
+
+
+#interesting-nodes-button:hover {
+    background-color: black;
+}
+
+#choose-POI-nodes-edges-continue-button {
+    display: none;
+    color: black;
+    font-size: 20px;
+}
+
+#choose-POI-nodes-edges-continue-button:hover {
+    color: #C40000;
+}
+
+/*############################################
+  #######  Page 3: Select cluster type  #######
+  ############################################*/
+
+#choose-POI-clusters {
+    display: none;
+}
+
