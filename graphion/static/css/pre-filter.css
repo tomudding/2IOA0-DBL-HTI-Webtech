@@ -86,6 +86,11 @@
     font-size: 17px;
 }
 
+.pop-up-footer-button-continue {
+    color: black;
+    font-size: 24px;
+}
+
 .pop-up-footer-button:hover {
     color: #C40000;
     cursor: pointer;
@@ -151,8 +156,6 @@
 
 #choose-POI-nodes-edges-continue-button {
     display: none;
-    color: black;
-    font-size: 17px;
 }
 
 #choose-POI-nodes-edges-continue-button:hover {
@@ -200,4 +203,12 @@
 #custom-edge-weight-chk-box:hover {
     background-color: rgb(255, 144, 59);
     border: 3px solid white;
+}
+
+/*############################################
+  ####  Page 5: filter the node degrees  #####
+  ############################################*/
+
+#filter-node-degree {
+    display: none;
 }
