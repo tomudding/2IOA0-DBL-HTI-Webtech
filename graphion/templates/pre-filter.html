@@ -107,11 +107,17 @@
         </div>
         <div class="pop-up-footer-area">
             <button class="pop-up-footer-button pop-up-footer-button-back"
-            onclick="document.getElementById('choose-POI-nodes-edges').style.display='none';document.getElementById('choose-theme').style.display='block'">
+            onclick="
+            document.getElementById('choose-POI-nodes-edges').style.display='none';
+            document.getElementById('choose-theme').style.display='block'">
                 < Back
             </button>
             <button class="pop-up-footer-button pop-up-footer-button-continue"
-            id="choose-POI-nodes-edges-continue-button">
+            id="choose-POI-nodes-edges-continue-button"
+            onclick="
+            document.getElementById('choose-POI-nodes-edges').style.display='none';
+            document.getElementById('filter-edge-weight').style.display='block';
+            ">
                 Continue >
             </button>
             <button class="pop-up-footer-button pop-up-footer-button-help">Help ?</button>
@@ -131,7 +137,7 @@
                 <button class="pop-up-button"
                 onclick="
                 document.getElementById('choose-POI-clusters').style.display='none';
-                document.getElementById('filter-edge-weight').style.display='block'
+                document.getElementById('filter-edge-weight').style.display='block';
                 ">
                 Cluster Type 1</button>
             </div>
@@ -162,7 +168,7 @@
      <!-- Page 4: filter the edge weights -->
      <div class="pop-up-window" id="filter-edge-weight">
         <div class="pop-up-title">
-        Filter the edge weights
+        Filter by edge weights
         </div>
         <div class="pop-up-icon-area">
             <div class="pop-up-icon-area-center">
@@ -190,8 +196,52 @@
             </span>
         </div>
         <div class="pop-up-footer-area">
+            <!-- 
+                This button should be fixed:
+                    when clicking "Back" the app should take the user back to where he came from
+                    which is not necessarily choose-POI-nodes-edges as it can also be
+                    choose-POI-cluster
+            -->
             <button class="pop-up-footer-button pop-up-footer-button-back"
-            onclick="document.getElementById('choose-POI-clusters').style.display='none';document.getElementById('choose-theme').style.display='block'">
+            onclick="
+            document.getElementById('filter-edge-weight').style.display='none';
+            document.getElementById('choose-POI-nodes-edges').style.display='block';
+            ">
+                < Back
+            </button>
+            <button class="pop-up-footer-button pop-up-footer-button-continue"
+            onclick="
+            document.getElementById('filter-edge-weight').style.display='none';
+            document.getElementById('filter-node-degree').style.display='block'
+            ">
+                Continue ></button>
+            <button class="pop-up-footer-button pop-up-footer-button-help">Help ?</button>
+        </div>
+    </div>
+
+    <!-- Page 5: filter the node degrees -->
+    <div class="pop-up-window" id="filter-node-degree">
+        <div class="pop-up-title">
+        Filter by node degrees
+        </div>
+        <div class="pop-up-icon-area">
+            <div class="pop-up-icon-area-center">
+                <img src="static/images/filter-test.png" alt="clusters-img">
+            </div>
+            <br>
+            <span class="filter-text">
+                Estimated processing time:
+            </span>
+            <br>
+            <span class="filter-text" id="filter-text-time">
+                126 min
+            </span>
+        </div>
+        <div class="pop-up-footer-area">
+            <button class="pop-up-footer-button pop-up-footer-button-back"
+            onclick="
+            document.getElementById('filter-node-degree').style.display='none';
+            document.getElementById('filter-edge-weight').style.display='block'">
                 < Back
             </button>
             <button class="pop-up-footer-button pop-up-footer-button-continue">
@@ -199,7 +249,6 @@
             <button class="pop-up-footer-button pop-up-footer-button-help">Help ?</button>
         </div>
     </div>
-
 </body>
 
 </html>
