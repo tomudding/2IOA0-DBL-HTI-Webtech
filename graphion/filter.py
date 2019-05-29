@@ -19,7 +19,8 @@ def visualise(file=None):
         return redirect('/selection')
     global df
     df = processCSVMatrix(os.path.join(server.config['TEMP_FOLDER'], (file + '.csv')))
-    return render_template('filter.html', fileName=file)
+    # return render_template('filter.html', fileName=file)
+    return render_template('filter.html')
 
 def get_df():
     return df

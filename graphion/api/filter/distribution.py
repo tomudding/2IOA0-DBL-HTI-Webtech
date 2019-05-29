@@ -21,20 +21,26 @@ apiDegreeBlueprint = Blueprint('apiMatrixBlueprint', __name__, template_folder='
 
 @apiDegreeBlueprint.route('/api/filter/distribution/<type>/<dir>/<file>', methods=['GET'], strict_slashes=False)
 @apiDegreeBlueprint.route('/api/filter/distribution/<type>/<dir>', methods=['GET'], strict_slashes=False)
-@apiDegreeBlueprint.route('/api/filter/distribution/<type>/<file>', methods=['GET'], strict_slashes=False)
 @apiDegreeBlueprint.route('/api/filter/distribution/<type>/', methods=['GET'], strict_slashes=False)
 def degreeAPI(file=None, type=None, dir=None):
-    filePath = 'api/filter/cached_plots/{}-{}-{}.json'.format(file, type, dir)
-    if (exists(filePath)):
-        with open(filePath, 'r') as json_file:
-            return json_file.read()
+    # Not used
+    if file is not None:
+        filePath = 'api/filter/cached_plots/{}-{}-{}.json'.format(file, type, dir)
+        if (exists(filePath)):
+            with open(filePath, 'r') as json_file:
+                return json_file.read()
+        else:
+            with open(filePath, 'w+') as json_file:
+                plot = generate_selection(getFilePath(file), kind=type, dir=dir)
+                start = time.time()
+                item = json_item(plot)
+                dump(item, json_file)
+                print("To json {}-{}: ".format(dir, type) + str(time.time()-start))
+            return dumps(item)
+    # All filters use this
     else:
-        with open(filePath, 'w+') as json_file:
-            plot = generate_selection(getFilePath(file), kind=type, dir=dir)
-            start = time.time()
-            item = json_item(plot)
-            dump(item, json_file)
-            print("To json {}-{}: ".format(dir, type) + str(time.time()-start))
+        item = json_item(generate_selection(get_filtered_df(), kind=type, dir=dir, dataframe=True))
+
         return dumps(item)
 
 @apiDegreeBlueprint.route('/postmethod', methods = ['POST'])
@@ -50,18 +56,19 @@ def worker():
 
 
 def filter_data(left, right, type, dir, file):
-    df = get_df()
     global filtered_df
     if(type == 'degree'):
+        df = get_filtered_df()
         filtered_df = generate_degree_selection(df, left, right, dir)
         return len(filtered_df.columns)
     elif(type == 'weight'):
+        df = get_df()
         filtered_df = generate_edge_selection(df, left, right, keep_edges = True)
-        return filtered_df.size
+        return len(filtered_df.columns)
 
 def get_filtered_df():
     if 'filtered_df' in globals():
-        return filtered_df
+        return filtered_df.copy()
     return get_df()
 
 def getFilePath(file):

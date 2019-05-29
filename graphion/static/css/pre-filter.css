@@ -175,6 +175,11 @@
   ####  Page 4: filter the edge weights  #####
   ############################################*/
 
+#weight-plot {
+    margin: auto;
+    width: 400px;
+}
+
 #filter-edge-weight {
     display: none;
 }
@@ -211,4 +216,9 @@
 
 #filter-node-degree {
     display: none;
+}
+
+#in-degree-plot {
+    margin: auto;
+    width: 400px;
 }

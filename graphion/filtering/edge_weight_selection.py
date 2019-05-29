@@ -135,7 +135,7 @@ def generate_degree_selection(df, cutoff_l = 2, cutoff_r = 900, dir = "in"):
                     count += 1
 
             in_degree = len(adj_matrix_t[i]) - count  # indegree equals to the remaining none zero columns in given row
-            #print(in_degree)
+            # print(in_degree)
             if (in_degree < cutoff_l or in_degree > cutoff_r):
                 del_lst.append(i)
     else:

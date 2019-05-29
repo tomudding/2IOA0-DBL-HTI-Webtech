@@ -1,0 +1,70 @@
+<!--
+Author(s): Steven van den Broek
+Created: 2019-05-18
+Edited: 2019-05-18
+-->
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>graphion - filter</title>
+		<link rel="stylesheet" type="text/css" href="/static/css/grid.css">
+		<link rel="stylesheet" type="text/css" href="/static/css/grid_style.css">
+	    <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700" rel="stylesheet">
+		<!-- Bokeh files from Cloudflare CDN -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh.min.css" integrity="sha256-kmX/Nb5PazwKydPmaZjEb9sOg8BWh1v5eP14IzXJUkU=" crossorigin="anonymous" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh-tables.min.css" integrity="sha256-RL9kShsLcf2jHG2zzLh1peDLvWOEK0wPFWSZTiYykc4=" crossorigin="anonymous" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh-widgets.min.css" integrity="sha256-+DdrVMn0QeLZ5dYwdqkuugwJ4Im57giLBGqd9wH2YO0=" crossorigin="anonymous" />
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh.min.js" integrity="sha256-VwiC87GeMmJLjJIRwyI9USfUlf9zpJbgZugDAz7W5CA=" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh-tables.min.js" integrity="sha256-1xlBn0odMnApk3dBf3oUDUQlsLvSwx2lvcBTIJC0x20=" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh-widgets.min.js" integrity="sha256-0D9ZpwC/v+rmx33UGlpWU9Uo1+J58MFqTKkGVGDZpEE=" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh-gl.min.js" integrity="sha256-fDyCLeWMeXB/F1JUTOFAM/9ONJmyiiSfsmPWl5tZQzk=" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/dat-gui/0.5/dat.gui.min.js"></script>
+	</head>
+	<body>
+		<h1>Filtering</h1>
+		<div class="row">
+			<div class="col-s-6">
+				<div id="in-degree-selection">Calculating best KDE bandwidth...</div>
+				<div id="in-degree-plot"></div>
+				<p id="between-in-degree">Select nodes by dragging the mouse.</p>
+			</div>
+			<div class="col-s-6">
+				<div id="out-degree-selection">Calculating best KDE bandwidth...</div>
+				<div id="out-degree-plot"></div>
+				<p id="between-out-degree">Select nodes by dragging the mouse.</p>
+			</div>
+		</div>
+
+	<div id="weight-selection">Calculating best KDE bandwidth...</div>
+	<div id="weight-plot"></div>
+		<p id="between-weight">Select nodes by dragging the mouse.</p>
+	<a href="/visualise/">Go to visualization page</a>
+	</body>
+	<script>
+ fetch('/api/filter/distribution/degree/in/{{ fileName }}').then(
+ 		function(response) {
+ 			document.getElementById('in-degree-selection').setAttribute("hidden", true);
+ 			return response.json(); })
+		 .then(function(item) {
+		 	Bokeh.embed.embed_item(item, "in-degree-plot");
+		 });
+  fetch('/api/filter/distribution/degree/out/{{ fileName }}').then(
+ 		function(response) {
+ 			document.getElementById('out-degree-selection').setAttribute("hidden", true);
+ 			return response.json(); })
+		 .then(function(item) {
+		 	Bokeh.embed.embed_item(item, "out-degree-plot");
+		 });
+ fetch('/api/filter/distribution/weight/{{ fileName }}').then(
+ 		function(response) {
+ 			document.getElementById('weight-selection').setAttribute("hidden", true);
+ 			return response.json(); })
+		 .then(function(item) {
+		 	Bokeh.embed.embed_item(item, "weight-plot");
+		 });
+	</script>
+</html>

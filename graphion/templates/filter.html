@@ -1,70 +1,294 @@
-<!--
-Author(s): Steven van den Broek
-Created: 2019-05-18
-Edited: 2019-05-18
--->
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta http-equiv="X-UA-Compatible" content="ie=edge">
-		<title>graphion - filter</title>
-		<link rel="stylesheet" type="text/css" href="/static/css/grid.css">
-		<link rel="stylesheet" type="text/css" href="/static/css/grid_style.css">
-	    <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700" rel="stylesheet">
-		<!-- Bokeh files from Cloudflare CDN -->
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh.min.css" integrity="sha256-kmX/Nb5PazwKydPmaZjEb9sOg8BWh1v5eP14IzXJUkU=" crossorigin="anonymous" />
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh-tables.min.css" integrity="sha256-RL9kShsLcf2jHG2zzLh1peDLvWOEK0wPFWSZTiYykc4=" crossorigin="anonymous" />
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh-widgets.min.css" integrity="sha256-+DdrVMn0QeLZ5dYwdqkuugwJ4Im57giLBGqd9wH2YO0=" crossorigin="anonymous" />
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh.min.js" integrity="sha256-VwiC87GeMmJLjJIRwyI9USfUlf9zpJbgZugDAz7W5CA=" crossorigin="anonymous"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh-tables.min.js" integrity="sha256-1xlBn0odMnApk3dBf3oUDUQlsLvSwx2lvcBTIJC0x20=" crossorigin="anonymous"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh-widgets.min.js" integrity="sha256-0D9ZpwC/v+rmx33UGlpWU9Uo1+J58MFqTKkGVGDZpEE=" crossorigin="anonymous"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh-gl.min.js" integrity="sha256-fDyCLeWMeXB/F1JUTOFAM/9ONJmyiiSfsmPWl5tZQzk=" crossorigin="anonymous"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-		<script src="//cdnjs.cloudflare.com/ajax/libs/dat-gui/0.5/dat.gui.min.js"></script>
-	</head>
-	<body>
-		<h1>Filtering</h1>
-		<div class="row">
-			<div class="col-s-6">
-				<div id="in-degree-selection">Calculating best KDE bandwidth...</div>
-				<div id="in-degree-plot"></div>
-				<p id="between-in-degree">Select nodes by dragging the mouse.</p>
-			</div>
-			<div class="col-s-6">
-				<div id="out-degree-selection">Calculating best KDE bandwidth...</div>
-				<div id="out-degree-plot"></div>
-				<p id="between-out-degree">Select nodes by dragging the mouse.</p>
-			</div>
-		</div>
 
-	<div id="weight-selection">Calculating best KDE bandwidth...</div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="/static/css/pre-filter.css">
+
+    <!-- Bokeh files from Cloudflare CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh.min.css" integrity="sha256-kmX/Nb5PazwKydPmaZjEb9sOg8BWh1v5eP14IzXJUkU=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh-tables.min.css" integrity="sha256-RL9kShsLcf2jHG2zzLh1peDLvWOEK0wPFWSZTiYykc4=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh-widgets.min.css" integrity="sha256-+DdrVMn0QeLZ5dYwdqkuugwJ4Im57giLBGqd9wH2YO0=" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh.min.js" integrity="sha256-VwiC87GeMmJLjJIRwyI9USfUlf9zpJbgZugDAz7W5CA=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh-tables.min.js" integrity="sha256-1xlBn0odMnApk3dBf3oUDUQlsLvSwx2lvcBTIJC0x20=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh-widgets.min.js" integrity="sha256-0D9ZpwC/v+rmx33UGlpWU9Uo1+J58MFqTKkGVGDZpEE=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh-gl.min.js" integrity="sha256-fDyCLeWMeXB/F1JUTOFAM/9ONJmyiiSfsmPWl5tZQzk=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/dat-gui/0.5/dat.gui.min.js"></script>
+    <title>Filter page</title>
+</head>
+
+<body>
+
+    <!-- Page 1: select theme -->
+    <div class="pop-up-window" id="choose-theme">
+        <div class="pop-up-title">
+        Begin by choosing your point of interest
+        </div>
+        <div class="pop-up-icon-area">
+            <div class="pop-up-icon-area-left">
+                <img src="static/images/interesting-nodes-edges.svg" alt="clusters-img">
+                <br>
+                <button class="pop-up-button" 
+                onclick="
+                document.getElementById('choose-POI-nodes-edges').style.display='block';
+                document.getElementById('choose-theme').style.display='none'
+                fetch('/api/filter/distribution/weight/').then(
+                function(response) {
+                    document.getElementById('weight-selection').setAttribute('hidden', true);
+                    return response.json(); })
+                 .then(function(item) {
+                    Bokeh.embed.embed_item(item, 'weight-plot');
+                 });
+                ">
+                    Interesting nodes / edges
+                </button>
+            </div>
+            <div class="vertical-line"></div>
+            <div class="pop-up-icon-area-right">
+                <img src="static/images/clusters.svg" alt="clusters-img">
+                <br>
+                <button class="pop-up-button"
+                onclick="
+                document.getElementById('choose-POI-clusters').style.display='block';
+                document.getElementById('choose-theme').style.display='none'">
+                    Clusters
+                </button>
+            </div>
+        </div>
+        <div class="pop-up-footer-area">
+            <!-- Where should this "Back" -button lead to? -->
+            <button class="pop-up-footer-button pop-up-footer-button-back">< Back</button>
+            <!-- Opens a "Help" -popup window -->
+            <button class="pop-up-footer-button pop-up-footer-button-help">Help ?</button>
+        </div>
+    </div>
+
+
+
+    <!-- Page 2: select nodes / edges -->
+    <div class="pop-up-window" id="choose-POI-nodes-edges">
+        <div class="pop-up-title">
+        Select your point(s) of interest
+        </div>
+        <div class="pop-up-icon-area">
+            <div class="pop-up-icon-area-left">
+                <img src="static/images/interesting-nodes.svg" alt="clusters-img">
+                <br>
+                <button class="pop-up-button" 
+                id="interesting-nodes-button"
+                onclick="
+                if (document.getElementById('interesting-nodes-chk-box').checked==false) {
+                    document.getElementById('interesting-nodes-button').style.backgroundColor='black';
+                    document.getElementById('interesting-nodes-chk-box').checked=true;
+                } else {
+                    document.getElementById('interesting-nodes-button').style.backgroundColor='';
+                    document.getElementById('interesting-nodes-chk-box').checked=false;
+                }
+                
+                if (document.getElementById('interesting-nodes-chk-box').checked || document.getElementById('interesting-edges-chk-box').checked) {
+                    document.getElementById('choose-POI-nodes-edges-continue-button').style.display='inline-block';
+                } else {
+                    document.getElementById('choose-POI-nodes-edges-continue-button').style.display='none';
+                }">
+                    <input type="checkbox" class="multiple-choice-selection" id="interesting-nodes-chk-box">
+                    <span class="custom-checkbox"></span>
+                    Interesting nodes
+                </button>
+            </div>
+            <div class="vertical-line"></div>
+            <div class="pop-up-icon-area-right">
+                <img src="static/images/interesting-edges.svg" alt="clusters-img">
+                <br>
+                <button class="pop-up-button"
+                id="interesting-edges-button"
+                onclick="
+                if (document.getElementById('interesting-edges-chk-box').checked==false) {
+                    document.getElementById('interesting-edges-button').style.backgroundColor='black';
+                    document.getElementById('interesting-edges-chk-box').checked=true;
+                } else {
+                    document.getElementById('interesting-edges-button').style.backgroundColor='';
+                    document.getElementById('interesting-edges-chk-box').checked=false;
+                }
+                
+                if (document.getElementById('interesting-nodes-chk-box').checked || document.getElementById('interesting-edges-chk-box').checked) {
+                    document.getElementById('choose-POI-nodes-edges-continue-button').style.display='inline-block';
+                } else {
+                    document.getElementById('choose-POI-nodes-edges-continue-button').style.display='none';
+                }">
+                    <input type="checkbox" class="multiple-choice-selection" id="interesting-edges-chk-box">
+                    <span class="custom-checkbox"></span>
+                    Interesting edges
+                </button>
+            </div>
+        </div>
+        <div class="pop-up-footer-area">
+            <button class="pop-up-footer-button pop-up-footer-button-back"
+            onclick="
+            document.getElementById('choose-POI-nodes-edges').style.display='none';
+            document.getElementById('choose-theme').style.display='block'">
+                < Back
+            </button>
+            <button class="pop-up-footer-button pop-up-footer-button-continue"
+            id="choose-POI-nodes-edges-continue-button"
+            onclick="
+            document.getElementById('choose-POI-nodes-edges').style.display='none';
+            document.getElementById('filter-edge-weight').style.display='block';
+
+            ">
+                Continue >
+            </button>
+            <button class="pop-up-footer-button pop-up-footer-button-help">Help ?</button>
+        </div>
+    </div>
+
+
+    <!-- Page 3: select cluster type -->
+    <div class="pop-up-window" id="choose-POI-clusters">
+        <div class="pop-up-title">
+        Specify your point of interest
+        </div>
+        <div class="pop-up-icon-area">
+            <div class="pop-up-icon-area-left">
+                <img src="static/images/clusters.svg" alt="clusters-img">
+                <br>
+                <button class="pop-up-button"
+                onclick="
+                document.getElementById('choose-POI-clusters').style.display='none';
+                document.getElementById('filter-edge-weight').style.display='block';
+                ">
+                Cluster Type 1</button>
+            </div>
+            <div class="vertical-line"></div>
+            <div class="pop-up-icon-area-right">
+                <img src="static/images/clusters.svg" alt="clusters-img">
+                <br>
+                <button class="pop-up-button"
+                onclick="
+                document.getElementById('choose-POI-clusters').style.display='none';
+                document.getElementById('filter-edge-weight').style.display='block'
+                ">
+                Cluster Type 2</button>
+            </div>
+        </div>
+        <div class="pop-up-footer-area">
+            <button class="pop-up-footer-button pop-up-footer-button-back"
+            onclick="
+            document.getElementById('choose-POI-clusters').style.display='none';
+            document.getElementById('choose-theme').style.display='block'
+            ">
+                < Back
+            </button>
+            <button class="pop-up-footer-button pop-up-footer-button-help">Help ?</button>
+        </div>
+    </div>
+
+     <!-- Page 4: filter the edge weights -->
+     <div class="pop-up-window" id="filter-edge-weight">
+        <div class="pop-up-title">
+        Filter by edge weights
+        </div>
+        <div class="pop-up-icon-area">
+        <!--    <div class="pop-up-icon-area-center">
+                <img src="static/images/filter-test.png" alt="clusters-img">
+            </div>                      -->
+            <div id="weight-selection">Loading...</div>
 	<div id="weight-plot"></div>
 		<p id="between-weight">Select nodes by dragging the mouse.</p>
-	<a href="/visualise/">Go to visualization page</a>
-	</body>
-	<script>
- fetch('/api/filter/distribution/degree/in/{{ fileName }}').then(
- 		function(response) {
- 			document.getElementById('in-degree-selection').setAttribute("hidden", true);
- 			return response.json(); })
-		 .then(function(item) {
-		 	Bokeh.embed.embed_item(item, "in-degree-plot");
-		 });
-  fetch('/api/filter/distribution/degree/out/{{ fileName }}').then(
- 		function(response) {
- 			document.getElementById('out-degree-selection').setAttribute("hidden", true);
- 			return response.json(); })
-		 .then(function(item) {
-		 	Bokeh.embed.embed_item(item, "out-degree-plot");
-		 });
- fetch('/api/filter/distribution/weight/{{ fileName }}').then(
- 		function(response) {
- 			document.getElementById('weight-selection').setAttribute("hidden", true);
- 			return response.json(); })
-		 .then(function(item) {
-		 	Bokeh.embed.embed_item(item, "weight-plot");
-		 });
-	</script>
+
+            <br>
+            <span class="filter-text">
+                Display only edges that satisfy the weight requirement:
+            </span>
+            <input type="checkbox" class="multiple-choice-selection" id="edge-weight-chk-box">
+            <span class="custom-checkbox" id="custom-edge-weight-chk-box"
+            onclick="
+            if (document.getElementById('edge-weight-chk-box').checked==false) {
+                document.getElementById('edge-weight-chk-box').checked=true;
+            } else {
+                document.getElementById('edge-weight-chk-box').checked=false;
+            }"></span>
+            <br>
+            <span class="filter-text">
+                Estimated processing time:
+            </span>
+            <br>
+            <span class="filter-text" id="filter-text-time">
+                126 min
+            </span>
+        </div>
+        <div class="pop-up-footer-area">
+            <!-- 
+                This button should be fixed:
+                    when clicking "Back" the app should take the user back to where he came from
+                    which is not necessarily choose-POI-nodes-edges as it can also be
+                    choose-POI-cluster
+            -->
+            <button class="pop-up-footer-button pop-up-footer-button-back"
+            onclick="
+            document.getElementById('filter-edge-weight').style.display='none';
+            document.getElementById('choose-POI-nodes-edges').style.display='block';
+            ">
+                < Back
+            </button>
+            <button class="pop-up-footer-button pop-up-footer-button-continue"
+            onclick="
+            document.getElementById('filter-edge-weight').style.display='none';
+            document.getElementById('filter-node-degree').style.display='block';
+             fetch('/api/filter/distribution/degree/in/').then(
+            function(response) {
+                document.getElementById('in-degree-selection').setAttribute('hidden', true);
+                return response.json(); })
+             .then(function(item) {
+                Bokeh.embed.embed_item(item, 'in-degree-plot');
+             });
+            ">
+                Continue ></button>
+            <button class="pop-up-footer-button pop-up-footer-button-help">Help ?</button>
+        </div>
+    </div>
+
+    <!-- Page 5: filter the node degrees -->
+    <div class="pop-up-window" id="filter-node-degree">
+        <div class="pop-up-title">
+        Filter by node degrees
+        </div>
+        <div class="pop-up-icon-area">
+            <div id="in-degree-selection">Calculating best KDE bandwidth...</div>
+				<div id="in-degree-plot"></div>
+				<p id="between-in-degree">Select nodes by dragging the mouse.</p>
+            <!--
+            <div class="pop-up-icon-area-center">
+                <img src="static/images/filter-test.png" alt="clusters-img">
+
+            </div>
+            -->
+            <br>
+            <span class="filter-text">
+                Estimated processing time:
+            </span>
+            <br>
+            <span class="filter-text" id="filter-text-time">
+                126 min
+            </span>
+        </div>
+        <div class="pop-up-footer-area">
+            <button class="pop-up-footer-button pop-up-footer-button-back"
+            onclick="
+            document.getElementById('filter-node-degree').style.display='none';
+            document.getElementById('filter-edge-weight').style.display='block';
+            plot = document.getElementById('in-degree-plot')
+            plot.removeChild(plot.childNodes[0]);
+            document.getElementById('between-in-degree').innerHTML = 'Select nodes by dragging the mouse.'">
+                < Back
+            </button>
+            <a class="pop-up-footer-button pop-up-footer-button-continue" href="/visualise/ ">
+                Continue ></a>
+            <button class="pop-up-footer-button pop-up-footer-button-help">Help ?</button>
+        </div>
+    </div>
+</body>
+
 </html>
