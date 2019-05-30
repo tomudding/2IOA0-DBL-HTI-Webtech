@@ -1,10 +1,11 @@
 """
-Author(s): Tom Udding, Steven van den Broek, Yuqing Zeng, Tim van de Klundert
+Author(s): Tom Udding, Steven van den Broek, Yuqing Zeng, Tim van de Klundert, Sam Baggen
 Created: 2019-05-03
 Edited: 2019-05-25
 """
 from bokeh.plotting import figure, reset_output
 from bokeh.models import Circle, ColumnDataSource
+from bokeh.models.callbacks import CustomJS
 from community import best_partition
 from graphion.graphing.parser import processCSVMatrix
 from holoviews import opts, renderer, extension
@@ -134,6 +135,19 @@ def generateForceDirectedDiagram(file, isDirected, df=False):
     # colour the nodes based on the partition
     nodeGlyph.glyph.size = 'centrality'
     nodeGlyph.glyph.fill_color = 'partition_colour'
+
+    # Attempt at linking
+    plot.js_on_event('tap', CustomJS(args=dict(s=nodeDataSource), code= """
+        const inds = s.selected.indices;
+        const d = s.data;
+
+        if (inds.length == 0) {
+            return;
+        } else {
+            console.log(inds);
+            //insert call to getting data into matrix function here
+        }
+    """))
 
     return pn.Column(plot)
 
