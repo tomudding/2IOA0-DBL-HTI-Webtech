@@ -37,7 +37,8 @@ Our own deadlines:
 
 ## REQUIREMENTS
 Minimal requirements as described in VisProjectDescription.pdf and the kickoff slides.
-- [ ] At least **2** visual metaphors
+
+- [x] At least **2** visual metaphors
   - [x] Node-link diagram with at least **3** different layouts:
     - [x] Radial
     - [x] Force-directed
@@ -45,6 +46,7 @@ Minimal requirements as described in VisProjectDescription.pdf and the kickoff s
     - [ ] Spectral
     - [ ] Orthogonal
     - [ ] [Circular tree](https://networkx.github.io/documentation/stable/auto_examples/drawing/plot_circular_tree.html)
+    - [ ] [Arc diagram (combined with matrix reorderings maybe)](https://www.data-to-viz.com/graph/arc.html)
     - [ ] Extra: others
   - [x] Adjacency matrix with at least **5** different reordering strategies
     - [x] Clustering
@@ -65,22 +67,24 @@ Minimal requirements as described in VisProjectDescription.pdf and the kickoff s
       - [ ] Bipolarization
     - [ ] Optimal-leaf ordering
     - [ ] ...
-  - Extra: others like (e.g. hybrid representations like NodeTrix or MatLink,)
+  - Extra: others like
     - Hybrid representations
       - [ ] NodeTrix
       - [ ] MatLink
     - [ ] [3D node-link diagram](https://plot.ly/python/3d-network-graph/)
-    - [ ] [Arc diagram (combined with matrix reorderings maybe)](https://www.data-to-viz.com/graph/arc.html)
 
 - [x] **Web-based** visualization tool for networks (weighted and directed graphs)
   - [x] Accessable via URL ([https://2ioa0.uddi.ng/](https://2ioa0.uddi.ng/))
   - [x] Upload graph data (in a specified data format)
   - [ ] Visual interactions from each of the 7 categories of interactions (Yi et al.)
   - [ ] Data and insights should be sharable with all other people using the web tool
-
+    - [x] 10 most recent datasets can be chosen
+    - [x] Screenshots can be made of each plot
+      - [ ] Parameters of plots are included in screenshots
+      
 Suggested further improvements but not required:
 - [ ] Multiple coordinated view design
-  - [ ] Different visualizations next to each other
+  - [x] Different visualizations next to each other
   - [ ] Brushing and linking (highlighting / selecting is synchronized between graphs)
 - [ ] Options for link representations in node-link diagrams (dotted, dashed, curved etc.)
 - [ ] Edge bundling (though bold red text comes included: Only if you enjoy visualization and like to do more)
