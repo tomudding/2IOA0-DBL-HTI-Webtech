@@ -113,17 +113,7 @@ def generateForceDirectedDiagram(file, isDirected, df=False):
 
     # get node and edge information from graph
     nodes, nodes_coordinates = zip(*sorted(layout.items()))
-    nodes_xs, nodes_ys = list(zip(*nodes_coordinates))
-    edges = G.edges
-    #nodeDataSource = ColumnDataSource(dict(x=nodes_xs, y=nodes_ys, name=nodes))
-    #lineDataSource = ColumnDataSource(calculateEdgePositions(G, layout))
-    #lineDataSource = ColumnDataSource(G.edges)
-
-    # create plot
-    #plot = figure(plot_width=400, plot_height=400, tools=['pan', 'tap', 'wheel_zoom', 'reset', 'box_zoom'])
-    #nodeGlyph = plot.circle('x', 'y', source=nodeDataSource, size=10, line_width=1, line_color="#000000", level='overlay')
-    #lineGlyph = plot.multi_line('xs', 'ys', source=lineDataSource, line_width=1.3, color='#000000')
-
+    
     # calculate centrality
     centrality = degree_centrality(G)
     _, nodeCentralities = zip(*sorted(centrality.items()))
@@ -138,7 +128,6 @@ def generateForceDirectedDiagram(file, isDirected, df=False):
     #nodeDataSource.add(nodePartitions, 'partition')
     partitionColours = ["#b2182b","#d6604d","#f4a582","#fddbc7","#f7f7f7","#d1e5f0","#92c5de","#4393c3","#2166ac"] # safe to use for colourblind people
     partitionList = [partitionColours[t % len(partitionColours)] for t in nodePartitions]
-    #partitionDimension = hv.Dimension(('Partition', 'which partition the node finds itself in'))
 
     #Making a dictionary for all attributes
     attributes = {}
@@ -152,8 +141,6 @@ def generateForceDirectedDiagram(file, isDirected, df=False):
 
     # colour the nodes based on the partition
     plot.opts(cmap = partitionColours, color_index='Partition', node_size='Centrality', tools=['pan', 'tap', 'wheel_zoom', 'reset', 'box_zoom'], width=700, height=700)
-    #nodeGlyph.glyph.size = 'centrality'
-    #nodeGlyph.glyph.fill_color = 'partition_colour'
     return pn.Column(plot)
 
 # Generate a hierarchical node-link diagram
