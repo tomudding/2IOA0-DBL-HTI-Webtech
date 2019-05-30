@@ -128,7 +128,12 @@
             <button class="pop-up-footer-button pop-up-footer-button-back"
             onclick="
             document.getElementById('choose-POI-nodes-edges').style.display='none';
-            document.getElementById('choose-theme').style.display='block'">
+            document.getElementById('choose-theme').style.display='block';
+            plot = document.getElementById('weight-plot');
+            plot.removeChild(plot.childNodes[0]);
+            document.getElementById('between-weight').innerHTML = 'Select nodes by dragging the mouse.'">
+
+">
                 < Back
             </button>
             <button class="pop-up-footer-button pop-up-footer-button-continue"
