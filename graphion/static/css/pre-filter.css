@@ -76,7 +76,7 @@
     text-align: center;
     bottom: 0;
     width: 100%;
-    height: 50px;
+    height: 70px;
 }
 
 .pop-up-footer-button {
@@ -84,11 +84,28 @@
     border: 0;
     color: #929292;
     font-size: 17px;
+    margin-top: 20px;
 }
 
 .pop-up-footer-button-continue {
     color: black;
     font-size: 24px;
+}
+
+.pop-up-footer-button-start {
+    background-color: black;
+    color: white;
+    border: 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 30px;
+    padding-right: 30px;
+    font-size: 20px;
+    margin-top: 0px;
+}
+
+.pop-up-footer-button-start:hover {
+    background-color: #929292;
 }
 
 .pop-up-footer-button:hover {
@@ -175,11 +192,6 @@
   ####  Page 4: filter the edge weights  #####
   ############################################*/
 
-#weight-plot {
-    margin: auto;
-    width: 400px;
-}
-
 #filter-edge-weight {
     display: none;
 }
@@ -210,15 +222,19 @@
     border: 3px solid white;
 }
 
+
 /*############################################
-  ####  Page 5: filter the node degrees  #####
+  ####  Page 5: filter the node in-degrees  #####
   ############################################*/
 
-#filter-node-degree {
+#filter-node-in-degree {
     display: none;
 }
 
-#in-degree-plot {
-    margin: auto;
-    width: 400px;
+/*############################################
+  ####  Page 6: filter the node out-degrees  #####
+  ############################################*/
+
+  #filter-node-out-degree {
+    display: none;
 }
