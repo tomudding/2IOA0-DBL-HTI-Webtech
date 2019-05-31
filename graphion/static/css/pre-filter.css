@@ -222,6 +222,10 @@
     border: 3px solid white;
 }
 
+#weight-plot {
+    margin: auto;
+    width: 400px;
+}
 
 /*############################################
   ####  Page 5: filter the node in-degrees  #####
@@ -231,10 +235,20 @@
     display: none;
 }
 
+#in-degree-plot {
+    margin: auto;
+    width: 400px;
+}
+
 /*############################################
   ####  Page 6: filter the node out-degrees  #####
   ############################################*/
 
-  #filter-node-out-degree {
+#filter-node-out-degree {
     display: none;
+}
+
+#out-degree-plot {
+    margin: auto;
+    width: 400px;
 }

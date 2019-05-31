@@ -324,6 +324,13 @@ Edited: 2019-05-31
                 onclick="
                 document.getElementById('filter-node-in-degree').style.display='none';
                 document.getElementById('filter-node-out-degree').style.display='block';
+                fetch('/api/filter/distribution/degree/out/').then(
+                function(response) {
+                    document.getElementById('out-degree-selection').setAttribute('hidden', true);
+                    return response.json(); })
+                 .then(function(item) {
+                    Bokeh.embed.embed_item(item, 'out-degree-plot');
+                 });
                 ">
 					Continue >
 				</button>

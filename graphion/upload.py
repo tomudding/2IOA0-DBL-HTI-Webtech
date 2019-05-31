@@ -87,3 +87,12 @@ def get_partially_filtered_df():
 def set_partially_filtered_df(input):
     global partially_filtered_df
     partially_filtered_df = input
+
+def get_almost_filtered_df():
+    if 'partially_filtered_df' in globals():
+        return partially_filtered_df.copy()
+    return get_df()
+
+def set_almost_filtered_df(input):
+    global partially_filtered_df
+    partially_filtered_df = input
