@@ -7,6 +7,8 @@ Edited: 2019-05-18
 from flask import Blueprint, redirect, render_template
 from graphion import server
 from bokeh.embed import server_document
+import os
+from graphion.graphing.parser import processCSVMatrix
 
 filterBlueprint = Blueprint('filterBlueprint', __name__, template_folder='templates')
 
@@ -15,5 +17,10 @@ filterBlueprint = Blueprint('filterBlueprint', __name__, template_folder='templa
 def visualise(file=None):
     if file is None:
         return redirect('/selection')
+    global df
+    df = processCSVMatrix(os.path.join(server.config['TEMP_FOLDER'], (file + '.csv')))
+    # return render_template('filter.html', fileName=file)
+    return render_template('filter.html')
 
-    return render_template('filter.html', fileName=file)
+def get_df():
+    return df

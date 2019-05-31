@@ -14,9 +14,11 @@ from fastcluster import linkage
 from pandas import read_hdf
 import time
 
-def makeMatrix(file):
-
-    df = read_hdf(file)
+def makeMatrix(file, df=False):
+    if not df:
+        df = read_hdf(file)
+    else:
+        df = file
     big_bang = time.time()
     names = df.columns.tolist()
     if (len(names) > 400):
@@ -24,6 +26,7 @@ def makeMatrix(file):
     names = df.columns.tolist()
     names = [name.replace('_', ' ') for name in names]
     df.columns = names
+    df.set_index([df.columns], inplace=True)
 
     df_original = df.copy()
     # %%
@@ -173,3 +176,5 @@ def makeMatrix(file):
     matrix = Matrix_dropdown(name='Adjacency Matrix')
     pane = pn.Column(matrix.param, matrix.view)
     return pane
+
+

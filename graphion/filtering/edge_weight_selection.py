@@ -24,15 +24,16 @@ def processCSVMatrix(file):
 
     return df
 
-def generate_edge_selection(file, kind = "edge", cutoff_l = 0.6, cutoff_r = 10.0, keep_edges = False):
+def generate_edge_selection(df, cutoff_l = 0.6, cutoff_r = 10.0, keep_edges = False):
     #if file is already in hdf format, apply the following read method
-    df = read_hdf(file)
+    # df = read_hdf(file)
     # print(df[-20:])
-
+    #print(cutoff_l)
+    #print(cutoff_r)
     adj_matrix = df.to_numpy(copy = True)  #convert dataframe to numpy array for efficiency
 
     adj_matrix_copy = adj_matrix.copy(True) #make a deep copy of the adjacency matrix
-    # print(adj_matrix)
+    #print(adj_matrix)
     names = df.columns.tolist()
 
     #edge weight fitering
@@ -76,8 +77,8 @@ def generate_edge_selection(file, kind = "edge", cutoff_l = 0.6, cutoff_r = 10.0
     # print(filtered_node_matrix[del_lst[3]][1])
     # print(adj_matrix[2][del_lst[-1]])
 ##  aprint(filtered_node_matrix[2][del_lst[-1]])
-    # print(filtered_node_matrix)
-    # print(filtered_edge_node_matrix)
+    #print(filtered_node_matrix)
+    #print(filtered_edge_node_matrix)
     #################################
 
     rem_lst = [i for i in range(len(adj_matrix)) if i not in del_lst]  # remaining indices
@@ -89,7 +90,7 @@ def generate_edge_selection(file, kind = "edge", cutoff_l = 0.6, cutoff_r = 10.0
 
 
     if keep_edges:
-        df_filtered_keep_edge
+        return df_filtered_keep_edge
     return df_filtered_not_keep_edge
 
 
@@ -99,8 +100,8 @@ def intersection(lst1, lst2):
     return lst3
 
 
-def generate_degree_selection(file, cutoff_l = 2, cutoff_r = 900, dir = "in"):
-    df = read_hdf(file)
+def generate_degree_selection(df, cutoff_l = 2, cutoff_r = 900, dir = "in"):
+    # df = read_hdf(file)
 
     adj_matrix = df.to_numpy(copy=True)  # convert dataframe to numpy array for efficiency
 
@@ -134,7 +135,7 @@ def generate_degree_selection(file, cutoff_l = 2, cutoff_r = 900, dir = "in"):
                     count += 1
 
             in_degree = len(adj_matrix_t[i]) - count  # indegree equals to the remaining none zero columns in given row
-            print(in_degree)
+            # print(in_degree)
             if (in_degree < cutoff_l or in_degree > cutoff_r):
                 del_lst.append(i)
     else:
@@ -153,6 +154,6 @@ def generate_degree_selection(file, cutoff_l = 2, cutoff_r = 900, dir = "in"):
     output_df = pandas.DataFrame(result_matrix, index=rem_names, columns=rem_names)
     # print(output_df)
 
-    return output_df, rem_names
+    return output_df
 
 #generate_edge_selection("../../datasets/GephiMatrix_author_similarity.csv")

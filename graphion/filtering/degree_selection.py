@@ -12,7 +12,7 @@ import pandas
 from pandas import read_hdf
 import time
 
-def generate_selection(file, kind="degree", dir="in"):
+def generate_selection(file, kind="degree", dir="in", dataframe=False):
     big_bang = time.time()
 
     if (kind == "degree"):
@@ -23,7 +23,11 @@ def generate_selection(file, kind="degree", dir="in"):
     limit = 1000
 
     begin = time.time()
-    df = read_hdf(file)
+    if not dataframe:
+        df = read_hdf(file)
+    else:
+        df = file
+
     names = df.columns.tolist()
 
     print("Reading data {}-{}: ".format(dir, kind) + str(time.time()-begin))
@@ -46,8 +50,8 @@ def generate_selection(file, kind="degree", dir="in"):
         #deg = deg_all[:limit]
         print("Random sampling: {}-{}: ".format(dir, kind) + str(time.time() - begin))
         begin = time.time()
-        #np.append(deg, np.array([max(deg_all)]))
-        #np.append(deg, np.array([min(deg_all)]))
+        np.append(deg, np.array([max(deg_all)]))
+        np.append(deg, np.array([min(deg_all)]))
         print("Appending: {}-{}: ".format(dir, kind) + str(time.time() - begin))
     else:
         deg = deg_all
@@ -68,7 +72,6 @@ def generate_selection(file, kind="degree", dir="in"):
     # print("Bandwidth: {}-{}: ".format(dir, kind) + str(time.time()-begin))
     begin = time.time()
     # kde = grid.best_estimator_
-    print(np.std(deg))
     bandwidth = max(1.06 * np.std(deg) * len(deg)**(-1/5), 0.05)
     kde = KernelDensity(kernel="gaussian", bandwidth=bandwidth).fit(deg)
     # if (not edges):
@@ -122,14 +125,14 @@ def generate_selection(file, kind="degree", dir="in"):
 
         type_dependent2 = """
             colored_amount = "<span style='color:red; font-weight:bold'>" + amount + "</span>"
-        if (amount < 4000){
+        if (amount < 600){
         colored_amount = "<span style='color:orange; font-weight:bold'>" + amount + "</span>"
         }
-        if (amount < 1500){
+        if (amount < 150){
         colored_amount = "<span style='color:green; font-weight:bold'>" + amount + "</span>"
         }
 
-            p.innerHTML = "Selected " + colored_amount + " edges with weight between " + Math.ceil(geometry.x0*100)/100 + " and " + Math.floor(geometry.x1*100)/100 + "."
+            p.innerHTML = colored_amount + " nodes remaining having edges with weight between " + Math.ceil(geometry.x0*100)/100 + " and " + Math.floor(geometry.x1*100)/100 + "."
         """
 
     geometry_callback = CustomJS(args=dict(complete=complete, before=before, middle=middle, after=after), code="""
@@ -200,13 +203,14 @@ def generate_selection(file, kind="degree", dir="in"):
     }
     $.post("/postmethod", data, function(result){amount = result; """ + type_dependent2 + "});" + type_dependent1)
 
-    p = figure(plot_width=700, plot_height=700)
-
+    #p = figure(plot_width=300, plot_height=300, sizing_mode='scale_width')
+    p = figure(plot_width=400, plot_height=400)
     select_tool = BoxSelectTool(dimensions="width", callback=geometry_callback)
     p.add_tools(select_tool)
 
     p.patch("x", "y", source=before, alpha=0.3, line_width=0)
-    p.patch("x", "y", source=middle, alpha=1, line_width=0, color="orange")
+    p.patch("x", "y", source=middle, alpha=1, line_width=0, color="#4C72B0")
+    # p.patch("x", "y", source=middle, alpha=1, line_width=0, color="orange")
     p.patch("x", "y", source=after, alpha=0.3, line_width=0)
 
     if (not edges):
@@ -219,6 +223,10 @@ def generate_selection(file, kind="degree", dir="in"):
 
     p.toolbar.active_drag = select_tool
     p.toolbar.autohide = True
+
+    p.background_fill_color = None
+    p.border_fill_color = None
+
     print("KDE + plotting: {}-{}: ".format(dir, kind) + str(time.time()-begin))
     print("Total {}-{}: ".format(dir, kind) + str(time.time()-big_bang))
     return p

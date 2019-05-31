@@ -1,10 +1,11 @@
 """
-Author(s): Tom Udding, Steven van den Broek, Yuqing Zeng, Tim van de Klundert
+Author(s): Tom Udding, Steven van den Broek, Yuqing Zeng, Tim van de Klundert, Sam Baggen
 Created: 2019-05-03
-Edited: 2019-05-25
+Edited: 2019-05-30
 """
 from bokeh.plotting import figure, reset_output
 from bokeh.models import Circle, ColumnDataSource
+from bokeh.models.callbacks import CustomJS
 from community import best_partition
 from graphion.graphing.parser import processCSVMatrix
 from holoviews import opts, renderer, extension
@@ -21,6 +22,9 @@ import numpy as np
 from pandas import read_hdf, Series
 import panel as pn
 import plotly.graph_objs as go
+import holoviews as hv
+
+hv.extension('bokeh')
 
 """
 Function to decrease the size of the submatrix.
@@ -98,40 +102,45 @@ def generateNodeLinkDiagram(filePath, diagramType, isDirected):
     return pn.Column(plot)
 
 # Generate a force-directed node-link diagram
-def generateForceDirectedDiagram(file, isDirected):
-    df = decreaseDiagramSize(file)
+def generateForceDirectedDiagram(file, isDirected, df=False):
+    if not df:
+        df = decreaseDiagramSize(file)
+    else:
+        df = file
     # convert Pandas DataFrame (Matrix) to NetworkX graph
     G = from_pandas_adjacency(df)
     layout = spring_layout(G, k=1.42/sqrt(number_of_nodes(G)))
 
     # get node and edge information from graph
     nodes, nodes_coordinates = zip(*sorted(layout.items()))
-    nodes_xs, nodes_ys = list(zip(*nodes_coordinates))
-    nodeDataSource = ColumnDataSource(dict(x=nodes_xs, y=nodes_ys, name=nodes))
-    lineDataSource = ColumnDataSource(calculateEdgePositions(G, layout))
-    #lineDataSource = ColumnDataSource(G.edges)
-
-    # create plot
-    plot = figure(plot_width=400, plot_height=400, tools=['pan', 'tap', 'wheel_zoom', 'reset', 'box_zoom'])
-    nodeGlyph = plot.circle('x', 'y', source=nodeDataSource, size=10, line_width=1, line_color="#000000", level='overlay')
-    lineGlyph = plot.multi_line('xs', 'ys', source=lineDataSource, line_width=1.3, color='#000000')
-
+    
     # calculate centrality
     centrality = degree_centrality(G)
     _, nodeCentralities = zip(*sorted(centrality.items()))
-    nodeDataSource.add([10 + 12 * t / max(nodeCentralities) for t in nodeCentralities], 'centrality')
+    centralityList = [10 + 12 * t / max(nodeCentralities) for t in nodeCentralities]
+
+    #centralityDimension = hv.Dimension(('Centrality', 'centrality of the node'))
+    nx.set_node_attributes(G, centralityList, 'Centrality')
 
     # create partitions
     partition = best_partition(G)
     _, nodePartitions = zip(*sorted(partition.items()))
-    nodeDataSource.add(nodePartitions, 'partition')
+    #nodeDataSource.add(nodePartitions, 'partition')
     partitionColours = ["#b2182b","#d6604d","#f4a582","#fddbc7","#f7f7f7","#d1e5f0","#92c5de","#4393c3","#2166ac"] # safe to use for colourblind people
-    nodeDataSource.add([partitionColours[t % len(partitionColours)] for t in nodePartitions], 'partition_colour')
+    partitionList = [partitionColours[t % len(partitionColours)] for t in nodePartitions]
+
+    #Making a dictionary for all attributes
+    attributes = {}
+    for n in nodes:
+        attributes[n] = {'Centrality': centralityList[nodes.index(n)], 'Partition': partitionList[nodes.index(n)]}
+
+    nx.set_node_attributes(G, attributes)
+
+    # create the plot itself
+    plot = hv.Graph.from_networkx(G, layout)
 
     # colour the nodes based on the partition
-    nodeGlyph.glyph.size = 'centrality'
-    nodeGlyph.glyph.fill_color = 'partition_colour'
-
+    plot.opts(cmap = partitionColours, color_index='Partition', node_size='Centrality', tools=['pan', 'tap', 'wheel_zoom', 'reset', 'box_zoom'], width=700, height=700)
     return pn.Column(plot)
 
 # Generate a hierarchical node-link diagram
