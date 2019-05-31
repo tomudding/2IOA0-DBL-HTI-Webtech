@@ -1,5 +1,5 @@
 <!--
-Author(s): Steven van den Broek, Anton Vellikok
+Author(s): Steven van den Broek, Anton Vellikok, Tom Udding
 Created: 2019-05-18
 Edited: 2019-05-31
 -->
@@ -23,7 +23,6 @@ Edited: 2019-05-31
         <title>graphion - filter</title>
     </head>
     <body>
-
         <!-- Page 1: select theme -->
         <div class="pop-up-window" id="choose-theme">
             <div class="pop-up-title">
@@ -31,7 +30,7 @@ Edited: 2019-05-31
             </div>
             <div class="pop-up-icon-area">
                 <div class="pop-up-icon-area-left">
-                    <img src="static/images/interesting-nodes-edges.svg" alt="clusters-img">
+                    <img src="/static/images/interesting-nodes-edges.svg" alt="clusters-img">
                     <br>
                     <button class="pop-up-button"
                     onclick="
@@ -44,20 +43,16 @@ Edited: 2019-05-31
                      .then(function(item) {
                         Bokeh.embed.embed_item(item, 'weight-plot');
                      });
-                    ">
-                        Interesting nodes / edges
-                    </button>
+                    ">Interesting nodes / edges</button>
                 </div>
                 <div class="vertical-line"></div>
                 <div class="pop-up-icon-area-right">
-                    <img src="static/images/clusters.svg" alt="clusters-img">
+                    <img src="/static/images/clusters.svg" alt="clusters-img">
                     <br>
                     <button class="pop-up-button"
                     onclick="
                     document.getElementById('choose-POI-clusters').style.display='block';
-                    document.getElementById('choose-theme').style.display='none'">
-                        Clusters
-                    </button>
+                    document.getElementById('choose-theme').style.display='none'">Clusters</button>
                 </div>
             </div>
             <div class="pop-up-footer-area">
@@ -69,16 +64,13 @@ Edited: 2019-05-31
 				</script>
 				<button class="pop-up-footer-button pop-up-footer-button-back"
 				onclick="
-				goBack()">
-				< Back</button>
+				goBack()">< Back</button>
                 <!-- Opens a "Help" -popup window -->
                 <button class="pop-up-footer-button pop-up-footer-button-help"
                 onclick="
                 document.getElementById('help-page-1').style.display='block';
                 document.getElementById('choose-theme').style.display='none'
-                ">
-                    Help ?
-                </button>
+                ">Help ?</button>
             </div>
         </div>
 
@@ -114,14 +106,9 @@ Edited: 2019-05-31
                 onclick="
                 document.getElementById('help-page-1').style.display='none';
                 document.getElementById('choose-theme').style.display='block';
-                ">
-                < Back</button>
+                ">< Back</button>
             </div>
         </div>
-
-
-
-
 
 		<script>
 			var counter = 0;
@@ -144,8 +131,6 @@ Edited: 2019-05-31
 				}
 			}
 		</script>
-
-
 
         <!-- Page 2: select nodes / edges -->
         <div class="pop-up-window" id="choose-POI-nodes-edges">
@@ -180,7 +165,7 @@ Edited: 2019-05-31
                 </div>
                 <div class="vertical-line"></div>
                 <div class="pop-up-icon-area-right">
-                    <img src="static/images/interesting-edges.svg" alt="clusters-img">
+                    <img src="/static/images/interesting-edges.svg" alt="clusters-img">
                     <br>
                     <button class="pop-up-button"
                     id="interesting-edges-button"
@@ -220,19 +205,14 @@ Edited: 2019-05-31
                 onclick="
                 document.getElementById('choose-POI-nodes-edges').style.display='none';
                 document.getElementById('filter-edge-weight').style.display='block';
-                ">
-                    Continue >
-                </button>
+                ">Continue ></button>
                 <button class="pop-up-footer-button pop-up-footer-button-help"
                 onclick="
                 document.getElementById('choose-POI-nodes-edges').style.display='none';
                 document.getElementById('help-page-2').style.display='block'
-                ">
-                    Help ?
-                </button>
+                ">Help ?</button>
             </div>
         </div>
-
 
         <!-- Help section of page 2 -->
         <div class="pop-up-window" id="help-page-2">
@@ -263,12 +243,9 @@ Edited: 2019-05-31
                 onclick="
                 document.getElementById('help-page-2').style.display='none';
                 document.getElementById('choose-POI-nodes-edges').style.display='block';
-                ">
-                    < Back
-                </button>
+                ">< Back</button>
             </div>
         </div>
-
 
         <!-- Page 3: select cluster type -->
         <div class="pop-up-window" id="choose-POI-clusters">
@@ -277,27 +254,25 @@ Edited: 2019-05-31
             </div>
             <div class="pop-up-icon-area">
                 <div class="pop-up-icon-area-left">
-                    <img src="static/images/clusters.svg" alt="clusters-img">
+                    <img src="/static/images/clusters.svg" alt="clusters-img">
                     <br>
                     <button class="pop-up-button"
 					onclick="
 					pageCounter();
                     document.getElementById('choose-POI-clusters').style.display='none';
                     document.getElementById('filter-edge-weight').style.display='block';
-                    ">
-                    Cluster Type 1</button>
+                    ">Cluster Type 1</button>
                 </div>
                 <div class="vertical-line"></div>
                 <div class="pop-up-icon-area-right">
-                    <img src="static/images/clusters.svg" alt="clusters-img">
+                    <img src="/static/images/clusters.svg" alt="clusters-img">
                     <br>
                     <button class="pop-up-button"
 					onclick="
 					pageCounter();
                     document.getElementById('choose-POI-clusters').style.display='none';
                     document.getElementById('filter-edge-weight').style.display='block'
-                    ">
-                    Cluster Type 2</button>
+                    ">Cluster Type 2</button>
                 </div>
             </div>
             <div class="pop-up-footer-area">
@@ -305,21 +280,14 @@ Edited: 2019-05-31
                 onclick="
                 document.getElementById('choose-POI-clusters').style.display='none';
                 document.getElementById('choose-theme').style.display='block'
-                ">
-                    < Back
-                </button>
+                ">< Back</button>
                 <button class="pop-up-footer-button pop-up-footer-button-help"
                 onclick="
                 document.getElementById('help-page-3').style.display='block';
                 document.getElementById('choose-POI-clusters').style.display='none';
-                ">
-                    Help ?
-                </button>
+                ">Help ?</button>
             </div>
         </div>
-
-
-
 
         <!-- Help section of page 3 -->
         <div class="pop-up-window" id="help-page-3">
@@ -350,14 +318,9 @@ Edited: 2019-05-31
                 onclick="
                 document.getElementById('help-page-3').style.display='none';
                 document.getElementById('choose-POI-clusters').style.display='block';
-                ">
-                    < Back
-                </button>
+                ">< Back</button>
             </div>
         </div>
-
-
-
 
          <!-- Page 4: filter the edge weights -->
          <div class="pop-up-window" id="filter-edge-weight">
@@ -366,16 +329,14 @@ Edited: 2019-05-31
             </div>
             <div class="pop-up-icon-area">
             <!--    <div class="pop-up-icon-area-center">
-                    <img src="static/images/filter-test.png" alt="clusters-img">
+                    <img src="/static/images/filter-test.png" alt="clusters-img">
                 </div>                      -->
                 <div id="weight-selection">Loading...</div>
     	        <div id="weight-plot"></div>
     		    <p id="between-weight">Select nodes by dragging the mouse.</p>
 
                 <br>
-                <span class="filter-text">
-                    Display only edges that satisfy the weight requirement:
-                </span>
+                <span class="filter-text">Display only edges that satisfy the weight requirement:</span>
                 <input type="checkbox" class="multiple-choice-selection" id="edge-weight-chk-box">
                 <span class="custom-checkbox" id="custom-edge-weight-chk-box"
                 onclick="
@@ -385,21 +346,12 @@ Edited: 2019-05-31
                     document.getElementById('edge-weight-chk-box').checked=false;
                 }"></span>
                 <br>
-                <span class="filter-text">
-                    Estimated processing time:
-                </span>
+                <span class="filter-text">Estimated processing time:</span>
                 <br>
-                <span class="filter-text" id="filter-text-time">
-                    126 min
-                </span>
+                <span class="filter-text" id="filter-text-time">126 min</span>
             </div>
             <div class="pop-up-footer-area">
-                <button class="pop-up-footer-button pop-up-footer-button-back"
-                onclick="
-				goBackFromPage4();
-                ">
-                    < Back
-                </button>
+                <button class="pop-up-footer-button pop-up-footer-button-back" onclick="goBackFromPage4();">< Back</button>
                 <button class="pop-up-footer-button pop-up-footer-button-continue"
                 onclick="
 				document.getElementById('filter-edge-weight').style.display='none';
@@ -411,15 +363,12 @@ Edited: 2019-05-31
                  .then(function(item) {
                     Bokeh.embed.embed_item(item, 'in-degree-plot');
                  });
-                ">
-                    Continue ></button>
+                ">Continue ></button>
                 <button class="pop-up-footer-button pop-up-footer-button-help"
                 onclick="
                 document.getElementById('help-page-4').style.display='block';
                 document.getElementById('filter-edge-weight').style.display='none';
-                ">
-                    Help ?
-                </button>
+                ">Help ?</button>
             </div>
         </div>
 
@@ -441,9 +390,7 @@ Edited: 2019-05-31
                 onclick="
                 document.getElementById('help-page-4').style.display='none';
                 document.getElementById('filter-edge-weight').style.display='block';
-                ">
-                    < Back
-                </button>
+                ">< Back</button>
             </div>
         </div>
 
@@ -458,18 +405,14 @@ Edited: 2019-05-31
     				<p id="between-in-degree">Select nodes by dragging the mouse.</p>
                 <!--
                 <div class="pop-up-icon-area-center">
-                    <img src="static/images/filter-test.png" alt="clusters-img">
+                    <img src="/static/images/filter-test.png" alt="clusters-img">
 
                 </div>
                 -->
                 <br>
-                <span class="filter-text">
-                    Estimated processing time:
-                </span>
+                <span class="filter-text">Estimated processing time:</span>
                 <br>
-                <span class="filter-text" id="filter-text-time">
-                    126 min
-                </span>
+                <span class="filter-text" id="filter-text-time">126 min</span>
             </div>
             <div class="pop-up-footer-area">
                 <button class="pop-up-footer-button pop-up-footer-button-back"
@@ -478,9 +421,7 @@ Edited: 2019-05-31
                 document.getElementById('filter-edge-weight').style.display='block';
                 plot = document.getElementById('in-degree-plot')
                 plot.removeChild(plot.childNodes[0]);
-                document.getElementById('between-in-degree').innerHTML = 'Select nodes by dragging the mouse.'">
-                    < Back
-                </button>
+                document.getElementById('between-in-degree').innerHTML = 'Select nodes by dragging the mouse.'">< Back</button>
 				<button class="pop-up-footer-button pop-up-footer-button-continue"
                 onclick="
                 document.getElementById('filter-node-in-degree').style.display='none';
@@ -492,16 +433,12 @@ Edited: 2019-05-31
                  .then(function(item) {
                     Bokeh.embed.embed_item(item, 'out-degree-plot');
                  });
-                ">
-					Continue >
-				</button>
+                ">Continue ></button>
                 <button class="pop-up-footer-button pop-up-footer-button-help"
                 onclick="
                 document.getElementById('help-page-5').style.display='block';
                 document.getElementById('filter-node-in-degree').style.display='none';
-                ">
-                    Help ?
-                </button>
+                ">Help ?</button>
             </div>
         </div>
 
@@ -523,9 +460,7 @@ Edited: 2019-05-31
                 onclick="
                 document.getElementById('help-page-5').style.display='none';
                 document.getElementById('filter-node-in-degree').style.display='block';
-                ">
-                    < Back
-                </button>
+                ">< Back</button>
             </div>
         </div>
 
@@ -540,18 +475,14 @@ Edited: 2019-05-31
                     <p id="between-out-degree">Select nodes by dragging the mouse.</p>
                 <!--
                 <div class="pop-up-icon-area-center">
-                    <img src="static/images/filter-test.png" alt="clusters-img">
+                    <img src="/static/images/filter-test.png" alt="clusters-img">
 
                 </div>
                 -->
                 <br>
-                <span class="filter-text">
-                    Estimated processing time:
-                </span>
+                <span class="filter-text">Estimated processing time:</span>
                 <br>
-                <span class="filter-text" id="filter-text-time">
-                    126 min
-                </span>
+                <span class="filter-text" id="filter-text-time">126 min</span>
             </div>
             <div class="pop-up-footer-area">
                 <button class="pop-up-footer-button pop-up-footer-button-back"
@@ -560,20 +491,14 @@ Edited: 2019-05-31
                 document.getElementById('filter-node-in-degree').style.display='block';
                 plot = document.getElementById('out-degree-plot')
                 plot.removeChild(plot.childNodes[0]);
-                document.getElementById('between-out-degree').innerHTML = 'Select nodes by dragging the mouse.'">
-                    < Back
-                </button>
+                document.getElementById('between-out-degree').innerHTML = 'Select nodes by dragging the mouse.'">< Back</button>
                 <button class="pop-up-footer-button pop-up-footer-button-continue"
-                onclick="location.href='/visualise'">
-                    Start the tool >
-                </button>
+                onclick="location.href='/visualise'">Start the tool ></button>
                 <button class="pop-up-footer-button pop-up-footer-button-help"
                 onclick="
                 document.getElementById('help-page-6').style.display='block';
                 document.getElementById('filter-node-out-degree').style.display='none';
-                ">
-                    Help ?
-                </button>
+                ">Help ?</button>
             </div>
         </div>
 
@@ -595,9 +520,7 @@ Edited: 2019-05-31
                 onclick="
                 document.getElementById('help-page-6').style.display='none';
                 document.getElementById('filter-node-out-degree').style.display='block';
-                ">
-                    < Back
-                </button>
+                ">< Back</button>
             </div>
         </div>
     </body>

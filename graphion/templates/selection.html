@@ -1,7 +1,7 @@
 <!--
 Author(s): Tom Udding
 Created: 2019-04-29
-Edited: 2019-05-20
+Edited: 2019-05-31
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -10,80 +10,87 @@ Edited: 2019-05-20
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta http-equiv="X-UA-Compatible" content="ie=edge">
 		<title>graphion - file selection</title>
-		<link rel="stylesheet" type="text/css" href="static/css/grid.css">
-		<link rel="stylesheet" type="text/css" href="static/css/grid_style.css">
-	    <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="/static/css/grid.css">
+		<link rel="stylesheet" type="text/css" href="/static/css/grid_style.css">
+		<link rel="stylesheet" type="text/css" href="/static/css/header.css">
+	    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:100,400,700">
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.css" integrity="sha256-e47xOkXs1JXFbjjpoRr1/LhVcqSzRmGmPqsrUQeVs+g=" crossorigin="anonymous">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.js" integrity="sha256-cs4thShDfjkqFGk5s2Lxj35sgSRr4MRcyccmi0WKqCM=" crossorigin="anonymous"></script>
+		<style>body { background: url("/static/images/first.png") no-repeat center center fixed; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover; }</style>
 	</head>
 	<body>
-		<!--
-			THIS SECTION IS BASED ON MY OWN HTML/CSS FRAMEWORK
-			NEEDS TO BE ADJUSTED TO WHAT ANTON COMES UP WITH
-			UNLESS WE WANT TO USE THIS
-			- Tom Udding
-		-->
-		<section class="body-wrapper">
+		<header class="navigation-wrapper">
+			<div class="navigation-container">
+				<div class="navigation-row">
+					<div class="navigation-logo">
+						<a href="/" class="graphion" title="graphion">graph<span class="navigation-logo-bold">ion</span></a>
+					</div>
+					<input type="checkbox" class="navigation-button" id="navigation-button">
+					<label for="navigation-button" class="navigation-icon"><span class="navicon"></span></label>
+					<nav class="navigation-links">
+						<ul>
+							<li><a href="/">HOME</a></li>
+							<li><a href="/#video-jump">VIDEO</a></li>
+							<li><a href="/#meet-the-team">TEAM</a></li>
+							<li><a href="/#report">REPORT</a></li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</header>
+		<section class="body-wrapper valign-wrapper">
 			<div class="container">
 				<div class="row">
-					<div class="col-s-12">
-						<h1 class="text-center">Select or upload</h1>
-						<p class="text-center">Please select a previously uploaded data set from the list or upload a new data set.</p>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-s-6">
-						<!-- existing file selection -->
-						<div class="file-selection-container">
-							<h3>Select a data set:</h3>
-							<hr>
-							{% if filesList is defined and filesList|length >= 0 %}
-								<ul>
-									{% if filesList|length <= 0 %}
-										<li>No files have been uploaded</li>
-									{% else %}
-										{% for key, value in filesList.items() %}
-											<li><a href="filter/{{ key|e }}">{{ value|e }}</a></li>
-										{% endfor %}
-									{% endif %}
-								</ul>
-							{% else %}
-								<p>An unknown error has occurred while trying to retrieve previously uploaded data sets. Try again later.</p>
-							{% endif %}
-						</div>
-					</div>
-					<div class="col-s-6">
-						<!-- file upload -->
-						<div class="file-upload-container">
-							<h3>Upload a data set:</h3>
-							<hr>
-							<form action="/upload" method="POST" enctype="multipart/form-data">
-								<div class="row">
-									<div class="col-s-4">
-										<label for="file-upload" class="button button-secondary">Upload File</label>
-									    <input type="file" name="file" id="file-upload" accept=".csv, text/csv" hidden>
-									</div>
-									<div class="col-s-8">
-										<!--Text displaying the file name of the uploaded file-->
-										<div class="row">
-											<div class="col-s-12">
-												<span class="button-text" id="button-text-bold">File chosen:</span>
-												<span class="button-text" id="display-file-name">no file selected</span>
-											</div>
+					<div class="col-s-8 col-offset-2 valign">
+						<div class="card-container">
+							<div class="card-contents">
+								<h2 class="card-title text-center">Select or upload a file</h2>
+								<div class="card-body">
+									<p class="card-subtitle text-center">Please select a previously uploaded data set from the list or upload a new data set.</p>
+									<hr>
+									<div class="row file-selection-container" style="display: none">
+										<div class="col-s-12">
+											{% if filesList is defined and filesList|length >= 0 %}
+												<ul>
+													{% if filesList|length <= 0 %}
+														<li>No files have been uploaded</li>
+													{% else %}
+														{% for key, value in filesList.items() %}
+															<li><a href="filter/{{ key|e }}">{{ value|e }}</a></li>
+														{% endfor %}
+													{% endif %}
+												</ul>
+											{% else %}
+												<p>An unknown error has occurred while trying to retrieve previously uploaded data sets. Try again later.</p>
+											{% endif %}
 										</div>
-										<div class="row">
-											<div class="col-s-12">
-												<span class="button-text" id="button-text-bold">File size:</span>
-												<span class="button-text" id="display-file-size">no file selected</span>
+									</div>
+									<div class="row file-upload-container" style="display: none">
+										<div class="col-s-12">
+											<form action="/upload" class="dropzone" id="graphion-dropzone">
+												<div class="dz-message" data-dz-message><span>Drop files here or click to upload</span></div>
+											</form>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-s-12 col-0-margin">
+											<div class="row" id="file-selection-buttons">
+												<div class="col-s-4 col-offset-2">
+													<button class="button button-primary" id="file-selection-list">Previously Uploaded</button>
+												</div>
+												<div class="col-s-4">
+													<button class="button button-primary" id="file-selection-upload">Upload New File</button>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-s-2" style="margin: 0 auto;">
+													<button class="button button-primary" id="file-selection-back" style="display: none;">Back</button>
+												</div>
 											</div>
 										</div>
 									</div>
 								</div>
-								<div class="row">
-									<div class="col-s-12">
-							    		<input type="submit" class="button button-secondary" value="Submit" name="submit">
-									</div>
-								</div>
-							</form>
-							<a href="testfilter">Javascript upload</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -91,28 +98,53 @@ Edited: 2019-05-20
 		</section>
 	</body>
 	<script>
-		var fileInputButton = document.getElementById('file-upload');
-		fileInputButton.addEventListener('change', updateFileInformation);
+		document.getElementById("file-selection-list").addEventListener('click', function() {
+			toggleButtons();
+			document.querySelector(".card-title").textContent = "Select a file";
+			document.querySelector(".file-upload-container").style.display = "none";
+			document.querySelector(".file-selection-container").style.display = "flex";
+		}, false);
 
-		function updateFileInformation(event) {
-			var input = event.srcElement;
-			var fileName = input.files[0].name;
-			var fileSize = input.files[0].size;
-			document.getElementById('display-file-name').textContent = fileName;
-			document.getElementById('display-file-size').textContent = beautifyNumbers(fileSize);
-		}
+		document.getElementById("file-selection-upload").addEventListener('click', function() {
+			toggleButtons();
+			document.querySelector(".card-title").textContent="Upload a file";
+			document.querySelector(".file-selection-container").style.display = "none";
+			document.querySelector(".file-upload-container").style.display = "flex";
+		}, false);
 
-		function beautifyNumbers(number) {
-			var output = 0;
+		document.getElementById("file-selection-back").addEventListener('click', function() {
+			toggleButtons();
+			document.querySelector(".card-title").textContent="Select or upload a file";
+			document.querySelector(".file-selection-container").style.display = "none";
+			document.querySelector(".file-upload-container").style.display = "none";
+		}, false);
 
-			if (number > 999 && number <= 9999) {
-				output = Number.parseFloat(number / 1000).toFixed(2) + 'KB';
-			} else if (number > 9999) {
-				output = Number.parseFloat(number / 1000000).toFixed(2) + 'MB';
+		function toggleButtons() {
+			if (window.getComputedStyle(document.getElementById("file-selection-back")).getPropertyValue("display") == "none") {
+				document.getElementById("file-selection-back").style.display = "inline-block";
+				document.getElementById("file-selection-buttons").style.display = "none";
+				document.getElementById("file-selection-list").style.display = "none";
+				document.getElementById("file-selection-upload").style.display = "none";
 			} else {
-				output = number;
+				document.getElementById("file-selection-back").style.display = "none";
+				document.getElementById("file-selection-buttons").style.display = "flex";
+				document.getElementById("file-selection-list").style.display = "inline-block";
+				document.getElementById("file-selection-upload").style.display = "inline-block";
 			}
-			return output;
 		}
+	</script>
+	<script>
+		Dropzone.options.graphionDropzone = {
+			paramName: "file",
+			maxFiles: 1,
+			maxFilesize: 1000,
+			acceptedFiles: "text/csv,.csv",
+			//autoProcessQueue: false,
+			init: function() {
+		        this.on("success", function (file) {
+		            window.location = "/filter/" + file.xhr.response;
+		        });
+		    }
+		};
 	</script>
 </html>
