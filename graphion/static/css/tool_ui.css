@@ -301,3 +301,29 @@
     background-size: cover;
     background-repeat: no-repeat;
 }
+
+.icon {
+    position: absolute;
+    cursor: pointer;
+    width: 5.0vw;
+    height: 9.6vh;
+    border-style: solid;
+    border-color: rgb(170,170,170);
+    border-left-width: 0.2vw;
+    border-right-width: 0.2vw;
+    border-top-width: 0.3vh;
+    border-bottom-width: 0.3vh;
+}
+
+.icon-selected {
+    position: absolute;
+    width: 5.0vw;
+    height: 9.6vh;
+    border-style: solid;
+    border-color: white;
+    background-color: rgb(100,100,100);
+    border-left-width: 0.2vw;
+    border-right-width: 0.2vw;
+    border-top-width: 0.3vh;
+    border-bottom-width: 0.3vh;
+}

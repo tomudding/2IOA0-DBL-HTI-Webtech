@@ -144,7 +144,8 @@ def generateForceDirectedDiagram(file, isDirected, df=False):
     plot = hv.Graph.from_networkx(G, layout)
 
     # colour the nodes based on the partition
-    plot.opts(cmap = partitionColours, color_index='Partition', node_size='Centrality', tools=['box_select', 'lasso_select'], width=700, height=700)
+
+    plot.opts(cmap = partitionColours, color_index='Partition', node_size='Centrality', tools=['box_select', 'lasso_select'], width=600, height=600)
 
     renderer = hv.renderer('bokeh')
     print(renderer.get_plot(plot).handles['glyph_renderer'].node_renderer.data_source.selected.indices)
@@ -168,8 +169,12 @@ def generateForceDirectedDiagram(file, isDirected, df=False):
     return pn.Column(plot, table)
 
 # Generate a hierarchical node-link diagram
-def generateHierarchicalDiagram(file, isDirected):
-    df = decreaseDiagramSize(file)
+def generateHierarchicalDiagram(file, isDirected, df=False):
+    if not df:
+        df = decreaseDiagramSize(file)
+    else:
+        df = file
+    #df = decreaseDiagramSize(file)
     # set defaults for HoloViews
     extension('bokeh')
     renderer('bokeh').webgl = True
@@ -181,13 +186,17 @@ def generateHierarchicalDiagram(file, isDirected):
     cutoff = 2 #adjust this parameter to filter edges
     SG = nx.Graph([(u, v, d) for u, v, d in G.edges(data=True) if d['weight'] > cutoff])
 
-    graph = Graph.from_networkx(SG, positions = graphviz_layout(SG, prog ='dot')).opts(directed=isDirected, width=600, height=600, arrowhead_length=0.0005)
+    graph = hv.Graph.from_networkx(SG, positions = graphviz_layout(SG, prog ='dot')).opts(directed=isDirected, width=600, height=600, arrowhead_length=0.0005)
     # Make a panel and widgets with param for choosing a layout
     return pn.Column(graph)
 
 # Generate a radial node-link diagram
-def generateRadialDiagram(file, isDirected):
-    df = decreaseDiagramSize(file)
+def generateRadialDiagram(file, isDirected, df=False):
+    if not df:
+        df = decreaseDiagramSize(file)
+    else:
+        df = file
+    #df = decreaseDiagramSize(file)
 
     node_count = df.shape[0]
 
@@ -212,11 +221,21 @@ def generateRadialDiagram(file, isDirected):
     opts.defaults(opts.EdgePaths(**defaults), opts.Graph(**defaults), opts.Nodes(**defaults))
 
     G = from_pandas_adjacency(df)
-    graph = Graph.from_networkx(G, circular_layout)
-    graph.nodes.data['degree'] = Series(degree_array)
+    layout = circular_layout(G)
 
-    # I tried simply using node_size='degree', but if it only were that easy...
-    graph = graph.opts(opts.Graph(node_size=35, directed=isDirected, width=600, height=600, arrowhead_length=0.0005))
+    # get node and edge information from graph
+    nodes, nodes_coordinates = zip(*sorted(layout.items()))
+
+    degree_dict = {}
+    for n in nodes:
+        degree_dict[n] = {'Degree': degree_array[nodes.index(n)], 'DegreeSize': (degree_array[nodes.index(n)] / 2)}
+
+    nx.set_node_attributes(G, degree_dict)
+    graph = hv.Graph.from_networkx(G, circular_layout)
+    #graph.nodes.data['degree'] = Series(degree_array)
+
+    # I tried simply using node_size='degree', but if it only were that easy... (it is that easy :D)
+    graph.opts(node_size='DegreeSize', directed=isDirected, width=600, height=600, arrowhead_length=0.0005)
 
     # Make a panel and widgets with param for choosing a layout
     return pn.Column(graph)
