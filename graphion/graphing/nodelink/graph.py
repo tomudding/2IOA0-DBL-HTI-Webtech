@@ -95,7 +95,7 @@ def generateNodeLinkDiagram(filePath, diagramType, isDirected):
     lineDataSource = ColumnDataSource(calculateEdgePositions(G, layout))
 
     # create plot
-    plot = figure(plot_width=400, plot_height=400, tools=['pan', 'tap', 'wheel_zoom', 'reset', 'box_zoom'])
+    plot = figure(plot_width=400, plot_height=400)
     nodeGlyph = plot.circle('x', 'y', source=nodeDataSource, size=10, line_width=1, line_color="#000000", level='overlay')
     lineGlyph = plot.multi_line('xs', 'ys', source=lineDataSource, line_width=1.3, color='#000000')
 
@@ -140,7 +140,7 @@ def generateForceDirectedDiagram(file, isDirected, df=False):
     plot = hv.Graph.from_networkx(G, layout)
 
     # colour the nodes based on the partition
-    plot.opts(cmap = partitionColours, color_index='Partition', node_size='Centrality', tools=['pan', 'tap', 'wheel_zoom', 'reset', 'box_zoom'], width=700, height=700)
+    plot.opts(cmap = partitionColours, color_index='Partition', node_size='Centrality', width=700, height=700)
     return pn.Column(plot)
 
 # Generate a hierarchical node-link diagram
