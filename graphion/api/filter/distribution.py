@@ -8,7 +8,6 @@ from flask import Flask, render_template, request, redirect, Response, Blueprint
 from json import dump, dumps
 from graphion.filtering.degree_selection import generate_selection
 from graphion.filtering.edge_weight_selection import generate_degree_selection, generate_edge_selection
-from graphion.filter import get_df
 import time
 
 from graphion.upload import get_partially_filtered_df, get_almost_filtered_df, get_df, set_almost_filtered_df, set_partially_filtered_df, set_filtered_df
@@ -34,7 +33,7 @@ def degreeAPI(type=None, dir=None):
     #     else:
     #         with open(filePath, 'w+') as json_file:
     #             plot = generate_selection(getFilePath(file), kind=type, dir=dir)
-    #             start = time.time()
+    #            start = time.time()
     #             item = json_item(plot)
     #             dump(item, json_file)
     #             print("To json {}-{}: ".format(dir, type) + str(time.time()-start))
