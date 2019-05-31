@@ -16,10 +16,11 @@ def generateBokehApp(doc):
     df = get_filtered_df()
     matrix = makeMatrix(df, df=True)
     graph = generateForceDirectedDiagram(df, False, df=True)
-    # Put parameters in panel with param to change direction and type of graph.
+    graph3D = generate3DDiagram(df, df=True)
+
     pn.extension('plotly')
 
-    pane = pn.Row(graph, matrix)
+    pane = pn.Column(pn.Row(graph, matrix), graph3D)
     return pane.get_root(doc)
 
 def getFilePath(file):

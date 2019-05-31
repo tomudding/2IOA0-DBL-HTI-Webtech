@@ -65,14 +65,20 @@ def filter_data(left, right, type, dir, file):
     global filtered_df
     if(type == 'degree'):
         if dir == 'out':
+            begin = time.time()
             filtered_df = generate_degree_selection(get_almost_filtered_df(), left, right, dir)
+            print("Calculating selection took: " + str(time.time()-begin))
             set_filtered_df(filtered_df)
         if dir == 'in':
+            begin = time.time()
             filtered_df = generate_degree_selection(get_partially_filtered_df(), left, right, dir)
+            print("Calculating selection took: " + str(time.time() - begin))
             set_almost_filtered_df(filtered_df)
         return len(filtered_df.columns)
     elif(type == 'weight'):
+        begin = time.time()
         result = generate_edge_selection(get_df(), left, right, keep_edges = True)
+        print("Calculating selection took: " + str(time.time() - begin))
         set_partially_filtered_df(result)
         return len(result.columns)
 

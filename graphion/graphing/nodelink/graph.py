@@ -137,7 +137,6 @@ def generateForceDirectedDiagram(file, isDirected, df=False):
     attributes = {}
     for n in nodes:
         attributes[n] = {'Centrality': centralityList[nodes.index(n)], 'Partition': partitionList[nodes.index(n)], 'Names': n}
-
     nx.set_node_attributes(G, attributes)
 
     # create the plot itself
@@ -148,7 +147,7 @@ def generateForceDirectedDiagram(file, isDirected, df=False):
     plot.opts(cmap = partitionColours, color_index='Partition', node_size='Centrality', tools=['box_select', 'lasso_select'], width=600, height=600)
 
     renderer = hv.renderer('bokeh')
-    print(renderer.get_plot(plot).handles['glyph_renderer'].node_renderer.data_source.selected.indices)
+    # print(renderer.get_plot(plot).handles['glyph_renderer'].node_renderer.data_source.selected.indices)
     table = hv.Table(renderer.get_plot(plot).handles['glyph_renderer'].node_renderer.data_source.to_df())
     class SelectLink(Link):
         pass
@@ -241,8 +240,13 @@ def generateRadialDiagram(file, isDirected, df=False):
     return pn.Column(graph)
 
 # Generate 3D graph
-def generate3DDiagram(file):
-    df = decreaseDiagramSize(file)
+def generate3DDiagram(file, df=False):
+
+    if not df:
+        df = decreaseDiagramSize(file)
+    else:
+        df = file
+
     names = df.columns.tolist()
     N = len(names)
 
@@ -254,14 +258,14 @@ def generate3DDiagram(file):
 
     for name in noise:
         names.remove(name)
+
+
     df.drop(noise, inplace=True)
     df.drop(noise, axis=1, inplace=True)
-
     N = len(names)
 
     G = nx.from_pandas_adjacency(df)
     G = nx.convert_node_labels_to_integers(G)
-
     # 3d spring layout
     pos = nx.spring_layout(G, dim=3)
     # numpy array of x,y,z positions in sorted node order
@@ -270,7 +274,6 @@ def generate3DDiagram(file):
     scalars = np.array(list(G.nodes())) + 5
     # edges
     Edges = np.array([(int(u), int(v), d) for (u, v, d) in G.edges(data=True) if d['weight'] >= 0.5])
-
     def make_edge(x, y, z, weight):
         return go.Scatter3d(
             x=x,
@@ -341,4 +344,5 @@ def generate3DDiagram(file):
     data = [trace2] + edge_traces
     fig = go.Figure(data=data, layout=layout)
     pn.extension('plotly')
-    return pn.pane.Plotly(fig)
+    painful = pn.pane.Plotly(fig)
+    return painful

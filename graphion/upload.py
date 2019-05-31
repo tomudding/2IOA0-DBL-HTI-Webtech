@@ -71,6 +71,8 @@ def set_df(input):
 def get_filtered_df():
     if 'filtered_df' in globals():
         return filtered_df.copy()
+    if 'almost_filtered_df' in globals():
+        return almost_filtered_df.copy()
     if 'partially_filtered_df' in globals():
         return partially_filtered_df.copy()
     return get_df()
