@@ -1,3 +1,8 @@
+/*
+Author(s): Steven van den Broek, Anton Vellikok
+Created: 2019-05-18
+Edited: 2019-05-31
+*/
 * {
     margin: 0;
     padding: 0;
@@ -228,7 +233,7 @@
 }
 
 /*############################################
-  ####  Page 5: filter the node in-degrees  #####
+  #### Page 5: filter the node in-degrees ####
   ############################################*/
 
 #filter-node-in-degree {
@@ -241,7 +246,7 @@
 }
 
 /*############################################
-  ####  Page 6: filter the node out-degrees  #####
+  ### Page 6: filter the node out-degrees ####
   ############################################*/
 
 #filter-node-out-degree {
@@ -251,4 +256,44 @@
 #out-degree-plot {
     margin: auto;
     width: 400px;
+}
+
+/*############################################
+  ##############  Help Section  ##############
+  ############################################*/
+
+#help-page-1 {
+    display: none;
+}
+
+#help-page-2 {
+    display: none;
+}
+
+#help-page-3 {
+    display: none;
+}
+
+#help-page-4 {
+    display: none;
+}
+
+#help-page-5 {
+    display: none;
+}
+
+#help-page-6 {
+    display: none;
+}
+
+.help-section-title {
+    color: #C40000;
+    padding: 40px; 
+    padding-bottom: 20px;
+    font-size: 30px;
+}
+
+.help-section-paragraph {
+    margin-right: 50px;
+    margin-left: 50px;
 }
