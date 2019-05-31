@@ -7,16 +7,12 @@ import numpy as np
 import pandas as pd
 import panel as pn
 import param
+import hvplot.pandas
 from colorcet import palette
 from scipy.spatial.distance import pdist, squareform
 from fastcluster import linkage
 from pandas import read_hdf
 import time
-
-import holoviews as hv
-from holoviews.plotting.bokeh.callbacks import LinkCallback
-from holoviews.plotting.links import Link
-from bokeh.models import BoxSelectTool
 
 def makeMatrix(file, df=False):
     if not df:
@@ -131,13 +127,6 @@ def makeMatrix(file, df=False):
 
     pn.extension()
 
-    select_tool = BoxSelectTool()
-
-    result = to_liquid(df_original.values)
-    hm = hv.HeatMap(result).opts(tools=['tap', select_tool, 'hover'], active_tools=['box_select'],
-                                 height=550, width=600, xaxis=None, yaxis=None, cmap=palette['kbc'])
-    current_data = hm.data
-
     class Matrix_dropdown(param.Parameterized):
         reordering = param.ObjectSelector(default="none",
                                           objects=["none", "single", "average", "complete", "centroid", "weighted",
@@ -146,141 +135,46 @@ def makeMatrix(file, df=False):
                                       objects=["euclidean", "minkowski", "cityblock", "sqeuclidean", "cosine",
                                                "correlation", "hamming", "jaccard", "chebyshev", "canberra",
                                                "braycurtis"])
-        color_palette = param.ObjectSelector(default='cividis',
-                                             objects=['kbc', 'kgy', 'bgy', 'bmw', 'bmy', 'cividis', 'dimgray', 'fire',
-                                                      'inferno', 'viridis'])
 
-        def view(self, show_only_selection=True):
-            global selection
-            global current_data
-            global hm
+        def view(self):
             if self.reordering == "none":
-                # if 'selection' in globals():
-                #     selection.clear()
-
-                result = to_liquid(df_original.values)
-                # return result.hvplot.heatmap('index1', 'index2', 'value', invert=True, tools=['tap', select_tool],
-                #          height=500, width=600, flip_yaxis=True, xaxis=None, yaxis=None, cmap=palette['kbc'])
-
-                hm = hv.HeatMap(result).opts(tools=['tap', select_tool, 'hover'], active_tools=['box_select'],
-                                             height=500, width=550, xaxis=None, yaxis=None, cmap=self.color_palette,
-                                             colorbar=True)
-                current_data = hm.data
-                table = hv.Table(current_data)
-                table.opts(height=500)
-
-                if show_only_selection:
-                    SelectedDataLink(hm, table)
-                else:
-                    SelectLink(hm, table)
-                    SelectLink(table, hm)
-
-                return pn.Pane(hm)
-                # return pn.Row(hm, table)
-                # selection = Selection1D(source=hm, subscribers=[print_info])
-                # return hv.DynamicMap(lambda index: hm, streams=[selection])
+                begin = time.time()
+                liquid = to_liquid(df_original.values)
+                print("Matrix, melting matrix: " + str(time.time() - begin))
+                begin = time.time()
+                result = liquid.hvplot.heatmap('index1', 'index2', 'value', invert=True,
+                                             height=500, width=600, flip_yaxis=True, xaxis=None, yaxis=None,
+                                             cmap=palette['kbc'])
+                print("Matrix, generating heatmap: " + str(time.time() - begin))
+                return result
             else:
-                #             if 'selection' in globals():
-                #                 selection.clear()
+                small_bang = time.time()
                 res_order, res_linkage = compute_serial_matrix(df, self.reordering, dist_metric=self.metric)
+                print("Matrix, calculating reordering: " + str(time.time() - small_bang))
+                begin = time.time()
                 reordered_matrix_col = reordercol(df, res_order)
+                print("Matrix, reordering columns: " + str(time.time() - begin))
+                begin = time.time()
                 reordered_matrix = reorderrow(reordered_matrix_col, res_order)
+                print("Matrix, reordering rows: " + str(time.time() - begin))
+                begin = time.time()
                 dis_to_similarity(reordered_matrix)
-                # reordered_matrix = pd.DataFrame(reordered_matrix, index = author_reorder_list(df,res_order), column = author_reorder_list(df,res_order))
-                result = to_liquid_2(reordered_matrix, df, res_order)
-                hm = hv.HeatMap(result).opts(tools=['tap', select_tool, 'hover'], active_tools=['box_select'],
-                                             height=500, width=550, xaxis=None, yaxis=None, cmap=self.color_palette,
-                                             colorbar=True)
-                current_data = hm.data
-                table = hv.Table(current_data)
-                table.opts(height=500)
-
-                if show_only_selection:
-                    SelectedDataLink(hm, table)
-                else:
-                    SelectLink(hm, table)
-                    SelectLink(table, hm)
-
-                return pn.Pane(hm)
-                # return pn.Row(hm, table)
-                # selection = Selection1D(source=hm, subscribers=[print_info])
-                # return hv.DynamicMap(lambda index: hm, streams=[selection])
-
+                print("Matrix, to similarity: " + str(time.time() - begin))
+                begin = time.time()
+                liquid = to_liquid_2(reordered_matrix, df, res_order)
+                print("Matrix, melting matrix: " + str(time.time() - begin))
+                begin = time.time()
+                result = liquid.hvplot.heatmap('index1', 'index2', 'value', invert=True,
+                                             height=500, width=600, flip_yaxis=True, xaxis=None, yaxis=None,
+                                             cmap=palette['kbc'])
+                print("Matrix, generating heatmap: " + str(time.time() - begin))
+                print("------------------------------------")
+                print("Matrix, reordering took in total: " + str(time.time() - small_bang))
+                print()
+                return result
+    begin = time.time()
     matrix = Matrix_dropdown(name='Adjacency Matrix')
-
-    # %%
-
-
-    class SelectLink(Link):
-        _requires_target = True
-
-    class SelectCallback(LinkCallback):
-
-        source_model = 'selected'
-        # source_handles = ['cds']
-        on_source_changes = ['indices']
-
-        target_model = 'selected'
-
-        source_code = "let len = {}".format(len(names)) + """
-            let new_indices = []
-            for (let i = 0; i < source_selected.indices.length; i++){
-                let index = source_selected.indices[i]
-                j = len-1-(index%len)+Math.floor(index/(len))*(len)
-                new_indices[i] = j
-            }
-            target_selected.indices = new_indices
-        """
-
-    SelectLink.register_callback('bokeh', SelectCallback)
-
-    # table = hv.Table(current_data)
-    # SelectLink(hm, table)
-    # SelectLink(table, hm)
-
-    class SelectedDataLink(Link):
-        _requires_target = True
-
-    class SelectedDataCallback(LinkCallback):
-
-        source_model = 'selected'
-        source_handles = ['cds']
-        on_source_changes = ['indices']
-
-        target_model = 'cds'
-
-        source_code = "let len = {}".format(len(names)) + """
-            let new_indices = []
-            for (let i = 0; i < source_selected.indices.length; i++){
-                let index = source_selected.indices[i]
-                j = len-1-(index%len)+Math.floor(index/(len))*(len)
-                new_indices[i] = j
-            }
-            var inds = source_selected.indices
-            var d = source_cds.data
-
-            selected_data = {}
-            selected_data['index1'] = []
-            selected_data['index2'] = []
-            selected_data['value'] = []
-            selected_data['zvalues'] = []
-
-            for (var i = 0; i < inds.length; i++){
-                selected_data['index1'].push(d['index1'][inds[i]])
-                selected_data['index2'].push(d['index2'][inds[i]])
-                selected_data['value'].push(d['value'][inds[i]])
-                selected_data['zvalues'].push(d['zvalues'][inds[i]])
-            }
-            target_cds.data = selected_data
-
-        """
-
-    SelectedDataLink.register_callback('bokeh', SelectedDataCallback)
-
-    # hv_plot = hm + table
-    matrix_pane1 = pn.Column(matrix.param, matrix.view)
-    # matrix_pane2 = pn.Column(matrix.param, matrix.view(show_only_selection=False))
-
-    return matrix_pane1
+    pane = pn.Column(matrix.param, matrix.view)
+    return pane
 
 

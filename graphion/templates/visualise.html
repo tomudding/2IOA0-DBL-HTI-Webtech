@@ -1,364 +1,366 @@
 <!--
 Author(s): Tom Udding, Sam Baggen, Tim van de Klundert
 Created: 2019-05-01
-Edited: 2019-05-31
+Edited: 2019-05-28
 -->
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta http-equiv="X-UA-Compatible" content="ie=edge">
-		<title>graphion - visualisation</title>
-		<!-- Stylesheets for the loading screen-->
-		<link rel="stylesheet" type="text/css" href="/static/css/grid.css">
-		<link rel="stylesheet" type="text/css" href="/static/css/grid_style.css">
-		<link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700" rel="stylesheet">
-		<!-- Stylesheet for the tool after the loading -->
-		<link rel="stylesheet" type="text/css" href="/static/css/tool_ui.css">
-		<script src="/static/scripts/toolUI.js"></script>
-		<!-- Bokeh files from Cloudflare CDN -->
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh.min.css" integrity="sha256-kmX/Nb5PazwKydPmaZjEb9sOg8BWh1v5eP14IzXJUkU=" crossorigin="anonymous" />
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh-tables.min.css" integrity="sha256-RL9kShsLcf2jHG2zzLh1peDLvWOEK0wPFWSZTiYykc4=" crossorigin="anonymous" />
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh-widgets.min.css" integrity="sha256-+DdrVMn0QeLZ5dYwdqkuugwJ4Im57giLBGqd9wH2YO0=" crossorigin="anonymous" />
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh.min.js" integrity="sha256-VwiC87GeMmJLjJIRwyI9USfUlf9zpJbgZugDAz7W5CA=" crossorigin="anonymous"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh-tables.min.js" integrity="sha256-1xlBn0odMnApk3dBf3oUDUQlsLvSwx2lvcBTIJC0x20=" crossorigin="anonymous"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh-widgets.min.js" integrity="sha256-0D9ZpwC/v+rmx33UGlpWU9Uo1+J58MFqTKkGVGDZpEE=" crossorigin="anonymous"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh-gl.min.js" integrity="sha256-fDyCLeWMeXB/F1JUTOFAM/9ONJmyiiSfsmPWl5tZQzk=" crossorigin="anonymous"></script>
-		<script src="//cdnjs.cloudflare.com/ajax/libs/dat-gui/0.5/dat.gui.min.js"></script>
-	</head>
-	<body>
-		<!--
-				THIS SECTION IS BASED ON MY OWN HTML/CSS FRAMEWORK
-				NEEDS TO BE ADJUSTED TO WHAT ANTON COMES UP WITH
-				UNLESS WE WANT TO USE THIS
-				- Tom Udding
-			-->
-		<section class="body-wrapper" id="loading-screen">
-			<div class="container">
-				<div class="row">
-					<div class="col-s-6" id="nodelink">
-						<p id="nodelink-text">Loading nodelink diagram...</p>
-						<div id="nodelink-load"><canvas id="nodelink-loading"></canvas></div>
-						<div id="nodelink-plot"></div>
-					</div>
-					<div class="col-s-6" id="matrix">
-						<p id="matrix-text">Loading matrix...</p>
-						<div id="matrix-load"><canvas id="matrix-loading"></canvas></div>
-						<div id="matrix-plot"></div>
-					</div>
-					<script>
-						var canvas = document.getElementById('nodelink-loading');
-						var container = document.getElementById('loading-screen');
-						var context = canvas.getContext('2d');
-						var div = document.getElementById("nodelink");
-						var width = div.clientWidth - 5;
-						var height = (div.clientHeight * 4) - 5;
-						canvas.width = width;
-						canvas.height = height;
-						var graph = {
-							velocity: 1,
-							minRadius: 2,
-							maxRadius: 5,
-							connectDistance: 200,
-							dots: width * height / (100 * 100),
-							lineWidth: 2
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>graphion - visualisation</title>
+	<!-- Stylesheets for the loading screen-->
+	<link rel="stylesheet" type="text/css" href="/static/css/grid.css">
+	<link rel="stylesheet" type="text/css" href="/static/css/grid_style.css">
+	<link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700" rel="stylesheet">
+	<!-- Stylesheet for the tool after the loading -->
+	<link rel="stylesheet" type="text/css" href="/static/css/tool_ui.css">
+	<script src="/static/scripts/toolUI.js"></script>
+	<!-- Bokeh files from Cloudflare CDN -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh.min.css" integrity="sha256-kmX/Nb5PazwKydPmaZjEb9sOg8BWh1v5eP14IzXJUkU=" crossorigin="anonymous" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh-tables.min.css" integrity="sha256-RL9kShsLcf2jHG2zzLh1peDLvWOEK0wPFWSZTiYykc4=" crossorigin="anonymous" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh-widgets.min.css" integrity="sha256-+DdrVMn0QeLZ5dYwdqkuugwJ4Im57giLBGqd9wH2YO0=" crossorigin="anonymous" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh.min.js" integrity="sha256-VwiC87GeMmJLjJIRwyI9USfUlf9zpJbgZugDAz7W5CA=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh-tables.min.js" integrity="sha256-1xlBn0odMnApk3dBf3oUDUQlsLvSwx2lvcBTIJC0x20=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh-widgets.min.js" integrity="sha256-0D9ZpwC/v+rmx33UGlpWU9Uo1+J58MFqTKkGVGDZpEE=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh-gl.min.js" integrity="sha256-fDyCLeWMeXB/F1JUTOFAM/9ONJmyiiSfsmPWl5tZQzk=" crossorigin="anonymous"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/dat-gui/0.5/dat.gui.min.js"></script>
+</head>
+
+<body>
+	<!--
+			THIS SECTION IS BASED ON MY OWN HTML/CSS FRAMEWORK
+			NEEDS TO BE ADJUSTED TO WHAT ANTON COMES UP WITH
+			UNLESS WE WANT TO USE THIS
+			- Tom Udding
+		-->
+	<section class="body-wrapper" id="loading-screen">
+		<div class="container">
+			<div class="row">
+				<div class="col-s-6" id="nodelink">
+					<p id="nodelink-text">Loading nodelink diagram...</p>
+					<div id="nodelink-load"><canvas id="nodelink-loading"></canvas></div>
+					<div id="nodelink-plot"></div>
+				</div>
+				<div class="col-s-6" id="matrix">
+					<p id="matrix-text">Loading matrix...</p>
+					<div id="matrix-load"><canvas id="matrix-loading"></canvas></div>
+					<div id="matrix-plot"></div>
+				</div>
+				<script>
+					var canvas = document.getElementById('nodelink-loading');
+					var container = document.getElementById('loading-screen');
+					var context = canvas.getContext('2d');
+					var div = document.getElementById("nodelink");
+					var width = div.clientWidth - 5;
+					var height = (div.clientHeight * 4) - 5;
+					canvas.width = width;
+					canvas.height = height;
+					var graph = {
+						velocity: 1,
+						minRadius: 2,
+						maxRadius: 5,
+						connectDistance: 200,
+						dots: width * height / (100 * 100),
+						lineWidth: 2
+					};
+					window.requestAnimFrame = (function() {
+						return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || function(callback) {
+							window.setTimeout(callback, 1000 / 60);
 						};
-						window.requestAnimFrame = (function() {
-							return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || function(callback) {
-								window.setTimeout(callback, 1000 / 60);
-							};
-						})();
+					})();
 
-						function random(min, max) {
-							if (min > max) {
-								min = [max, max = min][0];
+					function random(min, max) {
+						if (min > max) {
+							min = [max, max = min][0];
+						}
+						return Math.random() * (max - min + 1) + min;
+					}
+
+					function round(x) {
+						return Math.round(x);
+					}
+
+					function drawBackground() {
+						context.beginPath();
+						context.rect(0, 0, width, height);
+						context.fillStyle = "rgba(255, 255, 255, 1)";
+						context.fill();
+					}
+
+					function distance(dotA, dotB) {
+						var dX = dotA.x - dotB.x;
+						var dY = dotA.y - dotB.y;
+						return Math.sqrt(dX * dX + dY * dY);
+					}
+
+					function line(dotA, dotB) {
+						var gradient = context.createLinearGradient(dotA.x, dotA.y, dotB.x, dotB.y);
+						gradient.addColorStop(0, dotA.color);
+						gradient.addColorStop(1, dotB.color);
+						context.strokeStyle = gradient;
+						context.lineWidth = graph.lineWidth;
+						context.lineCap = "round";
+						context.beginPath();
+						context.moveTo(dotA.x, dotA.y);
+						context.lineTo(dotB.x, dotB.y);
+						context.stroke();
+					}
+
+					function Dot() {
+						this.r = random(graph.minRadius, graph.maxRadius);
+						this.vx = random(-3, 3);
+						this.vy = random(-3, 3);
+						this.x = random(0, width);
+						this.y = random(0, height);
+						this.color = "rgb(" + [round(random(100, 220)), round(random(100, 220)), round(random(100, 220))].join() + ")";
+						this.update = function() {
+							this.x += this.vx * graph.velocity;
+							this.y += this.vy * graph.velocity;
+							if (this.x > width - this.r) {
+								this.vx *= -1.0;
+								this.x = width - this.r
 							}
-							return Math.random() * (max - min + 1) + min;
-						}
-
-						function round(x) {
-							return Math.round(x);
-						}
-
-						function drawBackground() {
+							if (this.y > height - this.r) {
+								this.vy *= -1.0;
+								this.y = height - this.r
+							}
+							if (this.x < this.r) {
+								this.vx *= -1.0;
+								this.x = this.r
+							}
+							if (this.y < this.r) {
+								this.vy *= -1.0;
+								this.y = this.r
+							}
+						};
+						this.draw = function() {
+							context.fillStyle = this.color;
 							context.beginPath();
-							context.rect(0, 0, width, height);
-							context.fillStyle = "rgba(255, 255, 255, 1)";
+							context.arc(this.x, this.y, this.r, 0, 2 * Math.PI);
 							context.fill();
-						}
-
-						function distance(dotA, dotB) {
-							var dX = dotA.x - dotB.x;
-							var dY = dotA.y - dotB.y;
-							return Math.sqrt(dX * dX + dY * dY);
-						}
-
-						function line(dotA, dotB) {
-							var gradient = context.createLinearGradient(dotA.x, dotA.y, dotB.x, dotB.y);
-							gradient.addColorStop(0, dotA.color);
-							gradient.addColorStop(1, dotB.color);
-							context.strokeStyle = gradient;
-							context.lineWidth = graph.lineWidth;
-							context.lineCap = "round";
-							context.beginPath();
-							context.moveTo(dotA.x, dotA.y);
-							context.lineTo(dotB.x, dotB.y);
-							context.stroke();
-						}
-
-						function Dot() {
-							this.r = random(graph.minRadius, graph.maxRadius);
-							this.vx = random(-3, 3);
-							this.vy = random(-3, 3);
-							this.x = random(0, width);
-							this.y = random(0, height);
-							this.color = "rgb(" + [round(random(100, 220)), round(random(100, 220)), round(random(100, 220))].join() + ")";
-							this.update = function() {
-								this.x += this.vx * graph.velocity;
-								this.y += this.vy * graph.velocity;
-								if (this.x > width - this.r) {
-									this.vx *= -1.0;
-									this.x = width - this.r
+						};
+						this.connect = function(i) {
+							for (var j = i; j < dots.length; j++) {
+								if (distance(this, dots[j]) < graph.connectDistance) {
+									line(this, dots[j]);
 								}
-								if (this.y > height - this.r) {
-									this.vy *= -1.0;
-									this.y = height - this.r
-								}
-								if (this.x < this.r) {
-									this.vx *= -1.0;
-									this.x = this.r
-								}
-								if (this.y < this.r) {
-									this.vy *= -1.0;
-									this.y = this.r
-								}
-							};
-							this.draw = function() {
-								context.fillStyle = this.color;
-								context.beginPath();
-								context.arc(this.x, this.y, this.r, 0, 2 * Math.PI);
-								context.fill();
-							};
-							this.connect = function(i) {
-								for (var j = i; j < dots.length; j++) {
-									if (distance(this, dots[j]) < graph.connectDistance) {
-										line(this, dots[j]);
-									}
-								}
-							};
-						}
-
-						function createDots() {
-							dots = [];
-							for (var i = 0; i < graph.dots; i++) {
-								dots.push(new Dot());
-							}
-						}
-
-						function draw() {
-							drawBackground();
-							dots.forEach(function(dot) {
-								dot.update();
-							});
-							dots.forEach(function(dot) {
-								dot.draw();
-							});
-							dots.forEach(function(dot, i) {
-								dot.connect(i);
-							});
-							if (document.getElementsByClassName('bk bk-canvas-events').length > 0) {
-								container.remove();
-								document.getElementById('after-loading').hidden = false;
-							} else {
-								requestAnimFrame(draw);
 							}
 						};
-						var dots = [];
-						createDots();
-						draw();
+					}
 
-						var matrixCanvas = document.getElementById("matrix-loading");
-						var matrixContext = matrixCanvas.getContext('2d');
-						var matrixDiv = document.getElementById("matrix");
-						var matrixWidth = matrixDiv.clientWidth - 5;
-						var matrixHeight = (matrixDiv.clientHeight) - 5;
-						matrixCanvas.width = matrixWidth;
-						matrixCanvas.height = matrixHeight;
-						var matrix = {
-							velocity: 1,
-							minSize: 20,
-							maxSize: 50,
-							squares: (matrixWidth * matrixHeight) / (100 * 100)
-						};
-
-						function drawMatrixBackground() {
-							matrixContext.beginPath();
-							matrixContext.rect(0, 0, matrixWidth, matrixHeight);
-							matrixContext.fillStyle = "rgba(255, 255, 255, 1)";
-							matrixContext.fill();
+					function createDots() {
+						dots = [];
+						for (var i = 0; i < graph.dots; i++) {
+							dots.push(new Dot());
 						}
+					}
 
-						function Square() {
-							this.size = random(matrix.minSize, matrix.maxSize);
-							this.vx = random(-3, 3);
-							this.vy = random(3, -3);
-							this.x = random(0, matrixWidth);
-							this.y = random(0, matrixHeight);
-							this.color = "rgb(" + [round(random(100, 220)), round(random(100, 220)), round(random(100, 220))].join() + ")";
-							this.update = function() {
-								this.x += this.vx * matrix.velocity;
-								this.y += this.vy * matrix.velocity;
-								if (this.x > matrixWidth - this.size) {
-									this.vx *= -1.0;
-									this.x = matrixWidth - this.size
-								}
-								if (this.y > matrixHeight - this.size) {
-									this.vy *= -1.0;
-									this.y = matrixHeight - this.size
-								}
-								if (this.x < this.size) {
-									this.vx *= -1.0;
-									this.x = this.size
-								}
-								if (this.y < this.size) {
-									this.vy *= -1.0;
-									this.y = this.size
-								}
-						};
-							this.draw = function() {
-								matrixContext.fillStyle = this.color;
-								matrixContext.fillRect(this.x, this.y, this.size, this.size);
-							};
+					function draw() {
+						drawBackground();
+						dots.forEach(function(dot) {
+							dot.update();
+						});
+						dots.forEach(function(dot) {
+							dot.draw();
+						});
+						dots.forEach(function(dot, i) {
+							dot.connect(i);
+						});
+						if (document.getElementsByClassName('bk bk-canvas-events').length > 0) {
+							container.remove();
+							document.getElementById('after-loading').hidden = false;
+						} else {
+							requestAnimFrame(draw);
 						}
+					};
+					var dots = [];
+					createDots();
+					draw();
 
-						function createSquares() {
-							squares = [];
-							for (var i = 0; i < graph.dots; i++) {
-								squares.push(new Square());
+					var matrixCanvas = document.getElementById("matrix-loading");
+					var matrixContext = matrixCanvas.getContext('2d');
+					var matrixDiv = document.getElementById("matrix");
+					var matrixWidth = matrixDiv.clientWidth - 5;
+					var matrixHeight = (matrixDiv.clientHeight) - 5;
+					matrixCanvas.width = matrixWidth;
+					matrixCanvas.height = matrixHeight;
+					var matrix = {
+						velocity: 1,
+						minSize: 20,
+						maxSize: 50,
+						squares: (matrixWidth * matrixHeight) / (100 * 100)
+					};
+
+					function drawMatrixBackground() {
+						matrixContext.beginPath();
+						matrixContext.rect(0, 0, matrixWidth, matrixHeight);
+						matrixContext.fillStyle = "rgba(255, 255, 255, 1)";
+						matrixContext.fill();
+					}
+
+					function Square() {
+						this.size = random(matrix.minSize, matrix.maxSize);
+						this.vx = random(-3, 3);
+						this.vy = random(3, -3);
+						this.x = random(0, matrixWidth);
+						this.y = random(0, matrixHeight);
+						this.color = "rgb(" + [round(random(100, 220)), round(random(100, 220)), round(random(100, 220))].join() + ")";
+						this.update = function() {
+							this.x += this.vx * matrix.velocity;
+							this.y += this.vy * matrix.velocity;
+							if (this.x > matrixWidth - this.size) {
+								this.vx *= -1.0;
+								this.x = matrixWidth - this.size
 							}
-						}
-
-						function drawMatrix() {
-							drawMatrixBackground();
-							squares.forEach(function(square) {
-								square.update();
-							});
-							squares.forEach(function(square) {
-								square.draw();
-							});
-							if (document.getElementsByClassName('bk bk-canvas-events').length > 0) {
-								container.remove();
-								document.getElementById('after-loading').hidden = false;
-							} else {
-								requestAnimFrame(drawMatrix)
+							if (this.y > matrixHeight - this.size) {
+								this.vy *= -1.0;
+								this.y = matrixHeight - this.size
 							}
+							if (this.x < this.size) {
+								this.vx *= -1.0;
+								this.x = this.size
+							}
+							if (this.y < this.size) {
+								this.vy *= -1.0;
+								this.y = this.size
+							}
+					};
+						this.draw = function() {
+							matrixContext.fillStyle = this.color;
+							matrixContext.fillRect(this.x, this.y, this.size, this.size);
 						};
-						var squares = [];
-						createSquares();
-						drawMatrix();
-					</script>
-				</div>
-			</div>
-		</section>
-		<div id="after-loading" hidden>
-			<div class="left-bar-shown" id="left-bar-shown">
-				<div class="left-bar-small-links">
-					<a href="/"><- home</a><br>
-					<a href="javascript:history.back()" style="cursor: pointer;"><- pre-filter</a>
-				</div>
-				<div class="left-bar-graphion">
-					graph<b>ion</b>
-				</div>
-				<div class="left-bar-choose-vis">Choose a vizualisation type:</div>
-				<div class="left-bar-screen-big" style="top: 27vh;">Screen 1:</div>
-				<div class="left-bar-screen-small" style="top: 27.3vh; left: 9vw;">Radial</div>
-				<img class="icon" id="radial" onclick="displayDiagram('radial')" src="/static/images/icons/icon-radial-diagram.svg" style="left: 8.2vw; top: 17.3vh;">
-				<div class="left-bar-screen-small" style="top: 27.3vh; left: 15vw;">Force-directed</div>
-				<img class="icon-selected" id="force" onclick="displayDiagram('force')" src="/static/images/icons/icon-forcedirected-diagram.svg" style="left: 14.5vw; top: 17.3vh;">
-				<div class="left-bar-screen-small" style="top: 39.8vh; left: 9vw;">Hierarchical</div>
-				<img class="icon" id="hierarchical" onclick="displayDiagram('hierarchical')" src="/static/images/icons/icon-hierarchical-diagram.svg" style="left: 8.2vw; top: 29.4vh;">
-				<div class="left-bar-screen-small" style="top: 39.8vh; left: 15vw;">3D node-link diagram</div>
-				<img class="icon" id="3d" onclick="displayDiagram('3d')" src="/static/images/icons/icon-3d-diagram.svg" style="left: 14.5vw; top: 29.4vh;">
-				<div class="left-bar-screen-separator">---------------------------------------------</div>
-				<div class="left-bar-hide-button" onclick="hideLeftBar()"><</div>
-				<div class="left-bar-screen-big" style="top: 45vh;">Screen 2:</div>
-				<div class="left-bar-screen-small" style="top: 50vh; left: 10vw; width: 7.6vw;">Select ordering:</div>
-				<select class="dropdown" style="left: 8.4vw; top: 53vh; width: 11vw;">
-					<option>Option1</option>
-					<option>Option2</option>
-					<option>Option3</option>
-				</select>
-				<div class="left-bar-screen-small" style="top: 59.3vh; left: 2.8vw;">Adjacency</div>
-				<div class="left-bar-screen-small" style="top: 61vh; left: 3.6vw;">matrix</div>
-				<img class="icon" src="/static/images/icons/icon-matrix.svg" style="left: 2.2vw; top: 48.8vh;">
-				<div class="left-bar-node-labels" style="top: 64vh;">Resize the nodes by:</div>
-				<select class="dropdown" style="left: 1.8vw; top: 67vh; width: 13.6vw;">
-					<option>In-degree</option>
-					<option>Out-degree</option>
-					<option>Total degree</option>
-					<option>Total out edge weight</option>
-					<option>Total in edge weight</option>
-					<option>Total edge weight</option>
-				</select>
-				<div class="left-bar-node-labels" style="top: 73.6vh;">Recolor the nodes by:</div>
-				<select class="dropdown" style="left: 1.8vw; top: 76.5vh; width: 13.6vw;">
-					<option>In-degree</option>
-					<option>Out-degree</option>
-					<option>Total degree</option>
-					<option>Total out edge weight</option>
-					<option>Total in edge weight</option>
-					<option selected="selected">Total edge weight</option>
-				</select>
-				<input type="color" class="left-bar-color-picker">
-				<div class="left-bar-dark-mode-label">Dark mode:</div>
-				<label class="dark-mode-switch">
-					<input type="checkbox">
-					<span class="slider round"></span>
-				</label>
-			</div>
-			<div class="left-bar-hidden" id="left-bar-hidden" hidden>
-				<div class="left-bar-show-button" onclick="showLeftBar()">></div>
-			</div>
-			<div class="right-bar-shown" id="right-bar-shown">
-				<div class="right-bar-big" style="top: 5.6vh;">Children of the current node:</div>
-				<div class="right-bar-small" style="top: 10vh;">Select ordering:</div>
-				<select class="dropdown" style="left: 9.4vw; top: 8.6vh; width: 10.3vw;">
-					<option>Option1</option>
-					<option>Option2</option>
-					<option>Option3</option>
-				</select>
-				<div class="right-bar-info-block" style="top: 14.4vh;">
-					<div class="right-bar-info-title">The info title of this ordering</div>
-					<div class="right-bar-info-text">
-						Line1<br>
-						Line2<br>
-						Line3<br>
-						Line4<br>
-					</div>
-				</div>
-				<div class="right-bar-hide-button" onclick="hideRightBar()">></div>
-				<div class="right-bar-big" style="top: 53vh;">Some other information:</div>
-				<div class="right-bar-small" style="top: 57vh;">Select ordering:</div>
-				<select class="dropdown" style="left: 9.4vw; top: 56vh; width: 10.3vw;">
-					<option>Option1</option>
-					<option>Option2</option>
-					<option>Option3</option>
-				</select>
-				<div class="right-bar-info-block" style="top: 62vh;">
-					<div class="right-bar-info-title">The second info title about this</div>
-					<div class="right-bar-info-text">
-						Line1<br>
-						Line2<br>
-						Line3<br>
-						Line4<br>
-					</div>
-				</div>
-			</div>
-			<div class="right-bar-hidden" id="right-bar-hidden" hidden>
-				<div class="right-bar-show-button" onclick="showRightBar()"><</div>
+					}
+
+					function createSquares() {
+						squares = [];
+						for (var i = 0; i < graph.dots; i++) {
+							squares.push(new Square());
+						}
+					}
+
+					function drawMatrix() {
+						drawMatrixBackground();
+						squares.forEach(function(square) {
+							square.update();
+						});
+						squares.forEach(function(square) {
+							square.draw();
+						});
+						if (document.getElementsByClassName('bk bk-canvas-events').length > 0) {
+							container.remove();
+							document.getElementById('after-loading').hidden = false;
+						} else {
+							requestAnimFrame(drawMatrix)
+						}
+					};
+					var squares = [];
+					createSquares();
+					drawMatrix();
+				</script>
 			</div>
 		</div>
-		<div style="z-index: 1; position: absolute; left: 4vw;">{{ script|safe }}</div>
-	</body>
+	</section>
+	<div id="after-loading" hidden>
+		<div class="left-bar-shown" id="left-bar-shown">
+			<div class="left-bar-small-links">
+				<a href="/"><- home</a><br>
+				<a href="/filter/{{ fileName }}" style="cursor: pointer;"><- pre-filter</a>
+			</div>
+			<div class="left-bar-graphion">
+				graph<b>ion</b>
+			</div>
+			<div class="left-bar-choose-vis">Choose a vizualisation type:</div>
+			<div class="left-bar-screen-big" style="top: 27vh;">Screen 1:</div>
+			<div class="left-bar-screen-small" style="top: 27.3vh; left: 9vw;">Radial</div>
+			<img class="icon" id="radial" onclick="displayDiagram('radial')" src="/static/images/icons/icon-radial-diagram.svg" style="left: 8.2vw; top: 17.3vh;">
+			<div class="left-bar-screen-small" style="top: 27.3vh; left: 15vw;">Force-directed</div>
+			<img class="icon-selected" id="force" onclick="displayDiagram('force')" src="/static/images/icons/icon-forcedirected-diagram.svg" style="left: 14.5vw; top: 17.3vh;">
+			<div class="left-bar-screen-small" style="top: 39.8vh; left: 9vw;">Hierarchical</div>
+			<img class="icon" id="hierarchical" onclick="displayDiagram('hierarchical')" src="/static/images/icons/icon-hierarchical-diagram.svg" style="left: 8.2vw; top: 29.4vh;">
+			<div class="left-bar-screen-small" style="top: 39.8vh; left: 15vw;">3D node-link diagram</div>
+			<img class="icon" id="3d" onclick="displayDiagram('3d')" src="/static/images/icons/icon-3d-diagram.svg" style="left: 14.5vw; top: 29.4vh;">
+			<div class="left-bar-screen-separator">---------------------------------------------</div>
+			<div class="left-bar-hide-button" onclick="hideLeftBar()"><</div>
+			<div class="left-bar-screen-big" style="top: 45vh;">Screen 2:</div>
+			<div class="left-bar-screen-small" style="top: 50vh; left: 10vw; width: 7.6vw;">Select ordering:</div>
+			<select class="dropdown" style="left: 8.4vw; top: 53vh; width: 11vw;">
+				<option>Option1</option>
+				<option>Option2</option>
+				<option>Option3</option>
+			</select>
+			<div class="left-bar-screen-small" style="top: 59.3vh; left: 2.8vw;">Adjacency</div>
+			<div class="left-bar-screen-small" style="top: 61vh; left: 3.6vw;">matrix</div>
+			<img class="icon" src="/static/images/icons/icon-matrix.svg" style="left: 2.2vw; top: 48.8vh;">
+			<div class="left-bar-node-labels" style="top: 64vh;">Resize the nodes by:</div>
+			<select class="dropdown" style="left: 1.8vw; top: 67vh; width: 13.6vw;">
+				<option>In-degree</option>
+				<option>Out-degree</option>
+				<option>Total degree</option>
+				<option>Total out edge weight</option>
+				<option>Total in edge weight</option>
+				<option>Total edge weight</option>
+			</select>
+			<div class="left-bar-node-labels" style="top: 73.6vh;">Recolor the nodes by:</div>
+			<select class="dropdown" style="left: 1.8vw; top: 76.5vh; width: 13.6vw;">
+				<option>In-degree</option>
+				<option>Out-degree</option>
+				<option>Total degree</option>
+				<option>Total out edge weight</option>
+				<option>Total in edge weight</option>
+				<option selected="selected">Total edge weight</option>
+			</select>
+			<input type="color" class="left-bar-color-picker">
+			<div class="left-bar-dark-mode-label">Dark mode:</div>
+			<label class="dark-mode-switch">
+				<input type="checkbox">
+				<span class="slider round"></span>
+			</label>
+		</div>
+		<div class="left-bar-hidden" id="left-bar-hidden" hidden>
+			<div class="left-bar-show-button" onclick="showLeftBar()">></div>
+		</div>
+		<div class="right-bar-shown" id="right-bar-shown">
+			<div class="right-bar-big" style="top: 5.6vh;">Children of the current node:</div>
+			<div class="right-bar-small" style="top: 10vh;">Select ordering:</div>
+			<select class="dropdown" style="left: 9.4vw; top: 8.6vh; width: 10.3vw;">
+				<option>Option1</option>
+				<option>Option2</option>
+				<option>Option3</option>
+			</select>
+			<div class="right-bar-info-block" style="top: 14.4vh;">
+				<div class="right-bar-info-title">The info title of this ordering</div>
+				<div class="right-bar-info-text">
+					Line1<br>
+					Line2<br>
+					Line3<br>
+					Line4<br>
+				</div>
+			</div>
+			<div class="right-bar-hide-button" onclick="hideRightBar()">></div>
+			<div class="right-bar-big" style="top: 53vh;">Some other information:</div>
+			<div class="right-bar-small" style="top: 57vh;">Select ordering:</div>
+			<select class="dropdown" style="left: 9.4vw; top: 56vh; width: 10.3vw;">
+				<option>Option1</option>
+				<option>Option2</option>
+				<option>Option3</option>
+			</select>
+			<div class="right-bar-info-block" style="top: 62vh;">
+				<div class="right-bar-info-title">The second info title about this</div>
+				<div class="right-bar-info-text">
+					Line1<br>
+					Line2<br>
+					Line3<br>
+					Line4<br>
+				</div>
+			</div>
+		</div>
+		<div class="right-bar-hidden" id="right-bar-hidden" hidden>
+			<div class="right-bar-show-button" onclick="showRightBar()"><</div>
+		</div>
+	</div>
+	<div style="z-index: 1; position: absolute; left: 4vw;">{{ script|safe }}</div>
+</body>
 </html>
