@@ -24,6 +24,10 @@ import panel as pn
 import plotly.graph_objs as go
 import holoviews as hv
 
+from holoviews.plotting.bokeh.callbacks import LinkCallback
+from holoviews.plotting.links import Link
+
+
 hv.extension('bokeh')
 
 """
@@ -140,8 +144,28 @@ def generateForceDirectedDiagram(file, isDirected, df=False):
     plot = hv.Graph.from_networkx(G, layout)
 
     # colour the nodes based on the partition
-    plot.opts(cmap = partitionColours, color_index='Partition', node_size='Centrality', width=700, height=700)
-    return pn.Column(plot)
+    plot.opts(cmap = partitionColours, color_index='Partition', node_size='Centrality', tools=['box_select', 'lasso_select'], width=700, height=700)
+
+    renderer = hv.renderer('bokeh')
+    print(renderer.get_plot(plot).handles['glyph_renderer'].node_renderer.data_source.selected.indices)
+    table = hv.Table(renderer.get_plot(plot).handles['glyph_renderer'].node_renderer.data_source.to_df())
+    class SelectLink(Link):
+        pass
+
+    class SelectCallback(LinkCallback):
+
+        source_model = 'glyph_renderer'
+        # source_handles = ['cds']
+        on_source_changes = ['node_renderer']
+
+        source_code = """
+            console.log(source_glyph_renderer)
+        """
+
+    SelectLink.register_callback('bokeh', SelectCallback)
+    SelectLink(plot)
+
+    return pn.Column(plot, table)
 
 # Generate a hierarchical node-link diagram
 def generateHierarchicalDiagram(file, isDirected):
