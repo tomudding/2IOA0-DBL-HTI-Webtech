@@ -274,10 +274,14 @@ Edited: 2019-05-28
 			</div>
 			<div class="left-bar-choose-vis">Choose a vizualisation type:</div>
 			<div class="left-bar-screen-big" style="top: 27vh;">Screen 1:</div>
-			<div class="left-bar-screen-small" style="top: 27vh; left: 9vw;">Radial</div>
-			<div class="left-bar-screen-small" style="top: 27vh; left: 15vw;">Force-directed</div>
-			<div class="left-bar-screen-small" style="top: 39vh; left: 9vw;">Hierarchical</div>
-			<div class="left-bar-screen-small" style="top: 39vh; left: 15vw;">3D node-link diagram</div>
+			<div class="left-bar-screen-small" style="top: 27.3vh; left: 9vw;">Radial</div>
+			<img class="icon" id="radial" onclick="displayDiagram('radial')" src="/static/images/icons/icon-radial-diagram.svg" style="left: 8.2vw; top: 17.3vh;">
+			<div class="left-bar-screen-small" style="top: 27.3vh; left: 15vw;">Force-directed</div>
+			<img class="icon-selected" id="force" onclick="displayDiagram('force')" src="/static/images/icons/icon-forcedirected-diagram.svg" style="left: 14.5vw; top: 17.3vh;">
+			<div class="left-bar-screen-small" style="top: 39.8vh; left: 9vw;">Hierarchical</div>
+			<img class="icon" id="hierarchical" onclick="displayDiagram('hierarchical')" src="/static/images/icons/icon-hierarchical-diagram.svg" style="left: 8.2vw; top: 29.4vh;">
+			<div class="left-bar-screen-small" style="top: 39.8vh; left: 15vw;">3D node-link diagram</div>
+			<img class="icon" id="3d" onclick="displayDiagram('3d')" src="/static/images/icons/icon-3d-diagram.svg" style="left: 14.5vw; top: 29.4vh;">
 			<div class="left-bar-screen-separator">---------------------------------------------</div>
 			<div class="left-bar-hide-button" onclick="hideLeftBar()"><</div>
 			<div class="left-bar-screen-big" style="top: 45vh;">Screen 2:</div>
@@ -287,8 +291,9 @@ Edited: 2019-05-28
 				<option>Option2</option>
 				<option>Option3</option>
 			</select>
-			<div class="left-bar-screen-small" style="top: 58.5vh; left: 1.5vw;">Adjacency</div>
-			<div class="left-bar-screen-small" style="top: 61vh; left: 1.75vw;">matrix</div>
+			<div class="left-bar-screen-small" style="top: 59.3vh; left: 2.8vw;">Adjacency</div>
+			<div class="left-bar-screen-small" style="top: 61vh; left: 3.6vw;">matrix</div>
+			<img class="icon" src="/static/images/icons/icon-matrix.svg" style="left: 2.2vw; top: 48.8vh;">
 			<div class="left-bar-node-labels" style="top: 64vh;">Resize the nodes by:</div>
 			<select class="dropdown" style="left: 1.8vw; top: 67vh; width: 13.6vw;">
 				<option>In-degree</option>
@@ -298,7 +303,7 @@ Edited: 2019-05-28
 				<option>Total in edge weight</option>
 				<option>Total edge weight</option>
 			</select>
-			<div class="left-bar-node-labels" style="top: 74vh;">Recolor the nodes by:</div>
+			<div class="left-bar-node-labels" style="top: 73.6vh;">Recolor the nodes by:</div>
 			<select class="dropdown" style="left: 1.8vw; top: 76.5vh; width: 13.6vw;">
 				<option>In-degree</option>
 				<option>Out-degree</option>
