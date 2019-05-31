@@ -62,7 +62,6 @@ def worker():
 
 
 def filter_data(left, right, type, dir, file):
-    global filtered_df
     if(type == 'degree'):
         if dir == 'out':
             begin = time.time()
@@ -77,7 +76,7 @@ def filter_data(left, right, type, dir, file):
         return len(filtered_df.columns)
     elif(type == 'weight'):
         begin = time.time()
-        result = generate_edge_selection(get_df(), left, right, keep_edges = True)
+        result = generate_edge_selection(get_df(), left, right, keep_edges = False)
         print("Calculating selection took: " + str(time.time() - begin))
         set_partially_filtered_df(result)
         return len(result.columns)

@@ -35,10 +35,10 @@ def makeMatrix(file, df=False):
     df_original = df.copy()
     # %%
     # convert similarity into unsimilarity (1.0 - similarity)
-    begin = time.time()
+    # begin = time.time()
     for name in names:
         df[name] = 1 - df[name]
-    print("Matrix, inverting values took: " + str(time.time()-begin))
+    # print("Matrix, inverting values took: " + str(time.time()-begin))
     # %%
     # This is just the method online: https://gmarti.gitlab.io/ml/2017/09/07/how-to-sort-distance-matrix.html
     # We have to clean data and modified the method

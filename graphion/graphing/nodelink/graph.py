@@ -251,18 +251,18 @@ def generate3DDiagram(file, df=False):
     N = len(names)
 
     # remove some noise (assuming author similarity matrix)
-    noise = []
-    for name in names:
-        if (len(df[name][df[name] == 0]) == len(names)):
-            noise.append(name)
+    # noise = []
+    # for name in names:
+    #     if (len(df[name][df[name] == 0]) == len(names)):
+    #         noise.append(name)
+    #
+    # for name in noise:
+    #     names.remove(name)
 
-    for name in noise:
-        names.remove(name)
 
-
-    df.drop(noise, inplace=True)
-    df.drop(noise, axis=1, inplace=True)
-    N = len(names)
+    # df.drop(noise, inplace=True)
+    # df.drop(noise, axis=1, inplace=True)
+    # N = len(names)
 
     G = nx.from_pandas_adjacency(df)
     G = nx.convert_node_labels_to_integers(G)
@@ -273,13 +273,22 @@ def generate3DDiagram(file, df=False):
     # scalar colors
     scalars = np.array(list(G.nodes())) + 5
     # edges
-    Edges = np.array([(int(u), int(v), d) for (u, v, d) in G.edges(data=True) if d['weight'] >= 0.5])
+
+    maximum = 0
+    for (u, v, d) in G.edges(data=True):
+        w = d['weight']
+        if w > maximum:
+            maximum = w
+
+    Edges = np.array([(int(u), int(v), {'weight': d['weight']/maximum}) for (u, v, d) in G.edges(data=True) if d['weight'] > 0])
+
     def make_edge(x, y, z, weight):
         return go.Scatter3d(
             x=x,
             y=y,
             z=z,
-            line=dict(color='rgb(' + str(int(100 + (weight ** 2 - 0.25) * 100)) + ',100,100)', width=(weight * 3) ** 2),
+            # line=dict(color='rgb(' + str(int(100 + (weight ** 2 - 0.25) * 100)) + ',100,100)', width=(weight * 3) ** 2),
+            line=dict(color='rgb(' + str(int(weight)*180) + ', 0, 0)', width=(weight * 3) ** 2),
             hoverinfo='none',
             mode='lines')
 
@@ -325,7 +334,7 @@ def generate3DDiagram(file, df=False):
                 )
 
     layout = go.Layout(
-        title="3-dimensional node-link diagram, edge weigthts >= 0.5",
+        title="3-dimensional node-link diagram",
         width=900,
         height=900,
         showlegend=False,

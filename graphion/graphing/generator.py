@@ -14,9 +14,9 @@ import pandas
 
 def generateBokehApp(doc):
     df = get_filtered_df()
-    matrix = makeMatrix(df, df=True)
-    graph = generateForceDirectedDiagram(df, False, df=True)
-    graph3D = generate3DDiagram(df, df=True)
+    matrix = makeMatrix(df.copy(), df=True)
+    graph = generateForceDirectedDiagram(df.copy(), False, df=True)
+    graph3D = generate3DDiagram(df.copy(), df=True)
 
     pn.extension('plotly')
 
