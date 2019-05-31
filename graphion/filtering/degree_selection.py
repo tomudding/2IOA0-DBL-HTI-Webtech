@@ -1,7 +1,7 @@
 """
 Author(s): Steven van den Broek, Tom Udding
 Created: 2019-05-18
-Edited: 2019-05-20
+Edited: 2019-05-31
 """
 from sklearn.neighbors import KernelDensity
 from sklearn.model_selection import GridSearchCV

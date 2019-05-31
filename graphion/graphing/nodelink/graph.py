@@ -136,7 +136,7 @@ def generateForceDirectedDiagram(file, isDirected, df=False):
     #Making a dictionary for all attributes
     attributes = {}
     for n in nodes:
-        attributes[n] = {'Centrality': centralityList[nodes.index(n)], 'Partition': partitionList[nodes.index(n)]}
+        attributes[n] = {'Centrality': centralityList[nodes.index(n)], 'Partition': partitionList[nodes.index(n)], 'Names': n}
 
     nx.set_node_attributes(G, attributes)
 

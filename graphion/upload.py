@@ -1,7 +1,7 @@
 """
-Author(s): Tom Udding
+Author(s): Tom Udding, Steven van den Broek
 Created: 2019-05-01
-Edited: 2019-05-16
+Edited: 2019-05-31
 """
 import os, secrets
 from flask import flash, request, redirect, url_for
@@ -14,7 +14,6 @@ def allowed_file(filename):
 
 @server.route('/upload', methods=['GET', 'POST'])
 def upload_file():
-    global df
     if request.method == 'POST':
         if 'file' not in request.files:
             # throw exception because file is not in submitted form
@@ -31,7 +30,6 @@ def upload_file():
             fileOriginalInformation.write(fileOriginalName)
             fileOriginalInformation.close()
             df = processCSVMatrix(os.path.join(server.config['TEMP_FOLDER'], (fileUniqueHash + '.csv')))
-            set_df(df)
             df.to_hdf(os.path.join(server.config['UPLOAD_FOLDER'], (fileUniqueHash + '.h5')), key=fileUniqueHash)
             return redirect('/filter/' + fileUniqueHash)
     return redirect('/selection')
@@ -56,12 +54,12 @@ def upload_file_now():
             fileOriginalInformation.write(fileOriginalName)
             fileOriginalInformation.close()
             df = processCSVMatrix(os.path.join(server.config['TEMP_FOLDER'], (fileUniqueHash + '.csv')))
-            set_df(df)
             df.to_hdf(os.path.join(server.config['UPLOAD_FOLDER'], (fileUniqueHash + '.h5')), key=fileUniqueHash)
             return redirect('/visualise/' + fileUniqueHash)
     return redirect('/selection')
 
 def get_df():
+    global df
     return df.copy()
 
 def set_df(input):
@@ -80,6 +78,7 @@ def set_filtered_df(input):
     filtered_df = input
 
 def get_partially_filtered_df():
+    global partially_filtered_df
     if 'partially_filtered_df' in globals():
         return partially_filtered_df.copy()
     return get_df()
@@ -89,6 +88,7 @@ def set_partially_filtered_df(input):
     partially_filtered_df = input
 
 def get_almost_filtered_df():
+    global almost_filtered_df
     if 'almost_filtered_df' in globals():
         return almost_filtered_df.copy()
     return get_df()

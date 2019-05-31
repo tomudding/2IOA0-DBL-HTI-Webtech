@@ -1,7 +1,7 @@
 """
 Author(s): Steven van den Broek, Yuqin Cui
 Created: 2019-05-05
-Edited: 2019-05-05
+Edited: 2019-05-31
 """
 import numpy as np
 import pandas as pd
@@ -278,6 +278,7 @@ def makeMatrix(file, df=False):
     SelectedDataLink.register_callback('bokeh', SelectedDataCallback)
 
     # hv_plot = hm + table
+
     matrix_pane1 = pn.Column(pn.Pane(matrix.param, css_classes=['matrix_dropdowns']), matrix.view)
     # matrix_pane2 = pn.Column(matrix.param, matrix.view(show_only_selection=False))
 

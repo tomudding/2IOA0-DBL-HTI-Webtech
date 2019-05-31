@@ -1,15 +1,17 @@
 """
 Author(s): Steven van den Broek, Tom Udding
 Created: 2019-05-18
-Edited: 2019-05-22
+Edited: 2019-05-31
 """
 from bokeh.embed import json_item
 from flask import Flask, render_template, request, redirect, Response, Blueprint
 from json import dump, dumps
 from graphion.filtering.degree_selection import generate_selection
 from graphion.filtering.edge_weight_selection import generate_degree_selection, generate_edge_selection
-from graphion.upload import get_df, get_filtered_df, set_filtered_df, set_partially_filtered_df, get_partially_filtered_df, get_almost_filtered_df, set_almost_filtered_df
+from graphion.filter import get_df
 import time
+
+from graphion.upload import get_partially_filtered_df, get_almost_filtered_df, get_df, set_almost_filtered_df, set_partially_filtered_df, set_filtered_df
 
 from os.path import exists
 import os
@@ -61,6 +63,7 @@ def worker():
 
 
 def filter_data(left, right, type, dir, file):
+    global filtered_df
     if(type == 'degree'):
         if dir == 'out':
             filtered_df = generate_degree_selection(get_almost_filtered_df(), left, right, dir)
