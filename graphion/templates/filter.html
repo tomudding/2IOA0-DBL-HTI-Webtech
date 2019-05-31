@@ -72,13 +72,55 @@ Edited: 2019-05-31
 				goBack()">
 				< Back</button>
                 <!-- Opens a "Help" -popup window -->
-				<button class="pop-up-footer-button pop-up-footer-button-help">Help ?</button>
-				<div class="help-section-page-1">
-					<!-- Explain the difference between interesting nodes / edges and clusters -->
-				</div>
+                <button class="pop-up-footer-button pop-up-footer-button-help"
+                onclick="
+                document.getElementById('help-page-1').style.display='block';
+                document.getElementById('choose-theme').style.display='none'
+                ">
+                    Help ?
+                </button>
             </div>
-		</div>
-		
+        </div>
+        
+
+
+        <!-- Help section of page 1, that is a separate window -->
+        <div class="pop-up-window" id="help-page-1">
+            <!-- Explain the difference between interesting nodes / edges and clusters -->
+            <div class="help-section-title">
+                What are interesting nodes / edges?
+            </div>
+            <div class="help-section-paragraph">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ac risus est. Aliquam id tincidunt neque. Mauris vitae tempor augue.
+                Duis nulla magna, varius et neque quis, dapibus volutpat tortor. Nulla placerat tellus quis elit venenatis, et scelerisque elit pharetra.
+                Etiam et felis quis ex cursus posuere in sit amet eros. Curabitur non sem ligula. Donec egestas felis ac enim egestas, eu pellentesque 
+                ipsum tempor. Ut vitae feugiat ipsum. Donec faucibus eu lacus ut feugiat. Donec ullamcorper elementum ipsum sed varius. Suspendisse
+                id nunc sed urna commodo ornare. Fusce nec ante in massa tempor imperdiet ut vel augue. Sed nec scelerisque dui. Donec scelerisqu
+                e velit sed metus molestie gravida. In odio enim, iaculis in rhoncus in, consectetur sed quam. 
+            </div>
+            <div class="help-section-title">
+                What are clusters?
+            </div>
+            <div class="help-section-paragraph">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ac risus est. Aliquam id tincidunt neque. Mauris vitae tempor augue.
+                Duis nulla magna, varius et neque quis, dapibus volutpat tortor. Nulla placerat tellus quis elit venenatis, et scelerisque elit pharetra.
+                Etiam et felis quis ex cursus posuere in sit amet eros. Curabitur non sem ligula. Donec egestas felis ac enim egestas, eu pellentesque 
+                ipsum tempor. Ut vitae feugiat ipsum. Donec faucibus eu lacus ut feugiat. Donec ullamcorper elementum ipsum sed varius. Suspendisse
+                id nunc sed urna commodo ornare. Fusce nec ante in massa tempor imperdiet ut vel augue. Sed nec scelerisque dui. Donec scelerisqu
+                e velit sed metus molestie gravida. In odio enim, iaculis in rhoncus in, consectetur sed quam. 
+            </div>
+            <div class="pop-up-footer-area">
+                <button class="pop-up-footer-button pop-up-footer-button-back"
+                onclick="
+                document.getElementById('help-page-1').style.display='none';
+                document.getElementById('choose-theme').style.display='block';
+                ">
+                < Back</button>
+            </div>
+        </div>
+        
+        
+
 
 
 		<script>
@@ -181,7 +223,49 @@ Edited: 2019-05-31
                 ">
                     Continue >
                 </button>
-                <button class="pop-up-footer-button pop-up-footer-button-help">Help ?</button>
+                <button class="pop-up-footer-button pop-up-footer-button-help"
+                onclick="
+                document.getElementById('choose-POI-nodes-edges').style.display='none';
+                document.getElementById('help-page-2').style.display='block'
+                ">
+                    Help ?
+                </button>
+            </div>
+        </div>
+
+
+        <!-- Help section of page 2 -->
+        <div class="pop-up-window" id="help-page-2">
+            <div class="help-section-title">
+                What are interesting nodes?
+            </div>
+            <div class="help-section-paragraph">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ac risus est. Aliquam id tincidunt neque. Mauris vitae tempor augue.
+                Duis nulla magna, varius et neque quis, dapibus volutpat tortor. Nulla placerat tellus quis elit venenatis, et scelerisque elit pharetra.
+                Etiam et felis quis ex cursus posuere in sit amet eros. Curabitur non sem ligula. Donec egestas felis ac enim egestas, eu pellentesque 
+                ipsum tempor. Ut vitae feugiat ipsum. Donec faucibus eu lacus ut feugiat. Donec ullamcorper elementum ipsum sed varius. Suspendisse
+                id nunc sed urna commodo ornare. Fusce nec ante in massa tempor imperdiet ut vel augue. Sed nec scelerisque dui. Donec scelerisqu
+                e velit sed metus molestie gravida. In odio enim, iaculis in rhoncus in, consectetur sed quam. 
+            </div>
+            <div class="help-section-title">
+                What are interesting edges?
+            </div>
+            <div class="help-section-paragraph">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ac risus est. Aliquam id tincidunt neque. Mauris vitae tempor augue.
+                Duis nulla magna, varius et neque quis, dapibus volutpat tortor. Nulla placerat tellus quis elit venenatis, et scelerisque elit pharetra.
+                Etiam et felis quis ex cursus posuere in sit amet eros. Curabitur non sem ligula. Donec egestas felis ac enim egestas, eu pellentesque 
+                ipsum tempor. Ut vitae feugiat ipsum. Donec faucibus eu lacus ut feugiat. Donec ullamcorper elementum ipsum sed varius. Suspendisse
+                id nunc sed urna commodo ornare. Fusce nec ante in massa tempor imperdiet ut vel augue. Sed nec scelerisque dui. Donec scelerisqu
+                e velit sed metus molestie gravida. In odio enim, iaculis in rhoncus in, consectetur sed quam. 
+            </div>
+            <div class="pop-up-footer-area">
+                <button class="pop-up-footer-button pop-up-footer-button-back"
+                onclick="
+                document.getElementById('help-page-2').style.display='none';
+                document.getElementById('choose-POI-nodes-edges').style.display='block';
+                ">
+                    < Back
+                </button>
             </div>
         </div>
 
@@ -224,9 +308,56 @@ Edited: 2019-05-31
                 ">
                     < Back
                 </button>
-                <button class="pop-up-footer-button pop-up-footer-button-help">Help ?</button>
+                <button class="pop-up-footer-button pop-up-footer-button-help"
+                onclick="
+                document.getElementById('help-page-3').style.display='block';
+                document.getElementById('choose-POI-clusters').style.display='none';
+                ">
+                    Help ?
+                </button>
             </div>
         </div>
+
+
+
+
+        <!-- Help section of page 3 -->
+        <div class="pop-up-window" id="help-page-3">
+            <div class="help-section-title">
+                What is Cluster Type 1?
+            </div>
+            <div class="help-section-paragraph">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ac risus est. Aliquam id tincidunt neque. Mauris vitae tempor augue.
+                Duis nulla magna, varius et neque quis, dapibus volutpat tortor. Nulla placerat tellus quis elit venenatis, et scelerisque elit pharetra.
+                Etiam et felis quis ex cursus posuere in sit amet eros. Curabitur non sem ligula. Donec egestas felis ac enim egestas, eu pellentesque 
+                ipsum tempor. Ut vitae feugiat ipsum. Donec faucibus eu lacus ut feugiat. Donec ullamcorper elementum ipsum sed varius. Suspendisse
+                id nunc sed urna commodo ornare. Fusce nec ante in massa tempor imperdiet ut vel augue. Sed nec scelerisque dui. Donec scelerisqu
+                e velit sed metus molestie gravida. In odio enim, iaculis in rhoncus in, consectetur sed quam. 
+            </div>
+            <div class="help-section-title">
+                What is Cluster Type 2?
+            </div>
+            <div class="help-section-paragraph">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ac risus est. Aliquam id tincidunt neque. Mauris vitae tempor augue.
+                Duis nulla magna, varius et neque quis, dapibus volutpat tortor. Nulla placerat tellus quis elit venenatis, et scelerisque elit pharetra.
+                Etiam et felis quis ex cursus posuere in sit amet eros. Curabitur non sem ligula. Donec egestas felis ac enim egestas, eu pellentesque 
+                ipsum tempor. Ut vitae feugiat ipsum. Donec faucibus eu lacus ut feugiat. Donec ullamcorper elementum ipsum sed varius. Suspendisse
+                id nunc sed urna commodo ornare. Fusce nec ante in massa tempor imperdiet ut vel augue. Sed nec scelerisque dui. Donec scelerisqu
+                e velit sed metus molestie gravida. In odio enim, iaculis in rhoncus in, consectetur sed quam. 
+            </div>
+            <div class="pop-up-footer-area">
+                <button class="pop-up-footer-button pop-up-footer-button-back"
+                onclick="
+                document.getElementById('help-page-3').style.display='none';
+                document.getElementById('choose-POI-clusters').style.display='block';
+                ">
+                    < Back
+                </button>
+            </div>
+        </div>
+
+
+
 
          <!-- Page 4: filter the edge weights -->
          <div class="pop-up-window" id="filter-edge-weight">
@@ -238,8 +369,8 @@ Edited: 2019-05-31
                     <img src="static/images/filter-test.png" alt="clusters-img">
                 </div>                      -->
                 <div id="weight-selection">Loading...</div>
-    	<div id="weight-plot"></div>
-    		<p id="between-weight">Select nodes by dragging the mouse.</p>
+    	        <div id="weight-plot"></div>
+    		    <p id="between-weight">Select nodes by dragging the mouse.</p>
 
                 <br>
                 <span class="filter-text">
@@ -282,14 +413,44 @@ Edited: 2019-05-31
                  });
                 ">
                     Continue ></button>
-                <button class="pop-up-footer-button pop-up-footer-button-help">Help ?</button>
+                <button class="pop-up-footer-button pop-up-footer-button-help"
+                onclick="
+                document.getElementById('help-page-4').style.display='block';
+                document.getElementById('filter-edge-weight').style.display='none';
+                ">
+                    Help ?
+                </button>
+            </div>
+        </div>
+
+        <!-- Help section of page 4 -->
+        <div class="pop-up-window" id="help-page-4">
+            <div class="help-section-title">
+                What are edge weights?
+            </div>
+            <div class="help-section-paragraph">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ac risus est. Aliquam id tincidunt neque. Mauris vitae tempor augue.
+                Duis nulla magna, varius et neque quis, dapibus volutpat tortor. Nulla placerat tellus quis elit venenatis, et scelerisque elit pharetra.
+                Etiam et felis quis ex cursus posuere in sit amet eros. Curabitur non sem ligula. Donec egestas felis ac enim egestas, eu pellentesque 
+                ipsum tempor. Ut vitae feugiat ipsum. Donec faucibus eu lacus ut feugiat. Donec ullamcorper elementum ipsum sed varius. Suspendisse
+                id nunc sed urna commodo ornare. Fusce nec ante in massa tempor imperdiet ut vel augue. Sed nec scelerisque dui. Donec scelerisqu
+                e velit sed metus molestie gravida. In odio enim, iaculis in rhoncus in, consectetur sed quam. 
+            </div>
+            <div class="pop-up-footer-area">
+                <button class="pop-up-footer-button pop-up-footer-button-back"
+                onclick="
+                document.getElementById('help-page-4').style.display='none';
+                document.getElementById('filter-edge-weight').style.display='block';
+                ">
+                    < Back
+                </button>
             </div>
         </div>
 
         <!-- Page 5: filter the node in-degrees -->
         <div class="pop-up-window" id="filter-node-in-degree">
             <div class="pop-up-title">
-            Filter by node in-degrees
+            Filter by node's in-degree
             </div>
             <div class="pop-up-icon-area">
                 <div id="in-degree-selection">Calculating best KDE bandwidth...</div>
@@ -334,14 +495,44 @@ Edited: 2019-05-31
                 ">
 					Continue >
 				</button>
-                <button class="pop-up-footer-button pop-up-footer-button-help">Help ?</button>
+                <button class="pop-up-footer-button pop-up-footer-button-help"
+                onclick="
+                document.getElementById('help-page-5').style.display='block';
+                document.getElementById('filter-node-in-degree').style.display='none';
+                ">
+                    Help ?
+                </button>
+            </div>
+        </div>
+
+        <!-- Help section of page 5 -->
+        <div class="pop-up-window" id="help-page-5">
+            <div class="help-section-title">
+                What is node's in-degree?
+            </div>
+            <div class="help-section-paragraph">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ac risus est. Aliquam id tincidunt neque. Mauris vitae tempor augue.
+                Duis nulla magna, varius et neque quis, dapibus volutpat tortor. Nulla placerat tellus quis elit venenatis, et scelerisque elit pharetra.
+                Etiam et felis quis ex cursus posuere in sit amet eros. Curabitur non sem ligula. Donec egestas felis ac enim egestas, eu pellentesque 
+                ipsum tempor. Ut vitae feugiat ipsum. Donec faucibus eu lacus ut feugiat. Donec ullamcorper elementum ipsum sed varius. Suspendisse
+                id nunc sed urna commodo ornare. Fusce nec ante in massa tempor imperdiet ut vel augue. Sed nec scelerisque dui. Donec scelerisqu
+                e velit sed metus molestie gravida. In odio enim, iaculis in rhoncus in, consectetur sed quam. 
+            </div>
+            <div class="pop-up-footer-area">
+                <button class="pop-up-footer-button pop-up-footer-button-back"
+                onclick="
+                document.getElementById('help-page-5').style.display='none';
+                document.getElementById('filter-node-in-degree').style.display='block';
+                ">
+                    < Back
+                </button>
             </div>
         </div>
 
         <!-- Page 6: filter the node out-degrees -->
         <div class="pop-up-window" id="filter-node-out-degree">
             <div class="pop-up-title">
-            Filter by node out-degrees
+            Filter by node's out-degree
             </div>
             <div class="pop-up-icon-area">
                 <div id="out-degree-selection">Calculating best KDE bandwidth...</div>
@@ -376,7 +567,37 @@ Edited: 2019-05-31
                 onclick="location.href='/visualise'">
                     Start the tool >
                 </button>
-                <button class="pop-up-footer-button pop-up-footer-button-help">Help ?</button>
+                <button class="pop-up-footer-button pop-up-footer-button-help"
+                onclick="
+                document.getElementById('help-page-6').style.display='block';
+                document.getElementById('filter-node-out-degree').style.display='none';
+                ">
+                    Help ?
+                </button>
+            </div>
+        </div>
+
+        <!-- Help section of page 6 -->
+        <div class="pop-up-window" id="help-page-6">
+            <div class="help-section-title">
+                What is node's out-degree?
+            </div>
+            <div class="help-section-paragraph">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ac risus est. Aliquam id tincidunt neque. Mauris vitae tempor augue.
+                Duis nulla magna, varius et neque quis, dapibus volutpat tortor. Nulla placerat tellus quis elit venenatis, et scelerisque elit pharetra.
+                Etiam et felis quis ex cursus posuere in sit amet eros. Curabitur non sem ligula. Donec egestas felis ac enim egestas, eu pellentesque 
+                ipsum tempor. Ut vitae feugiat ipsum. Donec faucibus eu lacus ut feugiat. Donec ullamcorper elementum ipsum sed varius. Suspendisse
+                id nunc sed urna commodo ornare. Fusce nec ante in massa tempor imperdiet ut vel augue. Sed nec scelerisque dui. Donec scelerisqu
+                e velit sed metus molestie gravida. In odio enim, iaculis in rhoncus in, consectetur sed quam. 
+            </div>
+            <div class="pop-up-footer-area">
+                <button class="pop-up-footer-button pop-up-footer-button-back"
+                onclick="
+                document.getElementById('help-page-6').style.display='none';
+                document.getElementById('filter-node-out-degree').style.display='block';
+                ">
+                    < Back
+                </button>
             </div>
         </div>
     </body>
