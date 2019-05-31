@@ -1,3 +1,8 @@
+<!--
+Author(s): Steven van den Broek, Anton Vellikok
+Created: 2019-05-18
+Edited: 2019-05-31
+-->
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -56,12 +61,47 @@
                 </div>
             </div>
             <div class="pop-up-footer-area">
-                <!-- Where should this "Back" -button lead to? -->
-                <button class="pop-up-footer-button pop-up-footer-button-back">< Back</button>
+				<!-- The "Back" -button returns the user to the previous page in his/her browser history -->
+				<script>
+					function goBack() {
+					  window.history.go(-1);
+					}
+				</script>
+				<button class="pop-up-footer-button pop-up-footer-button-back"
+				onclick="
+				goBack()">
+				< Back</button>
                 <!-- Opens a "Help" -popup window -->
-                <button class="pop-up-footer-button pop-up-footer-button-help">Help ?</button>
+				<button class="pop-up-footer-button pop-up-footer-button-help">Help ?</button>
+				<div class="help-section-page-1">
+					<!-- Explain the difference between interesting nodes / edges and clusters -->
+				</div>
             </div>
-        </div>
+		</div>
+		
+
+
+		<script>
+			var counter = 0;
+
+			function pageCounter() {
+				if (document.getElementById('choose-POI-nodes-edges').style.display!='none') {
+					counter = 0;
+				} else if (document.getElementById('choose-POI-clusters').style.display!='none') {
+					counter = 1;
+				}
+			}
+
+			function goBackFromPage4() {
+					if (counter == 0) {
+					document.getElementById('filter-edge-weight').style.display='none';
+					document.getElementById('choose-POI-nodes-edges').style.display='block';
+				} else if (counter == 1) {
+					document.getElementById('filter-edge-weight').style.display='none';
+					document.getElementById('choose-POI-clusters').style.display='block';
+				}
+			}
+		</script>
 
 
 
@@ -76,7 +116,8 @@
                     <br>
                     <button class="pop-up-button"
                     id="interesting-nodes-button"
-                    onclick="
+					onclick="
+					pageCounter();
                     if (document.getElementById('interesting-nodes-chk-box').checked==false) {
                         document.getElementById('interesting-nodes-button').style.backgroundColor='black';
                         document.getElementById('interesting-nodes-chk-box').checked=true;
@@ -101,7 +142,8 @@
                     <br>
                     <button class="pop-up-button"
                     id="interesting-edges-button"
-                    onclick="
+					onclick="
+					pageCounter();
                     if (document.getElementById('interesting-edges-chk-box').checked==false) {
                         document.getElementById('interesting-edges-button').style.backgroundColor='black';
                         document.getElementById('interesting-edges-chk-box').checked=true;
@@ -129,8 +171,6 @@
                 plot = document.getElementById('weight-plot');
                 plot.removeChild(plot.childNodes[0]);
                 document.getElementById('between-weight').innerHTML = 'Select nodes by dragging the mouse.'">
-
-    ">
                     < Back
                 </button>
                 <button class="pop-up-footer-button pop-up-footer-button-continue"
@@ -138,7 +178,6 @@
                 onclick="
                 document.getElementById('choose-POI-nodes-edges').style.display='none';
                 document.getElementById('filter-edge-weight').style.display='block';
-
                 ">
                     Continue >
                 </button>
@@ -157,7 +196,8 @@
                     <img src="static/images/clusters.svg" alt="clusters-img">
                     <br>
                     <button class="pop-up-button"
-                    onclick="
+					onclick="
+					pageCounter();
                     document.getElementById('choose-POI-clusters').style.display='none';
                     document.getElementById('filter-edge-weight').style.display='block';
                     ">
@@ -168,7 +208,8 @@
                     <img src="static/images/clusters.svg" alt="clusters-img">
                     <br>
                     <button class="pop-up-button"
-                    onclick="
+					onclick="
+					pageCounter();
                     document.getElementById('choose-POI-clusters').style.display='none';
                     document.getElementById('filter-edge-weight').style.display='block'
                     ">
@@ -227,17 +268,16 @@
                         when clicking "Back" the app should take the user back to where he came from
                         which is not necessarily choose-POI-nodes-edges as it can also be
                         choose-POI-cluster
-                -->
+				-->
                 <button class="pop-up-footer-button pop-up-footer-button-back"
                 onclick="
-                document.getElementById('filter-edge-weight').style.display='none';
-                document.getElementById('choose-POI-nodes-edges').style.display='block';
+				goBackFromPage4();
                 ">
                     < Back
                 </button>
                 <button class="pop-up-footer-button pop-up-footer-button-continue"
                 onclick="
-                document.getElementById('filter-edge-weight').style.display='none';
+				document.getElementById('filter-edge-weight').style.display='none';
                 document.getElementById('filter-node-degree').style.display='block';
                  fetch('/api/filter/distribution/degree/in/').then(
                 function(response) {
@@ -286,8 +326,10 @@
                 document.getElementById('between-in-degree').innerHTML = 'Select nodes by dragging the mouse.'">
                     < Back
                 </button>
-                <a class="pop-up-footer-button pop-up-footer-button-continue" href="/visualise">
-                    Continue ></a>
+				<button class="pop-up-footer-button pop-up-footer-button-continue" 
+				onclick="location.href='/visualise'">
+					Start the tool >
+				</button>
                 <button class="pop-up-footer-button pop-up-footer-button-help">Help ?</button>
             </div>
         </div>
