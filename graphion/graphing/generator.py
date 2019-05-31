@@ -6,7 +6,7 @@ Edited: 2019-05-22
 from graphion import server
 from graphion.graphing.nodelink.graph import generateForceDirectedDiagram, generateHierarchicalDiagram, generateRadialDiagram, generate3DDiagram
 from graphion.graphing.matrix.protomatrix import makeMatrix
-from graphion.api.filter.distribution import get_filtered_df
+from graphion.upload import get_filtered_df
 import os
 import panel as pn
 import time
