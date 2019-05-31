@@ -14,6 +14,7 @@ def allowed_file(filename):
 
 @server.route('/upload', methods=['GET', 'POST'])
 def upload_file():
+    global df
     if request.method == 'POST':
         if 'file' not in request.files:
             # throw exception because file is not in submitted form
@@ -30,6 +31,7 @@ def upload_file():
             fileOriginalInformation.write(fileOriginalName)
             fileOriginalInformation.close()
             df = processCSVMatrix(os.path.join(server.config['TEMP_FOLDER'], (fileUniqueHash + '.csv')))
+            set_df(df)
             df.to_hdf(os.path.join(server.config['UPLOAD_FOLDER'], (fileUniqueHash + '.h5')), key=fileUniqueHash)
             return redirect('/filter/' + fileUniqueHash)
     return redirect('/selection')
@@ -54,6 +56,43 @@ def upload_file_now():
             fileOriginalInformation.write(fileOriginalName)
             fileOriginalInformation.close()
             df = processCSVMatrix(os.path.join(server.config['TEMP_FOLDER'], (fileUniqueHash + '.csv')))
+            set_df(df)
             df.to_hdf(os.path.join(server.config['UPLOAD_FOLDER'], (fileUniqueHash + '.h5')), key=fileUniqueHash)
             return redirect('/visualise/' + fileUniqueHash)
     return redirect('/selection')
+
+def get_df():
+    return df
+
+def set_df(input):
+    global df
+    df = input
+
+def get_filtered_df():
+    if 'filtered_df' in globals():
+        return filtered_df.copy()
+    if 'partially_filtered_df' in globals():
+        return partially_filtered_df.copy()
+    return get_df()
+
+def set_filtered_df(input):
+    global filtered_df
+    filtered_df = input
+
+def get_partially_filtered_df():
+    if 'partially_filtered_df' in globals():
+        return partially_filtered_df.copy()
+    return get_df()
+
+def set_partially_filtered_df(input):
+    global partially_filtered_df
+    partially_filtered_df = input
+
+def get_almost_filtered_df():
+    if 'partially_filtered_df' in globals():
+        return partially_filtered_df.copy()
+    return get_df()
+
+def set_almost_filtered_df(input):
+    global partially_filtered_df
+    partially_filtered_df = input

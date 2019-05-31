@@ -8,7 +8,7 @@ from flask import Flask, render_template, request, redirect, Response, Blueprint
 from json import dump, dumps
 from graphion.filtering.degree_selection import generate_selection
 from graphion.filtering.edge_weight_selection import generate_degree_selection, generate_edge_selection
-from graphion.filter import get_df
+from graphion.upload import get_df, get_filtered_df, set_filtered_df, set_partially_filtered_df, get_partially_filtered_df, get_almost_filtered_df, set_almost_filtered_df
 import time
 
 from os.path import exists
@@ -56,20 +56,21 @@ def worker():
 
 
 def filter_data(left, right, type, dir, file):
-    global filtered_df
     if(type == 'degree'):
-        df = get_filtered_df()
-        filtered_df = generate_degree_selection(df, left, right, dir)
+        if dir == 'out':
+            df = get_partially_filtered_df()
+            filtered_df = generate_degree_selection(df, left, right, dir)
+            set_almost_filtered_df(filtered_df)
+        if dir == 'in':
+            df = get_almost_filtered_df()
+            filtered_df = generate_degree_selection(df, left, right, dir)
+            set_filtered_df(filtered_df)
         return len(filtered_df.columns)
     elif(type == 'weight'):
         df = get_df()
-        filtered_df = generate_edge_selection(df, left, right, keep_edges = True)
-        return len(filtered_df.columns)
-
-def get_filtered_df():
-    if 'filtered_df' in globals():
-        return filtered_df.copy()
-    return get_df()
+        result = generate_edge_selection(df, left, right, keep_edges = True)
+        set_partially_filtered_df(result)
+        return len(result.columns)
 
 def getFilePath(file):
     file = file + '.h5'
