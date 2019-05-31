@@ -6,13 +6,18 @@ Edited: 2019-05-20
 from sklearn.neighbors import KernelDensity
 from sklearn.model_selection import GridSearchCV
 import numpy as np
-from bokeh.plotting import figure, show
-from bokeh.models import BoxSelectTool, Circle, CustomJS, ColumnDataSource
+from bokeh.plotting import figure
+from bokeh.models import BoxSelectTool, CustomJS, ColumnDataSource
+from bokeh.models.widgets import Paragraph
 import pandas
 from pandas import read_hdf
 import time
 
 def generate_selection(file, kind="degree", dir="in", dataframe=False):
+    if file is None or file.size == 0:
+        p = Paragraph(text="""No nodes left""")
+        return p
+
     big_bang = time.time()
 
     if (kind == "degree"):
@@ -60,7 +65,7 @@ def generate_selection(file, kind="degree", dir="in", dataframe=False):
     deg_all = np.reshape(deg_all, (-1, 1))
     deg = np.reshape(deg, (-1, 1))
     print("Reshaping: {}-{}: ".format(dir, kind) + str(time.time() - begin))
-    deg_plot = np.linspace(-max(deg)[0] / 15, max(deg)[0] + max(deg)[0] / 15, 1000)
+    deg_plot = np.linspace(-max(deg)[0] / 15, max(deg_all)[0] + max(deg_all)[0] / 15, 1000)
     # Calculate 'pretty good' (since best takes a long time) bandwidth
     # begin = time.time()
     #

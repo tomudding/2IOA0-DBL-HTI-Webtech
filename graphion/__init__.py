@@ -59,8 +59,8 @@ server.register_blueprint(filterBlueprint)
 server.register_blueprint(apiDegreeBlueprint)
 
 # other stuff
-if (not isdir('api/filter/cached_plots')):
-    makedirs('api/filter/cached_plots')
+# if (not isdir('api/filter/cached_plots')):
+#     makedirs('api/filter/cached_plots')
 if (not isdir(server.config['UPLOAD_FOLDER'])):
     mkdir(server.config['UPLOAD_FOLDER'])
 if (not isdir(server.config['TEMP_FOLDER'])):

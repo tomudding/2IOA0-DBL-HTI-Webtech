@@ -19,29 +19,34 @@ from graphion import server
 
 apiDegreeBlueprint = Blueprint('apiMatrixBlueprint', __name__, template_folder='templates')
 
-@apiDegreeBlueprint.route('/api/filter/distribution/<type>/<dir>/<file>', methods=['GET'], strict_slashes=False)
+# @apiDegreeBlueprint.route('/api/filter/distribution/<type>/<dir>/<file>', methods=['GET'], strict_slashes=False)
 @apiDegreeBlueprint.route('/api/filter/distribution/<type>/<dir>', methods=['GET'], strict_slashes=False)
 @apiDegreeBlueprint.route('/api/filter/distribution/<type>/', methods=['GET'], strict_slashes=False)
-def degreeAPI(file=None, type=None, dir=None):
+def degreeAPI(type=None, dir=None):
     # Not used
-    if file is not None:
-        filePath = 'api/filter/cached_plots/{}-{}-{}.json'.format(file, type, dir)
-        if (exists(filePath)):
-            with open(filePath, 'r') as json_file:
-                return json_file.read()
-        else:
-            with open(filePath, 'w+') as json_file:
-                plot = generate_selection(getFilePath(file), kind=type, dir=dir)
-                start = time.time()
-                item = json_item(plot)
-                dump(item, json_file)
-                print("To json {}-{}: ".format(dir, type) + str(time.time()-start))
-            return dumps(item)
+    # if file is not None:
+    #     filePath = 'api/filter/cached_plots/{}-{}-{}.json'.format(file, type, dir)
+    #     if (exists(filePath)):
+    #         with open(filePath, 'r') as json_file:
+    #             return json_file.read()
+    #     else:
+    #         with open(filePath, 'w+') as json_file:
+    #             plot = generate_selection(getFilePath(file), kind=type, dir=dir)
+    #             start = time.time()
+    #             item = json_item(plot)
+    #             dump(item, json_file)
+    #             print("To json {}-{}: ".format(dir, type) + str(time.time()-start))
+    #         return dumps(item)
     # All filters use this
-    else:
-        item = json_item(generate_selection(get_filtered_df(), kind=type, dir=dir, dataframe=True))
-
-        return dumps(item)
+    if type == 'weight':
+        data = get_df()
+    if type == 'degree':
+        if dir == 'in':
+            data = get_partially_filtered_df()
+        if dir == 'out':
+            data = get_almost_filtered_df()
+    plot = generate_selection(data, kind=type, dir=dir, dataframe=True)
+    return dumps(json_item(plot))
 
 @apiDegreeBlueprint.route('/postmethod', methods = ['POST'])
 def worker():
@@ -58,17 +63,14 @@ def worker():
 def filter_data(left, right, type, dir, file):
     if(type == 'degree'):
         if dir == 'out':
-            df = get_partially_filtered_df()
-            filtered_df = generate_degree_selection(df, left, right, dir)
-            set_almost_filtered_df(filtered_df)
-        if dir == 'in':
-            df = get_almost_filtered_df()
-            filtered_df = generate_degree_selection(df, left, right, dir)
+            filtered_df = generate_degree_selection(get_almost_filtered_df(), left, right, dir)
             set_filtered_df(filtered_df)
+        if dir == 'in':
+            filtered_df = generate_degree_selection(get_partially_filtered_df(), left, right, dir)
+            set_almost_filtered_df(filtered_df)
         return len(filtered_df.columns)
     elif(type == 'weight'):
-        df = get_df()
-        result = generate_edge_selection(df, left, right, keep_edges = True)
+        result = generate_edge_selection(get_df(), left, right, keep_edges = True)
         set_partially_filtered_df(result)
         return len(result.columns)
 
