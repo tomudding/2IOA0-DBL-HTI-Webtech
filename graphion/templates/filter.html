@@ -9,7 +9,7 @@ Edited: 2019-05-31
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <link rel="stylesheet" type="text/css" href="/static/css/pre-filter.css">
+        <link rel="stylesheet" type="text/css" href="static/css/pre-filter.css">
         <!-- Bokeh files from Cloudflare CDN -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh.min.css" integrity="sha256-kmX/Nb5PazwKydPmaZjEb9sOg8BWh1v5eP14IzXJUkU=" crossorigin="anonymous" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh-tables.min.css" integrity="sha256-RL9kShsLcf2jHG2zzLh1peDLvWOEK0wPFWSZTiYykc4=" crossorigin="anonymous" />
@@ -93,7 +93,7 @@ Edited: 2019-05-31
 			}
 
 			function goBackFromPage4() {
-					if (counter == 0) {
+				if (counter == 0) {
 					document.getElementById('filter-edge-weight').style.display='none';
 					document.getElementById('choose-POI-nodes-edges').style.display='block';
 				} else if (counter == 1) {
@@ -112,7 +112,7 @@ Edited: 2019-05-31
             </div>
             <div class="pop-up-icon-area">
                 <div class="pop-up-icon-area-left">
-                    <img src="static/images/interesting-nodes.svg" alt="clusters-img">
+                    <img src="/static/images/interesting-nodes.svg" alt="clusters-img">
                     <br>
                     <button class="pop-up-button"
                     id="interesting-nodes-button"
@@ -263,12 +263,6 @@ Edited: 2019-05-31
                 </span>
             </div>
             <div class="pop-up-footer-area">
-                <!--
-                    This button should be fixed:
-                        when clicking "Back" the app should take the user back to where he came from
-                        which is not necessarily choose-POI-nodes-edges as it can also be
-                        choose-POI-cluster
-				-->
                 <button class="pop-up-footer-button pop-up-footer-button-back"
                 onclick="
 				goBackFromPage4();
@@ -278,7 +272,7 @@ Edited: 2019-05-31
                 <button class="pop-up-footer-button pop-up-footer-button-continue"
                 onclick="
 				document.getElementById('filter-edge-weight').style.display='none';
-                document.getElementById('filter-node-degree').style.display='block';
+                document.getElementById('filter-node-in-degree').style.display='block';
                  fetch('/api/filter/distribution/degree/in/').then(
                 function(response) {
                     document.getElementById('in-degree-selection').setAttribute('hidden', true);
@@ -292,10 +286,10 @@ Edited: 2019-05-31
             </div>
         </div>
 
-        <!-- Page 5: filter the node degrees -->
-        <div class="pop-up-window" id="filter-node-degree">
+        <!-- Page 5: filter the node in-degrees -->
+        <div class="pop-up-window" id="filter-node-in-degree">
             <div class="pop-up-title">
-            Filter by node degrees
+            Filter by node in-degrees
             </div>
             <div class="pop-up-icon-area">
                 <div id="in-degree-selection">Calculating best KDE bandwidth...</div>
@@ -319,7 +313,7 @@ Edited: 2019-05-31
             <div class="pop-up-footer-area">
                 <button class="pop-up-footer-button pop-up-footer-button-back"
                 onclick="
-                document.getElementById('filter-node-degree').style.display='none';
+                document.getElementById('filter-node-in-degree').style.display='none';
                 document.getElementById('filter-edge-weight').style.display='block';
                 plot = document.getElementById('in-degree-plot')
                 plot.removeChild(plot.childNodes[0]);
@@ -327,9 +321,54 @@ Edited: 2019-05-31
                     < Back
                 </button>
 				<button class="pop-up-footer-button pop-up-footer-button-continue" 
-				onclick="location.href='/visualise'">
-					Start the tool >
+                onclick="
+                document.getElementById('filter-node-in-degree').style.display='none';
+                document.getElementById('filter-node-out-degree').style.display='block';
+                ">
+					Continue >
 				</button>
+                <button class="pop-up-footer-button pop-up-footer-button-help">Help ?</button>
+            </div>
+        </div>
+
+        <!-- Page 6: filter the node out-degrees -->
+        <div class="pop-up-window" id="filter-node-out-degree">
+            <div class="pop-up-title">
+            Filter by node out-degrees
+            </div>
+            <div class="pop-up-icon-area">
+                <div id="out-degree-selection">Calculating best KDE bandwidth...</div>
+                    <div id="out-degree-plot"></div>
+                    <p id="between-out-degree">Select nodes by dragging the mouse.</p>
+                <!--
+                <div class="pop-up-icon-area-center">
+                    <img src="static/images/filter-test.png" alt="clusters-img">
+
+                </div>
+                -->
+                <br>
+                <span class="filter-text">
+                    Estimated processing time:
+                </span>
+                <br>
+                <span class="filter-text" id="filter-text-time">
+                    126 min
+                </span>
+            </div>
+            <div class="pop-up-footer-area">
+                <button class="pop-up-footer-button pop-up-footer-button-back"
+                onclick="
+                document.getElementById('filter-node-out-degree').style.display='none';
+                document.getElementById('filter-node-in-degree').style.display='block';
+                plot = document.getElementById('out-degree-plot')
+                plot.removeChild(plot.childNodes[0]);
+                document.getElementById('between-out-degree').innerHTML = 'Select nodes by dragging the mouse.'">
+                    < Back
+                </button>
+                <button class="pop-up-footer-button pop-up-footer-button-continue" 
+                onclick="location.href='/visualise'">
+                    Start the tool >
+                </button>
                 <button class="pop-up-footer-button pop-up-footer-button-help">Help ?</button>
             </div>
         </div>
