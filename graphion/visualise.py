@@ -16,6 +16,7 @@ visualiseBlueprint = Blueprint('visualiseBlueprint', __name__, template_folder='
 def visualise():
     if get_filtered_df() is None:
         return redirect("/selection")
+
     script = server_document('http://localhost:%d/bkapp' % server.config['PORT'], relative_urls=False, resources=None)
     return render_template('visualise.html', script=script)
 

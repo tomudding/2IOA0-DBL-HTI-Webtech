@@ -23,6 +23,9 @@ from pandas import read_hdf, Series
 import panel as pn
 import plotly.graph_objs as go
 import holoviews as hv
+from holoviews.operation.datashader import datashade, bundle_graph
+
+import time
 
 from holoviews.plotting.bokeh.callbacks import LinkCallback
 from holoviews.plotting.links import Link
@@ -144,7 +147,7 @@ def generateForceDirectedDiagram(file, isDirected, df=False):
 
     # colour the nodes based on the partition
 
-    plot.opts(cmap = partitionColours, color_index='Partition', node_size='Centrality', tools=['box_select', 'lasso_select'], width=600, height=600)
+    plot.opts(cmap = partitionColours, color_index='Partition', node_size='Centrality', tools=['box_select', 'lasso_select', 'tap'], width=600, height=600)
 
     renderer = hv.renderer('bokeh')
     # print(renderer.get_plot(plot).handles['glyph_renderer'].node_renderer.data_source.selected.indices)
@@ -164,7 +167,15 @@ def generateForceDirectedDiagram(file, isDirected, df=False):
 
     SelectLink.register_callback('bokeh', SelectCallback)
     SelectLink(plot)
+    begin = time.time()
 
+    # Comment the following two/three lines to disable edgebundling and datashading.
+    plot = bundle_graph(plot)
+    plot = (datashade(plot, normalization='linear', width=600, height=600) * plot.nodes).opts(opts.Nodes(cmap=partitionColours, color='Partition', size='Centrality',
+              tools=['box_select', 'lasso_select', 'tap'], width=600, height=600))
+
+
+    print("Edge bundling and datashading took: " + str(time.time()-begin))
     return pn.Column(plot, table)
 
 # Generate a hierarchical node-link diagram

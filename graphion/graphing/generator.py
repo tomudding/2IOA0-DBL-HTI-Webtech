@@ -14,13 +14,21 @@ import pandas
 
 def generateBokehApp(doc):
     df = get_filtered_df()
+    begin = time.time()
     matrix = makeMatrix(df.copy(), df=True)
+    print("Matrix generation took: " + str(time.time()-begin))
+    begin = time.time()
     graph = generateForceDirectedDiagram(df.copy(), False, df=True)
-    graph3D = generate3DDiagram(df.copy(), df=True)
+    print("Graph generation took: " + str(time.time()-begin))
+    begin = time.time()
+    #graph3D = generate3DDiagram(df.copy(), df=True)
+    print("3D generation took: " + str(time.time() - begin))
 
     pn.extension('plotly')
 
-    pane = pn.Column(pn.Row(graph, matrix), graph3D)
+    # pane = pn.Column(pn.Row(graph, matrix), graph3D)
+    pane = pn.Row(graph, matrix)
+    # pane = pn.Pane(graph)
     return pane.get_root(doc)
 
 def getFilePath(file):
