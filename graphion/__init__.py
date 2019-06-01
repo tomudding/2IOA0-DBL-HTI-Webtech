@@ -1,7 +1,7 @@
 """
 Author(s): Tom Udding, Steven van den Broek
 Created: 2019-04-29
-Edited: 2019-05-31
+Edited: 2019-06-02
 """
 from flask import Flask
 server = Flask(__name__)
@@ -26,17 +26,13 @@ from tornado.ioloop import IOLoop
 
 # constants
 UPLOAD_FOLDER = 'uploads'               #
-TEMP_FOLDER = 'temp'
 TOKEN_SIZE = 16                         #
-ALLOWED_EXTENSIONS = set(['csv'])       #
-BUFFER_SIZE = 64000                     #
-MAX_CONTENT_LENGTH = 1000 * 1024 * 1024   # limit file upload size to 1 GB
+BUFFER_SIZE = 100000                    #
+MAX_CONTENT_LENGTH = 1000 * 1024 * 1024 # limit file upload size to 1 GB
 
 # app configurations
 server.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-server.config['TEMP_FOLDER'] = TEMP_FOLDER
 server.config['TOKEN_SIZE'] = TOKEN_SIZE
-server.config['ALLOWED_EXTENSIONS'] = ALLOWED_EXTENSIONS
 server.config['BUFFER_SIZE'] = BUFFER_SIZE
 server.config['MAX_CONTENT_LENGTH'] = MAX_CONTENT_LENGTH
 
@@ -59,12 +55,8 @@ server.register_blueprint(filterBlueprint)
 server.register_blueprint(apiDegreeBlueprint)
 
 # other stuff
-# if (not isdir('api/filter/cached_plots')):
-#     makedirs('api/filter/cached_plots')
 if (not isdir(server.config['UPLOAD_FOLDER'])):
     mkdir(server.config['UPLOAD_FOLDER'])
-if (not isdir(server.config['TEMP_FOLDER'])):
-    mkdir(server.config['TEMP_FOLDER'])
 
 # start Bokeh server
 sockets, port = bind_sockets("localhost", 0)

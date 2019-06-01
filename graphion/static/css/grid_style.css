@@ -1000,13 +1000,13 @@ input[type="radio"]:disabled + label::before {
     height: 0.25rem;
     display: block;
     width: 100%;
-    background-color: rgb(208, 231, 246);
+    background-color: rgb(0, 97, 228);
     border-radius: 2px;
     overflow: hidden;
 }
 
 .loader.bar .intermediate {
-    background-color: rgb(34, 116, 165);
+    background-color: rgb(49, 137, 255);
     height: 0.25rem;
     border-radius: 2px;
     width: 30%;

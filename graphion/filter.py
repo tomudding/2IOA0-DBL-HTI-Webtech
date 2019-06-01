@@ -1,7 +1,7 @@
 """
 Author(s): Steven van den Broek
 Created: 2019-05-18
-Edited: 2019-05-31
+Edited: 2019-06-02
 """
 
 from flask import Blueprint, redirect, render_template
@@ -10,6 +10,7 @@ from bokeh.embed import server_document
 import os
 from graphion.graphing.parser import processCSVMatrix
 from graphion.upload import set_df, set_filtered_df, set_almost_filtered_df,set_partially_filtered_df
+from pandas import read_hdf
 
 filterBlueprint = Blueprint('filterBlueprint', __name__, template_folder='templates')
 
@@ -18,7 +19,7 @@ filterBlueprint = Blueprint('filterBlueprint', __name__, template_folder='templa
 def visualise(file=None):
     if file is None:
         return redirect('/selection')
-    df = processCSVMatrix(os.path.join(server.config['TEMP_FOLDER'], (file + '.csv')))
+    df = read_hdf(os.path.join(server.config['UPLOAD_FOLDER'], (file + '.h5'))) # should be done in a memory efficient way (instead of loading the whole file into memory)
     set_df(df)
     set_almost_filtered_df(None)
     set_partially_filtered_df(None)
