@@ -1000,7 +1000,7 @@ input[type="radio"]:disabled + label::before {
     height: 0.25rem;
     display: block;
     width: 100%;
-    background-color: rgb(0, 97, 228);
+    background-color: rgb(126, 181, 255);
     border-radius: 2px;
     overflow: hidden;
 }
@@ -1018,10 +1018,10 @@ input[type="radio"]:disabled + label::before {
     font-size: 0.625em;
     position: relative;
     text-indent: -9999em;
-    border-top: 0.4375rem solid rgb(208, 231, 246);
-    border-right: 0.4375rem solid rgb(208, 231, 246);
-    border-bottom: 0.4375rem solid rgb(208, 231, 246);
-    border-left: 0.4375rem solid rgb(34, 116, 165);
+    border-top: 0.4375rem solid rgb(126, 181, 255);
+    border-right: 0.4375rem solid rgb(126, 181, 255);
+    border-bottom: 0.4375rem solid rgb(126, 181, 255);
+    border-left: 0.4375rem solid rgb(49, 137, 255);
     -webkit-transform: translateZ(0);
     -ms-transform: translateZ(0);
     transform: translateZ(0);
