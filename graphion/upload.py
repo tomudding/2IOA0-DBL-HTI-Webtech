@@ -1,7 +1,7 @@
 """
 Author(s): Tom Udding, Steven van den Broek
 Created: 2019-05-01
-Edited: 2019-05-31
+Edited: 2019-06-01
 """
 import os, secrets
 from flask import flash, request, redirect, url_for
@@ -62,6 +62,8 @@ def upload_file_now():
 
 def get_df():
     global df
+    if 'df' not in globals():
+        return None
     return df.copy()
 
 def set_df(input):
