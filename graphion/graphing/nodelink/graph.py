@@ -1,7 +1,7 @@
 """
 Author(s): Tom Udding, Steven van den Broek, Yuqing Zeng, Tim van de Klundert, Sam Baggen
 Created: 2019-05-03
-Edited: 2019-05-30
+Edited: 2019-05-31
 """
 from bokeh.plotting import figure, reset_output
 from bokeh.models import Circle, ColumnDataSource
@@ -139,7 +139,7 @@ def generateForceDirectedDiagram(file, isDirected, df=False):
     #Making a dictionary for all attributes
     attributes = {}
     for n in nodes:
-        attributes[n] = {'Centrality': centralityList[nodes.index(n)], 'Partition': partitionList[nodes.index(n)], 'Names': n}
+        attributes[n] = {'Centrality': centralityList[nodes.index(n)], 'Partition': partitionList[nodes.index(n)]}
     nx.set_node_attributes(G, attributes)
 
     # create the plot itself
@@ -147,7 +147,7 @@ def generateForceDirectedDiagram(file, isDirected, df=False):
 
     # colour the nodes based on the partition
 
-    plot.opts(cmap = partitionColours, color_index='Partition', node_size='Centrality', tools=['box_select', 'lasso_select', 'tap'], width=600, height=600)
+    plot.opts(cmap = partitionColours, color_index='Partition', node_size='Centrality', inspection_policy='nodes', tools=['box_select', 'lasso_select', 'tap', 'hover'], width=600, height=600)
 
     renderer = hv.renderer('bokeh')
     # print(renderer.get_plot(plot).handles['glyph_renderer'].node_renderer.data_source.selected.indices)
