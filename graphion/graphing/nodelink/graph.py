@@ -150,24 +150,27 @@ def generateForceDirectedDiagram(file, isDirected, df=False):
     plot.opts(cmap = partitionColours, color_index='Partition', node_size='Centrality', inspection_policy='nodes', tools=['box_select', 'lasso_select', 'tap', 'hover'], width=600, height=600)
 
     renderer = hv.renderer('bokeh')
-    # print(renderer.get_plot(plot).handles['glyph_renderer'].node_renderer.data_source.selected.indices)
+    print(renderer.get_plot(plot).handles['glyph_renderer'].node_renderer.data_source.selected.indices)
     table = hv.Table(renderer.get_plot(plot).handles['glyph_renderer'].node_renderer.data_source.to_df())
     class SelectLink(Link):
-        pass
+        _requires_target = True
 
     class SelectCallback(LinkCallback):
 
-        source_model = 'glyph_renderer'
+        source_model = 'selected'
         # source_handles = ['cds']
-        on_source_changes = ['node_renderer']
+        on_source_changes = ['indices']
+
+        target_model = 'glyph_renderer'
 
         source_code = """
-            console.log(source_glyph_renderer)
+            //console.log(target_glyph_renderer)
+            target_glyph_renderer.node_renderer.data_source.selected.indices = source_selected.indices
         """
 
     SelectLink.register_callback('bokeh', SelectCallback)
-    SelectLink(plot)
-    begin = time.time()
+    SelectLink(table, plot)
+    # begin = time.time()
 
     # Comment the following two/three lines to disable edgebundling and datashading.
     # plot = bundle_graph(plot)
@@ -175,7 +178,7 @@ def generateForceDirectedDiagram(file, isDirected, df=False):
     #           tools=['box_select', 'lasso_select', 'tap'], width=600, height=600))
 
 
-    print("Edge bundling and datashading took: " + str(time.time()-begin))
+    # print("Edge bundling and datashading took: " + str(time.time()-begin))
     return pn.Column(plot, table)
 
 # Generate a hierarchical node-link diagram
