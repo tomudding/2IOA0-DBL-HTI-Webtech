@@ -1,7 +1,7 @@
 <!--
 Author(s): Tom Udding
 Created: 2019-04-29
-Edited: 2019-05-31
+Edited: 2019-06-01
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -17,6 +17,96 @@ Edited: 2019-05-31
 		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.css" integrity="sha256-e47xOkXs1JXFbjjpoRr1/LhVcqSzRmGmPqsrUQeVs+g=" crossorigin="anonymous">
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.js" integrity="sha256-cs4thShDfjkqFGk5s2Lxj35sgSRr4MRcyccmi0WKqCM=" crossorigin="anonymous"></script>
 		<style>body { background: url("/static/images/first.png") no-repeat center center fixed; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover; }</style>
+		<style>
+			.dropzone {
+				border: 2px dashed rgb(49, 137, 255);
+				min-height: 0;
+			}
+
+			.dropzone .dz-preview {
+				width: calc(100% - 2.5rem);
+				min-height: 0;
+			}
+
+			.dropzone .dz-preview .dz-progress {
+				opacity: 1;
+				z-index: 1000;
+				pointer-events: none;
+				position: relative;
+				height: 0.5rem;
+				left: 0;
+				top: 0;
+				margin: 0;
+				background: rgb(209, 209, 209);
+				border-radius: 8px;
+				overflow: hidden;
+				width: 100%;
+			}
+
+			.dropzone .dz-preview .dz-progress .dz-upload {
+				background: rgb(49, 137, 255);
+				background: -moz-linear-gradient(left, rgb(49, 137, 255) 0%, rgb(0, 97, 228) 100%);
+				background: -webkit-linear-gradient(left, rgb(49, 137, 255) 0%, rgb(0, 97, 228) 100%);
+				background: -o-linear-gradient(left, rgb(49, 137, 255) 0%, rgb(0, 97, 228) 100%);
+				background: -ms-linear-gradient(left, rgb(49, 137, 255) 0%, rgb(0, 97, 228) 100%);
+				background: linear-gradient(to right, rgb(49, 137, 255) 0%, rgb(0, 97, 228) 100%);
+			}
+
+			.preview-container #previews .graphion-dropzone-info {
+			    display: flex;
+			    flex-wrap: nowrap;
+				width: calc(100% - 1.25rem);
+				height: 3rem;
+			}
+
+			.preview-container #previews .graphion-dropzone-info > .thumb-container {
+			    flex: 0 0 3.125rem;
+			    max-width: 3.125rem;
+			    border-radius: 10px;
+			    overflow: hidden;
+			}
+
+			.preview-container #previews .graphion-dropzone-info img {
+			    max-width: 100%;
+			    height: auto;
+			}
+
+			.preview-container #previews .graphion-dropzone-info > .details {
+			    position: relative;
+			    flex: 0 0 calc(100% - 3.125rem);
+			    max-width: calc(100% - 3.125rem);
+			}
+
+			#previews > div {
+			    display: -webkit-flex;
+			    display: -ms-flexbox;
+			    display: flex;
+			    -webkit-align-items: flex-start;
+			    -ms-flex-align: flex-start;
+			    align-items: flex-start;
+			}
+
+			.thumb-container {
+			    position: relative;
+			}
+
+			.type-csv .thumb-container::after {
+				content: '';
+			    position: absolute;
+			    top: 0;
+			    right: 0;
+			    bottom: 0;
+			    left: 0;
+			    background-size: cover;
+			    background-size: 100% 100%;
+			    background-position: left center;
+			    background-repeat: no-repeat;
+			}
+
+			.type-csv .thumb-container::after {
+    			background-image: url("/static/images/icons/icon-file-csv.svg");
+			}
+		</style>
 	</head>
 	<body>
 		<header class="navigation-wrapper">
@@ -68,7 +158,24 @@ Edited: 2019-05-31
 									<div class="row file-upload-container" style="display: none">
 										<div class="col-s-12">
 											<form action="/upload" class="dropzone" id="graphion-dropzone">
-												<div class="dz-message" data-dz-message><span>Drop files here or click to upload</span></div>
+												<div class="preview-container dz-preview uploaded-files">
+													<div id="previews">
+														<div id="graphion-dropzone-template">
+															<div class="graphion-dropzone-info">
+																<div class="thumb-container">
+																	<img data-dz-thumbnail />
+																</div>
+																<div class="details">
+																	<div>
+																		<span data-dz-name></span> <span data-dz-size></span>
+																	</div>
+																	<div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
+																	<div class="dz-error-message"><span data-dz-errormessage></span></div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
 											</form>
 										</div>
 									</div>
@@ -134,13 +241,27 @@ Edited: 2019-05-31
 		}
 	</script>
 	<script>
+		var previewElement = document.getElementById("graphion-dropzone-template");
+		var previewTemplate = previewElement.parentNode.innerHTML;
+		previewElement.parentNode.parentNode.style.display = "none";
+		previewElement.parentNode.removeChild(previewElement);
+
 		Dropzone.options.graphionDropzone = {
-			paramName: "file",
-			maxFiles: 1,
-			maxFilesize: 1000,
 			acceptedFiles: "text/csv,.csv",
 			//autoProcessQueue: false,
+			createImageThumbnails: true,
+			dictDefaultMessage: "Drop files here or click to upload",
+			maxFiles: 1,
+			maxFilesize: 1000,
+			paramName: "file",
+			previewsContainer: "#previews",
+			previewTemplate: previewTemplate,
 			init: function() {
+				this.on("addedfile", function(file) {
+					document.querySelector(".preview-container").style.display = "inline-block";
+					document.querySelector(".dz-default.dz-message").style.display = "none";
+					file.previewElement.classList.add("type-" + file.name.split('.').pop());
+				});
 		        this.on("success", function (file) {
 		            window.location = "/filter/" + file.xhr.response;
 		        });
