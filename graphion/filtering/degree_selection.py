@@ -18,7 +18,7 @@ def generate_selection(file, kind="degree", dir="in", dataframe=False):
         p = Paragraph(text="""No nodes left""")
         return p
 
-    big_bang = time.time()
+    # big_bang = time.time()
 
     if (kind == "degree"):
         edges=False
@@ -35,9 +35,9 @@ def generate_selection(file, kind="degree", dir="in", dataframe=False):
 
     names = df.columns.tolist()
 
-    print("Reading data {}-{}: ".format(dir, kind) + str(time.time()-begin))
+    # print("Reading data {}-{}: ".format(dir, kind) + str(time.time()-begin))
 
-    begin = time.time()
+    # begin = time.time()
     ### BASIC DEGREE COUNTING
     if (not edges):
         if (dir == "in"):
@@ -48,23 +48,23 @@ def generate_selection(file, kind="degree", dir="in", dataframe=False):
         adj_matrix = df.to_numpy(copy=True)  # convert dataframe to numpy array for efficiency
         deg_all = adj_matrix.flatten()
 
-    print("Degree counting/edge weights {}-{}: ".format(dir, kind) + str(time.time() - begin))
-    begin = time.time()
+    # print("Degree counting/edge weights {}-{}: ".format(dir, kind) + str(time.time() - begin))
+    # begin = time.time()
     if (len(deg_all) > limit):
         deg = np.random.choice(deg_all, limit, replace=False)
         #deg = deg_all[:limit]
-        print("Random sampling: {}-{}: ".format(dir, kind) + str(time.time() - begin))
-        begin = time.time()
+        # print("Random sampling: {}-{}: ".format(dir, kind) + str(time.time() - begin))
+        # begin = time.time()
         np.append(deg, np.array([max(deg_all)]))
         np.append(deg, np.array([min(deg_all)]))
-        print("Appending: {}-{}: ".format(dir, kind) + str(time.time() - begin))
+        # print("Appending: {}-{}: ".format(dir, kind) + str(time.time() - begin))
     else:
         deg = deg_all
 
-    begin = time.time()
+    # begin = time.time()
     deg_all = np.reshape(deg_all, (-1, 1))
     deg = np.reshape(deg, (-1, 1))
-    print("Reshaping: {}-{}: ".format(dir, kind) + str(time.time() - begin))
+    # print("Reshaping: {}-{}: ".format(dir, kind) + str(time.time() - begin))
     deg_plot = np.linspace(-max(deg)[0] / 15, max(deg_all)[0] + max(deg_all)[0] / 15, 1000)
     # Calculate 'pretty good' (since best takes a long time) bandwidth
     # begin = time.time()
@@ -75,7 +75,7 @@ def generate_selection(file, kind="degree", dir="in", dataframe=False):
     #                     iid=False)  # 5-fold cross-validation
     # grid.fit(deg)
     # print("Bandwidth: {}-{}: ".format(dir, kind) + str(time.time()-begin))
-    begin = time.time()
+    # begin = time.time()
     # kde = grid.best_estimator_
     bandwidth = max(1.06 * np.std(deg) * len(deg)**(-1/5), 0.05)
     kde = KernelDensity(kernel="gaussian", bandwidth=bandwidth).fit(deg)
@@ -232,6 +232,6 @@ def generate_selection(file, kind="degree", dir="in", dataframe=False):
     p.background_fill_color = None
     p.border_fill_color = None
 
-    print("KDE + plotting: {}-{}: ".format(dir, kind) + str(time.time()-begin))
-    print("Total {}-{}: ".format(dir, kind) + str(time.time()-big_bang))
+    # print("KDE + plotting: {}-{}: ".format(dir, kind) + str(time.time()-begin))
+    # print("Total {}-{}: ".format(dir, kind) + str(time.time()-big_bang))
     return p

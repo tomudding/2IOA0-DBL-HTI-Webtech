@@ -35,10 +35,10 @@ def makeMatrix(file, df=False):
     df_original = df.copy()
     # %%
     # convert similarity into unsimilarity (1.0 - similarity)
-    begin = time.time()
+    # begin = time.time()
     for name in names:
         df[name] = 1 - df[name]
-    print("Matrix, inverting values took: " + str(time.time()-begin))
+    # print("Matrix, inverting values took: " + str(time.time()-begin))
     # %%
     # This is just the method online: https://gmarti.gitlab.io/ml/2017/09/07/how-to-sort-distance-matrix.html
     # We have to clean data and modified the method
@@ -105,18 +105,23 @@ def makeMatrix(file, df=False):
         solid.index = names
         solid.columns = names
         solid.reset_index(inplace=True)
-        liquid = solid.melt(id_vars='index', value_vars=list(df.columns), var_name="name2")
+        liquid = solid.melt(id_vars='index', value_vars=list(df.columns[0:]), var_name="name2")
         liquid.columns = ['index2', 'index1', 'value']
+        liquid = liquid[['index1', 'index2', 'value']]
+        # print(liquid)
         return liquid
 
+    # %%
     def to_liquid_2(matrix, df, order):
         solid = pd.DataFrame(matrix)
         name_list = author_reorder_list(df, order)
+        # print(name_list)
         solid.index = name_list
         solid.columns = name_list
         solid.reset_index(inplace=True)
         liquid = solid.melt(id_vars='index', value_vars=list(name_list[0:]), var_name="name2")
         liquid.columns = ['index2', 'index1', 'value']
+        liquid = liquid[['index1', 'index2', 'value']]
         # print(liquid)
         return liquid
 

@@ -137,7 +137,6 @@ def generateForceDirectedDiagram(file, isDirected, df=False):
     attributes = {}
     for n in nodes:
         attributes[n] = {'Centrality': centralityList[nodes.index(n)], 'Partition': partitionList[nodes.index(n)], 'Names': n}
-
     nx.set_node_attributes(G, attributes)
 
     # create the plot itself
@@ -148,7 +147,7 @@ def generateForceDirectedDiagram(file, isDirected, df=False):
     plot.opts(cmap = partitionColours, color_index='Partition', node_size='Centrality', tools=['box_select', 'lasso_select'], width=600, height=600)
 
     renderer = hv.renderer('bokeh')
-    print(renderer.get_plot(plot).handles['glyph_renderer'].node_renderer.data_source.selected.indices)
+    # print(renderer.get_plot(plot).handles['glyph_renderer'].node_renderer.data_source.selected.indices)
     table = hv.Table(renderer.get_plot(plot).handles['glyph_renderer'].node_renderer.data_source.to_df())
     class SelectLink(Link):
         pass
@@ -241,27 +240,32 @@ def generateRadialDiagram(file, isDirected, df=False):
     return pn.Column(graph)
 
 # Generate 3D graph
-def generate3DDiagram(file):
-    df = decreaseDiagramSize(file)
+def generate3DDiagram(file, df=False):
+
+    if not df:
+        df = decreaseDiagramSize(file)
+    else:
+        df = file
+
     names = df.columns.tolist()
     N = len(names)
 
     # remove some noise (assuming author similarity matrix)
-    noise = []
-    for name in names:
-        if (len(df[name][df[name] == 0]) == len(names)):
-            noise.append(name)
+    # noise = []
+    # for name in names:
+    #     if (len(df[name][df[name] == 0]) == len(names)):
+    #         noise.append(name)
+    #
+    # for name in noise:
+    #     names.remove(name)
 
-    for name in noise:
-        names.remove(name)
-    df.drop(noise, inplace=True)
-    df.drop(noise, axis=1, inplace=True)
 
-    N = len(names)
+    # df.drop(noise, inplace=True)
+    # df.drop(noise, axis=1, inplace=True)
+    # N = len(names)
 
     G = nx.from_pandas_adjacency(df)
     G = nx.convert_node_labels_to_integers(G)
-
     # 3d spring layout
     pos = nx.spring_layout(G, dim=3)
     # numpy array of x,y,z positions in sorted node order
@@ -269,14 +273,22 @@ def generate3DDiagram(file):
     # scalar colors
     scalars = np.array(list(G.nodes())) + 5
     # edges
-    Edges = np.array([(int(u), int(v), d) for (u, v, d) in G.edges(data=True) if d['weight'] >= 0.5])
+
+    maximum = 0
+    for (u, v, d) in G.edges(data=True):
+        w = d['weight']
+        if w > maximum:
+            maximum = w
+
+    Edges = np.array([(int(u), int(v), {'weight': d['weight']/maximum}) for (u, v, d) in G.edges(data=True) if d['weight'] > 0])
 
     def make_edge(x, y, z, weight):
         return go.Scatter3d(
             x=x,
             y=y,
             z=z,
-            line=dict(color='rgb(' + str(int(100 + (weight ** 2 - 0.25) * 100)) + ',100,100)', width=(weight * 3) ** 2),
+            # line=dict(color='rgb(' + str(int(100 + (weight ** 2 - 0.25) * 100)) + ',100,100)', width=(weight * 3) ** 2),
+            line=dict(color='rgb(' + str(int(weight)*180) + ', 0, 0)', width=(weight * 3) ** 2),
             hoverinfo='none',
             mode='lines')
 
@@ -322,7 +334,7 @@ def generate3DDiagram(file):
                 )
 
     layout = go.Layout(
-        title="3-dimensional node-link diagram, edge weigthts >= 0.5",
+        title="3-dimensional node-link diagram",
         width=900,
         height=900,
         showlegend=False,
@@ -341,4 +353,5 @@ def generate3DDiagram(file):
     data = [trace2] + edge_traces
     fig = go.Figure(data=data, layout=layout)
     pn.extension('plotly')
-    return pn.pane.Plotly(fig)
+    painful = pn.pane.Plotly(fig)
+    return painful

@@ -20,6 +20,5 @@ def visualise(file=None):
         return redirect('/selection')
     df = processCSVMatrix(os.path.join(server.config['TEMP_FOLDER'], (file + '.csv')))
     set_df(df)
-    set_filtered_df(df)
     # return render_template('filter.html', fileName=file)
     return render_template('filter.html')

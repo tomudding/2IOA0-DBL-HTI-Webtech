@@ -302,7 +302,7 @@
     background-repeat: no-repeat;
 }
 
-.icon {
+#after-loading .icon {
     position: absolute;
     cursor: pointer;
     width: 5.0vw;
