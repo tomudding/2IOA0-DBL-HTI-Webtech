@@ -127,7 +127,7 @@ def generate_degree_selection(df, cutoff_l = 2, cutoff_r = 900, dir = "in"):
 
     elif dir == "in":
         # for all nodes with in-degree outside of the cutoff range, add them to the delete list
-        adj_matrix_t = adj_matrix.transpose();
+        adj_matrix_t = adj_matrix.transpose()
         for i in range(len(adj_matrix_t)):  # iterate through rows
             count = 0  # initialize the count for zero weights
             for j in range(len(adj_matrix_t[i])):  # iterate through columns

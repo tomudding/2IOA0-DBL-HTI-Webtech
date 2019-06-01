@@ -170,9 +170,9 @@ def generateForceDirectedDiagram(file, isDirected, df=False):
     begin = time.time()
 
     # Comment the following two/three lines to disable edgebundling and datashading.
-    plot = bundle_graph(plot)
-    plot = (datashade(plot, normalization='linear', width=600, height=600) * plot.nodes).opts(opts.Nodes(cmap=partitionColours, color='Partition', size='Centrality',
-              tools=['box_select', 'lasso_select', 'tap'], width=600, height=600))
+    # plot = bundle_graph(plot)
+    # plot = (datashade(plot, normalization='linear', width=600, height=600) * plot.nodes).opts(opts.Nodes(cmap=partitionColours, color='Partition', size='Centrality',
+    #           tools=['box_select', 'lasso_select', 'tap'], width=600, height=600))
 
 
     print("Edge bundling and datashading took: " + str(time.time()-begin))

@@ -4,10 +4,10 @@ Created: 2019-05-18
 Edited: 2019-05-31
 """
 from bokeh.embed import json_item
-from flask import Flask, render_template, request, redirect, Response, Blueprint
+from flask import Flask, render_template, request, redirect, Response, Blueprint, jsonify
 from json import dump, dumps
-from graphion.filtering.degree_selection import generate_selection
-from graphion.filtering.edge_weight_selection import generate_degree_selection, generate_edge_selection
+from graphion.filtering.distribution_selection import generate_selection
+from graphion.filtering.filter_dataframe import generate_degree_selection, generate_edge_selection
 import time
 
 from graphion.upload import get_partially_filtered_df, get_almost_filtered_df, get_df, set_almost_filtered_df, set_partially_filtered_df, set_filtered_df
@@ -15,7 +15,6 @@ from graphion.upload import get_partially_filtered_df, get_almost_filtered_df, g
 from os.path import exists
 import os
 from graphion import server
-
 
 
 apiDegreeBlueprint = Blueprint('apiMatrixBlueprint', __name__, template_folder='templates')
@@ -57,8 +56,9 @@ def worker():
     type = request.form['type']
     dir = request.form['dir']
     file = request.form['file']
-    length = filter_data(left, right, type, dir, file)
-    return str(length)
+    nodes, edges = filter_data(left, right, type, dir, file)
+    response = {'nodes': str(nodes), 'edges': str(edges)}
+    return jsonify(response)
 
 
 def filter_data(left, right, type, dir, file):
@@ -73,13 +73,14 @@ def filter_data(left, right, type, dir, file):
             filtered_df = generate_degree_selection(get_partially_filtered_df(), left, right, dir)
             print("Calculating selection took: " + str(time.time() - begin))
             set_almost_filtered_df(filtered_df)
-        return len(filtered_df.columns)
+        return len(filtered_df.columns), None
     elif(type == 'weight'):
         begin = time.time()
         result = generate_edge_selection(get_df(), left, right, keep_edges = False)
         print("Calculating selection took: " + str(time.time() - begin))
         set_partially_filtered_df(result)
-        return len(result.columns)
+
+        return len(result.columns), result.astype(bool).sum(axis=0).sum()
 
 def getFilePath(file):
     file = file + '.h5'

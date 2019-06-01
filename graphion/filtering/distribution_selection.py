@@ -107,6 +107,8 @@ def generate_selection(file, kind="degree", dir="in", dataframe=False):
             }
             """
         type_dependent2 = """
+        amount = result['nodes'];
+        
              colored_amount = "<span style='color:red; font-weight:bold'>" + amount + "</span>"
                     if (amount < 600){
                         colored_amount = "<span style='color:orange; font-weight:bold'>" + amount + "</span>"
@@ -129,6 +131,17 @@ def generate_selection(file, kind="degree", dir="in", dataframe=False):
             """
 
         type_dependent2 = """
+        amount = result['nodes'];
+        amount_edges = result['edges'];
+        
+        colored_amount_edges = "<span style='color:red; font-weight:bold'>" + amount_edges + "</span>"
+        if (amount_edges < 4000){
+        colored_amount_edges = "<span style='color:orange; font-weight:bold'>" + amount_edges + "</span>"
+        }
+        if (amount_edges < 1500){
+        colored_amount_edges = "<span style='color:green; font-weight:bold'>" + amount_edges + "</span>"
+        }
+        
             colored_amount = "<span style='color:red; font-weight:bold'>" + amount + "</span>"
         if (amount < 600){
         colored_amount = "<span style='color:orange; font-weight:bold'>" + amount + "</span>"
@@ -137,7 +150,7 @@ def generate_selection(file, kind="degree", dir="in", dataframe=False):
         colored_amount = "<span style='color:green; font-weight:bold'>" + amount + "</span>"
         }
 
-            p.innerHTML = colored_amount + " nodes remaining having edges with weight between " + Math.ceil(geometry.x0*100)/100 + " and " + Math.floor(geometry.x1*100)/100 + "."
+            p.innerHTML = colored_amount + " nodes remaining having a total of " + colored_amount_edges + " edges with weight between " + Math.ceil(geometry.x0*100)/100 + " and " + Math.floor(geometry.x1*100)/100 + "."
         """
 
     geometry_callback = CustomJS(args=dict(complete=complete, before=before, middle=middle, after=after), code="""
@@ -206,7 +219,7 @@ def generate_selection(file, kind="degree", dir="in", dataframe=False):
         file: window.location.pathname.substring(8),
         """ + "type: '{}', dir: '{}'".format(kind, dir) + """
     }
-    $.post("/postmethod", data, function(result){amount = result; """ + type_dependent2 + "});" + type_dependent1)
+    $.post("/postmethod", data, function(result){ """ + type_dependent2 + "});" + type_dependent1)
 
     #p = figure(plot_width=300, plot_height=300, sizing_mode='scale_width')
     p = figure(plot_width=400, plot_height=400)
