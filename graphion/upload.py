@@ -68,7 +68,19 @@ def get_df():
 
 def set_df(input):
     global df
+    global directed
+    global sparce
     df = input
+    if df.equals(df.transpose()):
+        directed = False
+    else:
+        directed = True
+    print("This dataset is directed: " + str(directed))
+    if (df.astype(bool).sum(axis=0).sum())/(df.size) > 0.5:
+        sparce = False
+    else:
+        sparce = True
+    print("This dataset is sparce: " + str(sparce))
 
 def get_filtered_df():
     if 'filtered_df' in globals():
@@ -107,3 +119,9 @@ def get_almost_filtered_df():
 def set_almost_filtered_df(input):
     global almost_filtered_df
     almost_filtered_df = input
+
+def is_sparce():
+    return sparce
+
+def is_directed():
+    return directed
