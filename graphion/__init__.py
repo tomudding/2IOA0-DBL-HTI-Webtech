@@ -6,13 +6,22 @@ Edited: 2019-06-02
 from flask import Flask
 server = Flask(__name__)
 
-from os import mkdir, makedirs
+from os import environ, mkdir, makedirs
 from os.path import isdir
 if (not isdir('logs')):
     mkdir('logs')
 
 import logging
-logging.basicConfig(filename='logs/flask.log', level=logging.INFO)
+logger = logging.getLogger('werkzeug')
+if "gunicorn" not in environ.get("SERVER_SOFTWARE", ""):
+    from sys import stdout
+    stdoutHandler = logging.StreamHandler(stdout)
+    stdoutHandler.setLevel(logging.INFO)
+    logger.addHandler(stdoutHandler)
+
+fileHandler = logging.FileHandler('logs/flask.log', mode="w")
+fileHandler.setLevel(logging.INFO)
+logger.addHandler(fileHandler)
 
 # server needs to be defined before importing everything else
 from asyncio import set_event_loop, new_event_loop
