@@ -1,0 +1,23 @@
+<!--
+Author(s): Tom Udding
+Created: 2019-06-02
+Edited: 2019-06-02
+-->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="row">
+                <div class="col-s-12">
+                    <div class="card-container alert-{{ category }}">
+                        <h4 class="card-header card-title">{% if category == "danger" %} Error {% else %} {{ category }} {% endif %}</h4>
+                        <div class="card-contents">
+                            <div class="card-body">
+                                <p>{{ message }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}

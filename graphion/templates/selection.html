@@ -138,6 +138,7 @@ Edited: 2019-06-02
 								<div class="card-body">
 									<p class="card-subtitle text-center">Please select a previously uploaded data set from the list or upload a new data set.</p>
 									<hr>
+									{% include "flash.html" %}
 									<div class="row file-selection-container" style="display: none">
 										<div class="col-s-12">
 											{% if filesList is defined and filesList|length >= 0 %}
@@ -212,6 +213,7 @@ Edited: 2019-06-02
 	<script>
 		document.getElementById("file-selection-list").addEventListener('click', function() {
 			toggleButtons();
+			removeAlerts();
 			document.querySelector(".card-title").textContent = "Select a file";
 			document.querySelector(".file-upload-container").style.display = "none";
 			document.querySelector(".file-selection-container").style.display = "flex";
@@ -219,6 +221,7 @@ Edited: 2019-06-02
 
 		document.getElementById("file-selection-upload").addEventListener('click', function() {
 			toggleButtons();
+			removeAlerts();
 			document.querySelector(".card-title").textContent="Upload a file";
 			document.querySelector(".file-selection-container").style.display = "none";
 			document.querySelector(".file-upload-container").style.display = "flex";
@@ -226,10 +229,18 @@ Edited: 2019-06-02
 
 		document.getElementById("file-selection-back").addEventListener('click', function() {
 			toggleButtons();
+			removeAlerts();
 			document.querySelector(".card-title").textContent="Select or upload a file";
 			document.querySelector(".file-selection-container").style.display = "none";
 			document.querySelector(".file-upload-container").style.display = "none";
 		}, false);
+
+		function removeAlerts() {
+			var alertContainers = document.querySelectorAll("[class*='alert-']");
+			alertContainers.forEach(function(container) {
+				container.style.display = "none";
+			});
+		}
 
 		function toggleButtons() {
 			if (window.getComputedStyle(document.getElementById("file-selection-back")).getPropertyValue("display") == "none") {

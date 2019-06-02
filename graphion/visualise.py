@@ -1,9 +1,9 @@
 """
 Author(s): Tom Udding, Steven van den Broek
 Created: 2019-05-01
-Edited: 2019-06-01
+Edited: 2019-06-02
 """
-from flask import Blueprint, redirect, render_template
+from flask import Blueprint, flash, redirect, render_template
 from graphion import server
 from graphion.graphing.generator import generateBokehApp
 from graphion.upload import get_filtered_df
@@ -16,6 +16,7 @@ visualiseBlueprint = Blueprint('visualiseBlueprint', __name__, template_folder='
 @visualiseBlueprint.route('/visualise', methods=['GET'], strict_slashes=False)
 def visualise():
     if get_filtered_df() is None:
+        flash("No dataset has been selected. Please select a previously uploaded dataset or upload a new dataset.", "danger")
         return redirect("/selection")
 
     if "gunicorn" in os.environ.get("SERVER_SOFTWARE", ""):

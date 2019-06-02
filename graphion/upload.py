@@ -4,7 +4,7 @@ Created: 2019-05-01
 Edited: 2019-06-02
 """
 import os, secrets
-from flask import flash, request, redirect, url_for
+from flask import flash, request, redirect
 from graphion import server
 from graphion.graphing.parser import processCSVMatrix
 from tempfile import NamedTemporaryFile
@@ -38,7 +38,6 @@ def upload_file():
             begin = time()
             fileOriginalName = secure_filename(fil.filename.rsplit('.', 1)[0].lower())
             df = processCSVMatrix(fil.stream.name)
-            #set_df(df)
             df.to_hdf(os.path.join(server.config['UPLOAD_FOLDER'], (fileUniqueHash + '.h5')), key=fileOriginalName)
             server.logger.debug("HDF file generated in %.10f" % (time() - begin))
         begin = time()
