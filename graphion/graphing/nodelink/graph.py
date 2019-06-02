@@ -152,8 +152,8 @@ def generateForceDirectedDiagram(file, isDirected, df=False):
 
     renderer = hv.renderer('bokeh')
     table = hv.Table(renderer.get_plot(plot).handles['glyph_renderer'].node_renderer.data_source.to_df())
-    points = hv.Points((nodes_x, nodes_y, nodes), vdims='Index')
-    points.opts(size=0)
+    points = hv.Points((nodes_x, nodes_y, nodes, centralityList, partitionList), vdims=['Index', 'Centrality', 'Partition'])
+    points.opts(cmap = partitionColours, color_index='Partition', size=0)
 
     class SelectLink(Link):
         _requires_target = True
@@ -184,9 +184,54 @@ def generateForceDirectedDiagram(file, isDirected, df=False):
         source_code = """
             target_cds.selected.indices = source_selected.indices
         """
+    class SelectEdgeLink(Link):
+        _requires_target = True
+    
+    class SelectEdgeCallback(LinkCallback):
+        source_model = 'selected'
+        on_source_changes = ['indices']
+
+        target_model = 'glyph_renderer'
+
+        source_code = """
+            var cds = target_glyph_renderer.edge_renderer.data_source.data
+            var startIndex = cds['start']
+            var endIndex = cds['end']
+            var indices = []
+            var inds = source_selected.indices
+
+            for (var e = 0; e < inds.length; e++){
+                var entry = inds[e]
+                for (var i = 0; i < startIndex.length; i++){
+                    if (startIndex[i] == entry){
+                        indices.push(i)
+                    }
+                }
+            }
+
+            for (var e = 0; e < inds.length; e++){
+                var entry = inds[e]
+                for (var i = 0; i < endIndex.length; i++){
+                    if (endIndex[i] == entry){
+                        indices.push(i)
+                    }
+                }
+            }
+
+            if(indices.length == 0){
+                target_glyph_renderer.edge_renderer.data_source.selected.indices = []
+            } else {
+                target_glyph_renderer.edge_renderer.data_source.selected.indices = indices
+            }
+
+            
+        """
 
     SelectLink.register_callback('bokeh', SelectCallback)
     SelectLink(table, plot)
+
+    SelectEdgeLink.register_callback('bokeh', SelectEdgeCallback)
+    SelectEdgeLink(table, plot)
 
     SelectBackLink.register_callback('bokeh', SelectBackCallback)
     SelectBackLink(points, table)
