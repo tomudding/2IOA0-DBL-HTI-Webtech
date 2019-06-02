@@ -8,6 +8,7 @@ from graphion import server
 from graphion.graphing.generator import generateBokehApp
 from graphion.upload import get_filtered_df
 from bokeh.embed import server_document
+import os
 import time
 
 visualiseBlueprint = Blueprint('visualiseBlueprint', __name__, template_folder='templates')
@@ -17,7 +18,10 @@ def visualise():
     if get_filtered_df() is None:
         return redirect("/selection")
 
-    script = server_document('http://localhost:%d/bkapp' % server.config['PORT'], relative_urls=False, resources=None)
+    if "gunicorn" in os.environ.get("SERVER_SOFTWARE", ""):
+        script = server_document('https://2ioa0.uddi.ng:5001/bkapp', relative_urls=False, resources=None)
+    else:
+        script = server_document('http://localhost:%d/bkapp' % server.config['PORT'], relative_urls=False, resources=None)
     return render_template('visualise.html', script=script)
 
 def modify_doc(doc):
