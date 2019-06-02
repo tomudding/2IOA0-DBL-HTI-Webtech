@@ -17,9 +17,9 @@ Our own deadlines:
 
 | Task                              | Deadline date |
 ------------------------------------|----------------
-| Filtering page v1                 | 31st of May   |
-| Visualization page v1             | 31st of May   |
-| Visualizations/interactions v1    | 31st of May   |
+| ~~Filtering page v1~~             |~~31st of May~~|
+| ~~Visualization page v1~~         |~~31st of May~~|
+| ~~Visualizations/interactions v1~~|~~31st of May~~|
 ------------------------------------|----------------
 | Filtering page v2                 | 7th of June   |
 | Visualization page v2             | 7th of June   |
@@ -71,7 +71,7 @@ Minimal requirements as described in VisProjectDescription.pdf and the kickoff s
     - Hybrid representations
       - [ ] NodeTrix
       - [ ] MatLink
-    - [ ] [3D node-link diagram](https://plot.ly/python/3d-network-graph/)
+    - [x] [3D node-link diagram](https://plot.ly/python/3d-network-graph/)
 
 - [x] **Web-based** visualization tool for networks (weighted and directed graphs)
   - [x] Accessable via URL ([https://2ioa0.uddi.ng/](https://2ioa0.uddi.ng/))
