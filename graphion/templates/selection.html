@@ -28,6 +28,30 @@ Edited: 2019-06-02
 				min-height: 0;
 			}
 
+			.dropzone .dz-preview .dz-progress {
+				opacity: 1;
+				z-index: 1000;
+				pointer-events: none;
+				position: relative;
+				height: 0.5rem;
+				left: 0;
+				top: 0;
+				margin: 0;
+				background: rgb(209, 209, 209);
+				border-radius: 8px;
+				overflow: hidden;
+				width: 100%;
+			}
+
+			.dropzone .dz-preview .dz-progress .dz-upload {
+				background: rgb(49, 137, 255);
+				background: -moz-linear-gradient(left, rgb(49, 137, 255) 0%, rgb(0, 97, 228) 100%);
+				background: -webkit-linear-gradient(left, rgb(49, 137, 255) 0%, rgb(0, 97, 228) 100%);
+				background: -o-linear-gradient(left, rgb(49, 137, 255) 0%, rgb(0, 97, 228) 100%);
+				background: -ms-linear-gradient(left, rgb(49, 137, 255) 0%, rgb(0, 97, 228) 100%);
+				background: linear-gradient(to right, rgb(49, 137, 255) 0%, rgb(0, 97, 228) 100%);
+			}
+
 			.preview-container #previews .graphion-dropzone-info {
 			    display: flex;
 			    flex-wrap: nowrap;
@@ -145,7 +169,8 @@ Edited: 2019-06-02
 																	<div>
 																		<span data-dz-name></span> <span data-dz-size></span>
 																	</div>
-																	<div class="loader bar"><div class="intermediate"></div></div>
+																	<div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
+																	<div class="loader bar" style="display: none"><div class="intermediate"></div></div>
 																	<div class="dz-error-message"><span data-dz-errormessage></span></div>
 																</div>
 															</div>
@@ -244,6 +269,14 @@ Edited: 2019-06-02
 		        });
 				this.on("uploadprogress", function(file, progress, bytesSent) {
 					document.querySelector("[data-dz-uploadprogress]").style.width = progress + "%";
+
+					if (progress == 100) {
+						document.querySelector(".dz-progress").style.display = "none";
+						document.querySelector(".loader.bar").style.display = "block";
+
+						document.querySelector(".card-title").textContent = "Processing file...";
+						document.querySelector(".card-subtitle.text-center").textContent = "Your file has been uploaded and we are currently processing it. You will be redirected after processing has completed.";
+					}
 				});
 		    }
 		};
