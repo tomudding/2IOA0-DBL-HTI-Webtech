@@ -127,9 +127,6 @@ def generateForceDirectedDiagram(file, isDirected, df=False):
     _, nodeCentralities = zip(*sorted(centrality.items()))
     centralityList = [10 + 12 * t / max(nodeCentralities) for t in nodeCentralities]
 
-    #centralityDimension = hv.Dimension(('Centrality', 'centrality of the node'))
-    nx.set_node_attributes(G, centralityList, 'Centrality')
-
     # create partitions
     partition = best_partition(G)
     _, nodePartitions = zip(*sorted(partition.items()))
@@ -304,20 +301,115 @@ def generateRadialDiagram(file, isDirected, df=False):
 
     # get node and edge information from graph
     nodes, nodes_coordinates = zip(*sorted(layout.items()))
+    nodes_x, nodes_y = list(zip(*nodes_coordinates))
+
+    degreeList = []
+    for n in nodes:
+        if  (degree_array[nodes.index(n)] == 0 or degree_array[nodes.index(n)] == 1):
+            degreeList.append(1)
+        else:
+            degreeList.append(degree_array[nodes.index(n)])
 
     degree_dict = {}
     for n in nodes:
-        degree_dict[n] = {'Degree': degree_array[nodes.index(n)], 'DegreeSize': (degree_array[nodes.index(n)] / 2)}
+        degree_dict[n] = {'Degree': degreeList[nodes.index(n)]}
+
 
     nx.set_node_attributes(G, degree_dict)
     graph = hv.Graph.from_networkx(G, circular_layout)
     #graph.nodes.data['degree'] = Series(degree_array)
 
-    # I tried simply using node_size='degree', but if it only were that easy... (it is that easy :D)
-    graph.opts(node_size='DegreeSize', directed=isDirected, width=600, height=600, arrowhead_length=0.0005)
+    # I tried simply using node_size='degree', but if it only were that easy... (it is that easy :D, however most of the time the nodes are really small :( )
+    graph.opts(node_size='Degree', directed=isDirected, width=600, height=600, arrowhead_length=0.0005, inspection_policy='nodes', tools=['box_select', 'lasso_select', 'tap', 'hover'])
+    points = hv.Points((nodes_x, nodes_y, nodes, degreeList), vdims=['Index', 'Degree'])
+    points.opts(line_width = 1.5, line_color='#000000', size='Degree')
+    HVRenderer = hv.renderer('bokeh')
+    table = hv.Table(HVRenderer.get_plot(graph).handles['glyph_renderer'].node_renderer.data_source.to_df())
+
+    class SelectLink(Link):
+        _requires_target = True
+
+    class SelectCallback(LinkCallback):
+
+        source_model = 'selected'
+        # source_handles = ['cds']
+        on_source_changes = ['indices']
+
+        target_model = 'glyph_renderer'
+
+        source_code = """
+            //console.log(target_glyph_renderer)
+            target_glyph_renderer.node_renderer.data_source.selected.indices = source_selected.indices
+        """
+
+    class SelectBackLink(Link):
+        _requires_target = True
+    
+    class SelectBackCallback(LinkCallback):
+        source_model = 'selected'
+        source_handles = ['cds']
+        on_source_changes = ['indices']
+
+        target_model = 'cds'
+
+        source_code = """
+            target_cds.selected.indices = source_selected.indices
+        """
+    class SelectEdgeLink(Link):
+        _requires_target = True
+    
+    class SelectEdgeCallback(LinkCallback):
+        source_model = 'selected'
+        on_source_changes = ['indices']
+
+        target_model = 'glyph_renderer'
+
+        source_code = """
+            var cds = target_glyph_renderer.edge_renderer.data_source.data
+            var startIndex = cds['start']
+            var endIndex = cds['end']
+            var indices = []
+            var inds = source_selected.indices
+
+            for (var e = 0; e < inds.length; e++){
+                var entry = inds[e]
+                for (var i = 0; i < startIndex.length; i++){
+                    if (startIndex[i] == entry){
+                        indices.push(i)
+                    }
+                }
+            }
+
+            for (var e = 0; e < inds.length; e++){
+                var entry = inds[e]
+                for (var i = 0; i < endIndex.length; i++){
+                    if (endIndex[i] == entry){
+                        indices.push(i)
+                    }
+                }
+            }
+
+            if(indices.length == 0){
+                target_glyph_renderer.edge_renderer.data_source.selected.indices = []
+            } else {
+                target_glyph_renderer.edge_renderer.data_source.selected.indices = indices
+            }
+
+            
+        """
+
+    SelectLink.register_callback('bokeh', SelectCallback)
+    SelectLink(table, graph)
+
+    SelectEdgeLink.register_callback('bokeh', SelectEdgeCallback)
+    SelectEdgeLink(table, graph)
+
+    SelectBackLink.register_callback('bokeh', SelectBackCallback)
+    SelectBackLink(points, table)
+    SelectBackLink(table, points)
 
     # Make a panel and widgets with param for choosing a layout
-    return pn.Column(graph)
+    return pn.Column(graph * points, table)
 
 # Generate 3D graph
 def generate3DDiagram(file, df=False):
