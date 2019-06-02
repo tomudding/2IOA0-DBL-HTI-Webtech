@@ -23,7 +23,7 @@ def testfilter():
         return render_template('testfilter.html')
 
 def getRecentlyUploaded():
-    listOfFiles = sorted([join(server.config['UPLOAD_FOLDER'], f) for f in listdir(server.config['UPLOAD_FOLDER']) if f.endswith('.h5')], key=getctime, reverse=True)[:10]
+    listOfFiles = sorted([join(server.config['UPLOAD_FOLDER'], f) for f in listdir(server.config['UPLOAD_FOLDER']) if f.endswith('.h5')], key=getctime, reverse=True)[:20]
     finalListOfFiles = {}
     for file in listOfFiles:
         with HDFStore(file) as currentFile:

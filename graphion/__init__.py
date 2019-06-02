@@ -12,7 +12,7 @@ if (not isdir('logs')):
     mkdir('logs')
 
 import logging
-logging.basicConfig(filename='logs/error.log', level=logging.DEBUG)
+logging.basicConfig(filename='logs/flask.log', level=logging.INFO)
 
 # server needs to be defined before importing everything else
 from asyncio import set_event_loop, new_event_loop
