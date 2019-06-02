@@ -1,7 +1,7 @@
 """
 Author(s): Tom Udding, Steven van den Broek, Yuqing Zeng, Tim van de Klundert, Sam Baggen
 Created: 2019-05-03
-Edited: 2019-05-31
+Edited: 2019-06-02
 """
 from bokeh.plotting import figure, reset_output
 from bokeh.models import Circle, ColumnDataSource
@@ -120,6 +120,7 @@ def generateForceDirectedDiagram(file, isDirected, df=False):
 
     # get node and edge information from graph
     nodes, nodes_coordinates = zip(*sorted(layout.items()))
+    nodes_x, nodes_y = list(zip(*nodes_coordinates))
     
     # calculate centrality
     centrality = degree_centrality(G)
@@ -150,8 +151,10 @@ def generateForceDirectedDiagram(file, isDirected, df=False):
     plot.opts(cmap = partitionColours, color_index='Partition', node_size='Centrality', inspection_policy='nodes', tools=['box_select', 'lasso_select', 'tap', 'hover'], width=600, height=600)
 
     renderer = hv.renderer('bokeh')
-    print(renderer.get_plot(plot).handles['glyph_renderer'].node_renderer.data_source.selected.indices)
     table = hv.Table(renderer.get_plot(plot).handles['glyph_renderer'].node_renderer.data_source.to_df())
+    points = hv.Points((nodes_x, nodes_y, nodes), vdims='Index')
+    points.opts(size=0)
+
     class SelectLink(Link):
         _requires_target = True
 
@@ -168,8 +171,25 @@ def generateForceDirectedDiagram(file, isDirected, df=False):
             target_glyph_renderer.node_renderer.data_source.selected.indices = source_selected.indices
         """
 
+    class SelectBackLink(Link):
+        _requires_target = True
+    
+    class SelectBackCallback(LinkCallback):
+        source_model = 'selected'
+        source_handles = ['cds']
+        on_source_changes = ['indices']
+
+        target_model = 'cds'
+
+        source_code = """
+            target_cds.selected.indices = source_selected.indices
+        """
+
     SelectLink.register_callback('bokeh', SelectCallback)
     SelectLink(table, plot)
+
+    SelectBackLink.register_callback('bokeh', SelectBackCallback)
+    SelectBackLink(points, table)
     # begin = time.time()
 
     # Comment the following two/three lines to disable edgebundling and datashading.
@@ -179,7 +199,7 @@ def generateForceDirectedDiagram(file, isDirected, df=False):
 
 
     # print("Edge bundling and datashading took: " + str(time.time()-begin))
-    return pn.Column(plot, table)
+    return pn.Column(plot * points, table)
 
 # Generate a hierarchical node-link diagram
 def generateHierarchicalDiagram(file, isDirected, df=False):
