@@ -153,7 +153,7 @@ def generateForceDirectedDiagram(file, isDirected, df=False):
     renderer = hv.renderer('bokeh')
     table = hv.Table(renderer.get_plot(plot).handles['glyph_renderer'].node_renderer.data_source.to_df())
     points = hv.Points((nodes_x, nodes_y, nodes, centralityList, partitionList), vdims=['Index', 'Centrality', 'Partition'])
-    points.opts(cmap = partitionColours, color_index='Partition', size=0)
+    points.opts(cmap = partitionColours, color_index='Partition', size='Centrality', line_width = 1.5, line_color='#000000')
 
     class SelectLink(Link):
         _requires_target = True
@@ -235,6 +235,7 @@ def generateForceDirectedDiagram(file, isDirected, df=False):
 
     SelectBackLink.register_callback('bokeh', SelectBackCallback)
     SelectBackLink(points, table)
+    SelectBackLink(table, points)
     # begin = time.time()
 
     # Comment the following two/three lines to disable edgebundling and datashading.
