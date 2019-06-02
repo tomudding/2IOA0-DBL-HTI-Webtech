@@ -157,7 +157,11 @@ Edited: 2019-06-02
 									</div>
 									<div class="row file-upload-container" style="display: none">
 										<div class="col-s-12">
-											<form action="/upload" class="dropzone" id="graphion-dropzone">
+											<form action="/upload" method="post" class="dropzone" id="graphion-dropzone" enctype="multipart/form-data">
+												<div class="fallback">
+													<input type="file" name="file" accept=".csv, text/csv">
+													<input type="submit" class="button button-primary" value="Submit" name="submit">
+												</div>
 												<div class="preview-container dz-preview uploaded-files">
 													<div id="previews">
 														<div id="graphion-dropzone-template">
@@ -249,7 +253,6 @@ Edited: 2019-06-02
 
 		Dropzone.options.graphionDropzone = {
 			acceptedFiles: "text/csv,.csv",
-			//autoProcessQueue: false,
 			createImageThumbnails: true,
 			dictDefaultMessage: "Drop files here or click to upload",
 			maxFiles: 1,
