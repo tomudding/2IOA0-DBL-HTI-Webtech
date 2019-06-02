@@ -269,6 +269,7 @@ Edited: 2019-06-02
 		            window.location = "/filter/" + file.xhr.response;
 		        });
 				this.on("uploadprogress", function(file, progress, bytesSent) {
+					console.log("Uploading " + file.name + ". Already sent " + bytesSent + " bytes.");
 					document.querySelector("[data-dz-uploadprogress]").style.width = progress + "%";
 
 					if (progress == 100) {

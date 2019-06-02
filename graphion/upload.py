@@ -11,31 +11,44 @@ from tempfile import NamedTemporaryFile
 from werkzeug.formparser import parse_form_data
 from werkzeug.utils import secure_filename
 
+from time import time
+
 @server.route('/upload', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
         # all server-side checks have been removed because they stop the stream
         # I am figuring out how we should do them on the server
+        initial = time()
+        begin = time()
         fileUniqueHash = secrets.token_hex(server.config['TOKEN_SIZE'])
+        server.logger.debug("Generated secret in %.10f" % (time() - begin))
 
+        begin = time()
         def custom_stream_factory(total_content_length, filename, content_type, content_length=None):
             tmpfile = NamedTemporaryFile('wb+', delete=False) # delete=False requires manual deletion using os.remove(tmpfile.name)
             return tmpfile
+        server.logger.debug("Defined custom stream factory in %.10f" % (time() - begin))
 
+        begin = time()
         stream, form, files = parse_form_data(request.environ, stream_factory=custom_stream_factory)
         total_size = 0
+        server.logger.debug("Streams finished in %.10f" % (time() - begin))
 
         for fil in files.values():
+            begin = time()
             fileOriginalName = secure_filename(fil.filename.rsplit('.', 1)[0].lower())
             df = processCSVMatrix(fil.stream.name)
-            set_df(df)
+            #set_df(df)
             df.to_hdf(os.path.join(server.config['UPLOAD_FOLDER'], (fileUniqueHash + '.h5')), key=fileOriginalName)
+            server.logger.debug("HDF file generated in %.10f" % (time() - begin))
+        begin = time()
         fileStream = (next(iter(files.values()))).stream
         fileStream.close()
         os.remove(fileStream.name)
+        server.logger.debug("Finished cleaning in %.10f" % (time() - begin))
+        server.logger.debug("Total upload took %.10f" % (time() - initial))
         return fileUniqueHash
     return redirect('/selection')
-
 
 # Dirty test code for javascript filtering, this is basically the old way of doing things
 @server.route('/uploadnow', methods=['GET', 'POST'])
