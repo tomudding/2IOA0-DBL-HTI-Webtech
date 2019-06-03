@@ -23,15 +23,13 @@ def upload_file():
             return tmpfile
 
         stream, form, files = parse_form_data(request.environ, stream_factory=custom_stream_factory)
-        total_size = 0
 
-        for fil in files.values():
-            fileOriginalName = secure_filename(fil.filename.rsplit('.', 1)[0].lower())
-            df = processCSVMatrix(fil.stream.name)
-            df.to_hdf(os.path.join(server.config['UPLOAD_FOLDER'], (fileUniqueHash + '.h5')), key=fileOriginalName)
-        fileStream = (next(iter(files.values()))).stream
-        fileStream.close()
-        os.remove(fileStream.name)
+        file = next(iter(files.values()))
+        fileOriginalName = secure_filename(file.filename.rsplit('.', 1)[0].lower())
+        df = processCSVMatrix(file.stream.name)
+        df.to_hdf(os.path.join(server.config['UPLOAD_FOLDER'], (fileUniqueHash + '.h5')), key=fileOriginalName)
+        file.stream.close()
+        os.remove(file.stream.name)
         return fileUniqueHash
     return redirect('/selection')
 
