@@ -14,7 +14,8 @@ import time
 visualiseBlueprint = Blueprint('visualiseBlueprint', __name__, template_folder='templates')
 
 @visualiseBlueprint.route('/visualise', methods=['GET'], strict_slashes=False)
-def visualise():
+@visualiseBlueprint.route('/visualise/<file>', methods=['GET'], strict_slashes=False)
+def visualise(file):
     if get_filtered_df() is None:
         flash("No dataset has been selected. Please select a previously uploaded dataset or upload a new dataset.", "danger")
         return redirect("/selection")

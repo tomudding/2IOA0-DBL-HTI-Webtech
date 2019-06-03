@@ -25,5 +25,5 @@ def visualise(file=None):
     set_almost_filtered_df(None)
     set_partially_filtered_df(None)
     set_filtered_df(None)
-    # return render_template('filter.html', fileName=file)
-    return render_template('filter.html')
+    return render_template('filter.html', fileName=file)
+    # return render_template('filter.html')
