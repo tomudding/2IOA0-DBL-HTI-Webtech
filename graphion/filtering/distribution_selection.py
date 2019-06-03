@@ -222,7 +222,7 @@ def generate_selection(file, kind="degree", dir="in", dataframe=False):
     $.post("/postmethod", data, function(result){ """ + type_dependent2 + "});" + type_dependent1)
 
     #p = figure(plot_width=300, plot_height=300, sizing_mode='scale_width')
-    p = figure(plot_width=400, plot_height=400)
+    p = figure(plot_width=300, plot_height=300)
     select_tool = BoxSelectTool(dimensions="width", callback=geometry_callback)
     p.add_tools(select_tool)
 
