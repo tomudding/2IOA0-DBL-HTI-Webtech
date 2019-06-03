@@ -41,10 +41,8 @@ body {
 }
 
 a, a:visited {
-    color: rgb(56, 111, 164);
     text-decoration: none;
     outline: 0;
-    border-bottom: solid 0.0625rem;
     -webkit-transition: all 0.3s ease;
     -moz-transition: all 0.3s ease;
     -ms-transition: all 0.3s ease;

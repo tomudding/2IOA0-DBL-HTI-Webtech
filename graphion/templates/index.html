@@ -1,7 +1,7 @@
 <!--
 Author(s): Tom Udding, Anton Vellikok, Sam Baggen
 Created: 2019-04-29
-Edited: 2019-05-25
+Edited: 2019-06-03
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -11,7 +11,8 @@ Edited: 2019-05-25
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>graphion</title>
         <link rel="stylesheet" type="text/css" href="static/css/style.css">
-        <link rel="stylesheet" type="text/css" href="static/css/header.css">
+        <link rel="stylesheet" type="text/css" href="/static/css/grid.css">
+		<link rel="stylesheet" type="text/css" href="/static/css/grid_style.css">
         <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700" rel="stylesheet">
     </head>
     <body>
@@ -34,108 +35,110 @@ Edited: 2019-05-25
                 </div>
             </div>
         </header>
-        <div class="space-container"></div>
-        <section class="body-wrapper" id="main-page">
-            <div class="central-container">
-                <div class="black-box">
-                    <div class="black-box-text">
-                        <span class="bb-n025">N0.25</span>
-                        <br>
-                        <span class="bb-graphion">GRAPHION</span>
-                        <br>
-                        <span class="bb-your">YOUR DATA VISUALIZATION EXPERT</span>
-                        <br>
-                        <div class="control-menu">
-                            <a class="ctrl-menu-launch-button" href="selection">LAUNCH</a>
+        <section class="body-wrapper">
+            <div class="space-container"></div>
+            <section class="body-wrapper" id="main-page">
+                <div class="central-container">
+                    <div class="black-box">
+                        <div class="black-box-text">
+                            <span class="bb-n025">N0.25</span>
                             <br>
-                            <a class="ctlr-menu-button" href="#video-jump">VIDEO</a>
-                            <span class="ctrl-menu-cross"></span>
-                            <a class="ctlr-menu-button" href="#meet-the-team">TEAM</a>
+                            <span class="bb-graphion">GRAPHION</span>
                             <br>
-                            <a class="ctlr-menu-button" href="#report">REPORT</a>
+                            <span class="bb-your">YOUR DATA VISUALIZATION EXPERT</span>
+                            <br>
+                            <div class="control-menu">
+                                <a class="ctrl-menu-launch-button" href="selection">LAUNCH</a>
+                                <br>
+                                <a class="ctlr-menu-button" href="#video-jump">VIDEO</a>
+                                <span class="ctrl-menu-cross"></span>
+                                <a class="ctlr-menu-button" href="#meet-the-team">TEAM</a>
+                                <br>
+                                <a class="ctlr-menu-button" href="#report">REPORT</a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
-        <div id="video-jump"></div>
-        <section class="body-wrapper" id="video-page">
-            <div id="space-container-around-video-button"></div>
-            <button class="download-report-button" id="play-button" onclick="document.getElementById('video').style.display='block';document.getElementById('play-button').style.display='none';document.getElementById('close-video-button').style.display='block';location.href='#video-jump';document.getElementById('space-container-around-video-button').style.height='0'">PLAY THE VIDEO</button>
-            <button class="download-report-button" id="close-video-button" onclick="document.getElementById('video').style.display='none';document.getElementById('play-button').style.display='block';document.getElementById('close-video-button').style.display='none';document.getElementById('space-container-around-video-button').style.height='calc(46.5vh - 20px)'">CLOSE THE VIDEO</button>
-            <div id="video">
+            </section>
+            <div id="video-jump"></div>
+            <section class="body-wrapper" id="video-page">
+                <div id="space-container-around-video-button"></div>
+                <button class="download-report-button" id="play-button" onclick="document.getElementById('video').style.display='block';document.getElementById('play-button').style.display='none';document.getElementById('close-video-button').style.display='block';location.href='#video-jump';document.getElementById('space-container-around-video-button').style.height='0'">PLAY THE VIDEO</button>
+                <button class="download-report-button" id="close-video-button" onclick="document.getElementById('video').style.display='none';document.getElementById('play-button').style.display='block';document.getElementById('close-video-button').style.display='none';document.getElementById('space-container-around-video-button').style.height='calc(46.5vh - 20px)'">CLOSE THE VIDEO</button>
+                <div id="video">
+                    <div class="space-container"></div>
+                    <iframe width="560" height="315" id="iframe" frameborder="0" src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            </section>
+            <section class="body-wrapper" id="meet-the-team">
                 <div class="space-container"></div>
-                <iframe width="560" height="315" id="iframe" frameborder="0" src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>
-        </section>
-        <section class="body-wrapper" id="meet-the-team">
-            <div class="space-container"></div>
-            <div id="team-text">Meet the team</div>
-            <div class="row">
-                <div class="photo-and-name">
-                    <img src="static/images/team/SamBaggen.png" alt="Sam Baggen">
-                    <br>
-                    <h1 class="profile-name">Sam Baggen</h1>
-                    <p class="title">Title</p>
-                </div>
-                <div class="photo-and-name">
-                    <img src="static/images/team/Steven-van-den-Broek.png" alt="Steven van den Broek">
-                    <br>
-                    <h1 class="profile-name">Steven van den Broek</h1>
-                    <p class="title">Title</p>
-                </div>
-                <div class="photo-and-name">
-                    <img src="static/images/team/nameofteammember.jpg" alt="Yuqin Cui">
-                    <br>
-                    <h1 class="profile-name">Yuqin Cui</h1>
-                    <p class="title">Title</p>
-                </div>
-                <div class="photo-and-name">
-                    <img src="static/images/team/tim-van-de-klundert.jpg" alt="Tim van de Klundert">
-                    <br>
-                    <h1 class="profile-name">Tim van de Klundert</h1>
-                    <p class="title">Title</p>
-                </div>
-                <div class="photo-and-name">
-                    <img src="static/images/team/Tom-Udding.png" alt="Tom Udding">
-                    <br>
-                    <h1 class="profile-name">Tom Udding</h1>
-                    <p class="title">Title</p>
-                </div>
-                <div class="photo-and-name">
-                    <img src="static/images/team/Anton-Vellikok.jpg" alt="Anton Vellikok">
-                    <br>
-                    <h1 class="profile-name">Anton Vellikok</h1>
-                    <p class="title">Title</p>
-                </div>
-                <div class="photo-and-name">
-                    <img src="static/images/team/nameofteammember.jpg" alt="Yuqing Zeng">
-                    <br>
-                    <h1 class="profile-name">Yuqing Zeng</h1>
-                    <p class="title">Title</p>
-                </div>
-            </div>
-        </section>
-        <section class="body-wrapper" id="report">
-            <div class="space-container"></div>
-            <div id="report-test">
-                <div id="report-left-side">
-                    <span id="report-text">Read our report</span>
-                    <br>
-                    <div id="report-abstract-title">1. Abstract</div>
-                    <div id="report-abstract">
-                        This paper describes our online data visualization tool. It allows anyone with access to the internet to upload data sets and visualize them in their browser using various kinds of graphs. The tool is written in Python and makes use of various packages like Bokeh, HoloViews and NetworkX.
-                        Our tool lets the user upload a data set and allows the user to view the node-link diagram and/or adjacency matrix of that data set. These views also allow several interactions with the data set to study it more in depth, like zooming and panning. Furthermore, our tool features a filtering step to let the user decide what part of the data is used to generate the visualizations and thus what the focus is of the visualizations.
+                <div id="team-text">Meet the team</div>
+                <div class="row">
+                    <div class="photo-and-name">
+                        <img src="static/images/team/SamBaggen.png" alt="Sam Baggen">
                         <br>
-                        <div class="download-report-button-div">
-                            <a href="static/documents/report.pdf" class="download-report-button" download>DOWNLOAD REPORT</a>
-                        </div>
+                        <h1 class="profile-name">Sam Baggen</h1>
+                        <p class="title">Title</p>
+                    </div>
+                    <div class="photo-and-name">
+                        <img src="static/images/team/Steven-van-den-Broek.png" alt="Steven van den Broek">
+                        <br>
+                        <h1 class="profile-name">Steven van den Broek</h1>
+                        <p class="title">Title</p>
+                    </div>
+                    <div class="photo-and-name">
+                        <img src="static/images/team/nameofteammember.jpg" alt="Yuqin Cui">
+                        <br>
+                        <h1 class="profile-name">Yuqin Cui</h1>
+                        <p class="title">Title</p>
+                    </div>
+                    <div class="photo-and-name">
+                        <img src="static/images/team/tim-van-de-klundert.jpg" alt="Tim van de Klundert">
+                        <br>
+                        <h1 class="profile-name">Tim van de Klundert</h1>
+                        <p class="title">Title</p>
+                    </div>
+                    <div class="photo-and-name">
+                        <img src="static/images/team/Tom-Udding.png" alt="Tom Udding">
+                        <br>
+                        <h1 class="profile-name">Tom Udding</h1>
+                        <p class="title">Title</p>
+                    </div>
+                    <div class="photo-and-name">
+                        <img src="static/images/team/Anton-Vellikok.jpg" alt="Anton Vellikok">
+                        <br>
+                        <h1 class="profile-name">Anton Vellikok</h1>
+                        <p class="title">Title</p>
+                    </div>
+                    <div class="photo-and-name">
+                        <img src="static/images/team/nameofteammember.jpg" alt="Yuqing Zeng">
+                        <br>
+                        <h1 class="profile-name">Yuqing Zeng</h1>
+                        <p class="title">Title</p>
                     </div>
                 </div>
-                <div class="report-right-side">
-                    <img src="static/images/report.png" alt="report-img" id="report-img">
+            </section>
+            <section class="body-wrapper" id="report">
+                <div class="space-container"></div>
+                <div id="report-test">
+                    <div id="report-left-side">
+                        <span id="report-text">Read our report</span>
+                        <br>
+                        <div id="report-abstract-title">1. Abstract</div>
+                        <div id="report-abstract">
+                            This paper describes our online data visualization tool. It allows anyone with access to the internet to upload data sets and visualize them in their browser using various kinds of graphs. The tool is written in Python and makes use of various packages like Bokeh, HoloViews and NetworkX.
+                            Our tool lets the user upload a data set and allows the user to view the node-link diagram and/or adjacency matrix of that data set. These views also allow several interactions with the data set to study it more in depth, like zooming and panning. Furthermore, our tool features a filtering step to let the user decide what part of the data is used to generate the visualizations and thus what the focus is of the visualizations.
+                            <br>
+                            <div class="download-report-button-div">
+                                <a href="static/documents/report.pdf" class="download-report-button" download>DOWNLOAD REPORT</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="report-right-side">
+                        <img src="static/images/report.png" alt="report-img" id="report-img">
+                    </div>
                 </div>
-            </div>
+            </section>
         </section>
     </body>
 </html>
