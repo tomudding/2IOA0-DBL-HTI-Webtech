@@ -5,7 +5,6 @@ Edited: 2019-06-03
 """
 from bokeh.plotting import figure, reset_output
 from bokeh.models import Circle, ColumnDataSource
-from bokeh.models.callbacks import CustomJS
 from community import best_partition
 from graphion.graphing.parser import processCSVMatrix
 from holoviews import opts, renderer, extension
@@ -26,9 +25,6 @@ import holoviews as hv
 from holoviews.operation.datashader import datashade, bundle_graph
 
 import time
-
-from holoviews.plotting.bokeh.callbacks import LinkCallback
-from holoviews.plotting.links import Link
 
 
 hv.extension('bokeh')
@@ -160,7 +156,10 @@ def generateForceDirectedDiagram(file, isDirected, df=False):
 
 
     # print("Edge bundling and datashading took: " + str(time.time()-begin))
-    return (pn.Column(plot * points), plot, points)
+    return (plot, points)
+
+def generateForceDirectedDiagramPane(graph):
+    return pn.Column(graph[0] * graph[1])
 
 # Generate a hierarchical node-link diagram
 def generateHierarchicalDiagram(file, isDirected, df=False):
@@ -361,75 +360,3 @@ def generate3DDiagram(file, df=False):
     pn.extension('plotly')
     painful = pn.pane.Plotly(fig)
     return painful
-
-# Linking classes
-class SelectMatrixToNodeLink(Link):
-    _requires_target = True
-
-class SelectMatrixToNodeCallback(LinkCallback):
-
-    source_model = 'selected'
-    # source_handles = ['cds']
-    on_source_changes = ['indices']
-
-    target_model = 'glyph_renderer'
-
-    source_code = """
-        //console.log(target_glyph_renderer)
-        target_glyph_renderer.node_renderer.data_source.selected.indices = source_selected.indices
-    """
-
-class SelectNodeToMatrixLink(Link):
-    _requires_target = True
-    
-class SelectNodeToMatrixCallback(LinkCallback):
-    source_model = 'selected'
-    source_handles = ['cds']
-    on_source_changes = ['indices']
-
-    target_model = 'cds'
-
-    source_code = """
-        target_cds.selected.indices = source_selected.indices
-    """
-
-class SelectEdgeLink(Link):
-    _requires_target = True
-    
-class SelectEdgeCallback(LinkCallback):
-    source_model = 'selected'
-    on_source_changes = ['indices']
-
-    target_model = 'glyph_renderer'
-
-    source_code = """
-        var cds = target_glyph_renderer.edge_renderer.data_source.data
-        var startIndex = cds['start']
-        var endIndex = cds['end']
-        var indices = []
-        var inds = source_selected.indices
-
-        for (var e = 0; e < inds.length; e++){
-             var entry = inds[e]
-            for (var i = 0; i < startIndex.length; i++){
-                if (startIndex[i] == entry){
-                    indices.push(i)
-                }
-            }
-        }
-
-        for (var e = 0; e < inds.length; e++){
-            var entry = inds[e]
-            for (var i = 0; i < endIndex.length; i++){
-                if (endIndex[i] == entry){
-                    indices.push(i)
-                }
-            }
-        }
-
-        if(indices.length == 0){
-            target_glyph_renderer.edge_renderer.data_source.selected.indices = []
-        } else {
-            target_glyph_renderer.edge_renderer.data_source.selected.indices = indices
-        }
-    """
