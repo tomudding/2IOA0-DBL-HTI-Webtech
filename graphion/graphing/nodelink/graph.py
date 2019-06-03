@@ -1,7 +1,7 @@
 """
 Author(s): Tom Udding, Steven van den Broek, Yuqing Zeng, Tim van de Klundert, Sam Baggen
 Created: 2019-05-03
-Edited: 2019-06-02
+Edited: 2019-06-03
 """
 from bokeh.plotting import figure, reset_output
 from bokeh.models import Circle, ColumnDataSource
@@ -151,88 +151,6 @@ def generateForceDirectedDiagram(file, isDirected, df=False):
     table = hv.Table(renderer.get_plot(plot).handles['glyph_renderer'].node_renderer.data_source.to_df())
     points = hv.Points((nodes_x, nodes_y, nodes, centralityList, partitionList), vdims=['Index', 'Centrality', 'Partition'])
     points.opts(cmap = partitionColours, color_index='Partition', size='Centrality', line_width = 1.5, line_color='#000000')
-
-    class SelectLink(Link):
-        _requires_target = True
-
-    class SelectCallback(LinkCallback):
-
-        source_model = 'selected'
-        # source_handles = ['cds']
-        on_source_changes = ['indices']
-
-        target_model = 'glyph_renderer'
-
-        source_code = """
-            //console.log(target_glyph_renderer)
-            target_glyph_renderer.node_renderer.data_source.selected.indices = source_selected.indices
-        """
-
-    class SelectBackLink(Link):
-        _requires_target = True
-    
-    class SelectBackCallback(LinkCallback):
-        source_model = 'selected'
-        source_handles = ['cds']
-        on_source_changes = ['indices']
-
-        target_model = 'cds'
-
-        source_code = """
-            target_cds.selected.indices = source_selected.indices
-        """
-    class SelectEdgeLink(Link):
-        _requires_target = True
-    
-    class SelectEdgeCallback(LinkCallback):
-        source_model = 'selected'
-        on_source_changes = ['indices']
-
-        target_model = 'glyph_renderer'
-
-        source_code = """
-            var cds = target_glyph_renderer.edge_renderer.data_source.data
-            var startIndex = cds['start']
-            var endIndex = cds['end']
-            var indices = []
-            var inds = source_selected.indices
-
-            for (var e = 0; e < inds.length; e++){
-                var entry = inds[e]
-                for (var i = 0; i < startIndex.length; i++){
-                    if (startIndex[i] == entry){
-                        indices.push(i)
-                    }
-                }
-            }
-
-            for (var e = 0; e < inds.length; e++){
-                var entry = inds[e]
-                for (var i = 0; i < endIndex.length; i++){
-                    if (endIndex[i] == entry){
-                        indices.push(i)
-                    }
-                }
-            }
-
-            if(indices.length == 0){
-                target_glyph_renderer.edge_renderer.data_source.selected.indices = []
-            } else {
-                target_glyph_renderer.edge_renderer.data_source.selected.indices = indices
-            }
-
-            
-        """
-
-    SelectLink.register_callback('bokeh', SelectCallback)
-    SelectLink(table, plot)
-
-    SelectEdgeLink.register_callback('bokeh', SelectEdgeCallback)
-    SelectEdgeLink(table, plot)
-
-    SelectBackLink.register_callback('bokeh', SelectBackCallback)
-    SelectBackLink(points, table)
-    SelectBackLink(table, points)
     # begin = time.time()
 
     # Comment the following two/three lines to disable edgebundling and datashading.
@@ -242,7 +160,7 @@ def generateForceDirectedDiagram(file, isDirected, df=False):
 
 
     # print("Edge bundling and datashading took: " + str(time.time()-begin))
-    return pn.Column(plot * points, table)
+    return (pn.Column(plot * points), plot, points)
 
 # Generate a hierarchical node-link diagram
 def generateHierarchicalDiagram(file, isDirected, df=False):
@@ -323,93 +241,9 @@ def generateRadialDiagram(file, isDirected, df=False):
     graph.opts(node_size='Degree', directed=isDirected, width=600, height=600, arrowhead_length=0.0005, inspection_policy='nodes', tools=['box_select', 'lasso_select', 'tap', 'hover'])
     points = hv.Points((nodes_x, nodes_y, nodes, degreeList), vdims=['Index', 'Degree'])
     points.opts(line_width = 1.5, line_color='#000000', size='Degree')
-    HVRenderer = hv.renderer('bokeh')
-    table = hv.Table(HVRenderer.get_plot(graph).handles['glyph_renderer'].node_renderer.data_source.to_df())
-
-    class SelectLink(Link):
-        _requires_target = True
-
-    class SelectCallback(LinkCallback):
-
-        source_model = 'selected'
-        # source_handles = ['cds']
-        on_source_changes = ['indices']
-
-        target_model = 'glyph_renderer'
-
-        source_code = """
-            //console.log(target_glyph_renderer)
-            target_glyph_renderer.node_renderer.data_source.selected.indices = source_selected.indices
-        """
-
-    class SelectBackLink(Link):
-        _requires_target = True
-    
-    class SelectBackCallback(LinkCallback):
-        source_model = 'selected'
-        source_handles = ['cds']
-        on_source_changes = ['indices']
-
-        target_model = 'cds'
-
-        source_code = """
-            target_cds.selected.indices = source_selected.indices
-        """
-    class SelectEdgeLink(Link):
-        _requires_target = True
-    
-    class SelectEdgeCallback(LinkCallback):
-        source_model = 'selected'
-        on_source_changes = ['indices']
-
-        target_model = 'glyph_renderer'
-
-        source_code = """
-            var cds = target_glyph_renderer.edge_renderer.data_source.data
-            var startIndex = cds['start']
-            var endIndex = cds['end']
-            var indices = []
-            var inds = source_selected.indices
-
-            for (var e = 0; e < inds.length; e++){
-                var entry = inds[e]
-                for (var i = 0; i < startIndex.length; i++){
-                    if (startIndex[i] == entry){
-                        indices.push(i)
-                    }
-                }
-            }
-
-            for (var e = 0; e < inds.length; e++){
-                var entry = inds[e]
-                for (var i = 0; i < endIndex.length; i++){
-                    if (endIndex[i] == entry){
-                        indices.push(i)
-                    }
-                }
-            }
-
-            if(indices.length == 0){
-                target_glyph_renderer.edge_renderer.data_source.selected.indices = []
-            } else {
-                target_glyph_renderer.edge_renderer.data_source.selected.indices = indices
-            }
-
-            
-        """
-
-    SelectLink.register_callback('bokeh', SelectCallback)
-    SelectLink(table, graph)
-
-    SelectEdgeLink.register_callback('bokeh', SelectEdgeCallback)
-    SelectEdgeLink(table, graph)
-
-    SelectBackLink.register_callback('bokeh', SelectBackCallback)
-    SelectBackLink(points, table)
-    SelectBackLink(table, points)
 
     # Make a panel and widgets with param for choosing a layout
-    return pn.Column(graph * points, table)
+    return (pn.Column(graph * points), graph, points)
 
 # Generate 3D graph
 def generate3DDiagram(file, df=False):
@@ -527,3 +361,75 @@ def generate3DDiagram(file, df=False):
     pn.extension('plotly')
     painful = pn.pane.Plotly(fig)
     return painful
+
+# Linking classes
+class SelectMatrixToNodeLink(Link):
+    _requires_target = True
+
+class SelectMatrixToNodeCallback(LinkCallback):
+
+    source_model = 'selected'
+    # source_handles = ['cds']
+    on_source_changes = ['indices']
+
+    target_model = 'glyph_renderer'
+
+    source_code = """
+        //console.log(target_glyph_renderer)
+        target_glyph_renderer.node_renderer.data_source.selected.indices = source_selected.indices
+    """
+
+class SelectNodeToMatrixLink(Link):
+    _requires_target = True
+    
+class SelectNodeToMatrixCallback(LinkCallback):
+    source_model = 'selected'
+    source_handles = ['cds']
+    on_source_changes = ['indices']
+
+    target_model = 'cds'
+
+    source_code = """
+        target_cds.selected.indices = source_selected.indices
+    """
+
+class SelectEdgeLink(Link):
+    _requires_target = True
+    
+class SelectEdgeCallback(LinkCallback):
+    source_model = 'selected'
+    on_source_changes = ['indices']
+
+    target_model = 'glyph_renderer'
+
+    source_code = """
+        var cds = target_glyph_renderer.edge_renderer.data_source.data
+        var startIndex = cds['start']
+        var endIndex = cds['end']
+        var indices = []
+        var inds = source_selected.indices
+
+        for (var e = 0; e < inds.length; e++){
+             var entry = inds[e]
+            for (var i = 0; i < startIndex.length; i++){
+                if (startIndex[i] == entry){
+                    indices.push(i)
+                }
+            }
+        }
+
+        for (var e = 0; e < inds.length; e++){
+            var entry = inds[e]
+            for (var i = 0; i < endIndex.length; i++){
+                if (endIndex[i] == entry){
+                    indices.push(i)
+                }
+            }
+        }
+
+        if(indices.length == 0){
+            target_glyph_renderer.edge_renderer.data_source.selected.indices = []
+        } else {
+            target_glyph_renderer.edge_renderer.data_source.selected.indices = indices
+        }
+    """
