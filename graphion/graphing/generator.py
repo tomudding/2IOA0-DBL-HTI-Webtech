@@ -27,8 +27,8 @@ def generateBokehApp(doc):
     #graph3D = generate3DDiagram(df.copy(), df=True)
     print("3D generation took: " + str(time.time() - begin))
 
-    #Setting up the linking, generateDiagram functions return three-tuple (panel, graph, points). Points is the selection layer
-    #makeMatrix returns three-tuple (panel, matrix, names). Names are the indices of the matrix nodes
+    #Setting up the linking, generateDiagram functions return two-tuple (graph, points). Points is the selection layer
+    #makeMatrix returns matrix_dropdown object. matrix.view returns the heatmap object
     SelectMatrixToNodeLink.register_callback('bokeh', SelectMatrixToNodeCallback)
     SelectEdgeLink.register_callback('bokeh', SelectEdgeCallback)
     SelectNodeToMatrixLink.register_callback('bokeh', SelectNodeToMatrixCallback)
@@ -41,6 +41,7 @@ def generateBokehApp(doc):
     #Link nodelink to matrix (points only)
     SelectNodeToMatrixLink(graph[1], matrix.view())
     
+    #Generates the panels
     graphPane = generateForceDirectedDiagramPane(graph)
     matrixPane = makeMatrixPane(matrix)
 
