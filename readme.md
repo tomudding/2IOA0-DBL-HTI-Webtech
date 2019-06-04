@@ -11,6 +11,7 @@ Given project deadlines:
 | ~~Interim video~~         | ~~24th of May~~  |
 | ~~Interim report~~         | ~~24th of May~~  |
 | Nearly final tool      | 12th of June |
+| Send 2 best figures to Burch     | 18th of June |
 | Final tool/report/video| 21st of June |
 
 Our own deadlines:
