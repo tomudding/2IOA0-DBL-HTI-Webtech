@@ -33,6 +33,7 @@ def generateBokehApp(doc):
 
         @param.depends('Screen1', 'Screen2')
         def view(self):
+            global s1
             s1 = None
             if self.Screen1 == "radial":
                 s1 = getRadial(df)
@@ -42,24 +43,24 @@ def generateBokehApp(doc):
                 s1 = getHierarchical(df)
             if self.Screen1 == "3d":
                 s1 = getGraph3D(df)
-
+            print(s1[1])
             s2 = None
             if self.Screen2 == "matrix":
                 s2 = getMatrix(df)
 
             # Setting up the linking, generateDiagram functions return two-tuple (graph, points). Points is the selection layer
             # makeMatrix returns matrix_dropdown object. matrix.view returns the heatmap object
-            SelectMatrixToNodeLink.register_callback('bokeh', SelectMatrixToNodeCallback)
-            SelectEdgeLink.register_callback('bokeh', SelectEdgeCallback)
-            SelectNodeToMatrixLink.register_callback('bokeh', SelectNodeToMatrixCallback)
+            #SelectMatrixToNodeLink.register_callback('bokeh', SelectMatrixToNodeCallback)
+            #SelectEdgeLink.register_callback('bokeh', SelectEdgeCallback)
+            #SelectNodeToMatrixLink.register_callback('bokeh', SelectNodeToMatrixCallback)
 
             # Link matrix to the nodelink (both graph and points)
-            SelectMatrixToNodeLink(s2.view(), s1[0])
-            SelectMatrixToNodeLink(s2.view(), s1[1])
-            SelectEdgeLink(s2.view(), s1[0])
+            #SelectMatrixToNodeLink(s2.view, s1[0])
+            #SelectMatrixToNodeLink(s2.view, s1[1])
+            #SelectEdgeLink(s2.view, s1[0])
 
             # Link nodelink to matrix (points only)
-            SelectNodeToMatrixLink(s1[1], s2.view())
+            #SelectNodeToMatrixLink(s1[1], s2.view)
 
             # Generates the panels
             graphPane = generateForceDirectedDiagramPane(s1)
@@ -105,7 +106,7 @@ def getMatrix(df):
     if 'matrix' in globals() and matrix is not None:
         return matrix
     else:
-        matrix = makeMatrix(df.copy(), df=True)
+        matrix = makeMatrix(df.copy(), s1[1], df=True)
         return matrix
 
 def getHierarchical(df):

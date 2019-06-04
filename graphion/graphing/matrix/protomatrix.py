@@ -18,7 +18,9 @@ from holoviews.plotting.bokeh.callbacks import LinkCallback
 from holoviews.plotting.links import Link
 from bokeh.models import BoxSelectTool
 
-def makeMatrix(file, df=False):
+from graphion.graphing.linking import SelectMatrixToNodeCallback, SelectMatrixToNodeLink
+
+def makeMatrix(file, plot, df=False):
     if not df:
         df = read_hdf(file)
     else:
@@ -174,6 +176,10 @@ def makeMatrix(file, df=False):
                 table = hv.Table(current_data)
                 table.opts(height=500)
 
+                
+                select = SelectMatrixToNodeLink(hm, plot, indices=names)
+                select.register_callback('bokeh', SelectMatrixToNodeCallback)
+
                 return hm
                 # return pn.Row(hm, table)
                 # selection = Selection1D(source=hm, subscribers=[print_info])
@@ -193,6 +199,10 @@ def makeMatrix(file, df=False):
                 current_data = hm.data
                 table = hv.Table(current_data)
                 table.opts(height=500)
+        	    
+                select = SelectMatrixToNodeLink(hm, plot, indices=names)
+                select.register_callback('bokeh', SelectMatrixToNodeCallback)
+
 
                 return hm
                 # return pn.Row(hm, table)
@@ -200,6 +210,7 @@ def makeMatrix(file, df=False):
                 # return hv.DynamicMap(lambda index: hm, streams=[selection])
 
     matrix = Matrix_dropdown(name='Adjacency Matrix')
+
 
     # %%
     # hv_plot = hm + table

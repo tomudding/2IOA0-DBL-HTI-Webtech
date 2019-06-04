@@ -1,7 +1,7 @@
 """
 Author(s): Sam Baggen
 Created: 2019-06-03
-Edited: 2019-06-03
+Edited: 2019-06-04
 """
 
 from holoviews.plotting.bokeh.callbacks import LinkCallback
@@ -14,6 +14,7 @@ hv.extension('bokeh')
 # Linking classes
 class SelectMatrixToNodeLink(Link):
     _requires_target = True
+    indices = param.List(default=[], doc="The list of indices to be passed to the callback")
 
 class SelectMatrixToNodeCallback(LinkCallback):
     source_model = 'selected'
@@ -23,34 +24,34 @@ class SelectMatrixToNodeCallback(LinkCallback):
     target_model = 'glyph_renderer'
 
     source_code = """console.log("TRIGGERED MtN")
-        let len = source_cds.data['index1'].length
-        let new_indices = []
-        for (let i = 0; i < source_selected.indices.length; i++){
-            let index = source_selected.indices[i]
-            j = len-1-(index%len)+Math.floor(index/(len))*(len)
-            new_indices[i] = j
-        }
-        var inds = source_selected.indices
-        var d = source_cds.data
+        //let len = indices.length
+        //let new_indices = []
+        //for (let i = 0; i < source_selected.indices.length; i++){
+        //    let index = source_selected.indices[i]
+        //    j = len-1-(index%len)+Math.floor(index/(len))*(len)
+        //    new_indices[i] = j
+        //}
+        //var inds = source_selected.indices
+        //var d = source_cds.data
 
-        selected_data = {}
-        selected_data['index1'] = []
-        selected_data['index2'] = []
-        selected_data['value'] = []
-        selected_data['zvalues'] = []
+        //selected_data = {}
+        //selected_data['index1'] = []
+        //selected_data['index2'] = []
+        //selected_data['value'] = []
+        //selected_data['zvalues'] = []
 
-        for (var i = 0; i < inds.length; i++){
-            selected_data['index1'].push(d['index1'][inds[i]])
-            selected_data['index2'].push(d['index2'][inds[i]])
-            selected_data['value'].push(d['value'][inds[i]])
-            selected_data['zvalues'].push(d['zvalues'][inds[i]])
-        }
+        //for (var i = 0; i < inds.length; i++){
+        //    selected_data['index1'].push(d['index1'][inds[i]])
+        //    selected_data['index2'].push(d['index2'][inds[i]])
+        //    selected_data['value'].push(d['value'][inds[i]])
+        //    selected_data['zvalues'].push(d['zvalues'][inds[i]])
+        //}
 
-        var cds = target_glyph_renderer.edge_renderer.data_source.data
-        var startIndex = cds['start']
-        var endIndex = cds['end']
+        //var cds = target_glyph_renderer.edge_renderer.data_source.data
+        //var startIndex = cds['start']
+        //var endIndex = cds['end']
 
-        target_glyph_renderer.node_renderer.data_source.selected.indices = selected_data
+        //target_glyph_renderer.node_renderer.data_source.selected.indices = selected_data
 
     """
 
