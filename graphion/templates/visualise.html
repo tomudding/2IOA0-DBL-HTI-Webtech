@@ -27,8 +27,10 @@ Edited: 2019-06-03
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh-widgets.min.js" integrity="sha256-0D9ZpwC/v+rmx33UGlpWU9Uo1+J58MFqTKkGVGDZpEE=" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh-gl.min.js" integrity="sha256-fDyCLeWMeXB/F1JUTOFAM/9ONJmyiiSfsmPWl5tZQzk=" crossorigin="anonymous"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/dat-gui/0.5/dat.gui.min.js"></script>
-
+	<!-- Plotly files -->
 	<script type="text/javascript" src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+	<!-- jQuery for post methods... -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -277,9 +279,9 @@ Edited: 2019-06-03
 			<div class="left-bar-choose-vis">Choose a vizualisation type:</div>
 			<div class="left-bar-screen-big" style="top: 27vh;">Screen 1:</div>
 			<div class="left-bar-screen-small" style="top: 27.3vh; left: 9vw;">Radial</div>
-			<img class="icon" id="radial" onclick="displayDiagram('radial')" src="/static/images/icons/icon-radial-diagram.svg" style="left: 8.2vw; top: 17.3vh;">
+			<img class="icon-selected" id="radial" onclick="displayDiagram('radial')" src="/static/images/icons/icon-radial-diagram.svg" style="left: 8.2vw; top: 17.3vh;">
 			<div class="left-bar-screen-small" style="top: 27.3vh; left: 15vw;">Force-directed</div>
-			<img class="icon-selected" id="force" onclick="displayDiagram('force')" src="/static/images/icons/icon-forcedirected-diagram.svg" style="left: 14.5vw; top: 17.3vh;">
+			<img class="icon" id="force" onclick="displayDiagram('force')" src="/static/images/icons/icon-forcedirected-diagram.svg" style="left: 14.5vw; top: 17.3vh;">
 			<div class="left-bar-screen-small" style="top: 39.8vh; left: 9vw;">Hierarchical</div>
 			<img class="icon" id="hierarchical" onclick="displayDiagram('hierarchical')" src="/static/images/icons/icon-hierarchical-diagram.svg" style="left: 8.2vw; top: 29.4vh;">
 			<div class="left-bar-screen-small" style="top: 39.8vh; left: 15vw;">3D node-link diagram</div>

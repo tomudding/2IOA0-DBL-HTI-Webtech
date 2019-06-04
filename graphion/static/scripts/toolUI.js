@@ -25,6 +25,9 @@ function displayDiagram(id){
         document.getElementById(selectedDiagram).className = 'icon';
         selectedDiagram = id;
         document.getElementById(selectedDiagram).className = 'icon-selected';
+
+        $.post("/switch-nodelink", {to: id});
+
         if (id === 'radial'){
             // TODO switch to radial view
         } else if (id === 'force'){
