@@ -1,16 +1,20 @@
 """
-Author(s): Tom Udding, Steven van den Broek
+Author(s): Tom Udding, Steven van den Broek, Sam Baggen
 Created: 2019-05-03
-Edited: 2019-05-31
+Edited: 2019-06-03
 """
 from graphion import server
-from graphion.graphing.nodelink.graph import generateForceDirectedDiagram, generateHierarchicalDiagram, generateRadialDiagram, generate3DDiagram
-from graphion.graphing.matrix.protomatrix import makeMatrix
+from graphion.graphing.nodelink.graph import generateForceDirectedDiagram, generateHierarchicalDiagram, generateRadialDiagram, generate3DDiagram, generateForceDirectedDiagramPane
+from graphion.graphing.linking import SelectEdgeCallback, SelectMatrixToNodeCallback, SelectNodeToMatrixCallback
+from graphion.graphing.linking import SelectEdgeLink, SelectMatrixToNodeLink, SelectNodeToMatrixLink
+from graphion.graphing.matrix.protomatrix import makeMatrix, makeMatrixPane
 from graphion.upload import get_filtered_df
 import os
 import panel as pn
 import time
+
 import param
+import holoviews as hv
 
 
 def generateBokehApp(doc):
@@ -22,7 +26,7 @@ def generateBokehApp(doc):
     radial = None
 
     class VisApp(param.Parameterized):
-        Screen1 = param.ObjectSelector(default="radial",
+        Screen1 = param.ObjectSelector(default="force",
                                           objects=["none", "radial", "force", "hierarchical", "3d"])
         Screen2 = param.ObjectSelector(default="matrix",
                                       objects=["none", "matrix"])
@@ -43,9 +47,28 @@ def generateBokehApp(doc):
             if self.Screen2 == "matrix":
                 s2 = getMatrix(df)
 
-            return pn.Row(s1, s2)
+            # Setting up the linking, generateDiagram functions return two-tuple (graph, points). Points is the selection layer
+            # makeMatrix returns matrix_dropdown object. matrix.view returns the heatmap object
+            SelectMatrixToNodeLink.register_callback('bokeh', SelectMatrixToNodeCallback)
+            SelectEdgeLink.register_callback('bokeh', SelectEdgeCallback)
+            SelectNodeToMatrixLink.register_callback('bokeh', SelectNodeToMatrixCallback)
+
+            # Link matrix to the nodelink (both graph and points)
+            SelectMatrixToNodeLink(s2.view(), s1[0])
+            SelectMatrixToNodeLink(s2.view(), s1[1])
+            SelectEdgeLink(s2.view(), s1[0])
+
+            # Link nodelink to matrix (points only)
+            SelectNodeToMatrixLink(s1[1], s2.view())
+
+            # Generates the panels
+            graphPane = generateForceDirectedDiagramPane(s1)
+            matrixPane = makeMatrixPane(s2)
+
+            return pn.Row(graphPane, matrixPane)
 
     df = get_filtered_df()
+
     visApp = VisApp()
 
     # begin = time.time()
@@ -65,12 +88,13 @@ def generateBokehApp(doc):
     # pane = pn.Pane(graph)
 
 
+
+    pn.extension('plotly')
     return pn.Pane(visApp.view).get_root(doc)
 
 
 def changeScreen1(new_type):
     visApp.Screen1 = new_type
-
 
 def getFilePath(file):
     file = file + '.h5'

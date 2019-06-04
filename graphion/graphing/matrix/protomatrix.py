@@ -1,7 +1,7 @@
 """
-Author(s): Steven van den Broek, Yuqin Cui
+Author(s): Steven van den Broek, Yuqin Cui, Sam Baggen
 Created: 2019-05-05
-Edited: 2019-05-31
+Edited: 2019-06-03
 """
 import numpy as np
 import pandas as pd
@@ -174,13 +174,7 @@ def makeMatrix(file, df=False):
                 table = hv.Table(current_data)
                 table.opts(height=500)
 
-                if show_only_selection:
-                    SelectedDataLink(hm, table)
-                else:
-                    SelectLink(hm, table)
-                    SelectLink(table, hm)
-
-                return pn.Pane(hm)
+                return hm
                 # return pn.Row(hm, table)
                 # selection = Selection1D(source=hm, subscribers=[print_info])
                 # return hv.DynamicMap(lambda index: hm, streams=[selection])
@@ -200,13 +194,7 @@ def makeMatrix(file, df=False):
                 table = hv.Table(current_data)
                 table.opts(height=500)
 
-                if show_only_selection:
-                    SelectedDataLink(hm, table)
-                else:
-                    SelectLink(hm, table)
-                    SelectLink(table, hm)
-
-                return pn.Pane(hm)
+                return hm
                 # return pn.Row(hm, table)
                 # selection = Selection1D(source=hm, subscribers=[print_info])
                 # return hv.DynamicMap(lambda index: hm, streams=[selection])
@@ -214,79 +202,13 @@ def makeMatrix(file, df=False):
     matrix = Matrix_dropdown(name='Adjacency Matrix')
 
     # %%
-
-
-    class SelectLink(Link):
-        _requires_target = True
-
-    class SelectCallback(LinkCallback):
-
-        source_model = 'selected'
-        # source_handles = ['cds']
-        on_source_changes = ['indices']
-
-        target_model = 'selected'
-
-        source_code = "let len = {}".format(len(names)) + """
-            let new_indices = []
-            for (let i = 0; i < source_selected.indices.length; i++){
-                let index = source_selected.indices[i]
-                j = len-1-(index%len)+Math.floor(index/(len))*(len)
-                new_indices[i] = j
-            }
-            target_selected.indices = new_indices
-        """
-
-    SelectLink.register_callback('bokeh', SelectCallback)
-
-    # table = hv.Table(current_data)
-    # SelectLink(hm, table)
-    # SelectLink(table, hm)
-
-    class SelectedDataLink(Link):
-        _requires_target = True
-
-    class SelectedDataCallback(LinkCallback):
-
-        source_model = 'selected'
-        source_handles = ['cds']
-        on_source_changes = ['indices']
-
-        target_model = 'cds'
-
-        source_code = "let len = {}".format(len(names)) + """
-            let new_indices = []
-            for (let i = 0; i < source_selected.indices.length; i++){
-                let index = source_selected.indices[i]
-                j = len-1-(index%len)+Math.floor(index/(len))*(len)
-                new_indices[i] = j
-            }
-            var inds = source_selected.indices
-            var d = source_cds.data
-
-            selected_data = {}
-            selected_data['index1'] = []
-            selected_data['index2'] = []
-            selected_data['value'] = []
-            selected_data['zvalues'] = []
-
-            for (var i = 0; i < inds.length; i++){
-                selected_data['index1'].push(d['index1'][inds[i]])
-                selected_data['index2'].push(d['index2'][inds[i]])
-                selected_data['value'].push(d['value'][inds[i]])
-                selected_data['zvalues'].push(d['zvalues'][inds[i]])
-            }
-            target_cds.data = selected_data
-
-        """
-
-    SelectedDataLink.register_callback('bokeh', SelectedDataCallback)
-
     # hv_plot = hm + table
 
-    matrix_pane1 = pn.Column(pn.Pane(matrix.param, css_classes=['matrix_dropdowns']), matrix.view)
+    #matrix_pane1 = pn.Column(pn.Pane(matrix.param, css_classes=['matrix_dropdowns']), matrix.view())
     # matrix_pane2 = pn.Column(matrix.param, matrix.view(show_only_selection=False))
 
-    return matrix_pane1
+    return matrix
 
-
+def makeMatrixPane(matrix):
+    matrix_pane = pn.Column(pn.Pane(matrix.param, css_classes=['matrix_dropdowns']), pn.Pane(matrix.view()))
+    return matrix_pane
