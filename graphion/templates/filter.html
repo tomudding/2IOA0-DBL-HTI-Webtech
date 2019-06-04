@@ -40,7 +40,7 @@ Edited: 2019-06-04
                                 <hr>
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-s-6">
+                                        <div class="col-s-6 icon-area">
                                             <img src="/static/images/interesting-nodes-edges.svg" alt="clusters-img">
                                             <br>
                                             <button class="button button-primary"
@@ -56,7 +56,7 @@ Edited: 2019-06-04
                                              });">Interesting nodes / edges</button>
                                         </div>
                                         <div class="vertical-line"></div>
-                                        <div class="col-s-6">
+                                        <div class="col-s-6 icon-area">
                                             <img src="/static/images/clusters.svg" alt="clusters-img">
                                             <br>
                                             <button class="button button-primary"
@@ -74,12 +74,10 @@ Edited: 2019-06-04
                             					}
                             				</script>
                                             <div class="row">
-												<div class="col-s-2 col-offset-4">
-                                                    <button class="button button-primary pop-up-footer-button-back" onclick="goBack();">Back</button>
-                                                </div>
-                                                <div class="col-s-2">
+												<div class="footer-area">
+                                                    <button class="button pop-up-footer-button pop-up-footer-button-back" onclick="goBack();">Back</button>
                                                     <!-- Opens a "Help" -popup window -->
-                                                    <button class="button button-primary pop-up-footer-button-help" onclick="document.getElementById('help-page-1').style.display='block';document.getElementById('choose-theme').style.display='none';">Help</button>
+                                                    <button class="button pop-up-footer-button pop-up-footer-button-help" onclick="document.getElementById('help-page-1').style.display='block';document.getElementById('choose-theme').style.display='none';">Help</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -108,8 +106,8 @@ Edited: 2019-06-04
                                     <div class="row">
                                         <div class="col-s-12 col-0-margin">
                                             <div class="row">
-                                                <div class="col-s-2 col-offset-5">
-                                                    <button class="button button-primary pop-up-footer-button-back" onclick="document.getElementById('help-page-1').style.display='none';document.getElementById('choose-theme').style.display='block';">Back</button>
+                                                <div class="footer-area">
+                                                    <button class="button pop-up-footer-button pop-up-footer-button-back" onclick="document.getElementById('help-page-1').style.display='none';document.getElementById('choose-theme').style.display='block';"> Back</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -120,230 +118,347 @@ Edited: 2019-06-04
                     </div>
 
                     <!-- Page 2: select cluster type -->
-                    <div class="pop-up-window" id="choose-POI-clusters">
-                        <div class="pop-up-title">
-                        Specify your point of interest
-                        </div>
-                        <div class="pop-up-icon-area">
-                            <div class="pop-up-icon-area-left">
-                                <img src="/static/images/clusters.svg" alt="clusters-img">
-                                <br>
-                                <button class="button button-primary"
-            					onclick="
-            					pageCounter();
-                                document.getElementById('choose-POI-clusters').style.display='none';
-                                document.getElementById('filter-edge-weight').style.display='block';
-                                ">Cluster Type 1</button>
+                    <div class="col-s-8 col-offset-2 valign" id="choose-POI-clusters">
+                        <div class="card-container">
+							<div class="card-contents">
+								<h2 class="card-title text-center">Specify your point of interest</h2>
+                                <hr>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-s-6 icon-area">
+                                            <img src="/static/images/clusters.svg" alt="clusters-img">
+                                            <br>
+                                            <button class="button button-primary"
+                                            onclick="
+                                            document.getElementById('choose-POI-clusters').style.display='none';">
+                                                Cluster Type 1
+                                            </button>
+                                        </div>
+                                        <div class="vertical-line"></div>
+                                        <div class="col-s-6 icon-area">
+                                            <img src="/static/images/clusters.svg" alt="clusters-img">
+                                            <br>
+                                            <button class="button button-primary"
+                                            onclick="
+                                            document.getElementById('choose-POI-clusters').style.display='none';">
+                                                Cluster Type 2
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-s-12 col-0-margin">
+                                            <div class="row">
+												<div class="footer-area">
+                                                    <button class="button pop-up-footer-button pop-up-footer-button-back" onclick="
+                                                    document.getElementById('choose-POI-clusters').style.display='none';
+                                                    document.getElementById('choose-theme').style.display='block'">
+                                                        Back
+                                                    </button>
+                                                    <!-- Opens a "Help" -popup window -->
+                                                    <button class="button pop-up-footer-button pop-up-footer-button-help" onclick="
+                                                    document.getElementById('help-page-2').style.display='block';
+                                                    document.getElementById('choose-POI-clusters').style.display='none';">
+                                                        Help
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="vertical-line"></div>
-                            <div class="pop-up-icon-area-right">
-                                <img src="/static/images/clusters.svg" alt="clusters-img">
-                                <br>
-                                <button class="button button-primary"
-            					onclick="
-            					pageCounter();
-                                document.getElementById('choose-POI-clusters').style.display='none';
-                                document.getElementById('filter-edge-weight').style.display='block'
-                                ">Cluster Type 2</button>
-                            </div>
-                        </div>
-                        <div class="pop-up-footer-area">
-                            <button class="button button-primary pop-up-footer-button-back"
-                            onclick="
-                            document.getElementById('choose-POI-clusters').style.display='none';
-                            document.getElementById('choose-theme').style.display='block'
-                            ">< Back</button>
-                            <button class="button button-primary pop-up-footer-button-help"
-                            onclick="
-                            document.getElementById('help-page-3').style.display='block';
-                            document.getElementById('choose-POI-clusters').style.display='none';
-                            ">Help ?</button>
                         </div>
                     </div>
 
                     <!-- Help section of page 2 -->
-                    <div class="pop-up-window" id="help-page-3">
-                        <h3 class="help-section-title">What is Cluster Type 1?</h3>
-                        <p class="help-section-paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce varius finibus sem vitae molestie. Vivamus at quam imperdiet metus interdum tempor. Integer luctus libero id orci auctor posuere. Cras tincidunt hendrerit ante, id feugiat purus sagittis a. Curabitur nec nibh varius, tempor ex in, pulvinar turpis. Ut ligula lectus, dignissim id felis finibus, venenatis pretium lectus. Maecenas accumsan vulputate lorem, vel mollis est pretium sed. Sed felis lacus, finibus eget sem vitae, mollis ultrices tellus. Donec commodo finibus eros, nec egestas lectus blandit id.</p>
-                        <h3 class="help-section-title">What is Cluster Type 2?</h3>
-                        <p class="help-section-paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce varius finibus sem vitae molestie. Vivamus at quam imperdiet metus interdum tempor. Integer luctus libero id orci auctor posuere. Cras tincidunt hendrerit ante, id feugiat purus sagittis a. Curabitur nec nibh varius, tempor ex in, pulvinar turpis. Ut ligula lectus, dignissim id felis finibus, venenatis pretium lectus. Maecenas accumsan vulputate lorem, vel mollis est pretium sed. Sed felis lacus, finibus eget sem vitae, mollis ultrices tellus. Donec commodo finibus eros, nec egestas lectus blandit id.</p>
-                        <div class="pop-up-footer-area">
-                            <button class="button button-primary pop-up-footer-button-back"
-                            onclick="
-                            document.getElementById('help-page-3').style.display='none';
-                            document.getElementById('choose-POI-clusters').style.display='block';
-                            ">< Back</button>
+                    <div class="col-s-8 col-offset-2 valign" id="help-page-2">
+                        <div class="card-container">
+                            <div class="card-contents">
+                                <!-- Explain the difference between interesting nodes / edges and clusters -->
+                                <h2 class="card-title text-center">Help</h2>
+                                <hr>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-s-12">
+                                            <h3 class="help-section-title">What is Cluster Type 1?</h3>
+                                            <p class="help-section-paragraph">For big datasets, it is not possible to show all nodes and edges in the dataset. That's why you are getting the opportunity to decide which nodes and edges you want to visualize. We will call those nodes and edges 'interesting'.<br>All edges have a weight (possibly 0 or 1). Edges will be considered interesting if their weight is between the minimum and maximum weight, which you get to decide.<br>Nodes will be considered interesting if the number of incoming and outcoming interesting edges is within the minimum and maximum that, again, you can decide.</p><br>
+                                            <h3 class="help-section-title">What is Cluster Type 2?</h3>
+                                            <p class="help-section-paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce varius finibus sem vitae molestie. Vivamus at quam imperdiet metus interdum tempor. Integer luctus libero id orci auctor posuere. Cras tincidunt hendrerit ante, id feugiat purus sagittis a. Curabitur nec nibh varius, tempor ex in, pulvinar turpis. Ut ligula lectus, dignissim id felis finibus, venenatis pretium lectus. Maecenas accumsan vulputate lorem, vel mollis est pretium sed. Sed felis lacus, finibus eget sem vitae, mollis ultrices tellus. Donec commodo finibus eros, nec egestas lectus blandit id.</p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-s-12 col-0-margin">
+                                            <div class="row">
+                                                <div class="footer-area">
+                                                    <button class="button pop-up-footer-button pop-up-footer-button-back" onclick="document.getElementById('help-page-2').style.display='none';document.getElementById('choose-POI-clusters').style.display='block';"> Back</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                     <!-- Page 3: filter the edge weights -->
-                     <div class="pop-up-window" id="filter-edge-weight">
-                        <div class="pop-up-title">
-                        Filter by edge weights
-                        </div>
-                        <div class="pop-up-icon-area">
-                        <!--    <div class="pop-up-icon-area-center">
-                                <img src="/static/images/filter-test.png" alt="clusters-img">
-                            </div>                      -->
-                            <div id="weight-selection">Loading...</div>
-                	        <div id="weight-plot"></div>
-                		    <p id="between-weight">Select nodes by dragging the mouse.</p>
 
-                            <br>
-                            <span class="filter-text">Display only edges that satisfy the weight requirement:</span>
-                            <input type="checkbox" class="multiple-choice-selection" id="edge-weight-chk-box">
-                            <span class="custom-checkbox" id="custom-edge-weight-chk-box"
-                            onclick="
-                            if (document.getElementById('edge-weight-chk-box').checked==false) {
-                                document.getElementById('edge-weight-chk-box').checked=true;
-                            } else {
-                                document.getElementById('edge-weight-chk-box').checked=false;
-                            }"></span>
-                            <br>
-                            <span class="filter-text">Estimated processing time:</span>
-                            <br>
-                            <span class="filter-text" id="filter-text-time">126 min</span>
-                        </div>
-                        <div class="pop-up-footer-area">
-                            <button class="button button-primary pop-up-footer-button-back" onclick="goBackFromPage4();">< Back</button>
-                            <button class="button button-primary pop-up-footer-button-continue"
-                            onclick="
-            				document.getElementById('filter-edge-weight').style.display='none';
-                            document.getElementById('filter-node-in-degree').style.display='block';
-                             fetch('/api/filter/distribution/degree/in/').then(
-                            function(response) {
-                                document.getElementById('in-degree-selection').setAttribute('hidden', true);
-                                return response.json(); })
-                             .then(function(item) {
-                                Bokeh.embed.embed_item(item, 'in-degree-plot');
-                             });
-                            ">Continue ></button>
-                            <button class="button button-primary pop-up-footer-button-help"
-                            onclick="
-                            document.getElementById('help-page-4').style.display='block';
-                            document.getElementById('filter-edge-weight').style.display='none';
-                            ">Help ?</button>
+                    <!-- Page 3: filter the edge weights -->
+                    <div class="col-s-8 col-offset-2 valign" id="filter-edge-weight">
+                        <div class="card-container">
+                            <div class="card-contents">
+                                <h2 class="card-title text-center">Filter edge weights</h2>
+                                <hr>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-s-12 icon-area valign">
+                                            <div id="weight-selection">Loading...</div>
+                                            <div id="weight-plot"></div>
+                                            <p id="between-weight">Select nodes by dragging the mouse.</p>
+                
+                                            <br>
+                                            <span class="filter-text">Display only edges that satisfy the weight requirement:</span>
+                                            <input type="checkbox" class="multiple-choice-selection" id="edge-weight-chk-box">
+                                            <span class="custom-checkbox" id="custom-edge-weight-chk-box"
+                                            onclick="
+                                            if (document.getElementById('edge-weight-chk-box').checked==false) {
+                                                document.getElementById('edge-weight-chk-box').checked=true;
+                                            } else {
+                                                document.getElementById('edge-weight-chk-box').checked=false;
+                                            }"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-s-12 col-0-margin">
+                                            <div class="row">
+                                                <div class="footer-area">
+                                                    <button class="button pop-up-footer-button pop-up-footer-button-back" onclick="
+                                                    document.getElementById('filter-edge-weight').style.display='none';
+                                                    document.getElementById('choose-theme').style.display='block';">
+                                                        Back
+                                                    </button>
+
+                                                    <button class="button button-primary pop-up-footer-button-continue"
+                                                    onclick="
+                                                    document.getElementById('filter-edge-weight').style.display='none';
+                                                    document.getElementById('filter-node-in-degree').style.display='block';
+                                                    fetch('/api/filter/distribution/degree/in/').then(
+                                                    function(response) {
+                                                        document.getElementById('in-degree-selection').setAttribute('hidden', true);
+                                                        return response.json(); })
+                                                    .then(function(item) {
+                                                        Bokeh.embed.embed_item(item, 'in-degree-plot');
+                                                    });
+                                                    ">Continue</button>
+
+                                                    <!-- Opens a "Help" -popup window -->
+                                                    <button class="button pop-up-footer-button pop-up-footer-button-help" onclick="
+                                                    document.getElementById('help-page-3').style.display='block';
+                                                    document.getElementById('filter-edge-weight').style.display='none';">
+                                                    Help</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Help section of page 3 -->
-                    <div class="pop-up-window" id="help-page-4">
-                        <h3 class="help-section-title">What are edge weights?</h3>
-                        <p class="help-section-paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce varius finibus sem vitae molestie. Vivamus at quam imperdiet metus interdum tempor. Integer luctus libero id orci auctor posuere. Cras tincidunt hendrerit ante, id feugiat purus sagittis a. Curabitur nec nibh varius, tempor ex in, pulvinar turpis. Ut ligula lectus, dignissim id felis finibus, venenatis pretium lectus. Maecenas accumsan vulputate lorem, vel mollis est pretium sed. Sed felis lacus, finibus eget sem vitae, mollis ultrices tellus. Donec commodo finibus eros, nec egestas lectus blandit id.</p>
-                        <div class="pop-up-footer-area">
-                            <button class="button button-primary pop-up-footer-button-back"
-                            onclick="
-                            document.getElementById('help-page-4').style.display='none';
-                            document.getElementById('filter-edge-weight').style.display='block';
-                            ">< Back</button>
+                    <div class="col-s-8 col-offset-2 valign" id="help-page-3">
+                        <div class="card-container">
+                            <div class="card-contents">
+                                <h2 class="card-title text-center">Help</h2>
+                                <hr>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-s-12">
+                                            <h3 class="help-section-title">What are edge weights?</h3>
+                                            <p class="help-section-paragraph">For big datasets, it is not possible to show all nodes and edges in the dataset. That's why you are getting the opportunity to decide which nodes and edges you want to visualize. We will call those nodes and edges 'interesting'.<br>All edges have a weight (possibly 0 or 1). Edges will be considered interesting if their weight is between the minimum and maximum weight, which you get to decide.<br>Nodes will be considered interesting if the number of incoming and outcoming interesting edges is within the minimum and maximum that, again, you can decide.</p><br>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-s-12 col-0-margin">
+                                            <div class="row">
+                                                <div class="footer-area">
+                                                    <button class="button pop-up-footer-button pop-up-footer-button-back" onclick="
+                                                    document.getElementById('help-page-3').style.display='none';
+                                                    document.getElementById('filter-edge-weight').style.display='block';"> 
+                                                        Back
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Page 4: filter the node in-degrees -->
-                    <div class="pop-up-window" id="filter-node-in-degree">
-                        <div class="pop-up-title">
-                        Filter by node's in-degree
-                        </div>
-                        <div class="pop-up-icon-area">
-                            <div id="in-degree-selection">Calculating best KDE bandwidth...</div>
-                				<div id="in-degree-plot"></div>
-                				<p id="between-in-degree">Select nodes by dragging the mouse.</p>
-                            <br>
-                            <span class="filter-text">Estimated processing time:</span>
-                            <br>
-                            <span class="filter-text" id="filter-text-time">126 min</span>
-                        </div>
-                        <div class="pop-up-footer-area">
-                            <button class="button button-primary pop-up-footer-button-back"
-                            onclick="
-                            document.getElementById('filter-node-in-degree').style.display='none';
-                            document.getElementById('filter-edge-weight').style.display='block';
-                            plot = document.getElementById('in-degree-plot')
-                            plot.removeChild(plot.childNodes[0]);
-                            document.getElementById('between-in-degree').innerHTML = 'Select nodes by dragging the mouse.'">< Back</button>
-            				<button class="button button-primary pop-up-footer-button-continue"
-                            onclick="
-                            document.getElementById('filter-node-in-degree').style.display='none';
-                            document.getElementById('filter-node-out-degree').style.display='block';
-                            fetch('/api/filter/distribution/degree/out/').then(
-                            function(response) {
-                                document.getElementById('out-degree-selection').setAttribute('hidden', true);
-                                return response.json(); })
-                             .then(function(item) {
-                                Bokeh.embed.embed_item(item, 'out-degree-plot');
-                             });
-                            ">Continue ></button>
-                            <button class="button button-primary pop-up-footer-button-help"
-                            onclick="
-                            document.getElementById('help-page-5').style.display='block';
-                            document.getElementById('filter-node-in-degree').style.display='none';
-                            ">Help ?</button>
+                     <!-- Page 4: filter the node in-degrees -->
+                    <div class="col-s-8 col-offset-2 valign" id="filter-node-in-degree">
+                        <div class="card-container">
+                            <div class="card-contents">
+                                <h2 class="card-title text-center">Filter node's in-degree</h2>
+                                <hr>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-s-12 icon-area valign">
+                                            <div id="in-degree-selection">Calculating best KDE bandwidth...</div>
+                                            <div id="in-degree-plot"></div>
+                                            <p id="between-in-degree">Select nodes by dragging the mouse.</p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-s-12 col-0-margin">
+                                            <div class="row">
+                                                <div class="footer-area">
+                                                    <button class="button pop-up-footer-button pop-up-footer-button-back"
+                                                    onclick="
+                                                    document.getElementById('filter-node-in-degree').style.display='none';
+                                                    document.getElementById('filter-edge-weight').style.display='block';
+                                                    plot = document.getElementById('in-degree-plot')
+                                                    plot.removeChild(plot.childNodes[0]);
+                                                    document.getElementById('between-in-degree').innerHTML = 'Select nodes by dragging the mouse.'">
+                                                        Back
+                                                    </button>
+                                                    <button class="button button-primary pop-up-footer-button-continue"
+                                                    onclick="
+                                                    document.getElementById('filter-node-in-degree').style.display='none';
+                                                    document.getElementById('filter-node-out-degree').style.display='block';
+                                                    fetch('/api/filter/distribution/degree/out/').then(
+                                                    function(response) {
+                                                        document.getElementById('out-degree-selection').setAttribute('hidden', true);
+                                                        return response.json(); })
+                                                     .then(function(item) {
+                                                        Bokeh.embed.embed_item(item, 'out-degree-plot');
+                                                     });">
+                                                        Continue
+                                                    </button>
+                                                    <button class="button pop-up-footer-button pop-up-footer-button-help"
+                                                    onclick="
+                                                    document.getElementById('help-page-4').style.display='block';
+                                                    document.getElementById('filter-node-in-degree').style.display='none';">
+                                                        Help
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Help section of page 4 -->
-                    <div class="pop-up-window" id="help-page-5">
-                        <h3 class="help-section-title">What is node's in-degree?</h3>
-                        <p class="help-section-paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce varius finibus sem vitae molestie. Vivamus at quam imperdiet metus interdum tempor. Integer luctus libero id orci auctor posuere. Cras tincidunt hendrerit ante, id feugiat purus sagittis a. Curabitur nec nibh varius, tempor ex in, pulvinar turpis. Ut ligula lectus, dignissim id felis finibus, venenatis pretium lectus. Maecenas accumsan vulputate lorem, vel mollis est pretium sed. Sed felis lacus, finibus eget sem vitae, mollis ultrices tellus. Donec commodo finibus eros, nec egestas lectus blandit id.</p>
-                        <div class="pop-up-footer-area">
-                            <button class="button button-primary pop-up-footer-button-back"
-                            onclick="
-                            document.getElementById('help-page-5').style.display='none';
-                            document.getElementById('filter-node-in-degree').style.display='block';
-                            ">< Back</button>
+                    <div class="col-s-8 col-offset-2 valign" id="help-page-4">
+                        <div class="card-container">
+                            <div class="card-contents">
+                                <h2 class="card-title text-center">Help</h2>
+                                <hr>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-s-12">
+                                            <h3 class="help-section-title">What is node's in-degree?</h3>
+                                            <p class="help-section-paragraph">For big datasets, it is not possible to show all nodes and edges in the dataset. That's why you are getting the opportunity to decide which nodes and edges you want to visualize. We will call those nodes and edges 'interesting'.<br>All edges have a weight (possibly 0 or 1). Edges will be considered interesting if their weight is between the minimum and maximum weight, which you get to decide.<br>Nodes will be considered interesting if the number of incoming and outcoming interesting edges is within the minimum and maximum that, again, you can decide.</p><br>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-s-12 col-0-margin">
+                                            <div class="row">
+                                                <div class="footer-area">
+                                                    <button class="button pop-up-footer-button pop-up-footer-button-back" onclick="
+                                                    document.getElementById('help-page-4').style.display='none';
+                                                    document.getElementById('filter-node-in-degree').style.display='block';"> 
+                                                        Back
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
 
                     <!-- Page 5: filter the node out-degrees -->
-                    <div class="pop-up-window" id="filter-node-out-degree">
-                        <div class="pop-up-title">
-                        Filter by node's out-degree
-                        </div>
-                        <div class="pop-up-icon-area">
-                            <div id="out-degree-selection">Calculating best KDE bandwidth...</div>
-                                <div id="out-degree-plot"></div>
-                                <p id="between-out-degree">Select nodes by dragging the mouse.</p>
-                            <!--
-                            <div class="pop-up-icon-area-center">
-                                <img src="/static/images/filter-test.png" alt="clusters-img">
-
+                    <div class="col-s-8 col-offset-2 valign" id="filter-node-out-degree">
+                        <div class="card-container">
+                            <div class="card-contents">
+                                <h2 class="card-title text-center">Filter node's out-degree</h2>
+                                <hr>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-s-12 icon-area valign">
+                                            <div id="out-degree-selection">Calculating best KDE bandwidth...</div>
+                                            <div id="out-degree-plot"></div>
+                                            <p id="between-out-degree">Select nodes by dragging the mouse.</p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-s-12 col-0-margin">
+                                            <div class="row">
+                                                <div class="footer-area">
+                                                    <button class="button pop-up-footer-button pop-up-footer-button-back"
+                                                    onclick="
+                                                    document.getElementById('filter-node-out-degree').style.display='none';
+                                                    document.getElementById('filter-node-in-degree').style.display='block';
+                                                    plot = document.getElementById('out-degree-plot')
+                                                    plot.removeChild(plot.childNodes[0]);
+                                                    document.getElementById('between-out-degree').innerHTML = 'Select nodes by dragging the mouse.'">
+                                                        Back
+                                                    </button>
+                                                    <button class="button button-primary pop-up-footer-button-continue"
+                                                    onclick="location.href='/visualise/{{fileName}}'">
+                                                        Start the tool
+                                                    </button>
+                                                    <button class="button pop-up-footer-button pop-up-footer-button-help"
+                                                    onclick="
+                                                    document.getElementById('help-page-5').style.display='block';
+                                                    document.getElementById('filter-node-out-degree').style.display='none';">
+                                                        Help
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            -->
-                            <br>
-                            <span class="filter-text">Estimated processing time:</span>
-                            <br>
-                            <span class="filter-text" id="filter-text-time">126 min</span>
-                        </div>
-                        <div class="pop-up-footer-area">
-                            <button class="button button-primary pop-up-footer-button-back"
-                            onclick="
-                            document.getElementById('filter-node-out-degree').style.display='none';
-                            document.getElementById('filter-node-in-degree').style.display='block';
-                            plot = document.getElementById('out-degree-plot')
-                            plot.removeChild(plot.childNodes[0]);
-                            document.getElementById('between-out-degree').innerHTML = 'Select nodes by dragging the mouse.'">< Back</button>
-                            <button class="button button-primary pop-up-footer-button-continue"
-                            onclick="location.href='/visualise/{{fileName}}'">Start the tool ></button>
-                            <button class="button button-primary pop-up-footer-button-help"
-                            onclick="
-                            document.getElementById('help-page-6').style.display='block';
-                            document.getElementById('filter-node-out-degree').style.display='none';
-                            ">Help ?</button>
                         </div>
                     </div>
+
 
                     <!-- Help section of page 5 -->
-                    <div class="pop-up-window" id="help-page-6">
-                        <h3 class="help-section-title">What is node's out-degree?</h3>
-                        <p class="help-section-paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce varius finibus sem vitae molestie. Vivamus at quam imperdiet metus interdum tempor. Integer luctus libero id orci auctor posuere. Cras tincidunt hendrerit ante, id feugiat purus sagittis a. Curabitur nec nibh varius, tempor ex in, pulvinar turpis. Ut ligula lectus, dignissim id felis finibus, venenatis pretium lectus. Maecenas accumsan vulputate lorem, vel mollis est pretium sed. Sed felis lacus, finibus eget sem vitae, mollis ultrices tellus. Donec commodo finibus eros, nec egestas lectus blandit id.</p>
-                        <div class="pop-up-footer-area">
-                            <button class="button button-primary pop-up-footer-button-back"
-                            onclick="
-                            document.getElementById('help-page-6').style.display='none';
-                            document.getElementById('filter-node-out-degree').style.display='block';
-                            ">< Back</button>
+                    <div class="col-s-8 col-offset-2 valign" id="help-page-5">
+                        <div class="card-container">
+                            <div class="card-contents">
+                                <h2 class="card-title text-center">Help</h2>
+                                <hr>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-s-12">
+                                            <h3 class="help-section-title">What is node's out-degree?</h3>
+                                            <p class="help-section-paragraph">For big datasets, it is not possible to show all nodes and edges in the dataset. That's why you are getting the opportunity to decide which nodes and edges you want to visualize. We will call those nodes and edges 'interesting'.<br>All edges have a weight (possibly 0 or 1). Edges will be considered interesting if their weight is between the minimum and maximum weight, which you get to decide.<br>Nodes will be considered interesting if the number of incoming and outcoming interesting edges is within the minimum and maximum that, again, you can decide.</p><br>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-s-12 col-0-margin">
+                                            <div class="row">
+                                                <div class="footer-area">
+                                                    <button class="button pop-up-footer-button pop-up-footer-button-back"
+                                                    onclick="
+                                                    document.getElementById('help-page-5').style.display='none';
+                                                    document.getElementById('filter-node-out-degree').style.display='block';">
+                                                        Back
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </section>
