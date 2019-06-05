@@ -156,10 +156,7 @@ def generateForceDirectedDiagram(file, isDirected, df=False):
                tools=['box_select', 'lasso_select', 'tap'], width=600, height=600))
 
     # print("Edge bundling and datashading took: " + str(time.time()-begin))
-    return (plot, points)
-
-def generateForceDirectedDiagramPane(graph):
-    return pn.Column(graph[0] * graph[1])
+    return (pn.Column(plot * points), points)
 
 # Generate a hierarchical node-link diagram
 def generateHierarchicalDiagram(file, isDirected, df=False):
