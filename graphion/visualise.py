@@ -17,8 +17,11 @@ visualiseBlueprint = Blueprint('visualiseBlueprint', __name__, template_folder='
 @visualiseBlueprint.route('/visualise/<file>', methods=['GET'], strict_slashes=False)
 def visualise(file):
     if get_filtered_df() is None:
-        flash("No dataset has been selected. Please select a previously uploaded dataset or upload a new dataset.", "danger")
-        return redirect("/selection")
+        if file is None:
+            flash("No dataset has been selected. Please select a previously uploaded dataset or upload a new dataset.", "danger")
+            return redirect("/selection")
+        else:
+            return redirect("/filter/%s" % file)
 
     if "gunicorn" in os.environ.get("SERVER_SOFTWARE", ""):
         script = server_document('https://2ioa0.uddi.ng:5001/bkapp', relative_urls=False, resources=None)

@@ -117,7 +117,7 @@ def generateForceDirectedDiagram(file, isDirected, df=False):
     # get node and edge information from graph
     nodes, nodes_coordinates = zip(*sorted(layout.items()))
     nodes_x, nodes_y = list(zip(*nodes_coordinates))
-    
+
     # calculate centrality
     centrality = degree_centrality(G)
     _, nodeCentralities = zip(*sorted(centrality.items()))
@@ -144,6 +144,7 @@ def generateForceDirectedDiagram(file, isDirected, df=False):
     plot.opts(cmap = partitionColours, color_index='Partition', node_size='Centrality', inspection_policy='nodes', tools=['box_select', 'lasso_select', 'tap', 'hover'], width=600, height=600)
 
     renderer = hv.renderer('bokeh')
+    renderer.webgl = True
     table = hv.Table(renderer.get_plot(plot).handles['glyph_renderer'].node_renderer.data_source.to_df())
     points = hv.Points((nodes_x, nodes_y, nodes, centralityList, partitionList), vdims=['Index', 'Centrality', 'Partition'])
     points.opts(cmap = partitionColours, color_index='Partition', size='Centrality', line_width = 1.5, line_color='#000000')
@@ -153,7 +154,6 @@ def generateForceDirectedDiagram(file, isDirected, df=False):
     plot = bundle_graph(plot)
     plot = (datashade(plot, normalization='linear', width=600, height=600) * plot.nodes).opts(opts.Nodes(cmap=partitionColours, color='Partition', size='Centrality',
                tools=['box_select', 'lasso_select', 'tap'], width=600, height=600))
-
 
     # print("Edge bundling and datashading took: " + str(time.time()-begin))
     return (plot, points)
