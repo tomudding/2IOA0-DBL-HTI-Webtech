@@ -41,7 +41,5 @@ function displayDiagram(id){
 }
 
 function displayReordering(id){
-    console.log("Reordering started")
     $.post("/switch-ordering", {to: id});
-    console.log("Reordering finished")
 }
