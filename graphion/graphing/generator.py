@@ -1,13 +1,13 @@
 """
 Author(s): Tom Udding, Steven van den Broek, Sam Baggen
 Created: 2019-05-03
-Edited: 2019-06-03
+Edited: 2019-06-05
 """
 from graphion import server
-from graphion.graphing.nodelink.graph import generateForceDirectedDiagram, generateHierarchicalDiagram, generateRadialDiagram, generate3DDiagram, generateForceDirectedDiagramPane
+from graphion.graphing.nodelink.graph import generateForceDirectedDiagram, generateHierarchicalDiagram, generateRadialDiagram, generate3DDiagram
 from graphion.graphing.linking import SelectEdgeCallback, SelectMatrixToNodeCallback, SelectNodeToMatrixCallback
 from graphion.graphing.linking import SelectEdgeLink, SelectMatrixToNodeLink, SelectNodeToMatrixLink
-from graphion.graphing.matrix.protomatrix import makeMatrix, makeMatrixPane
+from graphion.graphing.matrix.protomatrix import makeMatrix
 from graphion.upload import get_filtered_df
 import os
 import panel as pn
@@ -62,11 +62,7 @@ def generateBokehApp(doc):
             # Link nodelink to matrix (points only)
             #SelectNodeToMatrixLink(s1[1], s2.view)
 
-            # Generates the panels
-            graphPane = generateForceDirectedDiagramPane(s1)
-            matrixPane = makeMatrixPane(s2)
-
-            return pn.Row(graphPane, matrixPane)
+            return pn.Row(s1, s2)
 
     df = get_filtered_df()
 
