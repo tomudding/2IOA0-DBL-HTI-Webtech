@@ -290,10 +290,15 @@ Edited: 2019-06-03
 			<div class="left-bar-hide-button" onclick="hideLeftBar()"><</div>
 			<div class="left-bar-screen-big" style="top: 45vh;">Screen 2:</div>
 			<div class="left-bar-screen-small" style="top: 50vh; left: 10vw; width: 7.6vw;">Select ordering:</div>
-			<select class="dropdown" style="left: 8.4vw; top: 53vh; width: 11vw;">
-				<option>Option1</option>
-				<option>Option2</option>
-				<option>Option3</option>
+			<select class="dropdown" onChange = "displayReordering(this.value)" style="left: 8.4vw; top: 53vh; width: 11vw;">
+				<option value="none">None</option>
+				<option value="single">Single</option>
+				<option value="average">Average</option>
+				<option value="complete">Complete</option>
+				<option value="centroid">Centroid</option>
+				<option value="weighted">Weighted</option>
+				<option value="median">Median</option>
+				<option value="ward">Ward</option>
 			</select>
 			<div class="left-bar-screen-small" style="top: 59.3vh; left: 2.8vw;">Adjacency</div>
 			<div class="left-bar-screen-small" style="top: 61vh; left: 3.6vw;">matrix</div>

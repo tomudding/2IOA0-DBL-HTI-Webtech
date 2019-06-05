@@ -30,8 +30,12 @@ def generateBokehApp(doc):
                                           objects=["none", "radial", "force", "hierarchical", "3d"])
         Screen2 = param.ObjectSelector(default="matrix",
                                       objects=["none", "matrix"])
+        
+        Ordering = param.ObjectSelector(default="none",
+                                          objects=["none", "single", "average", "complete", "centroid", "weighted",
+                                                   "median", "ward"])
 
-        @param.depends('Screen1', 'Screen2')
+        @param.depends('Screen1', 'Screen2', 'Ordering')
         def view(self):
             global s1
             s1 = None
@@ -62,7 +66,10 @@ def generateBokehApp(doc):
             # Link nodelink to matrix (points only)
             #SelectNodeToMatrixLink(s1[1], s2.view)
 
-            return pn.Row(s1[0], s2)
+            s2.reordering = self.Ordering
+            s2Pane = pn.Column(pn.Pane(s2.param, css_classes=['matrix_dropdowns']), s2.view)
+
+            return pn.Row(s1[0], s2Pane)
 
     df = get_filtered_df()
 
@@ -92,6 +99,9 @@ def generateBokehApp(doc):
 
 def changeScreen1(new_type):
     visApp.Screen1 = new_type
+
+def changeOrdering(new_ordering):
+    visApp.Ordering = new_ordering
 
 def getFilePath(file):
     file = file + '.h5'

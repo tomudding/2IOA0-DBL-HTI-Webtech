@@ -215,7 +215,7 @@ def makeMatrix(file, plot, df=False):
     # %%
     # hv_plot = hm + table
 
-    matrix_pane1 = pn.Column(pn.Pane(matrix.param, css_classes=['matrix_dropdowns']), matrix.view())
+    #matrix_pane1 = pn.Column(pn.Pane(matrix.param, css_classes=['matrix_dropdowns']), matrix.view)
     # matrix_pane2 = pn.Column(matrix.param, matrix.view(show_only_selection=False))
 
-    return matrix_pane1
+    return matrix
