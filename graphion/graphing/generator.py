@@ -62,7 +62,7 @@ def generateBokehApp(doc):
             # Link nodelink to matrix (points only)
             #SelectNodeToMatrixLink(s1[1], s2.view)
 
-            return pn.Row(s1, s2)
+            return pn.Row(s1[0], s2)
 
     df = get_filtered_df()
 
