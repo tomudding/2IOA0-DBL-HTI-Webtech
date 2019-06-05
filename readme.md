@@ -77,8 +77,7 @@ Suggested further improvements but not required:
 - [ ] Multiple coordinated view design
   - [x] Different visualizations next to each other
   - [ ] Brushing and linking (highlighting / selecting is synchronized between graphs)
-- [ ] Options for link representations in node-link diagrams (dotted, dashed, curved etc.)
-- [ ] Edge bundling (though bold red text comes included: Only if you enjoy visualization and like to do more)
+- [x] Edge bundling (though bold red text comes included: Only if you enjoy visualization and like to do more)
 
 ## DOCUMENTATION
 ### 1. Installation
