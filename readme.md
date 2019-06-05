@@ -19,12 +19,12 @@ Our own deadlines:
 | Task                              | Deadline date |
 ------------------------------------|----------------
 | Draft of final report             | 14th of June  |
-| Filming video                     | 17th of June  |
-------------------------------------|----------------
 | Checking and correcting report    | 16th of June  |
+| Filming video                     | 17th of June  |
+| Editing video (draft)             | 19th of June  |
+| Comments on video (draft)         | 20th of June (before 12)  |
+| Fix video | 21st of June| 
 | Final touches on our tool         | 21st of June  |
-| Editing video                     | 21st of June  |
-
 
 ## REQUIREMENTS
 Minimal requirements as described in VisProjectDescription.pdf and the kickoff slides.
