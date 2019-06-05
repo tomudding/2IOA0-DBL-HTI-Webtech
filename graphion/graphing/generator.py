@@ -47,7 +47,7 @@ def generateBokehApp(doc):
                 s1 = getHierarchical(df)
             if self.Screen1 == "3d":
                 s1 = getGraph3D(df)
-            print(s1[1])
+            # print(s1[1])
             s2 = None
             if self.Screen2 == "matrix":
                 s2 = getMatrix(df)
