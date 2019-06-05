@@ -18,23 +18,13 @@ Our own deadlines:
 
 | Task                              | Deadline date |
 ------------------------------------|----------------
-| ~~Filtering page v1~~             |~~31st of May~~|
-| ~~Visualization page v1~~         |~~31st of May~~|
-| ~~Visualizations/interactions v1~~|~~31st of May~~|
-------------------------------------|----------------
-| Filtering page v2                 | 7th of June   |
-| Visualization page v2             | 7th of June   |
-| Visualizations/interactions v2    | 7th of June   |
-------------------------------------|----------------
-| Filtering page v3                 | 14th of June  |
-| Visualization page v3             | 14th of June  |
-| Visualizations/interactions v3    | 14th of June  |
-| Filming video                     | 14th of June  |
 | Draft of final report             | 14th of June  |
+| Filming video                     | 17th of June  |
 ------------------------------------|----------------
+| Checking and correcting report    | 16th of June  |
 | Final touches on our tool         | 21st of June  |
 | Editing video                     | 21st of June  |
-| Checking and correcting report    | 21st of June  |
+
 
 ## REQUIREMENTS
 Minimal requirements as described in VisProjectDescription.pdf and the kickoff slides.
