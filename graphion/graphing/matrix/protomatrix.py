@@ -176,7 +176,7 @@ def makeMatrix(file, plot, df=False):
                 table = hv.Table(current_data)
                 table.opts(height=500)
 
-                
+                print(plot)
                 select = SelectMatrixToNodeLink(hm, plot, indices=names)
                 select.register_callback('bokeh', SelectMatrixToNodeCallback)
 
@@ -199,7 +199,7 @@ def makeMatrix(file, plot, df=False):
                 current_data = hm.data
                 table = hv.Table(current_data)
                 table.opts(height=500)
-        	    
+                print(plot)
                 select = SelectMatrixToNodeLink(hm, plot, indices=names)
                 select.register_callback('bokeh', SelectMatrixToNodeCallback)
 
