@@ -160,6 +160,7 @@ def generateForceDirectedDiagram(file, isDirected, df=False):
 
 # Generate a hierarchical node-link diagram
 def generateHierarchicalDiagram(file, isDirected, df=False):
+    print("Started")
     if not df:
         df = decreaseDiagramSize(file)
     else:
@@ -169,15 +170,21 @@ def generateHierarchicalDiagram(file, isDirected, df=False):
     extension('bokeh')
     renderer('bokeh').webgl = True
     reset_output()
+    print(1)
     defaults = dict(width=400, height=400, padding=0.1)
     opts.defaults(opts.EdgePaths(**defaults), opts.Graph(**defaults), opts.Nodes(**defaults))
 
     G = from_pandas_adjacency(df)
-    cutoff = 2 #adjust this parameter to filter edges
-    SG = nx.Graph([(u, v, d) for u, v, d in G.edges(data=True) if d['weight'] > cutoff])
-
+    # cutoff = 2 #adjust this parameter to filter edges
+    # SG = nx.Graph([(u, v, d) for u, v, d in G.edges(data=True) if d['weight'] > cutoff])
+    SG = nx.Graph([(u, v, d) for u, v, d in G.edges(data=True)])
+    print(2)
     graph = hv.Graph.from_networkx(SG, positions = graphviz_layout(SG, prog ='dot')).opts(directed=isDirected, width=600, height=600, arrowhead_length=0.0005)
+    graph = bundle_graph(graph)
+    graph = (datashade(graph, normalization='linear', width=600, height=600) * graph.nodes).opts(
+        opts.Nodes(width=600, height=600, tools=['box_select', 'lasso_select', 'tap']))
     # Make a panel and widgets with param for choosing a layout
+    print(3)
     return pn.Column(graph)
 
 # Generate a radial node-link diagram
@@ -237,6 +244,10 @@ def generateRadialDiagram(file, isDirected, df=False):
     graph.opts(node_size='Degree', directed=isDirected, width=600, height=600, arrowhead_length=0.0005, inspection_policy='nodes', tools=['box_select', 'lasso_select', 'tap', 'hover'])
     points = hv.Points((nodes_x, nodes_y, nodes, degreeList), vdims=['Index', 'Degree'])
     points.opts(line_width = 1.5, line_color='#000000', size='Degree')
+    graph = bundle_graph(graph)
+    graph = (datashade(graph, normalization='linear', width=600, height=600) * graph.nodes).opts(
+        opts.Nodes(size='Degree',
+                   tools=['box_select', 'lasso_select', 'tap'], width=600, height=600))
 
     return (pn.Column(graph * points), graph, points)
 

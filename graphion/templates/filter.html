@@ -231,7 +231,11 @@ Edited: 2019-06-04
                                                 <div class="footer-area">
                                                     <button class="button pop-up-footer-button pop-up-footer-button-back" onclick="
                                                     document.getElementById('filter-edge-weight').style.display='none';
-                                                    document.getElementById('choose-theme').style.display='block';">
+                                                    document.getElementById('choose-theme').style.display='block';
+                                                    plot = document.getElementById('weight-plot');
+                                                    plot.removeChild(plot.childNodes[0]);
+                                                    document.getElementById('between-weight').innerHTML = 'Select nodes by dragging the mouse.';
+                                                    document.getElementById('weight-selection').removeAttribute('hidden');">
                                                         Back
                                                     </button>
 
@@ -302,7 +306,7 @@ Edited: 2019-06-04
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-s-12 icon-area valign">
-                                            <div id="in-degree-selection">Calculating best KDE bandwidth...</div>
+                                            <div id="in-degree-selection">Loading...</div>
                                             <div id="in-degree-plot"></div>
                                             <p id="between-in-degree">Select nodes by dragging the mouse.</p>
                                         </div>
@@ -315,9 +319,10 @@ Edited: 2019-06-04
                                                     onclick="
                                                     document.getElementById('filter-node-in-degree').style.display='none';
                                                     document.getElementById('filter-edge-weight').style.display='block';
-                                                    plot = document.getElementById('in-degree-plot')
+                                                    plot = document.getElementById('in-degree-plot');
                                                     plot.removeChild(plot.childNodes[0]);
-                                                    document.getElementById('between-in-degree').innerHTML = 'Select nodes by dragging the mouse.'">
+                                                    document.getElementById('between-in-degree').innerHTML = 'Select nodes by dragging the mouse.';
+                                                    document.getElementById('in-degree-selection').removeAttribute('hidden');">
                                                         Back
                                                     </button>
                                                     <button class="button button-primary pop-up-footer-button-continue"
@@ -389,7 +394,7 @@ Edited: 2019-06-04
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-s-12 icon-area valign">
-                                            <div id="out-degree-selection">Calculating best KDE bandwidth...</div>
+                                            <div id="out-degree-selection">Loading...</div>
                                             <div id="out-degree-plot"></div>
                                             <p id="between-out-degree">Select nodes by dragging the mouse.</p>
                                         </div>
@@ -402,9 +407,10 @@ Edited: 2019-06-04
                                                     onclick="
                                                     document.getElementById('filter-node-out-degree').style.display='none';
                                                     document.getElementById('filter-node-in-degree').style.display='block';
-                                                    plot = document.getElementById('out-degree-plot')
+                                                    plot = document.getElementById('out-degree-plot');
                                                     plot.removeChild(plot.childNodes[0]);
-                                                    document.getElementById('between-out-degree').innerHTML = 'Select nodes by dragging the mouse.'">
+                                                    document.getElementById('between-out-degree').innerHTML = 'Select nodes by dragging the mouse.';
+                                                    document.getElementById('out-degree-selection').removeAttribute('hidden');">
                                                         Back
                                                     </button>
                                                     <button class="button button-primary pop-up-footer-button-continue"
