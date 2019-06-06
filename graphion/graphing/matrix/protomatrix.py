@@ -1,7 +1,7 @@
 """
 Author(s): Steven van den Broek, Yuqin Cui, Sam Baggen
 Created: 2019-05-05
-Edited: 2019-06-03
+Edited: 2019-06-06
 """
 import numpy as np
 import pandas as pd
@@ -169,7 +169,7 @@ def makeMatrix(file, plot, df=False):
                 # return result.hvplot.heatmap('index1', 'index2', 'value', invert=True, tools=['tap', select_tool],
                 #          height=500, width=600, flip_yaxis=True, xaxis=None, yaxis=None, cmap=palette['kbc'])
 
-                hm = hv.HeatMap(result).opts(tools=['tap', select_tool, 'hover'], active_tools=['box_select'],
+                hm = hv.HeatMap(result).opts(tools=['tap', select_tool, 'hover'], toolbar='above', active_tools=['box_select'],
                                              height=500, width=550, xaxis=None, yaxis=None, cmap=self.color_palette,
                                              colorbar=True)
                 current_data = hm.data
@@ -193,7 +193,7 @@ def makeMatrix(file, plot, df=False):
                 dis_to_similarity(reordered_matrix)
                 # reordered_matrix = pd.DataFrame(reordered_matrix, index = author_reorder_list(df,res_order), column = author_reorder_list(df,res_order))
                 result = to_liquid_2(reordered_matrix, df, res_order)
-                hm = hv.HeatMap(result).opts(tools=['tap', select_tool, 'hover'], active_tools=['box_select'],
+                hm = hv.HeatMap(result).opts(tools=['tap', select_tool, 'hover'], toolbar='above', active_tools=['box_select'],
                                              height=500, width=550, xaxis=None, yaxis=None, cmap=self.color_palette,
                                              colorbar=True)
                 current_data = hm.data

@@ -1,7 +1,7 @@
 """
 Author(s): Tom Udding, Steven van den Broek, Yuqing Zeng, Tim van de Klundert, Sam Baggen
 Created: 2019-05-03
-Edited: 2019-06-03
+Edited: 2019-06-06
 """
 from bokeh.plotting import figure, reset_output
 from bokeh.models import Circle, ColumnDataSource
@@ -141,7 +141,7 @@ def generateForceDirectedDiagram(file, isDirected, df=False):
 
     # colour the nodes based on the partition
 
-    plot.opts(cmap = partitionColours, color_index='Partition', node_size='Centrality', inspection_policy='nodes', tools=['box_select', 'lasso_select', 'tap', 'hover'], width=600, height=600)
+    plot.opts(cmap = partitionColours, color_index='Partition', node_size='Centrality', inspection_policy='nodes', tools=['box_select', 'lasso_select', 'tap', 'hover'], toolbar='above', show_legend=False, width=600, height=600)
 
     renderer = hv.renderer('bokeh')
     renderer.webgl = True
@@ -153,7 +153,7 @@ def generateForceDirectedDiagram(file, isDirected, df=False):
     # Comment the following two/three lines to disable edgebundling and datashading.
     plot = bundle_graph(plot)
     plot = (datashade(plot, normalization='linear', width=600, height=600) * plot.nodes).opts(opts.Nodes(cmap=partitionColours, color='Partition', size='Centrality',
-               tools=['box_select', 'lasso_select', 'tap'], width=600, height=600))
+               tools=['box_select', 'lasso_select', 'tap'], toolbar='above', show_legend=False, width=600, height=600))
 
     # print("Edge bundling and datashading took: " + str(time.time()-begin))
     return (pn.Column(plot * points), points)
@@ -177,10 +177,10 @@ def generateHierarchicalDiagram(file, isDirected, df=False):
     # SG = nx.Graph([(u, v, d) for u, v, d in G.edges(data=True) if d['weight'] > cutoff])
     SG = nx.Graph([(u, v, d) for u, v, d in G.edges(data=True)])
 
-    graph = hv.Graph.from_networkx(SG, positions = graphviz_layout(SG, prog ='dot')).opts(directed=isDirected, width=600, height=600, arrowhead_length=0.0005)
+    graph = hv.Graph.from_networkx(SG, positions = graphviz_layout(SG, prog ='dot')).opts(directed=isDirected, width=600, height=600, show_legend=False, arrowhead_length=0.0005)
     graph = bundle_graph(graph)
     graph = (datashade(graph, normalization='linear', width=600, height=600) * graph.nodes).opts(
-        opts.Nodes(width=600, height=600, tools=['box_select', 'lasso_select', 'tap']))
+        opts.Nodes(width=600, height=600, tools=['box_select', 'lasso_select', 'tap'], toolbar='above', show_legend=False))
     # Make a panel and widgets with param for choosing a layout
     return pn.Column(graph)
 
@@ -238,13 +238,12 @@ def generateRadialDiagram(file, isDirected, df=False):
     #graph.nodes.data['degree'] = Series(degree_array)
 
     # I tried simply using node_size='degree', but if it only were that easy... (it is that easy :D, however most of the time the nodes are really small :( )
-    graph.opts(node_size='Degree', directed=isDirected, width=600, height=600, arrowhead_length=0.0005, inspection_policy='nodes', tools=['box_select', 'lasso_select', 'tap', 'hover'])
+    graph.opts(node_size='Degree', directed=isDirected, width=600, height=600, arrowhead_length=0.0005, inspection_policy='nodes', tools=['box_select', 'lasso_select', 'tap', 'hover'], toolbar='above', show_legend=False)
     points = hv.Points((nodes_x, nodes_y, nodes, degreeList), vdims=['Index', 'Degree'])
     points.opts(line_width = 1.5, line_color='#000000', size='Degree')
     graph = bundle_graph(graph)
     graph = (datashade(graph, normalization='linear', width=600, height=600) * graph.nodes).opts(
-        opts.Nodes(size='Degree',
-                   tools=['box_select', 'lasso_select', 'tap'], width=600, height=600))
+        opts.Nodes(size='Degree', tools=['box_select', 'lasso_select', 'tap'], toolbar='above', show_legend=False, width=600, height=600))
 
     return (pn.Column(graph * points), graph, points)
 
