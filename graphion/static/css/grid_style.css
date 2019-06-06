@@ -41,6 +41,7 @@ body {
 }
 
 a, a:visited {
+    color: rgb(49, 137, 255);
     text-decoration: none;
     outline: 0;
     -webkit-transition: all 0.3s ease;
@@ -52,8 +53,7 @@ a, a:visited {
 
 a:active,
 a:hover {
-    color: rgb(0, 46, 85);
-    border-color: rgb(0, 46, 85);
+    color: rgb(42, 116, 217);
 }
 
 b, strong {

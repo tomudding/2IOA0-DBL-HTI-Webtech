@@ -1,7 +1,7 @@
 """
 Author(s): Tom Udding, Steven van den Broek
 Created: 2019-05-01
-Edited: 2019-06-02
+Edited: 2019-06-06
 """
 from flask import Blueprint, flash, redirect, render_template
 from graphion import server
@@ -27,7 +27,7 @@ def visualise(file):
         script = server_document('https://2ioa0.uddi.ng:5001/bkapp', relative_urls=False, resources=None)
     else:
         script = server_document('http://localhost:%d/bkapp' % server.config['PORT'], relative_urls=False, resources=None)
-    return render_template('visualise.html', script=script)
+    return render_template('visualise.html', fileName=file, script=script)
 
 def modify_doc(doc):
     begin = time.time()

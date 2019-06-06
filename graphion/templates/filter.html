@@ -1,7 +1,7 @@
 <!--
 Author(s): Steven van den Broek, Anton Vellikok, Tom Udding
 Created: 2019-05-18
-Edited: 2019-06-04
+Edited: 2019-06-06
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -68,14 +68,9 @@ Edited: 2019-06-04
                                     <div class="row">
                                         <div class="col-s-12 col-0-margin">
                             				<!-- The "Back" -button returns the user to the previous page in his/her browser history -->
-                            				<script>
-                            					function goBack() {
-                            					  window.history.go(-1);
-                            					}
-                            				</script>
                                             <div class="row">
 												<div class="footer-area">
-                                                    <button class="button pop-up-footer-button pop-up-footer-button-back" onclick="goBack();">Back</button>
+                                                    <a href="/selection" class="button pop-up-footer-button pop-up-footer-button-back">Back</a>
                                                     <!-- Opens a "Help" -popup window -->
                                                     <button class="button pop-up-footer-button pop-up-footer-button-help" onclick="document.getElementById('help-page-1').style.display='block';document.getElementById('choose-theme').style.display='none';">Help</button>
                                                 </div>
@@ -213,7 +208,7 @@ Edited: 2019-06-04
                                             <div id="weight-selection"><div class="load-animation"></div>Loading...</div>
                                             <div id="weight-plot"></div>
                                             <p id="between-weight">Select nodes by dragging the mouse.</p>
-                
+
                                             <br>
                                             <span class="filter-text">Display only edges that satisfy the weight requirement:</span>
                                             <input type="checkbox" class="multiple-choice-selection" id="edge-weight-chk-box">
@@ -286,7 +281,7 @@ Edited: 2019-06-04
                                                 <div class="footer-area">
                                                     <button class="button pop-up-footer-button pop-up-footer-button-back" onclick="
                                                     document.getElementById('help-page-3').style.display='none';
-                                                    document.getElementById('filter-edge-weight').style.display='block';"> 
+                                                    document.getElementById('filter-edge-weight').style.display='block';">
                                                         Back
                                                     </button>
                                                 </div>
@@ -373,7 +368,7 @@ Edited: 2019-06-04
                                                 <div class="footer-area">
                                                     <button class="button pop-up-footer-button pop-up-footer-button-back" onclick="
                                                     document.getElementById('help-page-4').style.display='none';
-                                                    document.getElementById('filter-node-in-degree').style.display='block';"> 
+                                                    document.getElementById('filter-node-in-degree').style.display='block';">
                                                         Back
                                                     </button>
                                                 </div>
