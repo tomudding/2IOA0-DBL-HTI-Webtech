@@ -68,7 +68,6 @@ def generateBokehApp(doc):
             #SelectNodeToMatrixLink.register_callback('bokeh', SelectNodeToMatrixCallback)
 
             # Link matrix to the nodelink (both graph and points)
-            #SelectMatrixToNodeLink(s2.view, s1[0])
             #SelectMatrixToNodeLink(s2.view, s1[1])
             #SelectEdgeLink(s2.view, s1[0])
 
@@ -78,7 +77,7 @@ def generateBokehApp(doc):
             s2.reordering = self.Ordering
             s2.metric = self.Metric
             s2.color_palette = self.Color_palette
-            s2Pane = pn.Column(pn.Pane(s2.param, css_classes=['matrix_dropdowns']), s2.view)
+            s2Pane = pn.Column(s2.view)
 
             return pn.Row(s1[0], s2Pane)
 

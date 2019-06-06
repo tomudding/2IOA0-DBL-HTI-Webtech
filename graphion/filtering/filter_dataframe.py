@@ -199,17 +199,17 @@ def processCSVMatrix(file):
 
     return df
 
-df = processCSVMatrix("../../datasets/medium.csv")
+#df = processCSVMatrix("../../datasets/medium.csv")
 
 #st = time.time()
 #generate_edge_selection(df) #1.9890801906585693 author_similarity  106.71677088737488 huge
 #print(time.time() - st)
-st = time.time()
-a = fetch_edge_count(df) #0.11284518241882324-author_similarity   1.2482659816741943-huge
+#st = time.time()
+#a = fetch_edge_count(df) #0.11284518241882324-author_similarity   1.2482659816741943-huge
 # 0.039876699447631836-co-authorship      0.035131216049194336-citation   0.018270969390869140-medium
-print(time.time() - st)
-print(a)
-st = time.time()
-filter_df_weight(df) #1.4323952198028564-author_similarity   29.66236901283264-huge
+#print(time.time() - st)
+#print(a)
+#st = time.time()
+#filter_df_weight(df) #1.4323952198028564-author_similarity   29.66236901283264-huge
 # 0.8445062637329102-co-authorship 0.9564690589904785-co-authorship  0.35132312774658203-medium
-print(time.time() - st)
+#print(time.time() - st)
