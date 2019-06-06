@@ -83,7 +83,7 @@ if "gunicorn" in environ.get("SERVER_SOFTWARE", ""):
     forcedPort = getpid()
     sockets, port = bind_sockets("localhost", forcedPort)
     server.config['PORT'] = port + 20
-    server.logger.info("STARTED LISTENING INTERNALLY ON %d AND EXTERNALLY ON %d" % port, server.config['PORT'])
+    server.logger.info("STARTED LISTENING INTERNALLY ON %d AND EXTERNALLY ON %d" % (port, server.config['PORT']))
 else:
     sockets, port = bind_sockets("localhost", 0)
     server.config['PORT'] = port
