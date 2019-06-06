@@ -107,7 +107,7 @@ def generate_selection(file, kind="degree", dir="in", dataframe=False):
             }
             """
         type_dependent2 = """
-        amount = result['nodes'];
+        amount = result;
         
              colored_amount = "<span style='color:red; font-weight:bold'>" + amount + "</span>"
                     if (amount < 600){
@@ -116,8 +116,13 @@ def generate_selection(file, kind="degree", dir="in", dataframe=False):
                     if (amount < 150){
                         colored_amount = "<span style='color:green; font-weight:bold'>" + amount + "</span>"
                     }
-
-            """ + 'p.innerHTML = "Selected " + colored_amount + " nodes with {}-degree between " + Math.ceil(geometry.x0) + " and " + Math.floor(geometry.x1) + "."'.format(dir)
+            let lower = Math.ceil(geometry.x0);
+            let upper = Math.floor(geometry.x1);
+            if(upper < lower){
+                p.innerHTML = "Selected no nodes, since selection doesn't contain an integer degree.";
+            }
+            else{
+            """ + 'p.innerHTML = "Selected " + colored_amount + " nodes with {}-degree between " + lower + " and " + upper + ".";'.format(dir) + '}'
 
     else:
         type_dependent1 = """
@@ -131,26 +136,17 @@ def generate_selection(file, kind="degree", dir="in", dataframe=False):
             """
 
         type_dependent2 = """
-        amount = result['nodes'];
-        amount_edges = result['edges'];
-        
-        colored_amount_edges = "<span style='color:red; font-weight:bold'>" + amount_edges + "</span>"
-        if (amount_edges < 4000){
-        colored_amount_edges = "<span style='color:orange; font-weight:bold'>" + amount_edges + "</span>"
-        }
-        if (amount_edges < 1500){
-        colored_amount_edges = "<span style='color:green; font-weight:bold'>" + amount_edges + "</span>"
-        }
+        amount = result;
         
             colored_amount = "<span style='color:red; font-weight:bold'>" + amount + "</span>"
-        if (amount < 600){
+        if (amount < 4000){
         colored_amount = "<span style='color:orange; font-weight:bold'>" + amount + "</span>"
         }
-        if (amount < 150){
+        if (amount < 1500){
         colored_amount = "<span style='color:green; font-weight:bold'>" + amount + "</span>"
         }
 
-            p.innerHTML = colored_amount + " nodes remaining having a total of " + colored_amount_edges + " edges with weight between " + Math.ceil(geometry.x0*100)/100 + " and " + Math.floor(geometry.x1*100)/100 + "."
+            p.innerHTML = "Selected " + colored_amount + " edges with weight between " + Math.ceil(geometry.x0*100)/100 + " and " + Math.floor(geometry.x1*100)/100 + "."
         """
 
     geometry_callback = CustomJS(args=dict(complete=complete, before=before, middle=middle, after=after), code="""
@@ -226,10 +222,10 @@ def generate_selection(file, kind="degree", dir="in", dataframe=False):
     select_tool = BoxSelectTool(dimensions="width", callback=geometry_callback)
     p.add_tools(select_tool)
 
-    p.patch("x", "y", source=before, alpha=0.3, line_width=0)
-    p.patch("x", "y", source=middle, alpha=1, line_width=0, color="#4C72B0")
+    p.patch("x", "y", source=before, alpha=0.3, line_width=0, color="#3189ff")
+    p.patch("x", "y", source=middle, alpha=1, line_width=0, color="#3189ff")
     # p.patch("x", "y", source=middle, alpha=1, line_width=0, color="orange")
-    p.patch("x", "y", source=after, alpha=0.3, line_width=0)
+    p.patch("x", "y", source=after, alpha=0.3, line_width=0, color="#3189ff")
 
     if (not edges):
         p.xaxis.axis_label = "{}-degree".format(dir)

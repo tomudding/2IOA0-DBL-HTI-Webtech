@@ -210,12 +210,14 @@ Edited: 2019-06-04
                                     <div class="row">
                                         <div class="col-s-12 icon-area valign">
 
-                                            <div id="weight-selection"><div class="load-animation"></div>Loading...</div>
+                                            <div id="weight-selection"><div class="load-animation"></div>Generating distribution plot...</div>
                                             <div id="weight-plot"></div>
                                             <p id="between-weight">Select nodes by dragging the mouse.</p>
                 
                                             <br>
+                                            <!--
                                             <span class="filter-text">Display only edges that satisfy the weight requirement:</span>
+                                            -->
                                             <input type="checkbox" class="multiple-choice-selection" id="edge-weight-chk-box">
                                             <span class="custom-checkbox" id="custom-edge-weight-chk-box"
                                             onclick="
@@ -242,7 +244,8 @@ Edited: 2019-06-04
 
                                                     <button class="button button-primary pop-up-footer-button-continue"
                                                     onclick="
-                                                    document.getElementById('filter-edge-weight').style.display='none';
+                                                    document.getElementById('filter-edges').removeAttribute('hidden');
+                                                    $.post('/filter-edges', function(result){document.getElementById('filter-edge-weight').style.display='none';
                                                     document.getElementById('filter-node-in-degree').style.display='block';
                                                     fetch('/api/filter/distribution/degree/in/').then(
                                                     function(response) {
@@ -250,8 +253,9 @@ Edited: 2019-06-04
                                                         return response.json(); })
                                                     .then(function(item) {
                                                         Bokeh.embed.embed_item(item, 'in-degree-plot');
-                                                    });
-                                                    ">Continue</button>
+                                                    }); document.getElementById('filter-edges').setAttribute('hidden', true);})
+
+                                                    "><div class="load-animation" id="filter-edges" hidden>Continue</div></button>
 
                                                     <!-- Opens a "Help" -popup window -->
                                                     <button class="button pop-up-footer-button pop-up-footer-button-help" onclick="
@@ -307,7 +311,7 @@ Edited: 2019-06-04
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-s-12 icon-area valign">
-                                            <div id="in-degree-selection"><div class="load-animation"></div>Loading...</div>
+                                            <div id="in-degree-selection"><div class="load-animation"></div>Generating distribution plot...</div>
                                             <div id="in-degree-plot"></div>
                                             <p id="between-in-degree">Select nodes by dragging the mouse.</p>
                                         </div>
@@ -395,7 +399,7 @@ Edited: 2019-06-04
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-s-12 icon-area valign">
-                                            <div id="out-degree-selection"><div class="load-animation"></div>Loading...</div>
+                                            <div id="out-degree-selection"><div class="load-animation"></div>Generating distribution plot...</div>
                                             <div id="out-degree-plot"></div>
                                             <p id="between-out-degree">Select nodes by dragging the mouse.</p>
                                         </div>

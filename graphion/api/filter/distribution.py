@@ -7,7 +7,7 @@ from bokeh.embed import json_item
 from flask import Flask, render_template, request, redirect, Response, Blueprint, jsonify
 from json import dump, dumps
 from graphion.filtering.distribution_selection import generate_selection
-from graphion.filtering.filter_dataframe import generate_degree_selection, generate_edge_selection
+from graphion.filtering.filter_dataframe import generate_degree_selection, fetch_edge_count, filter_df_weight
 import time
 
 from graphion.upload import get_partially_filtered_df, get_almost_filtered_df, get_df, set_almost_filtered_df, set_partially_filtered_df, set_filtered_df
@@ -56,12 +56,10 @@ def worker():
     type = request.form['type']
     dir = request.form['dir']
     file = request.form['file']
-    nodes, edges = filter_data(left, right, type, dir, file)
-    response = {'nodes': str(nodes), 'edges': str(edges)}
-    return jsonify(response)
-
+    return str(filter_data(left, right, type, dir, file))
 
 def filter_data(left, right, type, dir, file):
+    global left_weight, right_weight
     if(type == 'degree'):
         if dir == 'out':
             begin = time.time()
@@ -73,14 +71,25 @@ def filter_data(left, right, type, dir, file):
             filtered_df = generate_degree_selection(get_partially_filtered_df(), left, right, dir)
             print("Calculating selection took: " + str(time.time() - begin))
             set_almost_filtered_df(filtered_df)
-        return len(filtered_df.columns), None
+        return len(filtered_df.columns)
     elif(type == 'weight'):
         begin = time.time()
-        result = generate_edge_selection(get_df(), left, right, keep_edges = False)
+        result = fetch_edge_count(get_df(), left, right)
+        left_weight = left
+        right_weight = right
         print("Calculating selection took: " + str(time.time() - begin))
-        set_partially_filtered_df(result)
+        # set_partially_filtered_df(result)
 
-        return len(result.columns), result.astype(bool).sum(axis=0).sum()
+        # return result.astype(bool).sum(axis=0).sum()
+        return result
+
+
+@apiDegreeBlueprint.route('/filter-edges', methods = ['POST'])
+def filter_worker():
+    result = filter_df_weight(get_df(), left_weight, right_weight)
+    set_partially_filtered_df(result)
+    return "fitered"
+
 
 def getFilePath(file):
     file = file + '.h5'
