@@ -1,3 +1,9 @@
+/* 
+Authors: Sam Baggen, Steven van den Broek, Tom Udding(?)
+Created: Unkown...
+Last Edited: 2019-06-06
+*/
+
 function showLeftBar(){
     document.getElementById('left-bar-shown').hidden = false;
     document.getElementById('left-bar-hidden').hidden = true;
@@ -42,4 +48,12 @@ function displayDiagram(id){
 
 function displayReordering(id){
     $.post("/switch-ordering", {to: id});
+}
+
+function displayMetric(id){
+    $.post("/switch-metric", {to: id});
+}
+
+function displayPalette(id){
+    $.post("/switch-palette", {to: id});
 }

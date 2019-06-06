@@ -1,7 +1,7 @@
 """
 Author(s): Tom Udding, Steven van den Broek, Sam Baggen
 Created: 2019-05-03
-Edited: 2019-06-05
+Edited: 2019-06-06
 """
 from graphion import server
 from graphion.graphing.nodelink.graph import generateForceDirectedDiagram, generateHierarchicalDiagram, generateRadialDiagram, generate3DDiagram
@@ -35,7 +35,16 @@ def generateBokehApp(doc):
                                           objects=["none", "single", "average", "complete", "centroid", "weighted",
                                                    "median", "ward"])
 
-        @param.depends('Screen1', 'Screen2', 'Ordering')
+        Metric = param.ObjectSelector(default="euclidean",
+                                      objects=["euclidean", "minkowski", "cityblock", "sqeuclidean", "cosine",
+                                               "correlation", "hamming", "jaccard", "chebyshev", "canberra",
+                                               "braycurtis"])
+
+        Color_palette = param.ObjectSelector(default='cividis',
+                                             objects=['kbc', 'kgy', 'bgy', 'bmw', 'bmy', 'cividis', 'dimgray', 'fire',
+                                                      'inferno', 'viridis'])
+
+        @param.depends('Screen1', 'Screen2', 'Ordering', 'Metric', 'Color_palette')
         def view(self):
             global s1
             s1 = None
@@ -67,6 +76,8 @@ def generateBokehApp(doc):
             #SelectNodeToMatrixLink(s1[1], s2.view)
 
             s2.reordering = self.Ordering
+            s2.metric = self.Metric
+            s2.color_palette = self.Color_palette
             s2Pane = pn.Column(pn.Pane(s2.param, css_classes=['matrix_dropdowns']), s2.view)
 
             return pn.Row(s1[0], s2Pane)
@@ -102,6 +113,12 @@ def changeScreen1(new_type):
 
 def changeOrdering(new_ordering):
     visApp.Ordering = new_ordering
+
+def changeMetric(new_metric):
+    visApp.Metric = new_metric
+
+def changePalette(new_palette):
+    visApp.Color_palette = new_palette
 
 def getFilePath(file):
     file = file + '.h5'

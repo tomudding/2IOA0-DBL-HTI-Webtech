@@ -277,7 +277,7 @@ Edited: 2019-06-06
 			<div class="left-bar-hide-button" onclick="hideLeftBar()"><</div>
 			<div class="left-bar-screen-big" style="top: 45vh;">Screen 2:</div>
             <div class="left-bar-screen-small" style="top: 46vh; left: 8.4vw; width: 7.6vw;">Select metric:</div>
-			<select class="dropdown" style="left: 8.4vw; top: 49vh; width: 9vw;">
+			<select class="dropdown" onChange = "displayMetric(this.value)" style="left: 8.4vw; top: 49vh; width: 9vw;">
 				<option value="euclidean">Euclidean</option>
 				<option value="minkowski">Minkowski</option>
 				<option value="cityblock">Cityblock</option>
@@ -323,7 +323,7 @@ Edited: 2019-06-06
 				<option selected="selected">Total edge weight</option>
             </select>
             <div class="left-bar-node-labels" style="top: 83.2vh;">Color palette:</div>
-			<select class="dropdown" style="left: 1.8vw; top: 86.1vh; width: 13.6vw;">
+			<select class="dropdown" onChange = "displayPalette(this.value)" style="left: 1.8vw; top: 86.1vh; width: 13.6vw;">
                 <option selected="selected">kbc</option>
                 <option>kgy</option>
                 <option>bgy</option>
