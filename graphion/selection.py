@@ -1,7 +1,7 @@
 """
 Author(s): Tom Udding
 Created: 2019-05-01
-Edited: 2019-06-02
+Edited: 2019-06-06
 """
 from flask import Blueprint, render_template
 from glob import glob
@@ -28,5 +28,5 @@ def getRecentlyUploaded():
     for file in listOfFiles:
         with HDFStore(file) as currentFile:
             id = basename(currentFile.filename)[0:-3]
-            finalListOfFiles[id] = next(iter(currentFile.keys()), None)
+            finalListOfFiles[id] = next(iter(currentFile.keys()), None).lstrip("/")
     return finalListOfFiles
