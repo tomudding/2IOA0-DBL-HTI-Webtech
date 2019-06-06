@@ -24,7 +24,7 @@ def visualise(file):
             return redirect("/filter/%s" % file)
 
     if "gunicorn" in os.environ.get("SERVER_SOFTWARE", ""):
-        script = server_document('https://2ioa0.uddi.ng:5001/bkapp', relative_urls=False, resources=None)
+        script = server_document('https://2ioa0.uddi.ng:%d/bkapp' % server.config['PORT'], relative_urls=False, resources=None)
     else:
         script = server_document('http://localhost:%d/bkapp' % server.config['PORT'], relative_urls=False, resources=None)
     return render_template('visualise.html', fileName=file, script=script)
