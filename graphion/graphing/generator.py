@@ -40,7 +40,7 @@ def generateBokehApp(doc):
                                                "correlation", "hamming", "jaccard", "chebyshev", "canberra",
                                                "braycurtis"])
 
-        Color_palette = param.ObjectSelector(default='cividis',
+        Color_palette = param.ObjectSelector(default='kbc',
                                              objects=['kbc', 'kgy', 'bgy', 'bmw', 'bmy', 'cividis', 'dimgray', 'fire',
                                                       'inferno', 'viridis'])
 

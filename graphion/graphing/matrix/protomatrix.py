@@ -153,7 +153,7 @@ def makeMatrix(file, plot, df=False):
                                       objects=["euclidean", "minkowski", "cityblock", "sqeuclidean", "cosine",
                                                "correlation", "hamming", "jaccard", "chebyshev", "canberra",
                                                "braycurtis"])
-        color_palette = param.ObjectSelector(default='cividis',
+        color_palette = param.ObjectSelector(default='kbc',
                                              objects=['kbc', 'kgy', 'bgy', 'bmw', 'bmy', 'cividis', 'dimgray', 'fire',
                                                       'inferno', 'viridis'])
 
@@ -170,13 +170,13 @@ def makeMatrix(file, plot, df=False):
                 #          height=500, width=600, flip_yaxis=True, xaxis=None, yaxis=None, cmap=palette['kbc'])
 
                 hm = hv.HeatMap(result).opts(tools=['tap', select_tool, 'hover'], toolbar='above', active_tools=['box_select'],
-                                             height=500, width=550, xaxis=None, yaxis=None, cmap=self.color_palette,
+                                             height=500, width=530, xaxis=None, yaxis=None, cmap=self.color_palette,
                                              colorbar=True)
                 current_data = hm.data
                 table = hv.Table(current_data)
                 table.opts(height=500)
 
-                print(plot)
+                # print(plot)
                 select = SelectMatrixToNodeLink(hm, plot, indices=names)
                 select.register_callback('bokeh', SelectMatrixToNodeCallback)
 
@@ -194,12 +194,12 @@ def makeMatrix(file, plot, df=False):
                 # reordered_matrix = pd.DataFrame(reordered_matrix, index = author_reorder_list(df,res_order), column = author_reorder_list(df,res_order))
                 result = to_liquid_2(reordered_matrix, df, res_order)
                 hm = hv.HeatMap(result).opts(tools=['tap', select_tool, 'hover'], toolbar='above', active_tools=['box_select'],
-                                             height=500, width=550, xaxis=None, yaxis=None, cmap=self.color_palette,
+                                             height=500, width=530, xaxis=None, yaxis=None, cmap=self.color_palette,
                                              colorbar=True)
                 current_data = hm.data
                 table = hv.Table(current_data)
                 table.opts(height=500)
-                print(plot)
+                # print(plot)
                 select = SelectMatrixToNodeLink(hm, plot, indices=names)
                 select.register_callback('bokeh', SelectMatrixToNodeCallback)
 

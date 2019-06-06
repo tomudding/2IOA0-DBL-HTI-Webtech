@@ -268,6 +268,19 @@ Edited: 2019-06-06
 				<div class="left-bar-screen-separator"></div>
 				<div class="left-bar-hide-button empty-triangle" onclick="hideLeftBar()">◁</div>
 				<div class="left-bar-screen-big" style="top: 45.5vh;">Screen 2:</div>
+
+				<div class="left-bar-screen-small" style="top: 56.8vh; left: 8.4vw; width: 7.6vw;">Select linkage criterium:</div>
+				<select class="dropdown" onChange = "displayReordering(this.value)" style="left: 8.4vw; top: 59vh; width:11vw;">
+					<option value="none">None</option>
+					<option value="single">Single</option>
+					<option value="average">Average</option>
+					<option value="complete">Complete</option>
+					<option value="centroid">Centroid</option>
+					<option value="weighted">Weighted</option>
+					<option value="median">Median</option>
+					<option value="ward">Ward</option>
+	            </select>
+
 	            <div class="left-bar-screen-small" style="top: 48.8vh; left: 8.4vw; width: 7.6vw;">Select metric:</div>
 				<select class="dropdown" onChange = "displayMetric(this.value)" style="left: 8.4vw; top: 51vh; width: 11vw;">
 					<option value="euclidean">Euclidean</option>
@@ -282,17 +295,7 @@ Edited: 2019-06-06
 	                <option value="canberra">Canberra</option>
 	                <option value="braycurtis">Braycurtis</option>
 	            </select>
-	            <div class="left-bar-screen-small" style="top: 56.8vh; left: 8.4vw; width: 7.6vw;">Select metric:</div>
-				<select class="dropdown" onChange = "displayReordering(this.value)" style="left: 8.4vw; top: 59vh; width:11vw;">
-					<option value="none">None</option>
-					<option value="single">Single</option>
-					<option value="average">Average</option>
-					<option value="complete">Complete</option>
-					<option value="centroid">Centroid</option>
-					<option value="weighted">Weighted</option>
-					<option value="median">Median</option>
-					<option value="ward">Ward</option>
-	            </select>
+
 				<div class="left-bar-screen-small" style="top: 60vh; left: 2.2vw;">Adjacency matrix</div>
 				<img class="icon" src="/static/images/icons/icon-matrix.svg" style="left: 2.2vw; top: 49.8vh;">
 				<div class="left-bar-node-labels" style="top: 67vh;">Resize the nodes by:</div>
