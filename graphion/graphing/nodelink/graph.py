@@ -156,10 +156,7 @@ def generateForceDirectedDiagram(file, isDirected, df=False):
                tools=['box_select', 'lasso_select', 'tap'], width=600, height=600))
 
     # print("Edge bundling and datashading took: " + str(time.time()-begin))
-    return (plot, points)
-
-def generateForceDirectedDiagramPane(graph):
-    return pn.Column(graph[0] * graph[1])
+    return (pn.Column(plot * points), points)
 
 # Generate a hierarchical node-link diagram
 def generateHierarchicalDiagram(file, isDirected, df=False):
@@ -176,10 +173,14 @@ def generateHierarchicalDiagram(file, isDirected, df=False):
     opts.defaults(opts.EdgePaths(**defaults), opts.Graph(**defaults), opts.Nodes(**defaults))
 
     G = from_pandas_adjacency(df)
-    cutoff = 2 #adjust this parameter to filter edges
-    SG = nx.Graph([(u, v, d) for u, v, d in G.edges(data=True) if d['weight'] > cutoff])
+    # cutoff = 2 #adjust this parameter to filter edges
+    # SG = nx.Graph([(u, v, d) for u, v, d in G.edges(data=True) if d['weight'] > cutoff])
+    SG = nx.Graph([(u, v, d) for u, v, d in G.edges(data=True)])
 
     graph = hv.Graph.from_networkx(SG, positions = graphviz_layout(SG, prog ='dot')).opts(directed=isDirected, width=600, height=600, arrowhead_length=0.0005)
+    graph = bundle_graph(graph)
+    graph = (datashade(graph, normalization='linear', width=600, height=600) * graph.nodes).opts(
+        opts.Nodes(width=600, height=600, tools=['box_select', 'lasso_select', 'tap']))
     # Make a panel and widgets with param for choosing a layout
     return pn.Column(graph)
 
@@ -205,7 +206,7 @@ def generateRadialDiagram(file, isDirected, df=False):
         degree_index += 1
 
 
-    print(df.head())
+    # print(df.head())
     # set defaults for HoloViews
     extension('bokeh')
     renderer('bokeh').webgl = True
@@ -240,6 +241,10 @@ def generateRadialDiagram(file, isDirected, df=False):
     graph.opts(node_size='Degree', directed=isDirected, width=600, height=600, arrowhead_length=0.0005, inspection_policy='nodes', tools=['box_select', 'lasso_select', 'tap', 'hover'])
     points = hv.Points((nodes_x, nodes_y, nodes, degreeList), vdims=['Index', 'Degree'])
     points.opts(line_width = 1.5, line_color='#000000', size='Degree')
+    graph = bundle_graph(graph)
+    graph = (datashade(graph, normalization='linear', width=600, height=600) * graph.nodes).opts(
+        opts.Nodes(size='Degree',
+                   tools=['box_select', 'lasso_select', 'tap'], width=600, height=600))
 
     return (pn.Column(graph * points), graph, points)
 

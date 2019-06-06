@@ -1,13 +1,13 @@
 """
 Author(s): Tom Udding, Steven van den Broek, Sam Baggen
 Created: 2019-05-03
-Edited: 2019-06-03
+Edited: 2019-06-05
 """
 from graphion import server
-from graphion.graphing.nodelink.graph import generateForceDirectedDiagram, generateHierarchicalDiagram, generateRadialDiagram, generate3DDiagram, generateForceDirectedDiagramPane
+from graphion.graphing.nodelink.graph import generateForceDirectedDiagram, generateHierarchicalDiagram, generateRadialDiagram, generate3DDiagram
 from graphion.graphing.linking import SelectEdgeCallback, SelectMatrixToNodeCallback, SelectNodeToMatrixCallback
 from graphion.graphing.linking import SelectEdgeLink, SelectMatrixToNodeLink, SelectNodeToMatrixLink
-from graphion.graphing.matrix.protomatrix import makeMatrix, makeMatrixPane
+from graphion.graphing.matrix.protomatrix import makeMatrix
 from graphion.upload import get_filtered_df
 import os
 import panel as pn
@@ -30,8 +30,12 @@ def generateBokehApp(doc):
                                           objects=["none", "radial", "force", "hierarchical", "3d"])
         Screen2 = param.ObjectSelector(default="matrix",
                                       objects=["none", "matrix"])
+        
+        Ordering = param.ObjectSelector(default="none",
+                                          objects=["none", "single", "average", "complete", "centroid", "weighted",
+                                                   "median", "ward"])
 
-        @param.depends('Screen1', 'Screen2')
+        @param.depends('Screen1', 'Screen2', 'Ordering')
         def view(self):
             global s1
             s1 = None
@@ -43,7 +47,7 @@ def generateBokehApp(doc):
                 s1 = getHierarchical(df)
             if self.Screen1 == "3d":
                 s1 = getGraph3D(df)
-            print(s1[1])
+            # print(s1[1])
             s2 = None
             if self.Screen2 == "matrix":
                 s2 = getMatrix(df)
@@ -62,11 +66,10 @@ def generateBokehApp(doc):
             # Link nodelink to matrix (points only)
             #SelectNodeToMatrixLink(s1[1], s2.view)
 
-            # Generates the panels
-            graphPane = generateForceDirectedDiagramPane(s1)
-            matrixPane = makeMatrixPane(s2)
+            s2.reordering = self.Ordering
+            s2Pane = pn.Column(pn.Pane(s2.param, css_classes=['matrix_dropdowns']), s2.view)
 
-            return pn.Row(graphPane, matrixPane)
+            return pn.Row(s1[0], s2Pane)
 
     df = get_filtered_df()
 
@@ -96,6 +99,9 @@ def generateBokehApp(doc):
 
 def changeScreen1(new_type):
     visApp.Screen1 = new_type
+
+def changeOrdering(new_ordering):
+    visApp.Ordering = new_ordering
 
 def getFilePath(file):
     file = file + '.h5'

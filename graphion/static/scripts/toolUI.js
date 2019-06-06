@@ -39,3 +39,7 @@ function displayDiagram(id){
         }
     }
 }
+
+function displayReordering(id){
+    $.post("/switch-ordering", {to: id});
+}

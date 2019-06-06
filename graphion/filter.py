@@ -1,7 +1,7 @@
 """
-Author(s): Steven van den Broek
+Author(s): Steven van den Broek, Tom Udding
 Created: 2019-05-18
-Edited: 2019-06-02
+Edited: 2019-06-05
 """
 
 from flask import Blueprint, flash, redirect, render_template
@@ -19,6 +19,9 @@ filterBlueprint = Blueprint('filterBlueprint', __name__, template_folder='templa
 def visualise(file=None):
     if file is None:
         flash("No dataset has been selected. Please select a previously uploaded dataset or upload a new dataset.", "danger")
+        return redirect('/selection')
+    if not os.path.exists(os.path.join(server.config['UPLOAD_FOLDER'], (file + '.h5'))):
+        flash("Dataset could not be found. Please select a previously uploaded dataset or upload a new dataset.", "danger")
         return redirect('/selection')
     df = read_hdf(os.path.join(server.config['UPLOAD_FOLDER'], (file + '.h5'))) # should be done in a memory efficient way (instead of loading the whole file into memory)
     set_df(df)

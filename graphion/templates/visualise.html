@@ -279,9 +279,9 @@ Edited: 2019-06-03
 			<div class="left-bar-choose-vis">Choose a vizualisation type:</div>
 			<div class="left-bar-screen-big" style="top: 27vh;">Screen 1:</div>
 			<div class="left-bar-screen-small" style="top: 27.3vh; left: 9vw;">Radial</div>
-			<img class="icon-selected" id="radial" onclick="displayDiagram('radial')" src="/static/images/icons/icon-radial-diagram.svg" style="left: 8.2vw; top: 17.3vh;">
+			<img class="icon" id="radial" onclick="displayDiagram('radial')" src="/static/images/icons/icon-radial-diagram.svg" style="left: 8.2vw; top: 17.3vh;">
 			<div class="left-bar-screen-small" style="top: 27.3vh; left: 15vw;">Force-directed</div>
-			<img class="icon" id="force" onclick="displayDiagram('force')" src="/static/images/icons/icon-forcedirected-diagram.svg" style="left: 14.5vw; top: 17.3vh;">
+			<img class="icon-selected" id="force" onclick="displayDiagram('force')" src="/static/images/icons/icon-forcedirected-diagram.svg" style="left: 14.5vw; top: 17.3vh;">
 			<div class="left-bar-screen-small" style="top: 39.8vh; left: 9vw;">Hierarchical</div>
 			<img class="icon" id="hierarchical" onclick="displayDiagram('hierarchical')" src="/static/images/icons/icon-hierarchical-diagram.svg" style="left: 8.2vw; top: 29.4vh;">
 			<div class="left-bar-screen-small" style="top: 39.8vh; left: 15vw;">3D node-link diagram</div>
@@ -290,10 +290,15 @@ Edited: 2019-06-03
 			<div class="left-bar-hide-button" onclick="hideLeftBar()"><</div>
 			<div class="left-bar-screen-big" style="top: 45vh;">Screen 2:</div>
 			<div class="left-bar-screen-small" style="top: 50vh; left: 10vw; width: 7.6vw;">Select ordering:</div>
-			<select class="dropdown" style="left: 8.4vw; top: 53vh; width: 11vw;">
-				<option>Option1</option>
-				<option>Option2</option>
-				<option>Option3</option>
+			<select class="dropdown" onChange = "displayReordering(this.value)" style="left: 8.4vw; top: 53vh; width: 11vw;">
+				<option value="none">None</option>
+				<option value="single">Single</option>
+				<option value="average">Average</option>
+				<option value="complete">Complete</option>
+				<option value="centroid">Centroid</option>
+				<option value="weighted">Weighted</option>
+				<option value="median">Median</option>
+				<option value="ward">Ward</option>
 			</select>
 			<div class="left-bar-screen-small" style="top: 59.3vh; left: 2.8vw;">Adjacency</div>
 			<div class="left-bar-screen-small" style="top: 61vh; left: 3.6vw;">matrix</div>

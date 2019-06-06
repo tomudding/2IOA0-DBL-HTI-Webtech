@@ -18,23 +18,13 @@ Our own deadlines:
 
 | Task                              | Deadline date |
 ------------------------------------|----------------
-| ~~Filtering page v1~~             |~~31st of May~~|
-| ~~Visualization page v1~~         |~~31st of May~~|
-| ~~Visualizations/interactions v1~~|~~31st of May~~|
-------------------------------------|----------------
-| Filtering page v2                 | 7th of June   |
-| Visualization page v2             | 7th of June   |
-| Visualizations/interactions v2    | 7th of June   |
-------------------------------------|----------------
-| Filtering page v3                 | 14th of June  |
-| Visualization page v3             | 14th of June  |
-| Visualizations/interactions v3    | 14th of June  |
-| Filming video                     | 14th of June  |
 | Draft of final report             | 14th of June  |
-------------------------------------|----------------
+| Checking and correcting report    | 16th of June  |
+| Filming video                     | 17th of June  |
+| Editing video (draft)             | 19th of June  |
+| Comments on video (draft)         | 20th of June (before 12)  |
+| Fix video | 21st of June| 
 | Final touches on our tool         | 21st of June  |
-| Editing video                     | 21st of June  |
-| Checking and correcting report    | 21st of June  |
 
 ## REQUIREMENTS
 Minimal requirements as described in VisProjectDescription.pdf and the kickoff slides.
@@ -87,8 +77,7 @@ Suggested further improvements but not required:
 - [ ] Multiple coordinated view design
   - [x] Different visualizations next to each other
   - [ ] Brushing and linking (highlighting / selecting is synchronized between graphs)
-- [ ] Options for link representations in node-link diagrams (dotted, dashed, curved etc.)
-- [ ] Edge bundling (though bold red text comes included: Only if you enjoy visualization and like to do more)
+- [x] Edge bundling (though bold red text comes included: Only if you enjoy visualization and like to do more)
 
 ## DOCUMENTATION
 ### 1. Installation
