@@ -1,7 +1,7 @@
 <!--
-Author(s): Tom Udding, Sam Baggen, Tim van de Klundert
+Author(s): Tom Udding, Sam Baggen, Tim van de Klundert, Anton Vellikok
 Created: 2019-05-01
-Edited: 2019-06-03
+Edited: 2019-06-06
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -75,31 +75,26 @@ Edited: 2019-06-03
 							window.setTimeout(callback, 1000 / 60);
 						};
 					})();
-
 					function random(min, max) {
 						if (min > max) {
 							min = [max, max = min][0];
 						}
 						return Math.random() * (max - min + 1) + min;
 					}
-
 					function round(x) {
 						return Math.round(x);
 					}
-
 					function drawBackground() {
 						context.beginPath();
 						context.rect(0, 0, width, height);
 						context.fillStyle = "rgba(255, 255, 255, 1)";
 						context.fill();
 					}
-
 					function distance(dotA, dotB) {
 						var dX = dotA.x - dotB.x;
 						var dY = dotA.y - dotB.y;
 						return Math.sqrt(dX * dX + dY * dY);
 					}
-
 					function line(dotA, dotB) {
 						var gradient = context.createLinearGradient(dotA.x, dotA.y, dotB.x, dotB.y);
 						gradient.addColorStop(0, dotA.color);
@@ -112,7 +107,6 @@ Edited: 2019-06-03
 						context.lineTo(dotB.x, dotB.y);
 						context.stroke();
 					}
-
 					function Dot() {
 						this.r = random(graph.minRadius, graph.maxRadius);
 						this.vx = random(-3, 3);
@@ -154,14 +148,12 @@ Edited: 2019-06-03
 							}
 						};
 					}
-
 					function createDots() {
 						dots = [];
 						for (var i = 0; i < graph.dots; i++) {
 							dots.push(new Dot());
 						}
 					}
-
 					function draw() {
 						drawBackground();
 						dots.forEach(function(dot) {
@@ -183,7 +175,6 @@ Edited: 2019-06-03
 					var dots = [];
 					createDots();
 					draw();
-
 					var matrixCanvas = document.getElementById("matrix-loading");
 					var matrixContext = matrixCanvas.getContext('2d');
 					var matrixDiv = document.getElementById("matrix");
@@ -197,14 +188,12 @@ Edited: 2019-06-03
 						maxSize: 50,
 						squares: (matrixWidth * matrixHeight) / (100 * 100)
 					};
-
 					function drawMatrixBackground() {
 						matrixContext.beginPath();
 						matrixContext.rect(0, 0, matrixWidth, matrixHeight);
 						matrixContext.fillStyle = "rgba(255, 255, 255, 1)";
 						matrixContext.fill();
 					}
-
 					function Square() {
 						this.size = random(matrix.minSize, matrix.maxSize);
 						this.vx = random(-3, 3);
@@ -237,14 +226,12 @@ Edited: 2019-06-03
 							matrixContext.fillRect(this.x, this.y, this.size, this.size);
 						};
 					}
-
 					function createSquares() {
 						squares = [];
 						for (var i = 0; i < graph.dots; i++) {
 							squares.push(new Square());
 						}
 					}
-
 					function drawMatrix() {
 						drawMatrixBackground();
 						squares.forEach(function(square) {
@@ -289,8 +276,22 @@ Edited: 2019-06-03
 			<div class="left-bar-screen-separator">---------------------------------------------</div>
 			<div class="left-bar-hide-button" onclick="hideLeftBar()"><</div>
 			<div class="left-bar-screen-big" style="top: 45vh;">Screen 2:</div>
-			<div class="left-bar-screen-small" style="top: 50vh; left: 10vw; width: 7.6vw;">Select ordering:</div>
-			<select class="dropdown" onChange = "displayReordering(this.value)" style="left: 8.4vw; top: 53vh; width: 11vw;">
+            <div class="left-bar-screen-small" style="top: 46vh; left: 8.4vw; width: 7.6vw;">Select metric:</div>
+			<select class="dropdown" onChange = "displayMetric(this.value)" style="left: 8.4vw; top: 49vh; width: 9vw;">
+				<option value="euclidean">Euclidean</option>
+				<option value="minkowski">Minkowski</option>
+				<option value="cityblock">Cityblock</option>
+				<option value="sqeuclidean">Sqeuclidean</option>
+				<option value="cosine">Cosine</option>
+				<option value="correlation">Correlation</option>
+				<option value="hamming">Hamming</option>
+                <option value="jaccard">Jaccard</option>
+                <option value="chebyshev">Chebyshev</option>
+                <option value="canberra">Canberra</option>
+                <option value="braycurtis">Braycurtis</option>
+            </select>
+            <div class="left-bar-screen-small" style="top: 54vh; left: 8.4vw; width: 7.6vw;">Select ordering:</div>
+			<select class="dropdown" onChange = "displayReordering(this.value)" style="left: 8.4vw; top: 57vh; width: 9vw;">
 				<option value="none">None</option>
 				<option value="single">Single</option>
 				<option value="average">Average</option>
@@ -299,7 +300,7 @@ Edited: 2019-06-03
 				<option value="weighted">Weighted</option>
 				<option value="median">Median</option>
 				<option value="ward">Ward</option>
-			</select>
+            </select>
 			<div class="left-bar-screen-small" style="top: 59.3vh; left: 2.8vw;">Adjacency</div>
 			<div class="left-bar-screen-small" style="top: 61vh; left: 3.6vw;">matrix</div>
 			<img class="icon" src="/static/images/icons/icon-matrix.svg" style="left: 2.2vw; top: 48.8vh;">
@@ -320,8 +321,20 @@ Edited: 2019-06-03
 				<option>Total out edge weight</option>
 				<option>Total in edge weight</option>
 				<option selected="selected">Total edge weight</option>
+            </select>
+            <div class="left-bar-node-labels" style="top: 83.2vh;">Color palette:</div>
+			<select class="dropdown" onChange = "displayPalette(this.value)" style="left: 1.8vw; top: 86.1vh; width: 13.6vw;">
+                <option selected="selected">kbc</option>
+                <option>kgy</option>
+                <option>bgy</option>
+                <option>bmw</option>
+                <option>bmy</option>
+                <option>cividis</option>
+                <option>dimgray</option>
+                <option>fire</option>
+                <option>inferno</option>
+                <option>viridis</option>
 			</select>
-			<input type="color" class="left-bar-color-picker">
 			<div class="left-bar-dark-mode-label">Dark mode:</div>
 			<label class="dark-mode-switch">
 				<input type="checkbox">
