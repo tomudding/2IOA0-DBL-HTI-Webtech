@@ -25,13 +25,13 @@ Edited: 2019-06-06
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh-tables.min.js" integrity="sha256-1xlBn0odMnApk3dBf3oUDUQlsLvSwx2lvcBTIJC0x20=" crossorigin="anonymous"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh-widgets.min.js" integrity="sha256-0D9ZpwC/v+rmx33UGlpWU9Uo1+J58MFqTKkGVGDZpEE=" crossorigin="anonymous"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh-gl.min.js" integrity="sha256-fDyCLeWMeXB/F1JUTOFAM/9ONJmyiiSfsmPWl5tZQzk=" crossorigin="anonymous"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.6/dat.gui.min.js" integrity="sha256-HJ7j+71YYw6Kcs8THwQV9lXmPOcR0eXlg7n8KRTZsyA=" crossorigin="anonymous"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/dat-gui/0.5/dat.gui.min.js"></script>
 		<!-- Plotly files -->
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/1.48.1/plotly.min.js" integrity="sha256-LE6cKkU1yNCSCMPJrBlZonWX8bdy0EuY2QDpbmJaOzY=" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 		<!-- jQuery for post methods... -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 	</head>
-	<body class="valign-wrapper">
+	<body>
 		<section class="body-wrapper" id="loading-screen">
 			<div class="container">
 				<div class="row">
@@ -51,7 +51,7 @@ Edited: 2019-06-06
 						var context = canvas.getContext('2d');
 						var div = document.getElementById("nodelink");
 						var width = div.clientWidth - 5;
-						var height = (div.clientHeight * 3) - 5;
+						var height = (div.clientHeight * 4) - 5;
 						canvas.width = width;
 						canvas.height = height;
 						var graph = {
@@ -249,27 +249,27 @@ Edited: 2019-06-06
 		<div id="after-loading" hidden>
 			<div class="left-bar-shown" id="left-bar-shown">
 				<div class="left-bar-small-links">
-					<a href="/"><- home</a><br>
-					<a href="/filter/{{ fileName }}" style="cursor: pointer;"><- pre-filter</a>
+					<a href="/"><  home</a><br>
+					<a href="/filter/{{ fileName }}" style="cursor: pointer;"><  filter</a>
 				</div>
 				<div class="left-bar-graphion">
-					graph<b>ion</b>
+					graph<span class="graphion-bold">ion</span>
 				</div>
 				<div class="left-bar-choose-vis">Choose a vizualisation type:</div>
 				<div class="left-bar-screen-big" style="top: 27vh;">Screen 1:</div>
-				<div class="left-bar-screen-small" style="top: 27.3vh; left: 9vw;">Radial</div>
+				<div class="left-bar-screen-small" style="top: 27.3vh; left: 8.2vw;">Radial</div>
 				<img class="icon" id="radial" onclick="displayDiagram('radial')" src="/static/images/icons/icon-radial-diagram.svg" style="left: 8.2vw; top: 17.3vh;">
-				<div class="left-bar-screen-small" style="top: 27.3vh; left: 15vw;">Force-directed</div>
+				<div class="left-bar-screen-small" style="top: 27.3vh; left: 14.5vw;">Force-directed</div>
 				<img class="icon-selected" id="force" onclick="displayDiagram('force')" src="/static/images/icons/icon-forcedirected-diagram.svg" style="left: 14.5vw; top: 17.3vh;">
-				<div class="left-bar-screen-small" style="top: 39.8vh; left: 9vw;">Hierarchical</div>
-				<img class="icon" id="hierarchical" onclick="displayDiagram('hierarchical')" src="/static/images/icons/icon-hierarchical-diagram.svg" style="left: 8.2vw; top: 29.4vh;">
-				<div class="left-bar-screen-small" style="top: 39.8vh; left: 15vw;">3D node-link diagram</div>
-				<img class="icon" id="3d" onclick="displayDiagram('3d')" src="/static/images/icons/icon-3d-diagram.svg" style="left: 14.5vw; top: 29.4vh;">
-				<div class="left-bar-screen-separator">---------------------------------------------</div>
-				<div class="left-bar-hide-button" onclick="hideLeftBar()"><</div>
-				<div class="left-bar-screen-big" style="top: 45vh;">Screen 2:</div>
-	            <div class="left-bar-screen-small" style="top: 46vh; left: 8.4vw; width: 7.6vw;">Select metric:</div>
-				<select class="dropdown" onChange = "displayMetric(this.value)" style="left: 8.4vw; top: 49vh; width: 9vw;">
+				<div class="left-bar-screen-small" style="top: 39.8vh; left: 8.2vw;">Hierarchical</div>
+				<img class="icon" id="hierarchical" onclick="displayDiagram('hierarchical')" src="/static/images/icons/icon-hierarchical-diagram.svg" style="left: 8.2vw; top: 29.8vh;">
+				<div class="left-bar-screen-small" style="top: 39.8vh; left: 14.5vw;">3D node-link diagram</div>
+				<img class="icon" id="3d" onclick="displayDiagram('3d')" src="/static/images/icons/icon-3d-diagram.svg" style="left: 14.5vw; top: 29.8vh;">
+				<div class="left-bar-screen-separator"></div>
+				<div class="left-bar-hide-button empty-triangle" onclick="hideLeftBar()">◁</div>
+				<div class="left-bar-screen-big" style="top: 45.5vh;">Screen 2:</div>
+	            <div class="left-bar-screen-small" style="top: 48.8vh; left: 8.4vw; width: 7.6vw;">Select metric:</div>
+				<select class="dropdown" onChange = "displayMetric(this.value)" style="left: 8.4vw; top: 51vh; width: 11vw;">
 					<option value="euclidean">Euclidean</option>
 					<option value="minkowski">Minkowski</option>
 					<option value="cityblock">Cityblock</option>
@@ -282,8 +282,8 @@ Edited: 2019-06-06
 	                <option value="canberra">Canberra</option>
 	                <option value="braycurtis">Braycurtis</option>
 	            </select>
-	            <div class="left-bar-screen-small" style="top: 54vh; left: 8.4vw; width: 7.6vw;">Select ordering:</div>
-				<select class="dropdown" onChange = "displayReordering(this.value)" style="left: 8.4vw; top: 57vh; width: 9vw;">
+	            <div class="left-bar-screen-small" style="top: 56.8vh; left: 8.4vw; width: 7.6vw;">Select metric:</div>
+				<select class="dropdown" onChange = "displayReordering(this.value)" style="left: 8.4vw; top: 59vh; width:11vw;">
 					<option value="none">None</option>
 					<option value="single">Single</option>
 					<option value="average">Average</option>
@@ -293,11 +293,10 @@ Edited: 2019-06-06
 					<option value="median">Median</option>
 					<option value="ward">Ward</option>
 	            </select>
-				<div class="left-bar-screen-small" style="top: 59.3vh; left: 2.8vw;">Adjacency</div>
-				<div class="left-bar-screen-small" style="top: 61vh; left: 3.6vw;">matrix</div>
-				<img class="icon" src="/static/images/icons/icon-matrix.svg" style="left: 2.2vw; top: 48.8vh;">
-				<div class="left-bar-node-labels" style="top: 64vh;">Resize the nodes by:</div>
-				<select class="dropdown" style="left: 1.8vw; top: 67vh; width: 13.6vw;">
+				<div class="left-bar-screen-small" style="top: 60vh; left: 2.2vw;">Adjacency matrix</div>
+				<img class="icon" src="/static/images/icons/icon-matrix.svg" style="left: 2.2vw; top: 49.8vh;">
+				<div class="left-bar-node-labels" style="top: 67vh;">Resize the nodes by:</div>
+				<select class="dropdown" style="left: 1.8vw; top: 70vh; width: 12vw;">
 					<option>In-degree</option>
 					<option>Out-degree</option>
 					<option>Total degree</option>
@@ -305,8 +304,8 @@ Edited: 2019-06-06
 					<option>Total in edge weight</option>
 					<option>Total edge weight</option>
 				</select>
-				<div class="left-bar-node-labels" style="top: 73.6vh;">Recolor the nodes by:</div>
-				<select class="dropdown" style="left: 1.8vw; top: 76.5vh; width: 13.6vw;">
+				<div class="left-bar-node-labels" style="top: 75.6vh;">Recolor the nodes by:</div>
+				<select class="dropdown" style="left: 1.8vw; top: 78.5vh; width: 12vw;">
 					<option>In-degree</option>
 					<option>Out-degree</option>
 					<option>Total degree</option>
@@ -314,8 +313,8 @@ Edited: 2019-06-06
 					<option>Total in edge weight</option>
 					<option selected="selected">Total edge weight</option>
 	            </select>
-	            <div class="left-bar-node-labels" style="top: 83.2vh;">Color palette:</div>
-				<select class="dropdown" onChange = "displayPalette(this.value)" style="left: 1.8vw; top: 86.1vh; width: 13.6vw;">
+	            <div class="left-bar-node-labels" style="top: 84.2vh;">Color palette:</div>
+				<select class="dropdown" onChange = "displayPalette(this.value)" style="left: 1.8vw; top: 87.1vh; width: 12vw;">
 	                <option selected="selected">kbc</option>
 	                <option>kgy</option>
 	                <option>bgy</option>
@@ -334,17 +333,17 @@ Edited: 2019-06-06
 				</label>
 			</div>
 			<div class="left-bar-hidden" id="left-bar-hidden" hidden>
-				<div class="left-bar-show-button" onclick="showLeftBar()">></div>
+				<div class="left-bar-show-button empty-triangle" onclick="showLeftBar()">▷</div>
 			</div>
 			<div class="right-bar-shown" id="right-bar-shown">
-				<div class="right-bar-big" style="top: 5.6vh;">Children of the current node:</div>
-				<div class="right-bar-small" style="top: 10vh;">Select ordering:</div>
-				<select class="dropdown" style="left: 9.4vw; top: 8.6vh; width: 10.3vw;">
+				<div class="right-bar-big" style="top: 5.6vh; left: 2.5vw;">Children of the current node:</div>
+				<div class="right-bar-small" style="top: 10vh; left: 2.5vw;">Select ordering:</div>
+				<select class="dropdown" style="left: 10.5vw; top: 9.1vh; width: 11vw;">
 					<option>Option1</option>
 					<option>Option2</option>
 					<option>Option3</option>
 				</select>
-				<div class="right-bar-info-block" style="top: 14.4vh;">
+				<div class="right-bar-info-block" style="top: 14.4vh; left: 2.5vw;">
 					<div class="right-bar-info-title">The info title of this ordering</div>
 					<div class="right-bar-info-text">
 						Line1<br>
@@ -353,15 +352,15 @@ Edited: 2019-06-06
 						Line4<br>
 					</div>
 				</div>
-				<div class="right-bar-hide-button" onclick="hideRightBar()">></div>
-				<div class="right-bar-big" style="top: 53vh;">Some other information:</div>
-				<div class="right-bar-small" style="top: 57vh;">Select ordering:</div>
-				<select class="dropdown" style="left: 9.4vw; top: 56vh; width: 10.3vw;">
+				<div class="right-bar-hide-button empty-triangle" onclick="hideRightBar()">▷</div>
+				<div class="right-bar-big" style="top: 53vh; left: 2.5vw;">Some other information:</div>
+				<div class="right-bar-small" style="top: 57vh; left: 2.5vw;">Select ordering:</div>
+				<select class="dropdown" style="left: 10.5vw; top: 56.5vh; width: 11vw;">
 					<option>Option1</option>
 					<option>Option2</option>
 					<option>Option3</option>
 				</select>
-				<div class="right-bar-info-block" style="top: 62vh;">
+				<div class="right-bar-info-block" style="top: 62vh; left: 2.5vw;">
 					<div class="right-bar-info-title">The second info title about this</div>
 					<div class="right-bar-info-text">
 						Line1<br>
@@ -372,11 +371,9 @@ Edited: 2019-06-06
 				</div>
 			</div>
 			<div class="right-bar-hidden" id="right-bar-hidden" hidden>
-				<div class="right-bar-show-button" onclick="showRightBar()"><</div>
+				<div class="right-bar-show-button empty-triangle" onclick="showRightBar()">◁</div>
 			</div>
 		</div>
-		<div class="bokeh-container valign">
-			<div>{{ script|safe }}</div>
-		</div>
+		<div style="z-index: 1; position: absolute; left: 4vw;">{{ script|safe }}</div>
 	</body>
 </html>
