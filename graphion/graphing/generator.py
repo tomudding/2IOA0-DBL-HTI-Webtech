@@ -3,6 +3,7 @@ Author(s): Tom Udding, Steven van den Broek, Sam Baggen
 Created: 2019-05-03
 Edited: 2019-06-06
 """
+from flask import session
 from graphion import server
 from graphion.graphing.nodelink.graph import generateForceDirectedDiagram, generateHierarchicalDiagram, generateRadialDiagram, generate3DDiagram
 from graphion.graphing.linking import SelectEdgeCallback, SelectMatrixToNodeCallback, SelectNodeToMatrixCallback
@@ -18,22 +19,22 @@ import holoviews as hv
 
 
 def generateBokehApp(doc):
-    global visApp, matrix, hierarchical, graph3D, force, radial
-    matrix = None
-    hierarchical = None
-    graph3D = None
-    force = None
-    radial = None
+    session['matrix'] = None
+    session['hierarchical'] = None
+    session['graph3D'] = None
+    session['force'] = None
+    session['radial'] = None
 
     class VisApp(param.Parameterized):
         Screen1 = param.ObjectSelector(default="force",
-                                          objects=["none", "radial", "force", "hierarchical", "3d"])
+                                       objects=["none", "radial", "force", "hierarchical", "3d"])
+
         Screen2 = param.ObjectSelector(default="matrix",
-                                      objects=["none", "matrix"])
-        
+                                       objects=["none", "matrix"])
+
         Ordering = param.ObjectSelector(default="none",
-                                          objects=["none", "single", "average", "complete", "centroid", "weighted",
-                                                   "median", "ward"])
+                                        objects=["none", "single", "average", "complete", "centroid", "weighted",
+                                                 "median", "ward"])
 
         Metric = param.ObjectSelector(default="euclidean",
                                       objects=["euclidean", "minkowski", "cityblock", "sqeuclidean", "cosine",
@@ -46,20 +47,19 @@ def generateBokehApp(doc):
 
         @param.depends('Screen1', 'Screen2', 'Ordering', 'Metric', 'Color_palette')
         def view(self):
-            global s1
-            s1 = None
+            session['s1'] = None
             if self.Screen1 == "radial":
-                s1 = getRadial(df)
+                session['s1'] = getRadial(df)
             if self.Screen1 == "force":
-                s1 = getForce(df)
+                session['s1'] = getForce(df)
             if self.Screen1 == "hierarchical":
-                s1 = getHierarchical(df)
+                session['s1'] = getHierarchical(df)
             if self.Screen1 == "3d":
-                s1 = getGraph3D(df)
+                session['s1'] = getGraph3D(df)
             # print(s1[1])
-            s2 = None
+            session['s2'] = None
             if self.Screen2 == "matrix":
-                s2 = getMatrix(df)
+                session['s2'] = getMatrix(df)
 
             # Setting up the linking, generateDiagram functions return two-tuple (graph, points). Points is the selection layer
             # makeMatrix returns matrix_dropdown object. matrix.view returns the heatmap object
@@ -74,15 +74,14 @@ def generateBokehApp(doc):
             # Link nodelink to matrix (points only)
             #SelectNodeToMatrixLink(s1[1], s2.view)
 
-            s2.reordering = self.Ordering
-            s2.metric = self.Metric
-            s2.color_palette = self.Color_palette
-            s2Pane = pn.Column(s2.view)
+            session['s2.reordering'] = self.Ordering
+            session['s2.metric'] = self.Metric
+            session['s2.color_palette'] = self.Color_palette
+            session['s2Pane'] = pn.Column(session['s2.view'])
 
-            return pn.Row(s1[0], s2Pane)
+            return pn.Row(session['s1'][0], session['s2Pane'])
 
     df = get_filtered_df()
-
     visApp = VisApp()
 
     # begin = time.time()
@@ -95,13 +94,9 @@ def generateBokehApp(doc):
     # threeD = getGraph3D(df)
     # print("3D generation took: " + str(time.time() - begin))
 
-
-
     # pane = pn.Column(pn.Row(graph, matrix), graph3D)
     # pane = pn.Column(pn.Row(h, m), threeD)
     # pane = pn.Pane(graph)
-
-
 
     pn.extension('plotly')
     return pn.Pane(visApp.view).get_root(doc)
@@ -124,41 +119,36 @@ def getFilePath(file):
     return os.path.join(server.config['UPLOAD_FOLDER'], file)
 
 def getMatrix(df):
-    global matrix
-    if 'matrix' in globals() and matrix is not None:
-        return matrix
+    if 'matrix' in session and session['matrix'] is not None:
+        return session['matrix']
     else:
-        matrix = makeMatrix(df.copy(), s1[1], df=True)
-        return matrix
+        session['matrix'] = makeMatrix(df.copy(), session['s1'][1], df=True)
+        return session['matrix']
 
 def getHierarchical(df):
-    global hierarchical
-    if 'hierarchical' in globals() and hierarchical is not None:
-        return hierarchical
+    if 'hierarchical' in session and session['hierarchical'] is not None:
+        return session['hierarchical']
     else:
-        hierarchical = generateHierarchicalDiagram(df.copy(), False, df=True)
-        return hierarchical
+        session['hierarchical'] = generateHierarchicalDiagram(df.copy(), False, df=True)
+        return session['hierarchical']
 
 def getGraph3D(df):
-    global graph3D
-    if 'graph3D' in globals() and graph3D is not None:
-        return graph3D
+    if 'graph3D' in session and session['graph3D'] is not None:
+        return session['graph3D']
     else:
-        graph3D = generate3DDiagram(df.copy(), df=True)
-        return graph3D
+        session['graph3D'] = generate3DDiagram(df.copy(), df=True)
+        return session['graph3D']
 
 def getForce(df):
-    global force
-    if 'force' in globals() and force is not None:
-        return force
+    if 'force' in session and session['force'] is not None:
+        return session['force']
     else:
-        force = generateForceDirectedDiagram(df, False, df=True)
-        return force
+        session['force'] = generateForceDirectedDiagram(df.copy(), False, df=True)
+        return session['force']
 
 def getRadial(df):
-    global radial
-    if 'radial' in globals() and radial is not None:
-        return radial
+    if 'radial' in session and session['radial'] is not None:
+        return session['radial']
     else:
-        radial = generateRadialDiagram(df, False, df=True)
-        return radial
+        session['radial'] = generateRadialDiagram(df.copy(), False, df=True)
+        return session['radial']

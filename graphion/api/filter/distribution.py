@@ -17,7 +17,7 @@ import os
 from graphion import server
 
 
-apiDegreeBlueprint = Blueprint('apiMatrixBlueprint', __name__, template_folder='templates')
+apiDegreeBlueprint = Blueprint('apiDegreeBlueprint', __name__, template_folder='templates')
 
 # @apiDegreeBlueprint.route('/api/filter/distribution/<type>/<dir>/<file>', methods=['GET'], strict_slashes=False)
 @apiDegreeBlueprint.route('/api/filter/distribution/<type>/<dir>', methods=['GET'], strict_slashes=False)

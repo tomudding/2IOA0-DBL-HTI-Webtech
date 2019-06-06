@@ -1,10 +1,15 @@
 """
 Author(s): Tom Udding, Steven van den Broek, Sam Baggen
 Created: 2019-04-29
-Edited: 2019-06-06
+Edited: 2019-06-07
 """
-from flask import Flask
+from flask import Flask, session
+from flask_session import Session
 server = Flask(__name__)
+
+# initiate server-side sessions to hold DataSets between requests
+server.config['SESSION_TYPE'] = 'filesystem'
+Session(server)
 
 from os import environ, mkdir, makedirs
 from os.path import isdir

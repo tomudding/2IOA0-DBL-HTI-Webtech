@@ -1,10 +1,10 @@
 """
 Author(s): Tom Udding, Steven van den Broek
 Created: 2019-05-01
-Edited: 2019-06-02
+Edited: 2019-06-07
 """
 import os, secrets
-from flask import flash, request, redirect
+from flask import flash, request, redirect, session
 from graphion import server
 from graphion.graphing.parser import processCSVMatrix
 from tempfile import NamedTemporaryFile
@@ -58,10 +58,9 @@ def upload_file_now():
     return redirect('/selection')
 
 def get_df():
-    global df
-    if 'df' not in globals():
+    if 'df' not in session:
         return None
-    return df.copy()
+    return session['df'].copy()
 
 def set_df(input):
     global df
@@ -80,45 +79,40 @@ def set_df(input):
     # print("This dataset is sparce: " + str(sparce))
 
 def get_filtered_df():
-    if 'filtered_df' in globals():
-        if filtered_df is not None:
-            return filtered_df.copy()
-    if 'almost_filtered_df' in globals():
-        if almost_filtered_df is not None:
-            return almost_filtered_df.copy()
-    if 'partially_filtered_df' in globals():
-        if almost_filtered_df is not None:
-            return partially_filtered_df.copy()
+    if 'filtered_df' in session:
+        if session['filtered_df'] is not None:
+            return session['filtered_df'].copy()
+    if 'almost_filtered_df' in session:
+        if session['almost_filtered_df'] is not None:
+            return session['almost_filtered_df'].copy()
+    if 'partially_filtered_df' in session:
+        if session['almost_filtered_df'] is not None:
+            return session['partially_filtered_df'].copy()
     return get_df()
 
 def set_filtered_df(input):
-    global filtered_df
-    filtered_df = input
+    session['filtered_df'] = input
 
 def get_partially_filtered_df():
-    global partially_filtered_df
-    if 'partially_filtered_df' in globals():
-        if partially_filtered_df is not None:
-            return partially_filtered_df.copy()
+    if 'partially_filtered_df' in session:
+        if session['partially_filtered_df'] is not None:
+            return session['partially_filtered_df'].copy()
     return get_df()
 
 def set_partially_filtered_df(input):
-    global partially_filtered_df
-    partially_filtered_df = input
+    session['partially_filtered_df'] = input
 
 def get_almost_filtered_df():
-    global almost_filtered_df
-    if 'almost_filtered_df' in globals():
-        if almost_filtered_df is not None:
-            return almost_filtered_df.copy()
+    if 'almost_filtered_df' in session:
+        if session['almost_filtered_df'] is not None:
+            return session['almost_filtered_df'].copy()
     return get_df()
 
 def set_almost_filtered_df(input):
-    global almost_filtered_df
-    almost_filtered_df = input
+    session['almost_filtered_df'] = input
 
 def is_sparce():
-    return sparce
+    return session['sparce']
 
 def is_directed():
-    return directed
+    return session['directed']
