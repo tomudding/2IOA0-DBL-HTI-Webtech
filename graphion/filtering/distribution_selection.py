@@ -244,6 +244,7 @@ def generate_selection(file, kind="degree", dir="in", dataframe=False):
 
     p.background_fill_color = None
     p.border_fill_color = None
+    p.outline_line_color = None
 
     # print("KDE + plotting: {}-{}: ".format(dir, kind) + str(time.time()-begin))
     # print("Total {}-{}: ".format(dir, kind) + str(time.time()-big_bang))

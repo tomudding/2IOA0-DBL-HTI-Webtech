@@ -57,6 +57,8 @@ from graphion.selection import selectionBlueprint
 from graphion.visualise import visualiseBlueprint
 from graphion.filter import filterBlueprint
 from graphion.api.filter.distribution import apiDegreeBlueprint
+from graphion.api.visualise.plot_switching import apiSwitchBlueprint
+from graphion.api.visualise.matrix_reordering import apiOrderBlueprint
 
 # register views as blueprints
 server.register_blueprint(indexBlueprint)
@@ -64,6 +66,8 @@ server.register_blueprint(selectionBlueprint)
 server.register_blueprint(visualiseBlueprint)
 server.register_blueprint(filterBlueprint)
 server.register_blueprint(apiDegreeBlueprint)
+server.register_blueprint(apiSwitchBlueprint)
+server.register_blueprint(apiOrderBlueprint)
 
 # other stuff
 if (not isdir(server.config['UPLOAD_FOLDER'])):

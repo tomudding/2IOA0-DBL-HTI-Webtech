@@ -1,121 +1,23 @@
 /*
 Author(s): Steven van den Broek, Anton Vellikok
 Created: 2019-05-18
-Edited: 2019-05-31
+Edited: 2019-06-04
 */
-* {
-    margin: 0;
-    padding: 0;
-    font-family: Roboto, sans-serif;
-    font-weight: 300;
-}
 
 
 /*############################################
   #########  Page X: General outlook  ########
   ############################################*/
 
-.pop-up-window {
-    width: 1080px;
-    background-color: #E8E8E8;
-    border-radius: 15px;
-    margin: auto;
-    margin-top: 17vh;
-    height: 66vh;
-    margin-bottom: 17vh;
-    min-height: 100%;
-    position: relative;
-}
-
-.pop-up-title {
-    text-align: center;
-    line-height: 150px;
-    font-size: 50px;
-    color: #C40000;
-}
-
-.pop-up-icon-area {
+.icon-area {
     text-align: center;
 }
 
-.vertical-line {
-    height: 25vh;
-    width: 1px;
-    background-color: #929292;
-    display: inline-block;
-}
-
-.pop-up-icon-area-left, .pop-up-icon-area-right, .pop-up-icon-area-center {
-    height: 20vh;
-    display: inline-block;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 50px;
-    padding-right: 50px;
-}
-
-.pop-up-icon-area-left img, .pop-up-icon-area-right img, .pop-up-icon-area-center img {
-    height: 100%;
-}
-
-.pop-up-button {
-    margin-top: 5vh;
-    background-color: #929292;
-    color: white;
-    border: 0;
-    padding-top: 15px;
-    padding-bottom: 15px;
-    padding-left: 30px;
-    padding-right: 30px;
-    font-size: 20px;
-}
-
-.pop-up-button:hover {
-    background-color: black;
-    cursor: pointer;
-}
-
-.pop-up-footer-area {
-    clear: both;
-    position: absolute;
+.footer-area {
     text-align: center;
     bottom: 0;
     width: 100%;
-    height: 70px;
-}
-
-.pop-up-footer-button {
-    background-color: #E8E8E8;
-    border: 0;
-    color: #929292;
-    font-size: 17px;
-    margin-top: 20px;
-}
-
-.pop-up-footer-button-continue {
-    color: black;
-    font-size: 24px;
-}
-
-.pop-up-footer-button-start {
-    background-color: black;
-    color: white;
-    border: 0;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    padding-left: 30px;
-    padding-right: 30px;
-    font-size: 20px;
-    margin-top: 0px;
-}
-
-.pop-up-footer-button-start:hover {
-    background-color: #929292;
-}
-
-.pop-up-footer-button:hover {
-    color: #C40000;
-    cursor: pointer;
+    height: 50px;
 }
 
 .pop-up-footer-button-back {
@@ -128,134 +30,51 @@ Edited: 2019-05-31
     margin-right: 30px;
 }
 
+.pop-up-footer-button {
+    background-color: #E8E8E8;
+    border: 0;
+    color: #929292;
+    font-size: 17px;
+}
+
 /*############################################
   ##########  Page 1: Select theme  ##########
   ############################################*/
 
-#choose-theme {
+  #choose-theme {
     display: block;
 }
 
 /*############################################
-  #######  Page 2: Select nodes/edges  #######
+  #######  Page 2: Select cluster type  ######
   ############################################*/
 
-#choose-POI-nodes-edges {
+  #choose-POI-clusters {
     display: none;
-}
-
-
-.multiple-choice-selection {
-    display: none;
-}
-
-.custom-checkbox {
-    display: inline-block;
-    height: 11px;
-    width: 11px;
-    background-color: white;
-    border: 3px solid white;
-    margin-right: 5px;
-    color: black;
-}
-
-#interesting-nodes-chk-box:checked ~ .custom-checkbox {
-    background-color: #C40000;
-}
-
-#interesting-edges-chk-box:checked ~ .custom-checkbox {
-    background-color:#C40000;
-}
-
-#interesting-nodes-button {
-    background-color: #929292;
-}
-
-
-#interesting-nodes-button:hover {
-    background-color: black;
-}
-
-#choose-POI-nodes-edges-continue-button {
-    display: none;
-}
-
-#choose-POI-nodes-edges-continue-button:hover {
-    color: #C40000;
 }
 
 /*############################################
-  #######  Page 3: Select cluster type  ######
+  ####  Page 3: filter the edge weights  #####
   ############################################*/
 
-#choose-POI-clusters {
+  #filter-edge-weight {
     display: none;
 }
 
-
 /*############################################
-  ####  Page 4: filter the edge weights  #####
-  ############################################*/
-
-#filter-edge-weight {
-    display: none;
-}
-
-.filter-text {
-    margin-top: 5vh;
-    color: #5C5C5C;
-    font-size: 20px;
-    line-height: 30px;
-}
-
-#filter-text-time {
-    color: #C40000;
-}
-
-#edge-weight-chk-box:checked ~ .custom-checkbox {
-    background-color: #C40000;
-}
-
-#custom-edge-weight-chk-box {
-    cursor: pointer;
-    height: 15px;
-    width: 15px;
-}
-
-#custom-edge-weight-chk-box:hover {
-    background-color: rgb(255, 144, 59);
-    border: 3px solid white;
-}
-
-#weight-plot {
-    margin: auto;
-    width: 400px;
-}
-
-/*############################################
-  #### Page 5: filter the node in-degrees ####
+  #### Page 4: filter the node in-degrees ####
   ############################################*/
 
 #filter-node-in-degree {
     display: none;
 }
 
-#in-degree-plot {
-    margin: auto;
-    width: 400px;
-}
-
 /*############################################
-  ### Page 6: filter the node out-degrees ####
+  ### Page 5: filter the node out-degrees ####
   ############################################*/
 
 #filter-node-out-degree {
     display: none;
-}
-
-#out-degree-plot {
-    margin: auto;
-    width: 400px;
 }
 
 /*############################################
@@ -284,16 +103,4 @@ Edited: 2019-05-31
 
 #help-page-6 {
     display: none;
-}
-
-.help-section-title {
-    color: #C40000;
-    padding: 40px;
-    padding-bottom: 20px;
-    font-size: 30px;
-}
-
-.help-section-paragraph {
-    margin-right: 50px;
-    margin-left: 50px;
 }

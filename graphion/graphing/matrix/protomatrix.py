@@ -18,7 +18,9 @@ from holoviews.plotting.bokeh.callbacks import LinkCallback
 from holoviews.plotting.links import Link
 from bokeh.models import BoxSelectTool
 
-def makeMatrix(file, df=False):
+from graphion.graphing.linking import SelectMatrixToNodeCallback, SelectMatrixToNodeLink
+
+def makeMatrix(file, plot, df=False):
     if not df:
         df = read_hdf(file)
     else:
@@ -174,6 +176,10 @@ def makeMatrix(file, df=False):
                 table = hv.Table(current_data)
                 table.opts(height=500)
 
+                print(plot)
+                select = SelectMatrixToNodeLink(hm, plot, indices=names)
+                select.register_callback('bokeh', SelectMatrixToNodeCallback)
+
                 return hm
                 # return pn.Row(hm, table)
                 # selection = Selection1D(source=hm, subscribers=[print_info])
@@ -193,6 +199,10 @@ def makeMatrix(file, df=False):
                 current_data = hm.data
                 table = hv.Table(current_data)
                 table.opts(height=500)
+                print(plot)
+                select = SelectMatrixToNodeLink(hm, plot, indices=names)
+                select.register_callback('bokeh', SelectMatrixToNodeCallback)
+
 
                 return hm
                 # return pn.Row(hm, table)
@@ -201,14 +211,11 @@ def makeMatrix(file, df=False):
 
     matrix = Matrix_dropdown(name='Adjacency Matrix')
 
+
     # %%
     # hv_plot = hm + table
 
-    #matrix_pane1 = pn.Column(pn.Pane(matrix.param, css_classes=['matrix_dropdowns']), matrix.view())
+    #matrix_pane1 = pn.Column(pn.Pane(matrix.param, css_classes=['matrix_dropdowns']), matrix.view)
     # matrix_pane2 = pn.Column(matrix.param, matrix.view(show_only_selection=False))
 
     return matrix
-
-def makeMatrixPane(matrix):
-    matrix_pane = pn.Column(pn.Pane(matrix.param, css_classes=['matrix_dropdowns']), pn.Pane(matrix.view()))
-    return matrix_pane
