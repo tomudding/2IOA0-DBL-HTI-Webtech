@@ -30,6 +30,7 @@ from bokeh.application.handlers import FunctionHandler
 from bokeh.server.server import BaseServer
 from bokeh.server.tornado import BokehTornado
 from bokeh.server.util import bind_sockets
+from os import getpid
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
 
@@ -78,7 +79,11 @@ if (not isdir(server.config['UPLOAD_FOLDER'])):
     mkdir(server.config['UPLOAD_FOLDER'])
 
 # start Bokeh server
-sockets, port = bind_sockets("localhost", 0)
+if "gunicorn" in environ.get("SERVER_SOFTWARE", ""):
+    forcedPort = getpid()
+    sockets, port = bind_sockets("localhost", forcedPort)
+else:
+    sockets, port = bind_sockets("localhost", 0)
 server.config['PORT'] = port
 
 from graphion.visualise import modify_doc
