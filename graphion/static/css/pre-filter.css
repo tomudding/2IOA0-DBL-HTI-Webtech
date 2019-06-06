@@ -57,8 +57,13 @@ Edited: 2019-06-04
   ####  Page 3: filter the edge weights  #####
   ############################################*/
 
-  #filter-edge-weight {
+#filter-edge-weight {
     display: none;
+}
+
+#weight-plot{
+    width: 300px;
+    margin: auto;
 }
 
 /*############################################
@@ -69,12 +74,22 @@ Edited: 2019-06-04
     display: none;
 }
 
+#in-degree-plot{
+    width: 300px;
+    margin: auto;
+}
+
 /*############################################
   ### Page 5: filter the node out-degrees ####
   ############################################*/
 
 #filter-node-out-degree {
     display: none;
+}
+
+#out-degree-plot{
+    width: 300px;
+    margin: auto;
 }
 
 /*############################################
@@ -103,4 +118,22 @@ Edited: 2019-06-04
 
 #help-page-6 {
     display: none;
+}
+
+/*############################################
+  #############  Load Animation  #############
+  ############################################*/
+
+.load-animation {
+	border: 8px solid #f3f3f3; /* Light grey */
+	border-top: 8px solid #3189ff; /* Blue */
+	border-radius: 50%;
+	width: 30px;
+	height: 30px;
+	animation: spin 2s linear infinite;
+    margin: auto;
+}
+@keyframes spin {
+	0% { transform: rotate(0deg); }
+	100% { transform: rotate(360deg); }
 }
