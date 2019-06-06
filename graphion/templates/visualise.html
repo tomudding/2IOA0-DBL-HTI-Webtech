@@ -25,13 +25,13 @@ Edited: 2019-06-06
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh-tables.min.js" integrity="sha256-1xlBn0odMnApk3dBf3oUDUQlsLvSwx2lvcBTIJC0x20=" crossorigin="anonymous"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh-widgets.min.js" integrity="sha256-0D9ZpwC/v+rmx33UGlpWU9Uo1+J58MFqTKkGVGDZpEE=" crossorigin="anonymous"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh-gl.min.js" integrity="sha256-fDyCLeWMeXB/F1JUTOFAM/9ONJmyiiSfsmPWl5tZQzk=" crossorigin="anonymous"></script>
-		<script src="//cdnjs.cloudflare.com/ajax/libs/dat-gui/0.5/dat.gui.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.6/dat.gui.min.js" integrity="sha256-HJ7j+71YYw6Kcs8THwQV9lXmPOcR0eXlg7n8KRTZsyA=" crossorigin="anonymous"></script>
 		<!-- Plotly files -->
-		<script type="text/javascript" src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/1.48.1/plotly.min.js" integrity="sha256-LE6cKkU1yNCSCMPJrBlZonWX8bdy0EuY2QDpbmJaOzY=" crossorigin="anonymous"></script>
 		<!-- jQuery for post methods... -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 	</head>
-	<body>
+	<body class="valign-wrapper">
 		<section class="body-wrapper" id="loading-screen">
 			<div class="container">
 				<div class="row">
@@ -51,7 +51,7 @@ Edited: 2019-06-06
 						var context = canvas.getContext('2d');
 						var div = document.getElementById("nodelink");
 						var width = div.clientWidth - 5;
-						var height = (div.clientHeight * 4) - 5;
+						var height = (div.clientHeight * 3) - 5;
 						canvas.width = width;
 						canvas.height = height;
 						var graph = {
@@ -375,6 +375,8 @@ Edited: 2019-06-06
 				<div class="right-bar-show-button" onclick="showRightBar()"><</div>
 			</div>
 		</div>
-		<div style="z-index: 1; position: absolute; left: 4vw;">{{ script|safe }}</div>
+		<div class="bokeh-container valign">
+			<div>{{ script|safe }}</div>
+		</div>
 	</body>
 </html>

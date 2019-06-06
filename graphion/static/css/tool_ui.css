@@ -1,139 +1,141 @@
 /**
- * Author(s): Tim van de Klundert
+ * Author(s): Tim van de Klundert, Tom Udding
  * Created: 2019-05-27
- * Edited: 2019-05-28
+ * Edited: 2019-06-06
  */
 
- .left-bar-shown {
-     background-color: rgb(66,66,66);
-     position: absolute;
-     z-index: 10;
-     left: 0vw;
-     top: 0vh;
-     width: 21vw;
-     height: 100vh;
- }
+.bokeh-container {
+    margin: 0 auto;
+}
 
- .left-bar-small-links {
-     position: absolute;
-     left: 0.7vw;
-     top: 0.2vh;
-     width: 5vw;
-     height: 3.5vh;
-     font-size: 0.9vw;
+.left-bar-shown {
+    background-color: rgb(66,66,66);
+    position: absolute;
+    z-index: 10;
+    left: 0;
+    top: 0;
+    width: 21vw;
+    height: 100vh;
+}
+
+.left-bar-small-links {
+    position: absolute;
+    left: 0.7vw;
+    top: 0.2vh;
+    width: 5vw;
+    height: 3.5vh;
+    font-size: 0.9vw;
     line-height: 1.2vw;
- }
+}
 
- .left-bar-small-links a {
+.left-bar-small-links a {
     color: rgb(140,140,140);
     font-family: 'Segoe UI';
-    border-bottom: 0px;
- }
+    border-bottom: 0;
+}
 
- .left-bar-graphion {
-     position: absolute;
-     left: 1.5vw;
-     top: 9vh;
-     color: rgb(200,0,0);
-     font-size: 1.8vw;
-     line-height: 1.8vw;
- }
-
- .left-bar-choose-vis {
-     position: absolute;
-     left: 1.5vw;
-     width: 18vw;
-     top: 13.6vh;
-     font-size: 1.2vw;
-     line-height: 1.2vw;
-     color: white;
- }
-
- .left-bar-screen-big {
-     position: absolute;
-     color: rgb(133, 133, 133);
-     font-size: 1.3vw;
-     width: 6vw;
-     line-height: 1.3vw;
-     left: 1.7vw;
- }
-
- .left-bar-screen-small {
-     position: absolute;
-     color: rgb(133,133,133);
-     font-size: 0.8vw;
-     width: 5.4vw;
-     line-height: 0.8vw;
- }
-
- .left-bar-screen-separator {
-     position: absolute;
-     color: rgb(133,133,133);
-     left: 1.5vw;
-     top: 43vh;
-     width: 18vw;
-     font-size: 1vw;
-     line-height: 1vw;
- }
-
- .left-bar-hide-button {
-     position: absolute;
-     left:18vw;
-     top: 48vh;
-     width: 3vw;
-     height: 4vh;
-     font-size: 3vw;
-     line-height: 3vw;
-     color: white;
-     cursor: pointer;
- }
-
- .left-bar-node-labels {
-     position: absolute;
-     color: white;
-     left: 1.5vw;
-     width: 18vw;
-     font-size: 1.2vw;
-     line-height: 1.2vw;
- }
-
- .left-bar-color-picker {
-     position: absolute;
-     left: 1.5vw;
-     top: 81.5vh;
-     width: 5.4vw;
-     height: 10.4vh;
-     cursor: pointer;
- }
-
- .left-bar-dark-mode-label {
-     position: absolute;
-     color: white;
-     left: 1.5vw;
-     top: 94vh;
-     font-size: 1.2vw;
-     line-height: 1.2vw;
- }
-
- .left-bar-hidden {
-     background-color: rgb(66,66,66);
-     z-index: 10;
-     position: absolute;
-     left: 0vw;
-     top: 0vh;
-     width: 4vw;
-     height: 100vh;
- }
-
- .left-bar-show-button {
+.left-bar-graphion {
     position: absolute;
-    left:0.5vw;
-    top: 48vh;
-    width: 3vw;
-    height: 4vh;
-    font-size: 3vw;
-    line-height: 3vw;
+    left: 1.5vw;
+    top: 9vh;
+    color: rgb(200,0,0);
+    font-size: 1.8vw;
+    line-height: 1.8vw;
+}
+
+.left-bar-choose-vis {
+    position: absolute;
+    left: 1.5vw;
+    width: 18vw;
+    top: 13.6vh;
+    font-size: 1.2vw;
+    line-height: 1.2vw;
     color: white;
+}
+
+.left-bar-screen-big {
+    position: absolute;
+    color: rgb(133, 133, 133);
+    font-size: 1.3vw;
+    width: 6vw;
+    line-height: 1.3vw;
+    left: 1.7vw;
+}
+
+.left-bar-screen-small {
+    position: absolute;
+    color: rgb(133,133,133);
+    font-size: 0.8vw;
+    width: 5.4vw;
+    line-height: 0.8vw;
+}
+
+.left-bar-screen-separator {
+    position: absolute;
+    color: rgb(133,133,133);
+    left: 1.5vw;
+    top: 43vh;
+    width: 18vw;
+    font-size: 1vw;
+    line-height: 1vw;
+}
+
+.left-bar-hide-button {
+    position: absolute;
+    right: 1vw;
+    top: 48.5vh;
+    font-size: 2.5vw;
+    line-height: 2.5vw;
+    height: 3vh;
+    color: white;
+    cursor: pointer;
+}
+
+.left-bar-node-labels {
+    position: absolute;
+    color: white;
+    left: 1.5vw;
+    width: 18vw;
+    font-size: 1.2vw;
+    line-height: 1.2vw;
+}
+
+.left-bar-color-picker {
+    position: absolute;
+    left: 1.5vw;
+    top: 81.5vh;
+    width: 5.4vw;
+    height: 10.4vh;
+    cursor: pointer;
+}
+
+.left-bar-dark-mode-label {
+    position: absolute;
+    color: white;
+    left: 1.5vw;
+    top: 94vh;
+    font-size: 1.2vw;
+    line-height: 1.2vw;
+}
+
+.left-bar-hidden {
+    background-color: rgb(66,66,66);
+    z-index: 10;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 4vw;
+    height: 100vh;
+}
+
+.left-bar-show-button {
+    position: absolute;
+    color: white;
+    right: 1vw;
+    top: 48.5vh;
+    font-size: 2.5vw;
+    line-height: 2.5vw;
+    height: 3vh;
     cursor: pointer;
 }
 
@@ -164,9 +166,9 @@
     background-color: #ccc;
     -webkit-transition: .4s;
     transition: .4s;
-  }
-  
-  .slider:before {
+}
+
+.slider:before {
     position: absolute;
     content: "";
     height: 3vh;
@@ -176,104 +178,104 @@
     background-color: white;
     -webkit-transition: .4s;
     transition: .4s;
-  }
-  
-  input:checked + .slider {
+}
+
+input:checked + .slider {
     background-color: #2196F3;
-  }
-  
-  input:focus + .slider {
+}
+
+input:focus + .slider {
     box-shadow: 0 0 1px #2196F3;
-  }
-  
-  input:checked + .slider:before {
+}
+
+input:checked + .slider:before {
     -webkit-transform: translateX(26px);
     -ms-transform: translateX(26px);
     transform: translateX(26px);
-  }
-  
-  /* Rounded sliders */
-  .slider.round {
+}
+
+/* Rounded sliders */
+.slider.round {
     border-radius: 34px;
-  }
-  
-  .slider.round:before {
+}
+
+.slider.round:before {
     border-radius: 50%;
-  }
+}
 
-  /* End of ripped content */
+/* End of ripped content */
 
- .right-bar-shown {
-     background-color: rgb(66,66,66);
-     position: absolute;
-     z-index: 10;
-     left: 79vw;
-     top: 0vh;
-     width: 21vw;
-     height: 100vh;
- }
+.right-bar-shown {
+    background-color: rgb(66,66,66);
+    position: absolute;
+    z-index: 10;
+    left: 79vw;
+    top: 0;
+    width: 21vw;
+    height: 100vh;
+}
 
- .right-bar-big {
-     position: absolute;
-     color: white;
-     left: 1.3vw;
-     font-size: 1.2vw;
-     line-height: 1.2vw;
- }
+.right-bar-big {
+    position: absolute;
+    color: white;
+    left: 1.3vw;
+    font-size: 1.2vw;
+    line-height: 1.2vw;
+}
 
- .right-bar-small {
-     position: absolute;
-     color: rgb(133,133,133);
-     left: 1.3vw;
-     font-size: 1.1vw;
-     line-height: 1.1vw;
- }
+.right-bar-small {
+    position: absolute;
+    color: rgb(133,133,133);
+    left: 1.3vw;
+    font-size: 1.1vw;
+    line-height: 1.1vw;
+}
 
- .right-bar-hide-button {
-     position: absolute;
-     color: white;
-     left: 1vw;
-     top: 48.5vh;
-     font-size: 2.5vw;
-     line-height: 2.5vw;
-     height: 3vh;
-     cursor: pointer;
- }
+.right-bar-hide-button {
+    position: absolute;
+    left: 1vw;
+    top: 48.5vh;
+    font-size: 2.5vw;
+    line-height: 2.5vw;
+    height: 3vh;
+    color: white;
+    cursor: pointer;
+}
 
- .right-bar-info-block {
-     position: absolute;
-     left: 1vw;
-     width: 19vw;
-     height: 32vh;
-     background-color: white;
- }
+.right-bar-info-block {
+    position: absolute;
+    left: 1vw;
+    width: 19vw;
+    height: 32vh;
+    background-color: white;
+}
 
- .right-bar-info-title {
-     position: absolute;
-     left: 1vw;
-     top: 2vh;
-     font-size: 1.1vw;
-     line-height: 1.1vw;
-     color: black;
- }
+.right-bar-info-title {
+    position: absolute;
+    left: 1vw;
+    top: 2vh;
+    font-size: 1.1vw;
+    line-height: 1.1vw;
+    color: black;
+}
 
- .right-bar-info-text {
-     position: absolute;
-     left: 2vw;
-     top: 5vh;
-     width: 10vw;
-     height: 30vh;
-     font-size: 0.9vw;
-     line-height: 0.9vw;
-     color: rgb(133,133,133);
- }
+.right-bar-info-text {
+    position: absolute;
+    left: 2vw;
+    top: 5vh;
+    width: 10vw;
+    height: 30vh;
+    font-size: 0.9vw;
+    line-height: 0.9vw;
+    color: rgb(133,133,133);
+}
 
- .right-bar-hidden {
+.right-bar-hidden {
     background-color: rgb(66,66,66);
     position: absolute;
     z-index: 10;
     left: 96vw;
-    top: 0vh;
+    top: 0;
     width: 4vw;
     height: 100vh;
 }
