@@ -365,6 +365,7 @@
 
 .empty-triangle {
     font-size: 2vw;
+    transition: 0.4s;
 }
 
 .empty-triangle:hover {
