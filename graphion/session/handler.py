@@ -54,5 +54,6 @@ class GraphionSessionHandler:
     """
     def set(self, key, value):
         contents = self._getCacheContents()
-        contents.update({key: value})
-        return self.cache.set(self.key_prefix + self.identifier, contents)
+        contents[key] = value
+        #data = dict(contents)
+        return self.cache.set(self.key_prefix + self.identifier, contents)#, data)
