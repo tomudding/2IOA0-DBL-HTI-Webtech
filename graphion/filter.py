@@ -1,7 +1,7 @@
 """
 Author(s): Steven van den Broek, Tom Udding
 Created: 2019-05-18
-Edited: 2019-06-06
+Edited: 2019-06-08
 """
 
 from flask import Blueprint, flash, redirect, render_template
@@ -27,7 +27,4 @@ def visualise(file=None):
 
     df = read_hdf(os.path.join(server.config['UPLOAD_FOLDER'], (file + '.h5'))) # should be done in a memory efficient way (instead of loading the whole file into memory)
     set_df(df)
-    set_almost_filtered_df(None)
-    set_partially_filtered_df(None)
-    set_filtered_df(None)
     return render_template('filter.html', fileName=file)

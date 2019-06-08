@@ -18,19 +18,7 @@ import holoviews as hv
 
 def generateBokehApp(doc):
     sid = str(doc.session_context.request.arguments['sid'][0].decode('utf-8'))
-    print(sid)
     gsh = GraphionSessionHandler(sid)
-    print("---------------------------------------------------")
-    print(gsh.identifier)
-    print(gsh.cache)
-    print("---------------------------------------------------")
-    print(type(gsh.get("")))
-    print(gsh.get("sparce"))
-    print("---------------------------------------------------")
-    gsh.set("test", True)
-    print(gsh.get("test"))
-    print(gsh.get(""))
-    print("---------------------------------------------------")
 
     class VisApp(param.Parameterized):
         Screen1 = param.ObjectSelector(default="force",

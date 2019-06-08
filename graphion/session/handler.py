@@ -23,18 +23,28 @@ class GraphionSessionHandler:
         self.identifier = Signer(server.config['SECRET_KEY'], salt='flask-session', key_derivation='hmac').unsign(sid).decode()
 
     """
+    Helper function to get SessionCache contents.
+    Returns contents or None.
+    """
+    def _getCacheContents(self):
+        return self.cache.get(self.key_prefix + self.identifier)
+
+    """
     Retrieve a value from the SessionCache using a given key.
     Returns contents at given key or None.
     """
     def get(self, key):
-        return self.cache.get(self.key_prefix + self.identifier)
+        contents = self._getCacheContents()
+        if contents is not None:
+            return contents.get(key, None)
+        return None
 
     """
     Check if a key exists without returning actual data.
     Returns True if data exists at key, False if it does not.
     """
     def has(self, key):
-        return key in self.cache.get(self.key_prefix + self.identifier)
+        return key in self._getCacheContents()
 
     """
     Set a value in the SessionCache using a given key.
@@ -43,4 +53,6 @@ class GraphionSessionHandler:
     pickling fails.
     """
     def set(self, key, value):
-        return self.cache.get(self.key_prefix + self.identifier).update({key: value})
+        contents = self._getCacheContents()
+        contents.update({key: value})
+        return self.cache.set(self.key_prefix + self.identifier, contents)
