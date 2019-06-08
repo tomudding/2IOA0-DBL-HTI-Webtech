@@ -18,6 +18,7 @@ from flask.sessions import SessionMixin
 from werkzeug.datastructures import CallbackDict
 from itsdangerous import Signer, BadSignature, want_bytes
 
+
 PY2 = sys.version_info[0] == 2
 if not PY2:
     text_type = str

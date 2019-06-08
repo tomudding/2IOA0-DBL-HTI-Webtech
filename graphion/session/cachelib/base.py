@@ -167,4 +167,4 @@ class NullCache(BaseCache):
     """
 
     def has(self, key):
-        return False
+return False
