@@ -38,21 +38,21 @@ def degreeAPI(type=None, dir=None):
     #             print("To json {}-{}: ".format(dir, type) + str(time.time()-start))
     #         return dumps(item)
     # All filters use this
+    sid = request.cookies.get(server.config['SESSION_COOKIE_NAME'])
     if type == 'weight':
-        data = get_df()
+        data = get_df(sid)
     if type == 'degree':
         if dir == 'in':
-            data = get_partially_filtered_df()
+            data = get_partially_filtered_df(sid)
         if dir == 'out':
-            data = get_almost_filtered_df()
+            data = get_almost_filtered_df(sid)
     plot = generate_selection(data, kind=type, dir=dir, dataframe=True)
     return dumps(json_item(plot))
 
-@apiDegreeBlueprint.route('/postmethod', methods = ['POST'])
+@apiDegreeBlueprint.route('/postmethod', methods=['POST'])
 def worker():
     # read json + reply
     left = float(request.form['left'])
-
     right = float(request.form['right'])
     type = request.form['type']
     dir = request.form['dir']

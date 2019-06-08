@@ -57,17 +57,19 @@ def upload_file_now():
             return redirect('/visualise/' + fileUniqueHash)
     return redirect('/selection')
 
-def get_df():
+def get_df(sid):
     global df
     if 'df' not in globals():
         return None
     return df.copy()
 
-def set_df(input):
-    global df
-    global directed
-    global sparce
-    df = input
+def set_df(input, sid):
+    if not('app_context' in globals()):
+        global app_context
+        app_context = dict()
+    if app_context.get(sid, None) is None:
+        app_context[sid] = dict()
+    app_context[sid]['df'] = input
     # if df.equals(df.transpose()):
     #     directed = False
     # else:
@@ -79,7 +81,7 @@ def set_df(input):
     #     sparce = True
     # print("This dataset is sparce: " + str(sparce))
 
-def get_filtered_df():
+def get_filtered_df(sid):
     if 'filtered_df' in globals():
         if filtered_df is not None:
             return filtered_df.copy()
@@ -91,34 +93,34 @@ def get_filtered_df():
             return partially_filtered_df.copy()
     return get_df()
 
-def set_filtered_df(input):
+def set_filtered_df(input, sid):
     global filtered_df
     filtered_df = input
 
-def get_partially_filtered_df():
+def get_partially_filtered_df(sid):
     global partially_filtered_df
     if 'partially_filtered_df' in globals():
         if partially_filtered_df is not None:
             return partially_filtered_df.copy()
     return get_df()
 
-def set_partially_filtered_df(input):
+def set_partially_filtered_df(input, sid):
     global partially_filtered_df
     partially_filtered_df = input
 
-def get_almost_filtered_df():
+def get_almost_filtered_df(sid):
     global almost_filtered_df
     if 'almost_filtered_df' in globals():
         if almost_filtered_df is not None:
             return almost_filtered_df.copy()
     return get_df()
 
-def set_almost_filtered_df(input):
+def set_almost_filtered_df(input, sid):
     global almost_filtered_df
     almost_filtered_df = input
 
-def is_sparce():
+def is_sparce(sid):
     return sparce
 
-def is_directed():
+def is_directed(sid):
     return directed

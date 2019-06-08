@@ -18,6 +18,9 @@ visualiseBlueprint = Blueprint('visualiseBlueprint', __name__, template_folder='
 def visualise(file):
     if session.get("active", None) is None:
         session['active'] = True
+    if not('app_context' in globals()):
+        flash("No dataset has been selected. Please select a previously uploaded dataset or upload a new dataset.", "danger")
+        return redirect("/selection")
     if get_filtered_df() is None or get_filtered_df().size == 0:
         if file is None:
             flash("No dataset has been selected. Please select a previously uploaded dataset or upload a new dataset.", "danger")
