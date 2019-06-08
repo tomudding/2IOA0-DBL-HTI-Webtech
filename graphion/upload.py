@@ -1,7 +1,7 @@
 """
 Author(s): Tom Udding, Steven van den Broek
 Created: 2019-05-01
-Edited: 2019-06-08
+Edited: 2019-06-07
 """
 import os, secrets
 from flask import flash, request, redirect, session
@@ -58,7 +58,7 @@ def upload_file_now():
     return redirect('/selection')
 
 def get_df():
-    if session.get('df', None) == None:
+    if 'df' not in session:
         return None
     return session['df'].copy()
 
@@ -79,12 +79,15 @@ def set_df(input):
     # print("This dataset is sparce: " + str(sparce))
 
 def get_filtered_df():
-    if session.get('filtered_df', None) is not None:
-        return session['filtered_df'].copy()
-    if session.get('almost_filtered_df', None) is not None:
-        return session['almost_filtered_df'].copy()
-    if session.get('partially_filtered_df', None) is not None:
-        return session['partially_filtered_df'].copy()
+    if 'filtered_df' in session:
+        if session['filtered_df'] is not None:
+            return session['filtered_df'].copy()
+    if 'almost_filtered_df' in session:
+        if session['almost_filtered_df'] is not None:
+            return session['almost_filtered_df'].copy()
+    if 'partially_filtered_df' in session:
+        if session['almost_filtered_df'] is not None:
+            return session['partially_filtered_df'].copy()
     return get_df()
 
 def set_filtered_df(input):
