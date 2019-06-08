@@ -58,15 +58,11 @@ def upload_file_now():
             return redirect('/visualise/' + fileUniqueHash)
     return redirect('/selection')
 
-def get_df(gsh=None):
-    if gsh is not None:
-        if gsh.has("df"):
-            return gsh.get("df")
+def get_df():
+    global df
+    if 'df' not in globals():
         return None
-    else:
-        if 'df' not in session:
-            return None
-        return session['df'].copy()
+    return df.copy()
 
 def set_df(input):
     global df
@@ -84,60 +80,46 @@ def set_df(input):
     #     sparce = True
     # print("This dataset is sparce: " + str(sparce))
 
-def get_filtered_df(gsh=None):
-    if gsh is not None:
-        if gsh.has("filtered_df"):
-            return gsh.get("filtered_df").copy()
-        if gsh.has("almost_filtered_df"):
-            return gsh.get("almost_filtered_df").copy()
-        if gsh.has("partially_filtered_df"):
-            return gsh.get("partially_filtered_df").copy()
-        return get_df(gsh)
-    else:
-        if 'filtered_df' in session:
-            if session['filtered_df'] is not None:
-                return session['filtered_df'].copy()
-        if 'almost_filtered_df' in session:
-            if session['almost_filtered_df'] is not None:
-                return session['almost_filtered_df'].copy()
-        if 'partially_filtered_df' in session:
-            if session['partially_filtered_df'] is not None:
-                return session['partially_filtered_df'].copy()
-        return get_df()
+def get_filtered_df():
+    if 'filtered_df' in globals():
+        if filtered_df is not None:
+            return filtered_df.copy()
+    if 'almost_filtered_df' in globals():
+        if almost_filtered_df is not None:
+            return almost_filtered_df.copy()
+    if 'partially_filtered_df' in globals():
+        if almost_filtered_df is not None:
+            return partially_filtered_df.copy()
+    return get_df()
 
 def set_filtered_df(input):
-    session['filtered_df'] = input
+    global filtered_df
+    filtered_df = input
 
-def get_partially_filtered_df(gsh=None):
-    if gsh is not None:
-        if gsh.has("partially_filtered_df"):
-            return gsh.get("partially_filtered_df").copy()
-        return get_df(gsh)
-    else:
-        if 'partially_filtered_df' in session:
-            if session['partially_filtered_df'] is not None:
-                return session['partially_filtered_df'].copy()
-        return get_df()
+def get_partially_filtered_df():
+    global partially_filtered_df
+    if 'partially_filtered_df' in globals():
+        if partially_filtered_df is not None:
+            return partially_filtered_df.copy()
+    return get_df()
 
 def set_partially_filtered_df(input):
-    session['partially_filtered_df'] = input
+    global partially_filtered_df
+    partially_filtered_df = input
 
-def get_almost_filtered_df(gsh=None):
-    if gsh is not None:
-        if gsh.has("almost_filtered_df"):
-            return gsh.get("almost_filtered_df")
-        return get_df(gsh)
-    else:
-        if 'almost_filtered_df' in session:
-            if session['almost_filtered_df'] is not None:
-                return session['almost_filtered_df'].copy()
-        return get_df()
+def get_almost_filtered_df():
+    global almost_filtered_df
+    if 'almost_filtered_df' in globals():
+        if almost_filtered_df is not None:
+            return almost_filtered_df.copy()
+    return get_df()
 
 def set_almost_filtered_df(input):
-    session['almost_filtered_df'] = input
+    global almost_filtered_df
+    almost_filtered_df = input
 
 def is_sparce():
-    return session['sparce']
+    return sparce
 
 def is_directed():
-    return session['directed']
+return directed

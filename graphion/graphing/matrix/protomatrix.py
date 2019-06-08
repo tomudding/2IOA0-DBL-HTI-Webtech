@@ -1,14 +1,13 @@
 """
 Author(s): Steven van den Broek, Yuqin Cui, Sam Baggen, Tom Udding
 Created: 2019-05-05
-Edited: 2019-06-06
+Edited: 2019-06-08
 """
 import numpy as np
 import pandas as pd
 import panel as pn
 import param
 from colorcet import palette
-from flask import session
 from scipy.spatial.distance import pdist, squareform
 from fastcluster import linkage
 from pandas import read_hdf
@@ -142,9 +141,9 @@ def makeMatrix(file, plot, df=False):
     select_tool = BoxSelectTool()
 
     result = to_liquid(df_original.values)
-    session['hm'] = hv.HeatMap(result).opts(tools=['tap', select_tool, 'hover'], active_tools=['box_select'],
+    hm = hv.HeatMap(result).opts(tools=['tap', select_tool, 'hover'], active_tools=['box_select'],
                                  height=550, width=600, xaxis=None, yaxis=None, cmap=palette['kbc'])
-    session['current_data'] = session['hm'].data
+    current_data = hm.data
 
     class Matrix_dropdown(param.Parameterized):
         reordering = param.ObjectSelector(default="none",
@@ -159,6 +158,9 @@ def makeMatrix(file, plot, df=False):
                                                       'inferno', 'viridis'])
 
         def view(self, show_only_selection=True):
+            global selection
+            global current_data
+            global hm
             if self.reordering == "none":
                 # if 'selection' in globals():
                 #     selection.clear()
@@ -170,15 +172,15 @@ def makeMatrix(file, plot, df=False):
                 hm = hv.HeatMap(result).opts(tools=['tap', select_tool, 'hover'], toolbar='above', active_tools=['box_select'],
                                              height=500, width=530, xaxis=None, yaxis=None, cmap=self.color_palette,
                                              colorbar=True)
-                session['current_data'] = session['hm'].data
-                table = hv.Table(session['current_data'])
+                current_data = hm.data
+                table = hv.Table(current_data)
                 table.opts(height=500)
 
                 # print(plot)
                 select = SelectMatrixToNodeLink(hm, plot, indices=names)
                 select.register_callback('bokeh', SelectMatrixToNodeCallback)
 
-                return session['hm']
+                return hm
                 # return pn.Row(hm, table)
                 # selection = Selection1D(source=hm, subscribers=[print_info])
                 # return hv.DynamicMap(lambda index: hm, streams=[selection])
@@ -194,26 +196,23 @@ def makeMatrix(file, plot, df=False):
                 hm = hv.HeatMap(result).opts(tools=['tap', select_tool, 'hover'], toolbar='above', active_tools=['box_select'],
                                              height=500, width=530, xaxis=None, yaxis=None, cmap=self.color_palette,
                                              colorbar=True)
-                session['current_data'] = session['hm'].data
-                table = hv.Table(session['current_data'])
+                current_data = hm.data
+                table = hv.Table(current_data)
                 table.opts(height=500)
                 # print(plot)
                 select = SelectMatrixToNodeLink(hm, plot, indices=names)
                 select.register_callback('bokeh', SelectMatrixToNodeCallback)
 
-
-                return session['hm']
+                return hm
                 # return pn.Row(hm, table)
                 # selection = Selection1D(source=hm, subscribers=[print_info])
                 # return hv.DynamicMap(lambda index: hm, streams=[selection])
 
     matrix = Matrix_dropdown(name='Adjacency Matrix')
 
-
     # %%
     # hv_plot = hm + table
-
     #matrix_pane1 = pn.Column(pn.Pane(matrix.param, css_classes=['matrix_dropdowns']), matrix.view)
     # matrix_pane2 = pn.Column(matrix.param, matrix.view(show_only_selection=False))
-
+    
     return matrix

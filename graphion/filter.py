@@ -3,7 +3,6 @@ Author(s): Steven van den Broek, Tom Udding
 Created: 2019-05-18
 Edited: 2019-06-08
 """
-
 from flask import Blueprint, flash, redirect, render_template
 from graphion import server
 from bokeh.embed import server_document

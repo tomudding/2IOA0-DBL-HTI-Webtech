@@ -1,7 +1,7 @@
 """
 Author(s): Tom Udding, Steven van den Broek, Yuqing Zeng, Tim van de Klundert, Sam Baggen
 Created: 2019-05-03
-Edited: 2019-06-06
+Edited: 2019-06-08
 """
 from bokeh.plotting import figure, reset_output
 from bokeh.models import Circle, ColumnDataSource
@@ -204,7 +204,6 @@ def generateRadialDiagram(file, isDirected, df=False):
                 degree += 1
         degree_array[degree_index] = degree
         degree_index += 1
-
 
     # print(df.head())
     # set defaults for HoloViews

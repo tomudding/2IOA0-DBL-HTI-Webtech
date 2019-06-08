@@ -18,7 +18,6 @@ import holoviews as hv
 
 def generateBokehApp(doc):
     sid = str(doc.session_context.request.arguments['sid'][0].decode('utf-8'))
-    gsh = GraphionSessionHandler(sid)
 
     class VisApp(param.Parameterized):
         Screen1 = param.ObjectSelector(default="force",
@@ -42,19 +41,20 @@ def generateBokehApp(doc):
 
         @param.depends('Screen1', 'Screen2', 'Ordering', 'Metric', 'Color_palette')
         def view(self):
-            gsh.set("s1", None)
+            global s1
+            s1 = None
             if self.Screen1 == "radial":
-                gsh.set("s1", getRadial(df, gsh))
+                s1 = getRadial(df)
             if self.Screen1 == "force":
-                gsh.set("s1", getForce(df, gsh))
+                s1 = getForce(df)
             if self.Screen1 == "hierarchical":
-                gsh.set("s1", getHierarchical(df, gsh))
+                s1 = getHierarchical(df)
             if self.Screen1 == "3d":
-                gsh.set("s1", getGraph3D(df, gsh))
+                s1 = getGraph3D(df)
             # print(s1[1])
             s2 = None
             if self.Screen2 == "matrix":
-                s2 = getMatrix(df, gsh)
+                s2 = getMatrix(df)
 
             # Setting up the linking, generateDiagram functions return two-tuple (graph, points). Points is the selection layer
             # makeMatrix returns matrix_dropdown object. matrix.view returns the heatmap object
@@ -74,7 +74,7 @@ def generateBokehApp(doc):
             s2.color_palette = self.Color_palette
             s2Pane = pn.Column(s2.view)
 
-            return pn.Row(session.get("s1")[0], s2Pane)
+            return pn.Row(s1[0], s2Pane)
 
     df = get_filtered_df(gsh)
     visApp = VisApp()
@@ -112,47 +112,42 @@ def getFilePath(file):
     file = file + '.h5'
     return os.path.join(server.config['UPLOAD_FOLDER'], file)
 
-def getMatrix(df, gsh):
-    if gsh.has("matrix"):
-        return gsh.get("matrix")
+def getMatrix(df):
+    global matrix
+    if 'matrix' in globals() and matrix is not None:
+        return matrix
     else:
-        generatedMatrix = makeMatrix(df.copy(), gsh.get("s1")[1], df=True)
-        # do not generate in gsh.set(), this requires return gsh.get() which will be expensive.
-        gsh.set("matrix", generatedMatrix)
-        return generatedMatrix
+        matrix = makeMatrix(df.copy(), s1[1], df=True)
+        return matrix
 
-def getHierarchical(df, gsh):
-    if gsh.has("hierarchical"):
-        return gsh.get("hierarchical")
+def getHierarchical(df):
+    global hierarchical
+    if 'hierarchical' in globals() and hierarchical is not None:
+        return hierarchical
     else:
-        generatedDiagram = generateHierarchicalDiagram(df.copy(), False, df=True)
-        # do not generate in gsh.set(), this requires return gsh.get() which will be expensive.
-        gsh.set("hierarchical", generatedDiagram)
-        return generatedDiagram
+        hierarchical = generateHierarchicalDiagram(df.copy(), False, df=True)
+        return hierarchical
 
-def getGraph3D(df, gsh):
-    if gsh.has("graph3D"):
-        return gsh.get("graph3D")
+def getGraph3D(df):
+    global graph3D
+    if 'graph3D' in globals() and graph3D is not None:
+        return graph3D
     else:
-        generatedDiagram = generate3DDiagram(df.copy(), df=True)
-        # do not generate in gsh.set(), this requires return gsh.get() which will be expensive.
-        gsh.set("graph3D", generatedDiagram)
-        return generatedDiagram
+        graph3D = generate3DDiagram(df.copy(), df=True)
+        return graph3D
 
-def getForce(df, gsh):
-    if gsh.has("force"):
-        return gsh.get("force")
+def getForce(df):
+    global force
+    if 'force' in globals() and force is not None:
+        return force
     else:
-        generatedDiagram = generateForceDirectedDiagram(df.copy(), False, df=True)
-        # do not generate in gsh.set(), this requires return gsh.get() which will be expensive.
-        gsh.set("force", generatedDiagram)
-        return generatedDiagram
+        force = generateForceDirectedDiagram(df, False, df=True)
+        return force
 
-def getRadial(df, gsh):
-    if gsh.has("radial"):
-        return gsh.get("radial")
+def getRadial(df):
+    global radial
+    if 'radial' in globals() and radial is not None:
+        return radial
     else:
-        generatedDiagram = generateRadialDiagram(df.copy(), False, df=True)
-        # do not generate in gsh.set(), this requires return gsh.get() which will be expensive.
-        gsh.set("radial", generatedDiagram)
-        return generatedDiagram
+        radial = generateRadialDiagram(df, False, df=True)
+        return radial
