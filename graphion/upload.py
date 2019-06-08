@@ -122,4 +122,4 @@ def is_sparce():
     return sparce
 
 def is_directed():
-return directed
+    return directed
