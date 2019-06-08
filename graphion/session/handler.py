@@ -34,7 +34,7 @@ class GraphionSessionHandler:
     Returns True if data exists at key, False if it does not.
     """
     def has(self, key):
-        return self.cache.has(key)
+        return key in self.cache.get(self.key_prefix + self.identifier)
 
     """
     Set a value in the SessionCache using a given key.
@@ -43,4 +43,4 @@ class GraphionSessionHandler:
     pickling fails.
     """
     def set(self, key, value):
-        return self.cache.set(self.key_prefix + self.identifier + key, value)
+        return self.cache.get(self.key_prefix + self.identifier).update({key: value})

@@ -3,7 +3,7 @@ Author(s): Tom Udding, Steven van den Broek
 Created: 2019-05-01
 Edited: 2019-06-08
 """
-from flask import Blueprint, flash, redirect, render_template, request
+from flask import Blueprint, flash, redirect, render_template, request, session
 from graphion import server
 from graphion.graphing.generator import generateBokehApp
 from graphion.upload import get_filtered_df
