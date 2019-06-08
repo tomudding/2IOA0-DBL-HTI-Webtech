@@ -1,9 +1,8 @@
 """
 Author(s): Tom Udding, Steven van den Broek, Sam Baggen
 Created: 2019-05-03
-Edited: 2019-06-06
+Edited: 2019-06-08
 """
-from flask import session
 from graphion import server
 from graphion.graphing.nodelink.graph import generateForceDirectedDiagram, generateHierarchicalDiagram, generateRadialDiagram, generate3DDiagram
 from graphion.graphing.linking import SelectEdgeCallback, SelectMatrixToNodeCallback, SelectNodeToMatrixCallback
@@ -17,13 +16,14 @@ import time
 import param
 import holoviews as hv
 
-
 def generateBokehApp(doc):
-    session['matrix'] = None
-    session['hierarchical'] = None
-    session['graph3D'] = None
-    session['force'] = None
-    session['radial'] = None
+    sid = str(doc.session_context.request.arguments['sid'][0].decode('utf-8'))
+    session = GraphionSessionHandler(sid)
+    session.set("matrix", None)
+    session.set("hierarchical", None)
+    session.set("graph3D", None)
+    session.set("force", None)
+    session.set("radial", None)
 
     class VisApp(param.Parameterized):
         Screen1 = param.ObjectSelector(default="force",

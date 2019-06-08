@@ -18,14 +18,14 @@ class GraphionSessionHandler:
 
         self.cache = FileSystemCache(join(getcwd(), 'flask_session'))
         self.key_prefix = "session:"
-        self.sid = sid
+        self.identifier = sid
 
     """
     Retrieve a value from the SessionCache using a given key.
     Returns contents at given key or None.
     """
-    def get(key):
-        return self.cache.get(self.key_prefix + self.sid + key)
+    def get(self, key):
+        return self.cache.get(self.key_prefix + self.identifier + key)
 
     """
     Set a value in the SessionCache using a given key.
@@ -33,8 +33,8 @@ class GraphionSessionHandler:
     False if a backend error has occurred. And pickle.PickleError when
     pickling fails.
     """
-    def set(key, value):
-        return self.cache.set(self.key_prefix + self.sid + key, value, calculateLifetime(app.permanent_session_lifetime))
+    def set(self, key, value):
+        return self.cache.set(self.key_prefix + self.identifier + key, value)
 
     """
     Calculate the lifetime of a SessionCache in seconds
