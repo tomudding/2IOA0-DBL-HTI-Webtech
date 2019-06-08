@@ -7,7 +7,6 @@ import os, secrets
 from flask import flash, request, redirect, session
 from graphion import server
 from graphion.graphing.parser import processCSVMatrix
-from graphion.session.handler import GraphionSessionHandler
 from tempfile import NamedTemporaryFile
 from werkzeug.formparser import parse_form_data
 from werkzeug.utils import secure_filename
