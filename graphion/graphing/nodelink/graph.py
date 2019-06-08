@@ -22,7 +22,7 @@ from pandas import read_hdf, Series
 import panel as pn
 import plotly.graph_objs as go
 import holoviews as hv
-from holoviews.operation.datashader import datashade, bundle_graph
+from holoviews.operation.datashader import datashade, bundle_graph, dynspread
 
 import time
 
@@ -153,7 +153,7 @@ def generateForceDirectedDiagram(file, isDirected, df=False):
     # Comment the following two/three lines to disable edgebundling and datashading.
     plot = bundle_graph(plot)
     plot = (datashade(plot, normalization='linear', width=600, height=600) * plot.nodes).opts(opts.Nodes(cmap=partitionColours, color='Partition', size='Centrality',
-               tools=['box_select', 'lasso_select', 'tap'], toolbar='above', show_legend=False, width=600, height=600))
+               tools=['box_select', 'lasso_select', 'tap'], active_tools=['wheel_zoom'], toolbar='above', show_legend=False, width=600, height=600))
 
     # print("Edge bundling and datashading took: " + str(time.time()-begin))
     return (pn.Column(plot * points), points)
@@ -180,7 +180,7 @@ def generateHierarchicalDiagram(file, isDirected, df=False):
     graph = hv.Graph.from_networkx(SG, positions = graphviz_layout(SG, prog ='dot')).opts(directed=isDirected, width=600, height=600, show_legend=False, arrowhead_length=0.0005)
     graph = bundle_graph(graph)
     graph = (datashade(graph, normalization='linear', width=600, height=600) * graph.nodes).opts(
-        opts.Nodes(width=600, height=600, tools=['box_select', 'lasso_select', 'tap'], toolbar='above', show_legend=False))
+        opts.Nodes(width=600, height=600, tools=['box_select', 'lasso_select', 'tap', 'hover'], active_tools=['wheel_zoom'], toolbar='above', show_legend=False))
     # Make a panel and widgets with param for choosing a layout
     return pn.Column(graph)
 
@@ -242,10 +242,10 @@ def generateRadialDiagram(file, isDirected, df=False):
     points = hv.Points((nodes_x, nodes_y, nodes, degreeList), vdims=['Index', 'Degree'])
     points.opts(line_width = 1.5, line_color='#000000', size='Degree')
     graph = bundle_graph(graph)
-    graph = (datashade(graph, normalization='linear', width=600, height=600) * graph.nodes).opts(
-        opts.Nodes(size='Degree', tools=['box_select', 'lasso_select', 'tap'], toolbar='above', show_legend=False, width=600, height=600))
+    graph = dynspread(datashade(graph, normalization='linear', width=600, height=600))
+    return (pn.Column((graph * points.opts(size='Degree', tools=['box_select', 'lasso_select', 'tap', 'hover'], active_tools=['wheel_zoom'], toolbar='above', show_legend=False, width=600, height=600)))
+        , graph, points)
 
-    return (pn.Column(graph * points), graph, points)
 
 # Generate 3D graph
 def generate3DDiagram(file, df=False):
@@ -342,7 +342,7 @@ def generate3DDiagram(file, df=False):
                 )
 
     layout = go.Layout(
-        title="3-dimensional node-link diagram",
+        title="Force-directed layout",
         width=600,
         height=600,
         showlegend=False,

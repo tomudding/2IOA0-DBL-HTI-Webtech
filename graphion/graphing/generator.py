@@ -8,7 +8,7 @@ from graphion.graphing.nodelink.graph import generateForceDirectedDiagram, gener
 from graphion.graphing.linking import SelectEdgeCallback, SelectMatrixToNodeCallback, SelectNodeToMatrixCallback
 from graphion.graphing.linking import SelectEdgeLink, SelectMatrixToNodeLink, SelectNodeToMatrixLink
 from graphion.graphing.matrix.protomatrix import makeMatrix
-from graphion.upload import get_filtered_df
+from graphion.upload import get_filtered_df, is_directed
 import os
 import panel as pn
 import time
@@ -136,7 +136,7 @@ def getHierarchical(df):
     if 'hierarchical' in globals() and hierarchical is not None:
         return hierarchical
     else:
-        hierarchical = generateHierarchicalDiagram(df.copy(), False, df=True)
+        hierarchical = generateHierarchicalDiagram(df.copy(), is_directed(), df=True)
         return hierarchical
 
 def getGraph3D(df):
@@ -152,7 +152,7 @@ def getForce(df):
     if 'force' in globals() and force is not None:
         return force
     else:
-        force = generateForceDirectedDiagram(df, False, df=True)
+        force = generateForceDirectedDiagram(df, is_directed(), df=True)
         return force
 
 def getRadial(df):
@@ -160,5 +160,5 @@ def getRadial(df):
     if 'radial' in globals() and radial is not None:
         return radial
     else:
-        radial = generateRadialDiagram(df, False, df=True)
+        radial = generateRadialDiagram(df, is_directed(), df=True)
         return radial
