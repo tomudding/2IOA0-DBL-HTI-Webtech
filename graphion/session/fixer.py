@@ -7,7 +7,7 @@ Edited: 2019-06-08
 """
 Graphion Session Handler
 """
-class GraphionSessionHandler():
+class GraphionSessionHandler:
     """
     Create GraphionSessionHandler with a given SID (session identifier)
     """
