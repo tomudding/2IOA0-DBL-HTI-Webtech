@@ -7,18 +7,20 @@ Edited: 2019-06-08
 """
 Graphion Session Handler
 """
+from graphion import server
+from itsdangerous import Signer, BadSignature, want_bytes
+from os import getcwd
+from os.path import join
+from werkzeug.contrib.cache import FileSystemCache
+
 class GraphionSessionHandler:
     """
     Create GraphionSessionHandler with a given SID (session identifier)
     """
     def __init__(self, sid):
-        from werkzeug.contrib.cache import FileSystemCache
-        from os import getcwd
-        from os.path import join
-
         self.cache = FileSystemCache(join(getcwd(), 'flask_session'))
         self.key_prefix = "session:"
-        self.identifier = sid
+        self.identifier = Signer(server.config['SECRET_KEY'], salt='flask-session', key_derivation='hmac').unsign(sid).decode()
 
     """
     Retrieve a value from the SessionCache using a given key.
@@ -42,9 +44,3 @@ class GraphionSessionHandler:
     """
     def set(self, key, value):
         return self.cache.set(self.key_prefix + self.identifier + key, value)
-
-    """
-    Calculate the lifetime of a SessionCache in seconds
-    """
-    def calculateLifetime(td):
-        return td.days * 60 * 60 * 24 + td.seconds

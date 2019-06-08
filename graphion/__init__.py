@@ -10,7 +10,7 @@ server = Flask(__name__)
 # initiate server-side sessions to hold DataSets between requests
 server.config['SESSION_TYPE'] = 'filesystem'
 server.config['SESSION_PERMANENT'] = False
-server.config['SESSION_USE_SIGNER'] = False
+server.config['SESSION_USE_SIGNER'] = True
 Session(server)
 
 from os import environ, mkdir, makedirs
