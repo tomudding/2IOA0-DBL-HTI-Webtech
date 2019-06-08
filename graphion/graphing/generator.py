@@ -24,7 +24,7 @@ def generateBokehApp(doc):
     print(gsh.identifier)
     print(gsh.cache)
     print("---------------------------------------------------")
-    print(gsh.get(""))
+    print(type(gsh.get("")))
     print(gsh.get("sparce"))
     print("---------------------------------------------------")
     gsh.set("test", True)

@@ -27,7 +27,7 @@ class GraphionSessionHandler:
     Returns contents at given key or None.
     """
     def get(self, key):
-        return self.cache.get(self.key_prefix + self.identifier + key)
+        return self.cache.get(self.key_prefix + self.identifier)
 
     """
     Check if a key exists without returning actual data.
