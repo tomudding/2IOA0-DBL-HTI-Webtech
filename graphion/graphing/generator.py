@@ -136,7 +136,7 @@ def getHierarchical(df):
     if 'hierarchical' in globals() and hierarchical is not None:
         return hierarchical
     else:
-        hierarchical = generateHierarchicalDiagram(df.copy(), is_directed(), df=True)
+        hierarchical = generateHierarchicalDiagram(df.copy(), False, df=True)
         return hierarchical
 
 def getGraph3D(df):
@@ -152,7 +152,7 @@ def getForce(df):
     if 'force' in globals() and force is not None:
         return force
     else:
-        force = generateForceDirectedDiagram(df, is_directed(), df=True)
+        force = generateForceDirectedDiagram(df, False, df=True)
         return force
 
 def getRadial(df):
@@ -160,5 +160,5 @@ def getRadial(df):
     if 'radial' in globals() and radial is not None:
         return radial
     else:
-        radial = generateRadialDiagram(df, is_directed(), df=True)
+        radial = generateRadialDiagram(df, False, df=True)
         return radial
