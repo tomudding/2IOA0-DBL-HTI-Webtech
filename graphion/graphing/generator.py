@@ -76,7 +76,7 @@ def generateBokehApp(doc):
 
             return pn.Row(s1[0], s2Pane)
 
-    df = get_filtered_df(gsh)
+    df = get_filtered_df()
     visApp = VisApp()
 
     # begin = time.time()
