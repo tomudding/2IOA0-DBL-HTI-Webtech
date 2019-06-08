@@ -28,6 +28,13 @@ class GraphionSessionHandler:
         return self.cache.get(self.key_prefix + self.identifier + key)
 
     """
+    Check if a key exists without returning actual data.
+    Returns True if data exists at key, False if it does not.
+    """
+    def has(self, key):
+        return self.cache.has(key)
+
+    """
     Set a value in the SessionCache using a given key.
     Returns boolean or pickle.PickleError. True is value has been updated
     False if a backend error has occurred. And pickle.PickleError when

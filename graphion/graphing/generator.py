@@ -18,12 +18,7 @@ import holoviews as hv
 
 def generateBokehApp(doc):
     sid = str(doc.session_context.request.arguments['sid'][0].decode('utf-8'))
-    session = GraphionSessionHandler(sid)
-    session.set("matrix", None)
-    session.set("hierarchical", None)
-    session.set("graph3D", None)
-    session.set("force", None)
-    session.set("radial", None)
+    gsh = GraphionSessionHandler(sid)
 
     class VisApp(param.Parameterized):
         Screen1 = param.ObjectSelector(default="force",
@@ -47,19 +42,19 @@ def generateBokehApp(doc):
 
         @param.depends('Screen1', 'Screen2', 'Ordering', 'Metric', 'Color_palette')
         def view(self):
-            session['s1'] = None
+            gsh.set("s1", None)
             if self.Screen1 == "radial":
-                session['s1'] = getRadial(df)
+                gsh.set("s1", getRadial(df, gsh))
             if self.Screen1 == "force":
-                session['s1'] = getForce(df)
+                gsh.set("s1", getForce(df, gsh))
             if self.Screen1 == "hierarchical":
-                session['s1'] = getHierarchical(df)
+                gsh.set("s1", getHierarchical(df, gsh))
             if self.Screen1 == "3d":
-                session['s1'] = getGraph3D(df)
+                gsh.set("s1", getGraph3D(df, gsh))
             # print(s1[1])
-            session['s2'] = None
+            s2 = None
             if self.Screen2 == "matrix":
-                session['s2'] = getMatrix(df)
+                s2 = getMatrix(df, gsh)
 
             # Setting up the linking, generateDiagram functions return two-tuple (graph, points). Points is the selection layer
             # makeMatrix returns matrix_dropdown object. matrix.view returns the heatmap object
@@ -74,14 +69,14 @@ def generateBokehApp(doc):
             # Link nodelink to matrix (points only)
             #SelectNodeToMatrixLink(s1[1], s2.view)
 
-            session['s2.reordering'] = self.Ordering
-            session['s2.metric'] = self.Metric
-            session['s2.color_palette'] = self.Color_palette
-            session['s2Pane'] = pn.Column(session['s2.view'])
+            s2.reordering = self.Ordering
+            s2.metric = self.Metric
+            s2.color_palette = self.Color_palette
+            s2Pane = pn.Column(s2.view)
 
-            return pn.Row(session['s1'][0], session['s2Pane'])
+            return pn.Row(session.get("s1")[0], s2Pane)
 
-    df = get_filtered_df()
+    df = get_filtered_df(gsh)
     visApp = VisApp()
 
     # begin = time.time()
@@ -101,7 +96,6 @@ def generateBokehApp(doc):
     pn.extension('plotly')
     return pn.Pane(visApp.view).get_root(doc)
 
-
 def changeScreen1(new_type):
     visApp.Screen1 = new_type
 
@@ -118,37 +112,47 @@ def getFilePath(file):
     file = file + '.h5'
     return os.path.join(server.config['UPLOAD_FOLDER'], file)
 
-def getMatrix(df):
-    if 'matrix' in session and session['matrix'] is not None:
-        return session['matrix']
+def getMatrix(df, gsh):
+    if gsh.has("matrix"):
+        return gsh.get("matrix")
     else:
-        session['matrix'] = makeMatrix(df.copy(), session['s1'][1], df=True)
-        return session['matrix']
+        generatedMatrix = makeMatrix(df.copy(), gsh.get("s1")[1], df=True)
+        # do not generate in gsh.set(), this requires return gsh.get() which will be expensive.
+        gsh.set("matrix", generatedMatrix)
+        return generatedMatrix
 
-def getHierarchical(df):
-    if 'hierarchical' in session and session['hierarchical'] is not None:
-        return session['hierarchical']
+def getHierarchical(df, gsh):
+    if gsh.has("hierarchical"):
+        return gsh.get("hierarchical")
     else:
-        session['hierarchical'] = generateHierarchicalDiagram(df.copy(), False, df=True)
-        return session['hierarchical']
+        generatedDiagram = generateHierarchicalDiagram(df.copy(), False, df=True)
+        # do not generate in gsh.set(), this requires return gsh.get() which will be expensive.
+        gsh.set("hierarchical", generatedDiagram)
+        return generatedDiagram
 
-def getGraph3D(df):
-    if 'graph3D' in session and session['graph3D'] is not None:
-        return session['graph3D']
+def getGraph3D(df, gsh):
+    if gsh.has("graph3D"):
+        return gsh.get("graph3D")
     else:
-        session['graph3D'] = generate3DDiagram(df.copy(), df=True)
-        return session['graph3D']
+        generatedDiagram = generate3DDiagram(df.copy(), df=True)
+        # do not generate in gsh.set(), this requires return gsh.get() which will be expensive.
+        gsh.set("graph3D", generatedDiagram)
+        return generatedDiagram
 
-def getForce(df):
-    if 'force' in session and session['force'] is not None:
-        return session['force']
+def getForce(df, gsh):
+    if gsh.has("force"):
+        return gsh.get("force")
     else:
-        session['force'] = generateForceDirectedDiagram(df.copy(), False, df=True)
-        return session['force']
+        generatedDiagram = generateForceDirectedDiagram(df.copy(), False, df=True)
+        # do not generate in gsh.set(), this requires return gsh.get() which will be expensive.
+        gsh.set("force", generatedDiagram)
+        return generatedDiagram
 
-def getRadial(df):
-    if 'radial' in session and session['radial'] is not None:
-        return session['radial']
+def getRadial(df, gsh):
+    if gsh.has("radial"):
+        return gsh.get("radial")
     else:
-        session['radial'] = generateRadialDiagram(df.copy(), False, df=True)
-        return session['radial']
+        generatedDiagram = generateRadialDiagram(df.copy(), False, df=True)
+        # do not generate in gsh.set(), this requires return gsh.get() which will be expensive.
+        gsh.set("radial", generatedDiagram)
+        return generatedDiagram
