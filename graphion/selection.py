@@ -1,9 +1,9 @@
 """
 Author(s): Tom Udding
 Created: 2019-05-01
-Edited: 2019-06-06
+Edited: 2019-06-08
 """
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, session
 from glob import glob
 from graphion import server
 from os import listdir
@@ -14,6 +14,8 @@ selectionBlueprint = Blueprint('selectionBlueprint', __name__, template_folder='
 
 @selectionBlueprint.route('/selection', methods=['GET'])
 def selection():
+    if session.get("active", None) is None:
+        session['active'] = True
     recentlyUploadedFiles = getRecentlyUploaded()
     return render_template('selection.html', filesList=recentlyUploadedFiles)
 

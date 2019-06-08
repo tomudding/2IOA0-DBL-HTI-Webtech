@@ -3,7 +3,7 @@ Author(s): Steven van den Broek, Tom Udding
 Created: 2019-05-18
 Edited: 2019-06-08
 """
-from flask import Blueprint, flash, redirect, render_template
+from flask import Blueprint, flash, redirect, render_template, session
 from graphion import server
 from bokeh.embed import server_document
 import os
@@ -16,6 +16,8 @@ filterBlueprint = Blueprint('filterBlueprint', __name__, template_folder='templa
 @filterBlueprint.route('/filter', methods=['GET'], strict_slashes=False)
 @filterBlueprint.route('/filter/<file>', methods=['GET'], strict_slashes=False)
 def visualise(file=None):
+    if session.get("active", None) is None:
+        session['active'] = True
     if file is None:
         flash("No dataset has been selected. Please select a previously uploaded dataset or upload a new dataset.", "danger")
         return redirect('/selection')
