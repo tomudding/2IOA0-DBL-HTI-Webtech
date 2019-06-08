@@ -24,9 +24,9 @@ def visualise(file):
             return redirect("/filter/%s" % file)
 
     if "gunicorn" in os.environ.get("SERVER_SOFTWARE", ""):
-        script = server_document('https://2ioa0.uddi.ng:%d/bkapp' % server.config['PORT'], relative_urls=False, resources=None, arguments={'sid': cookies.get(server.config['SESSION_COOKIE_NAME'])})
+        script = server_document('https://2ioa0.uddi.ng:%d/bkapp' % server.config['PORT'], relative_urls=False, resources=None, arguments={'sid': request.cookies.get(server.config['SESSION_COOKIE_NAME'])})
     else:
-        script = server_document('http://localhost:%d/bkapp' % server.config['PORT'], relative_urls=False, resources=None, arguments={'sid': cookies.get(server.config['SESSION_COOKIE_NAME'])})
+        script = server_document('http://localhost:%d/bkapp' % server.config['PORT'], relative_urls=False, resources=None, arguments={'sid': request.cookies.get(server.config['SESSION_COOKIE_NAME'])})
     return render_template('visualise.html', fileName=file, script=script)
 
 def modify_doc(doc):
