@@ -40,6 +40,7 @@ def generate_selection(file, kind="degree", dir="in", dataframe=False):
     # begin = time.time()
     ### BASIC DEGREE COUNTING
     if (not edges):
+        print(df)
         if (dir == "in"):
             deg_all = (df.ne(0).sum(axis=1)).to_numpy(copy=True)
         if (dir == "out"):
@@ -61,11 +62,14 @@ def generate_selection(file, kind="degree", dir="in", dataframe=False):
     else:
         deg = deg_all
 
+    if(edges):
+        deg = [item for item in deg if item > 0]
+
     # begin = time.time()
     deg_all = np.reshape(deg_all, (-1, 1))
     deg = np.reshape(deg, (-1, 1))
     # print("Reshaping: {}-{}: ".format(dir, kind) + str(time.time() - begin))
-    deg_plot = np.linspace(-max(deg)[0] / 15, max(deg_all)[0] + max(deg_all)[0] / 15, 1000)
+    deg_plot = np.linspace(0, max(deg_all)[0], 1000)
     # Calculate 'pretty good' (since best takes a long time) bandwidth
     # begin = time.time()
     #
@@ -118,6 +122,9 @@ def generate_selection(file, kind="degree", dir="in", dataframe=False):
                     }
             let lower = Math.ceil(geometry.x0);
             let upper = Math.floor(geometry.x1);
+            if(lower < 0){
+                lower = 0;
+            }
             if(upper < lower){
                 p.innerHTML = "Selected no nodes, since selection doesn't contain an integer degree.";
             }
@@ -145,8 +152,13 @@ def generate_selection(file, kind="degree", dir="in", dataframe=False):
         if (amount < 1500){
         colored_amount = "<span style='color:green; font-weight:bold'>" + amount + "</span>"
         }
+        
+        let lower = Math.ceil(geometry.x0*100)/100
+        if(lower < 0){
+            lower = 0;
+        }
 
-            p.innerHTML = "Selected " + colored_amount + " edges with weight between " + Math.ceil(geometry.x0*100)/100 + " and " + Math.floor(geometry.x1*100)/100 + "."
+            p.innerHTML = "Selected " + colored_amount + " edges with weight between " + lower + " and " + Math.floor(geometry.x1*100)/100 + "."
         """
 
     geometry_callback = CustomJS(args=dict(complete=complete, before=before, middle=middle, after=after), code="""

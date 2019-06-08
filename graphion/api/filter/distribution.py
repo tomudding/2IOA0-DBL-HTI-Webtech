@@ -52,6 +52,7 @@ def degreeAPI(type=None, dir=None):
 def worker():
     # read json + reply
     left = float(request.form['left'])
+
     right = float(request.form['right'])
     type = request.form['type']
     dir = request.form['dir']
@@ -73,6 +74,8 @@ def filter_data(left, right, type, dir, file):
             set_almost_filtered_df(filtered_df)
         return len(filtered_df.columns)
     elif(type == 'weight'):
+        if left <= 0:
+            left = 0.0000000001
         begin = time.time()
         result = fetch_edge_count(get_df(), left, right)
         left_weight = left
@@ -86,8 +89,9 @@ def filter_data(left, right, type, dir, file):
 
 @apiDegreeBlueprint.route('/filter-edges', methods = ['POST'])
 def filter_worker():
-    result = filter_df_weight(get_df(), left_weight, right_weight)
-    set_partially_filtered_df(result)
+    if 'left_weight' in globals():
+        result = filter_df_weight(get_df(), left_weight, right_weight)
+        set_partially_filtered_df(result)
     return "fitered"
 
 

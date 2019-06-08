@@ -76,7 +76,7 @@ def generate_degree_selection(df, cutoff_l = 2, cutoff_r = 900, dir = "in"):
             for j in range(len(adj_matrix[i])):  # iterate through columns
                 if adj_matrix[i][j] == 0.0 and not i == j: #don't count the diagonal edge
                     count += 1
-            out_degree = len(adj_matrix[i]) - count #outdegree equals to the remaining none zero columns in given row
+            out_degree = len(adj_matrix[i]) - 1 - count #outdegree equals to the remaining none zero columns in given row
             #print(out_degree)
             if(out_degree < cutoff_l or out_degree > cutoff_r):
                 del_lst.append(i)
@@ -91,7 +91,7 @@ def generate_degree_selection(df, cutoff_l = 2, cutoff_r = 900, dir = "in"):
                 if adj_matrix_t[i][j] == 0.0 and not i == j: #don't count the diagonal edge
                     count += 1
 
-            in_degree = len(adj_matrix_t[i]) - count  # indegree equals to the remaining none zero columns in given row
+            in_degree = len(adj_matrix_t[i]) - 1 - count  # indegree equals to the remaining none zero columns in given row
             # print(in_degree)
             if (in_degree < cutoff_l or in_degree > cutoff_r):
                 del_lst.append(i)

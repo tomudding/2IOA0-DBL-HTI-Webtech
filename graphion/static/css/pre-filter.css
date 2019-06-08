@@ -61,9 +61,21 @@ Edited: 2019-06-04
     display: none;
 }
 
-#weight-plot{
-    width: 300px;
+.weight-degree-plot{
+    width: 300px !important;
+    height: 300px;
     margin: auto;
+    position: relative;
+}
+
+
+.weight-degree-selection {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
 }
 
 /*############################################
@@ -74,22 +86,12 @@ Edited: 2019-06-04
     display: none;
 }
 
-#in-degree-plot{
-    width: 300px;
-    margin: auto;
-}
-
 /*############################################
   ### Page 5: filter the node out-degrees ####
   ############################################*/
 
 #filter-node-out-degree {
     display: none;
-}
-
-#out-degree-plot{
-    width: 300px;
-    margin: auto;
 }
 
 /*############################################

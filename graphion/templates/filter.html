@@ -53,6 +53,7 @@ Edited: 2019-06-06
                                                 return response.json(); })
                                              .then(function(item) {
                                                 Bokeh.embed.embed_item(item, 'weight-plot');
+                                                document.getElementById('between-weight').removeAttribute('hidden');
                                              });">Interesting nodes / edges</button>
                                         </div>
                                         <div class="vertical-line"></div>
@@ -204,10 +205,9 @@ Edited: 2019-06-06
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-s-12 icon-area valign">
+                                            <div id="weight-plot" class="weight-degree-plot"><div id="weight-selection" class="weight-degree-selection"><div class="load-animation"></div>Generating distribution plot...</div></div>
 
-                                            <div id="weight-selection"><div class="load-animation"></div>Generating distribution plot...</div>
-                                            <div id="weight-plot"></div>
-                                            <p id="between-weight">Select nodes by dragging the mouse.</p>
+                                            <p id="between-weight" hidden>Select nodes by dragging the mouse.</p>
 
                                             <br>
                                             <!--
@@ -248,6 +248,7 @@ Edited: 2019-06-06
                                                         return response.json(); })
                                                     .then(function(item) {
                                                         Bokeh.embed.embed_item(item, 'in-degree-plot');
+                                                        document.getElementById('between-in-degree').removeAttribute('hidden');
                                                     }); document.getElementById('filter-edges').setAttribute('hidden', true);})
 
                                                     "><div class="load-animation" id="filter-edges" hidden></div>Continue</button>
@@ -306,9 +307,9 @@ Edited: 2019-06-06
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-s-12 icon-area valign">
-                                            <div id="in-degree-selection"><div class="load-animation"></div>Generating distribution plot...</div>
-                                            <div id="in-degree-plot"></div>
-                                            <p id="between-in-degree">Select nodes by dragging the mouse.</p>
+                                            <div id="in-degree-plot" class="weight-degree-plot"> <div id="in-degree-selection" class="weight-degree-selection"><div class="load-animation"></div>Generating distribution plot...</div></div>
+
+                                            <p id="between-in-degree" hidden>Select nodes by dragging the mouse.</p>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -335,6 +336,7 @@ Edited: 2019-06-06
                                                         return response.json(); })
                                                      .then(function(item) {
                                                         Bokeh.embed.embed_item(item, 'out-degree-plot');
+                                                        document.getElementById('between-out-degree').removeAttribute('hidden');
                                                      });">
                                                         Continue
                                                     </button>
@@ -394,9 +396,9 @@ Edited: 2019-06-06
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-s-12 icon-area valign">
-                                            <div id="out-degree-selection"><div class="load-animation"></div>Generating distribution plot...</div>
-                                            <div id="out-degree-plot"></div>
-                                            <p id="between-out-degree">Select nodes by dragging the mouse.</p>
+                                            <div id="out-degree-plot" class="weight-degree-plot"><div id="out-degree-selection" class="weight-degree-selection"><div class="load-animation"></div>Generating distribution plot...</div></div>
+
+                                            <p id="between-out-degree" hidden>Select nodes by dragging the mouse.</p>
                                         </div>
                                     </div>
                                     <div class="row">
