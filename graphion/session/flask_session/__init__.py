@@ -13,7 +13,9 @@ __version__ = '0.3.1'
 
 import os
 
-from graphion.session.flask_session.sessions import NullSessionInterface FileSystemSessionInterface
+from graphion.session.flask_session.sessions import NullSessionInterface, RedisSessionInterface, \
+    MemcachedSessionInterface, FileSystemSessionInterface, \
+    MongoDBSessionInterface, SqlAlchemySessionInterface
 
 
 class Session(object):
