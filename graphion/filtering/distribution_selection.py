@@ -40,7 +40,6 @@ def generate_selection(file, kind="degree", dir="in", dataframe=False):
     # begin = time.time()
     ### BASIC DEGREE COUNTING
     if (not edges):
-        print(df)
         if (dir == "in"):
             deg_all = (df.ne(0).sum(axis=1)).to_numpy(copy=True)
         if (dir == "out"):
