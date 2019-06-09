@@ -1,7 +1,7 @@
 """
 Author(s): Tom Udding
 Created: 2019-05-01
-Edited: 2019-06-08
+Edited: 2019-06-09
 """
 from flask import Blueprint, render_template, session
 from glob import glob
@@ -18,11 +18,6 @@ def selection():
         session['active'] = True
     recentlyUploadedFiles = getRecentlyUploaded()
     return render_template('selection.html', filesList=recentlyUploadedFiles)
-
-#temporarily for testing
-@selectionBlueprint.route('/testfilter', methods=['GET'])
-def testfilter():
-        return render_template('testfilter.html')
 
 def getRecentlyUploaded():
     listOfFiles = sorted([join(server.config['UPLOAD_FOLDER'], f) for f in listdir(server.config['UPLOAD_FOLDER']) if f.endswith('.h5')], key=getctime, reverse=True)[:20]

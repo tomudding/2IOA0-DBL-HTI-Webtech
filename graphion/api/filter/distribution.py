@@ -1,7 +1,7 @@
 """
 Author(s): Steven van den Broek, Tom Udding
 Created: 2019-05-18
-Edited: 2019-06-08
+Edited: 2019-06-09
 """
 from bokeh.embed import json_item
 from flask import Flask, render_template, request, redirect, Response, Blueprint, jsonify, session
