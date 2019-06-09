@@ -217,10 +217,10 @@ def processCSVMatrix(file):
     return df
 
 #df = processCSVMatrix("../../datasets/medium.csv")
-df = processCSVMatrix("../../datasets/huge.csv")
-st = time.time()
-generate_degree_selection(df, dir = "in") # author_similarity   huge
-print(time.time() - st)
+#df = processCSVMatrix("../../datasets/huge.csv")
+#st = time.time()
+#generate_degree_selection(df, dir = "in") # author_similarity   huge
+#print(time.time() - st)
 
 #st = time.time()
 #generate_edge_selection(df) #1.9890801906585693 author_similarity  106.71677088737488 huge
