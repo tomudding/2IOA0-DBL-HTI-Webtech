@@ -14,13 +14,14 @@
  }
 
  .left-bar-shown {
-    background-color: rgb(66,66,66);
+    background-color: #F7F7F7;
     position: absolute;
     z-index: 10;
     left: 0vw;
     top: 0vh;
     width: 22vw;
     height: 100vh;
+    border-right: 1px solid rgb(170,170,170);
 }
 
 .left-bar-small-links {
@@ -131,13 +132,14 @@
 }
 
 .left-bar-hidden {
-    background-color: rgb(66,66,66);
+    background-color: #F7F7F7;
     z-index: 10;
     position: absolute;
     left: 0vw;
     top: 0vh;
     width: 2.5vw;
     height: 100vh;
+    border-right: 1px solid rgb(170,170,170);
 }
 
 .left-bar-show-button {
@@ -206,7 +208,7 @@
    -ms-transform: translateX(26px);
    transform: translateX(26px);
  }
- 
+
  /* Rounded sliders */
  .slider.round {
    border-radius: 34px;
@@ -219,13 +221,14 @@
  /* End of ripped content */
 
 .right-bar-shown {
-    background-color: rgb(66,66,66);
+    background-color: #F7F7F7;
     position: absolute;
     z-index: 10;
     right: 0vw;
     top: 0vh;
     width: 22vw;
     height: 100vh;
+    border-left: 1px solid rgb(170,170,170);
 }
 
 .right-bar-big {
@@ -284,13 +287,14 @@
 }
 
 .right-bar-hidden {
-   background-color: rgb(66,66,66);
+   background-color: #F7F7F7;
    position: absolute;
    z-index: 10;
    right: 0;
    top: 0vh;
    width: 2.5vw;
    height: 100vh;
+   border-right: 1px solid rgb(170,170,170);
 }
 
 .right-bar-show-button {
@@ -312,7 +316,7 @@
    background-image: url("../images/dropdown.png");
    background-position: right center;
    background-size: cover;
-   border: 2px solid rgb(66,66,66);
+   border: 1px solid rgb(170,170,170);
 }
 
 .dropdown option {
@@ -353,8 +357,8 @@
    width: 5.0vw;
    height: 9.6vh;
    border-style: solid;
-   border-color: white;
-   background-color: rgb(100,100,100);
+   border-color: rgb(170,170,170);
+   background-color: rgb(49, 137, 255);
    border-radius: 5px;
    border-left-width: 0.2vw;
    border-right-width: 0.2vw;
@@ -375,4 +379,8 @@
 
 #after-loading {
     background-color:#EAEAEA;
+}
+
+.white-text {
+    color: rgb(66,66,66);
 }
