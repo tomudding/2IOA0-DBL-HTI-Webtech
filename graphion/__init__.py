@@ -1,7 +1,7 @@
 """
 Author(s): Tom Udding, Steven van den Broek, Sam Baggen
 Created: 2019-04-29
-Edited: 2019-06-06
+Edited: 2019-06-08
 """
 from flask import Flask
 server = Flask(__name__)

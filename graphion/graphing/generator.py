@@ -1,14 +1,12 @@
 """
 Author(s): Tom Udding, Steven van den Broek, Sam Baggen
 Created: 2019-05-03
-Edited: 2019-06-06
+Edited: 2019-06-09
 """
 from graphion import server
-from graphion.graphing.nodelink.graph import generateForceDirectedDiagram, generateHierarchicalDiagram, generateRadialDiagram, generate3DDiagram, generateNodeLinkDiagram
 from graphion.graphing.linking import SelectEdgeCallback, SelectMatrixToNodeCallback, SelectNodeToMatrixCallback
 from graphion.graphing.linking import SelectEdgeLink, SelectMatrixToNodeLink, SelectNodeToMatrixLink
-from graphion.graphing.matrix.protomatrix import makeMatrix
-from graphion.upload import get_filtered_df, is_directed
+from graphion.session.handler import get_custom_key, set_custom_key, get_filtered_df, set_screen1, get_screen1, set_screen2, get_screen2, populate_3d_diagram, populate_force_diagram, populate_hierarchical_diagram, populate_matrix, populate_radial_diagram, get_visualisations_app, set_visualisations_app
 import os
 import panel as pn
 import time
@@ -16,24 +14,19 @@ import time
 import param
 import holoviews as hv
 
-
 def generateBokehApp(doc):
-    global visApp, matrix, hierarchical, graph3D, force, radial
-    matrix = None
-    hierarchical = None
-    graph3D = None
-    force = None
-    radial = None
+    sid = str(doc.session_context.request.arguments['sid'][0].decode('utf-8'))
 
     class VisApp(param.Parameterized):
         Screen1 = param.ObjectSelector(default="force",
-                                          objects=["none", "radial", "force", "hierarchical", "3d"])
+                                       objects=["none", "radial", "force", "hierarchical", "3d"])
+
         Screen2 = param.ObjectSelector(default="matrix",
-                                      objects=["none", "matrix"])
-        
+                                       objects=["none", "matrix"])
+
         Ordering = param.ObjectSelector(default="none",
-                                          objects=["none", "single", "average", "complete", "centroid", "weighted",
-                                                   "median", "ward"])
+                                        objects=["none", "single", "average", "complete", "centroid", "weighted",
+                                                 "median", "ward"])
 
         Metric = param.ObjectSelector(default="euclidean",
                                       objects=["euclidean", "minkowski", "cityblock", "sqeuclidean", "cosine",
@@ -46,20 +39,27 @@ def generateBokehApp(doc):
 
         @param.depends('Screen1', 'Screen2', 'Ordering', 'Metric', 'Color_palette')
         def view(self):
-            global s1
-            s1 = None
             if self.Screen1 == "radial":
-                s1 = getRadial(df)
+                set_screen1("radial", sid)
+                populate_radial_diagram(df, sid)
             if self.Screen1 == "force":
-                s1 = getForce(df)
+                set_screen1("force", sid)
+                populate_force_diagram(df, sid)
             if self.Screen1 == "hierarchical":
-                s1 = getHierarchical(df)
+                set_screen1("hierarchical", sid)
+                populate_hierarchical_diagram(df, sid)
             if self.Screen1 == "3d":
-                s1 = getGraph3D(df)
+                set_screen1("3d", sid)
+                populate_3d_diagram(df, sid)
             # print(s1[1])
-            s2 = None
             if self.Screen2 == "matrix":
-                s2 = getMatrix(df)
+                set_screen2("matrix", sid)
+                populate_matrix(df, sid)
+                screen2 = get_custom_key(get_screen2(sid), sid)
+                screen2.reordering = self.Ordering
+                screen2.metric = self.Metric
+                screen2.color_palette = self.Color_palette
+                set_custom_key(get_screen2(sid), screen2, sid)
 
             # Setting up the linking, generateDiagram functions return two-tuple (graph, points). Points is the selection layer
             # makeMatrix returns matrix_dropdown object. matrix.view returns the heatmap object
@@ -74,93 +74,51 @@ def generateBokehApp(doc):
             # Link nodelink to matrix (points only)
             #SelectNodeToMatrixLink(s1[1], s2.view)
 
-            s2.reordering = self.Ordering
-            s2.metric = self.Metric
-            s2.color_palette = self.Color_palette
             if self.Screen1 == "3d":
-                return pn.Row(s1, s2.view)
+                return pn.Row(get_custom_key(get_screen1(sid), sid), pn.Column(get_custom_key(get_screen2(sid), sid).view))
 
-            s1.color_palette = self.Color_palette
-            return pn.Row(s1.view, s2.view)
+            screen1 = get_custom_key(get_screen1(sid), sid)
+            screen1.color_palette = self.Color_palette
+            set_custom_key(get_screen1(sid), screen1, sid)
+            return pn.Row(get_custom_key(get_screen1(sid), sid).view, pn.Column(get_custom_key(get_screen2(sid), sid).view))
 
-    df = get_filtered_df()
-
+    df = get_filtered_df(sid)
     visApp = VisApp()
+    set_visualisations_app(visApp, sid)
 
     # begin = time.time()
-    # m = getMatrix(df)
+    # m = populate_matrix(df)
     # print("Matrix generation took: " + str(time.time()-begin))
     # begin = time.time()
-    # h = getHierarchical(df)
+    # h = populate_hierarchical_diagram(df)
     # print("Graph generation took: " + str(time.time()-begin))
     # begin = time.time()
-    # threeD = getGraph3D(df)
+    # threeD = populate_3d_diagram(df)
     # print("3D generation took: " + str(time.time() - begin))
-
-
 
     # pane = pn.Column(pn.Row(graph, matrix), graph3D)
     # pane = pn.Column(pn.Row(h, m), threeD)
     # pane = pn.Pane(graph)
 
-
-
     pn.extension('plotly')
     return pn.Pane(visApp.view).get_root(doc)
 
-
-def changeScreen1(new_type):
+def changeScreen1(new_type, sid):
+    visApp = get_visualisations_app(sid)
     visApp.Screen1 = new_type
+    set_visualisations_app(visApp, sid)
 
-def changeOrdering(new_ordering):
+def changeOrdering(new_ordering, sid):
+    visApp = get_visualisations_app(sid)
     visApp.Ordering = new_ordering
+    set_visualisations_app(visApp, sid)
 
-def changeMetric(new_metric):
+def changeMetric(new_metric, sid):
+    visApp = get_visualisations_app(sid)
     visApp.Metric = new_metric
+    set_visualisations_app(visApp, sid)
 
-def changePalette(new_palette):
+def changePalette(new_palette, sid):
+    visApp = get_visualisations_app(sid)
     visApp.Color_palette = new_palette
-
-def getFilePath(file):
-    file = file + '.h5'
-    return os.path.join(server.config['UPLOAD_FOLDER'], file)
-
-def getMatrix(df):
-    global matrix
-    if 'matrix' in globals() and matrix is not None:
-        return matrix
-    else:
-        matrix = makeMatrix(df.copy(), df=True)
-        return matrix
-
-def getHierarchical(df):
-    global hierarchical
-    if 'hierarchical' in globals() and hierarchical is not None:
-        return hierarchical
-    else:
-        hierarchical = generateNodeLinkDiagram(df.copy(), 'hierarchical')
-        return hierarchical
-
-def getGraph3D(df):
-    global graph3D
-    if 'graph3D' in globals() and graph3D is not None:
-        return graph3D
-    else:
-        graph3D = generate3DDiagram(df.copy(), df=True)
-        return graph3D
-
-def getForce(df):
-    global force
-    if 'force' in globals() and force is not None:
-        return force
-    else:
-        force = generateNodeLinkDiagram(df.copy(), "FORCE")
-        return force
-
-def getRadial(df):
-    global radial
-    if 'radial' in globals() and radial is not None:
-        return radial
-    else:
-        radial = generateNodeLinkDiagram(df.copy(), "RADIAL")
-        return radial
+    set_visualisations_app(visApp, sid)
