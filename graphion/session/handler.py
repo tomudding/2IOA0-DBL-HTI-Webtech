@@ -3,7 +3,24 @@ Author(s): Tom Udding, Steven van den Broek
 Created: 2019-06-09
 Edited: 2019-06-09
 """
+from graphion.graphing.matrix.protomatrix import makeMatrix
+from graphion.graphing.nodelink.graph import generateForceDirectedDiagram, generateHierarchicalDiagram, generateRadialDiagram, generate3DDiagram
 from time import time
+
+def is_global():
+    if 'APP_CONTEXT' in globals():
+        return True
+    return False
+
+def get_custom_key(key, sid):
+    global APP_CONTEXT
+    if not(key in APP_CONTEXT['data'][sid]):
+        return None # we should raise KeyError
+    return APP_CONTEXT['data'][sid][key]
+
+def set_custom_key(key, value, sid):
+    global APP_CONTEXT
+    APP_CONTEXT['data'][sid][key] = value
 
 def get_df(sid):
     global APP_CONTEXT
@@ -12,23 +29,13 @@ def get_df(sid):
     return APP_CONTEXT['data'][sid]['df'].copy()
 
 def set_df(input, sid):
-    if not('APP_CONTEXT' in globals()):
+    if not(is_global()):
         global APP_CONTEXT
         APP_CONTEXT = {'sessions': {}, 'data': {}}
     if APP_CONTEXT['sessions'].get(sid, None) is None:
         APP_CONTEXT['sessions'][sid] = time() # store current time for when we want to prune the variable
         APP_CONTEXT['data'][sid] = {}
     APP_CONTEXT['data'][sid]['df'] = input
-    # if df.equals(df.transpose()):
-    #     directed = False
-    # else:
-    #     directed = True
-    # print("This dataset is directed: " + str(directed))
-    # if (df.astype(bool).sum(axis=0).sum())/(df.size) > 0.5:
-    #     sparce = False
-    # else:
-    #     sparce = True
-    # print("This dataset is sparce: " + str(sparce))
 
 def get_filtered_df(sid):
     global APP_CONTEXT
@@ -88,3 +95,67 @@ def get_right_weight(sid):
     if not('right_weight' in APP_CONTEXT['data'][sid]):
         return None
     return APP_CONTEXT['data'][sid]['right_weight']
+
+def set_screen1(input, sid):
+    global APP_CONTEXT
+    APP_CONTEXT['data'][sid]['screen1'] = input
+
+def get_screen1(sid):
+    global APP_CONTEXT
+    if not('screen1' in APP_CONTEXT['data'][sid]):
+        return None
+    return APP_CONTEXT['data'][sid]['screen1']
+
+def set_screen2(input, sid):
+    global APP_CONTEXT
+    APP_CONTEXT['data'][sid]['screen2'] = input
+
+def get_screen2(sid):
+    global APP_CONTEXT
+    if not('screen2' in APP_CONTEXT['data'][sid]):
+        return None
+    return APP_CONTEXT['data'][sid]['screen2']
+
+def populate_matrix(df, sid):
+    global APP_CONTEXT
+    if 'matrix' in APP_CONTEXT['data'][sid]:
+        return APP_CONTEXT['data'][sid]['matrix']
+    else:
+        matrix = makeMatrix(df.copy(), get_custom_key(get_screen1(sid), sid)[1], df=True)
+        APP_CONTEXT['data'][sid]['matrix'] = matrix
+        return matrix
+
+def populate_hierarchical_diagram(df, sid):
+    global APP_CONTEXT
+    if 'hierarchical' in globals() and hierarchical is not None:
+        return hierarchical
+    else:
+        hierarchical = generateHierarchicalDiagram(df.copy(), False, df=True)
+        return hierarchical
+
+def populate_3d_diagram(df, sid):
+    global APP_CONTEXT
+    if '3d' in APP_CONTEXT['data'][sid]:
+        return APP_CONTEXT['data'][sid]['3d']
+    else:
+        graph3D = generate3DDiagram(df.copy(), df=True)
+        APP_CONTEXT['data'][sid]['3d'] = graph3D
+        return graph3D
+
+def populate_force_diagram(df, sid):
+    global APP_CONTEXT
+    if 'force' in APP_CONTEXT['data'][sid]:
+        return APP_CONTEXT['data'][sid]['force']
+    else:
+        force = generateForceDirectedDiagram(df, False, df=True)
+        APP_CONTEXT['data'][sid]['force'] = force
+        return force
+
+def populate_radial_diagram(df, sid):
+    global APP_CONTEXT
+    if 'radial' in APP_CONTEXT['data'][sid]:
+        return APP_CONTEXT['data'][sid]['radial']
+    else:
+        radial = generateRadialDiagram(df, False, df=True)
+        APP_CONTEXT['data'][sid]['radial'] = radial
+        return radial
