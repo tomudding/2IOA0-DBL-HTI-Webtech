@@ -32,7 +32,7 @@ Edited: 2019-06-06
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 	</head>
 	<body>
-		<section class="body-wrapper" id="loading-screen" hidden>
+		<section class="body-wrapper" id="loading-screen">
 			<div class="container">
 				<div class="row">
 					<div class="col-s-6" id="nodelink">
@@ -246,7 +246,7 @@ Edited: 2019-06-06
 				</div>
 			</div>
 		</section>
-		<div id="after-loading">
+		<div id="after-loading" hidden>
 
 			<!-- Left side of the tool bar -->
 			<div class="left-bar-shown" id="left-bar-shown">
@@ -312,7 +312,7 @@ Edited: 2019-06-06
 				
 				<div class="left-bar-screen-small" style="top: 60vh; left: 2.2vw; 
 				width: 5.4vw;">Adjacency matrix</div>
-				<img class="icon" src="/static/images/icons/icon-matrix.svg" style="left: 2.2vw; top: 49.8vh;">
+				<img class="icon" id="matrix-icon" src="/static/images/icons/icon-matrix.svg" style="left: 2.2vw; top: 49.8vh;">
 
 
 				<!-- Rezize option -->
@@ -364,7 +364,7 @@ Edited: 2019-06-06
 
 			<!-- Left bar minimized -->
 			<div class="left-bar-hidden" id="left-bar-hidden" hidden>
-				<div class="left-bar-show-button empty-triangle" onclick="showLeftBar()">▷</div>
+				<div class="left-bar-show-button empty-triangle white-text" onclick="showLeftBar()">▷</div>
 			</div>
 
 
@@ -414,7 +414,7 @@ Edited: 2019-06-06
 
 			<!-- Right bar minimized -->
 			<div class="right-bar-hidden" id="right-bar-hidden" hidden>
-				<div class="right-bar-show-button empty-triangle" onclick="showRightBar()">◁</div>
+				<div class="right-bar-show-button empty-triangle white-text" onclick="showRightBar()">◁</div>
 			</div>
 
 		</div>
