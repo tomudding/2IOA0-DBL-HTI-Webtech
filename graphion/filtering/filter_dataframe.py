@@ -59,9 +59,9 @@ def degree_bisect(arr, cutoff_l, cutoff_r):
     index, degree = np.argsort(arr), np.sort(arr)
     l = bisect.bisect_left(degree, cutoff_l)
     r = bisect.bisect_right(degree, cutoff_r)
-    return(list(index[:l]) + list(index[r:]))
+    return np.concatenate((index[:l], index[r:]))
 
-def generate_degree_selection(df, cutoff_l = 2, cutoff_r = 900, dir = "in"):
+def generate_degree_selection(df, cutoff_l = 60, cutoff_r = 80, dir = "in"):
     # df = read_hdf(file)
 
     adj_matrix = df.to_numpy(copy=True)  # convert dataframe to numpy array for efficiency
@@ -219,7 +219,7 @@ def processCSVMatrix(file):
 #df = processCSVMatrix("../../datasets/medium.csv")
 #df = processCSVMatrix("../../datasets/huge.csv")
 #st = time.time()
-#generate_degree_selection(df, dir = "in") # author_similarity   huge
+#generate_degree_selection(df, dir = "in") # author_similarity   huge 0.41277313232421875
 #print(time.time() - st)
 
 #st = time.time()
