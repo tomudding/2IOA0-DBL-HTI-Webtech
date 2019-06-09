@@ -20,7 +20,7 @@ from bokeh.models import BoxSelectTool
 
 from graphion.graphing.linking import SelectMatrixToNodeCallback, SelectMatrixToNodeLink
 
-def makeMatrix(file, plot, df=False):
+def makeMatrix(file, df=False):
     if not df:
         df = read_hdf(file)
     else:
@@ -177,8 +177,8 @@ def makeMatrix(file, plot, df=False):
                 table.opts(height=500)
 
                 # print(plot)
-                select = SelectMatrixToNodeLink(hm, plot, indices=names)
-                select.register_callback('bokeh', SelectMatrixToNodeCallback)
+                #select = SelectMatrixToNodeLink(hm, plot, indices=names)
+                # select.register_callback('bokeh', SelectMatrixToNodeCallback)
 
                 return hm
                 # return pn.Row(hm, table)
@@ -200,8 +200,8 @@ def makeMatrix(file, plot, df=False):
                 table = hv.Table(current_data)
                 table.opts(height=500)
                 # print(plot)
-                select = SelectMatrixToNodeLink(hm, plot, indices=names)
-                select.register_callback('bokeh', SelectMatrixToNodeCallback)
+                # select = SelectMatrixToNodeLink(hm, plot, indices=names)
+                # select.register_callback('bokeh', SelectMatrixToNodeCallback)
 
                 return hm
                 # return pn.Row(hm, table)

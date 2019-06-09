@@ -23,6 +23,9 @@ import panel as pn
 import plotly.graph_objs as go
 import holoviews as hv
 from holoviews.operation.datashader import datashade, bundle_graph, dynspread
+from colorcet import palette
+
+import param
 
 import time
 
@@ -57,52 +60,111 @@ Function to generate a node-link diagram based on a
 
 Returns a Panel.Column of the diagram.
 """
-def generateNodeLinkDiagram(filePath, diagramType, isDirected):
+def generateNodeLinkDiagram(df, diagramType):
     diagramType = diagramType.upper()
 
-    """
-    Decrease the size of the requested node-link diagram
-    TODO: Refactor and implement pre-filtering features
-    """
-    df = decreaseDiagramSize(filePath)
+    # """
+    # Create NetworkX graph object
+    # """
+    # if isDirected == False:
+    #     G = Graph(from_pandas_adjacency(df))
+    # elif isDirected == True:
+    #     G = DiGraph(from_pandas_adjacency(df))
+    # else:
+    #     # TODO: throw exception
+    #     pass
 
-    """
-    Create NetworkX graph object
-    """
-    if isDirected == False:
-        G = Graph(from_pandas_adjacency(df))
-    elif isDirected == True:
-        G = DiGraph(from_pandas_adjacency(df))
-    else:
-        # TODO: throw exception
-        pass
 
-    """
-    Create NetworkX graph layout manager
-    """
-    if diagramType == "FORCEDIRECTED":
-        layout = spring_layout(G, k=1.42/sqrt(number_of_nodes(G)))
-    elif diagramType == "HIERARCHICAL":
-        # TODO: refactor hierarchical code from Sophia
-        pass
-    elif diagramType == "RADIAL":
-        layout = circular_layout(G)
-    else:
-        # TODO: throw exception
-        pass
+    class Nodelink(param.Parameterized):
+        color_palette = param.ObjectSelector(default='kbc',
+                                             objects=['kbc', 'kgy', 'bgy', 'bmw', 'bmy', 'cividis', 'dimgray', 'fire',
+                                                      'inferno', 'viridis'])
 
-    # get node and edge information from graph
-    nodes, nodes_coordinates = zip(*sorted(layout.items()))
-    nodes_xs, nodes_ys = list(zip(*nodes_coordinates))
-    nodeDataSource = ColumnDataSource(dict(x=nodes_xs, y=nodes_ys, name=nodes))
-    lineDataSource = ColumnDataSource(calculateEdgePositions(G, layout))
+        def __init__(self, diagramType):
+            self.diagramType = diagramType
+            super(Nodelink, self).__init__()
+            self.plot, self.points = self.make_plot()
 
-    # create plot
-    plot = figure(plot_width=400, plot_height=400)
-    nodeGlyph = plot.circle('x', 'y', source=nodeDataSource, size=10, line_width=1, line_color="#000000", level='overlay')
-    lineGlyph = plot.multi_line('xs', 'ys', source=lineDataSource, line_width=1.3, color='#000000')
+        def make_plot(self):
+            G = from_pandas_adjacency(df)
 
-    return pn.Column(plot)
+            """
+            Create NetworkX graph layout manager
+            """
+            if diagramType == "FORCE":
+                layout = spring_layout(G, k=1.42 / sqrt(number_of_nodes(G)))
+                # print(layout)
+            elif diagramType == "HIERARCHICAL":
+                # TODO: refactor hierarchical code from Sophia
+                layout = graphviz_layout(nx.Graph([(u, v, d) for u, v, d in G.edges(data=True)]), prog='dot')
+                pass
+            elif diagramType == "RADIAL":
+                layout = circular_layout(G)
+                # print(layout)
+            else:
+                # TODO: throw exception
+                pass
+
+            # # get node and edge information from graph
+            # nodes, nodes_coordinates = zip(*sorted(layout.items()))
+            # nodes_xs, nodes_ys = list(zip(*nodes_coordinates))
+            # nodeDataSource = ColumnDataSource(dict(x=nodes_xs, y=nodes_ys, name=nodes))
+            # lineDataSource = ColumnDataSource(calculateEdgePositions(G, layout))
+            #
+            # # create plot
+            # plot = figure(plot_width=400, plot_height=400)
+            # nodeGlyph = plot.circle('x', 'y', source=nodeDataSource, size=10, line_width=1, line_color="#000000", level='overlay')
+            # lineGlyph = plot.multi_line('xs', 'ys', source=lineDataSource, line_width=1.3, color='#000000')
+
+            # if diagramType == "HIERARCHICAL":
+            #     print()
+            # get node and edge information from graph
+            nodes, nodes_coordinates = zip(*sorted(layout.items()))
+            nodes_x, nodes_y = list(zip(*nodes_coordinates))
+
+            # calculate centrality
+            centrality = degree_centrality(G)
+            _, nodeCentralities = zip(*sorted(centrality.items()))
+            centralityList = [10 + 12 * t / max(nodeCentralities) for t in nodeCentralities]
+
+            # create partitions
+            partition = best_partition(G)
+            _, nodePartitions = zip(*sorted(partition.items()))
+            # nodeDataSource.add(nodePartitions, 'partition')
+            partitionColours = ["#b2182b", "#d6604d", "#f4a582", "#fddbc7", "#f7f7f7", "#d1e5f0", "#92c5de", "#4393c3",
+                                "#2166ac"]  # safe to use for colourblind people
+            partitionList = [partitionColours[t % len(partitionColours)] for t in nodePartitions]
+
+            # Making a dictionary for all attributes
+            attributes = {}
+            for n in nodes:
+                attributes[n] = {'Centrality': centralityList[nodes.index(n)],
+                                 'Partition': partitionList[nodes.index(n)]}
+            nx.set_node_attributes(G, attributes)
+
+            # create the plot itself
+            # if diagramType == "HIERARCHICAL":
+            #     SG = nx.Graph([(u, v, d) for u, v, d in G.edges(data=True)])
+            #     plot = hv.Graph.from_networkx(SG, positions=graphviz_layout(SG, prog='dot'))
+            # else:
+            plot = hv.Graph.from_networkx(G, layout)
+
+            # begin = time.time()
+            # Comment the following two/three lines to disable edgebundling and datashading.
+            plot = bundle_graph(plot)
+            points = hv.Points((nodes_x, nodes_y, nodes, centralityList, partitionList),
+                               vdims=['Index', 'Centrality', 'Partition'])
+            points.opts(cmap=partitionColours, color='Partition', size='Centrality',
+                        tools=['box_select', 'lasso_select', 'tap'], active_tools=['wheel_zoom'], toolbar='above',
+                        show_legend=False, width=600, height=600)
+            return plot, points
+
+        def view(self):
+            plot = dynspread(datashade(self.plot, normalization='linear', width=600, height=600, cmap=palette[self.color_palette]))
+            return plot * self.points
+
+    # print("Edge bundling and datashading took: " + str(time.time()-begin))
+    return Nodelink(diagramType)
 
 # Generate a force-directed node-link diagram
 def generateForceDirectedDiagram(file, isDirected, df=False):
@@ -185,7 +247,7 @@ def generateHierarchicalDiagram(file, isDirected, df=False):
     return pn.Column(graph)
 
 # Generate a radial node-link diagram
-def generateRadialDiagram(file, isDirected, df=False):
+def generateRadialDiagram(file, isDirected, colorpalette, df=False):
     if not df:
         df = decreaseDiagramSize(file)
     else:
@@ -241,7 +303,7 @@ def generateRadialDiagram(file, isDirected, df=False):
     points = hv.Points((nodes_x, nodes_y, nodes, degreeList), vdims=['Index', 'Degree'])
     points.opts(line_width = 1.5, line_color='#000000', size='Degree')
     graph = bundle_graph(graph)
-    graph = dynspread(datashade(graph, normalization='linear', width=600, height=600))
+    graph = dynspread(datashade(graph, normalization='linear', width=600, height=600, cmap=palette[colorpalette]))
     return (pn.Column((graph * points.opts(size='Degree', tools=['box_select', 'lasso_select', 'tap', 'hover'], active_tools=['wheel_zoom'], toolbar='above', show_legend=False, width=600, height=600)))
         , graph, points)
 

@@ -55,9 +55,13 @@ def filter_df_weight(df, cutoff_l = 0.6, cutoff_r = 10.0):
     #print("convertbacktoDf")
     return df_filtered
 
+def degree_bisect(arr, cutoff_l, cutoff_r):
+    index, degree = np.argsort(arr), np.sort(arr)
+    l = bisect.bisect_left(degree, cutoff_l)
+    r = bisect.bisect_right(degree, cutoff_r)
+    return np.concatenate((index[:l], index[r:]))
 
-
-def generate_degree_selection(df, cutoff_l = 2, cutoff_r = 900, dir = "in"):
+def generate_degree_selection(df, cutoff_l = 60, cutoff_r = 80, dir = "in"):
     # df = read_hdf(file)
 
     adj_matrix = df.to_numpy(copy=True)  # convert dataframe to numpy array for efficiency
@@ -70,31 +74,45 @@ def generate_degree_selection(df, cutoff_l = 2, cutoff_r = 900, dir = "in"):
     del_lst = []  # initialize list of indices of nodes going to be deleted
 
     if dir == "out":
+        output_lst = []
         # for all nodes with out-degree outside of the cutoff range, add them to the delete list
         for i in range(len(adj_matrix)):  # iterate through rows
-            count = 0  #initialize the count for zero weights
-            for j in range(len(adj_matrix[i])):  # iterate through columns
-                if adj_matrix[i][j] == 0.0 and not i == j: #don't count the diagonal edge
-                    count += 1
-            out_degree = len(adj_matrix[i]) - 1 - count #outdegree equals to the remaining none zero columns in given row
+            row = np.array(adj_matrix[i])
+            row = np.delete(row, i)
+            ##count = 0  #initialize the count for zero weights
+            ##for j in range(len(adj_matrix[i])):  # iterate through columns
+            ##    if adj_matrix[i][j] == 0.0 and not i == j: #don't count the diagonal edge
+            ##        count += 1
+            ##out_degree = len(adj_matrix[i]) - 1 - count #outdegree equals to the remaining none zero columns in given row
+            out_degree = np.count_nonzero(row)
             #print(out_degree)
-            if(out_degree < cutoff_l or out_degree > cutoff_r):
-                del_lst.append(i)
+            output_lst.append(out_degree)
+            #if(out_degree < cutoff_l or out_degree > cutoff_r):
+            #    del_lst.append(i)
+
+        del_lst = degree_bisect(np.array(output_lst), cutoff_l, cutoff_r)
 
 
     elif dir == "in":
+        output_lst = []
         # for all nodes with in-degree outside of the cutoff range, add them to the delete list
         adj_matrix_t = adj_matrix.transpose()
         for i in range(len(adj_matrix_t)):  # iterate through rows
-            count = 0  # initialize the count for zero weights
-            for j in range(len(adj_matrix_t[i])):  # iterate through columns
-                if adj_matrix_t[i][j] == 0.0 and not i == j: #don't count the diagonal edge
-                    count += 1
+            col = adj_matrix_t[i]
+            col = np.delete(col, i)
+            #count = 0  # initialize the count for zero weights
+            #for j in range(len(adj_matrix_t[i])):  # iterate through columns
+            #    if adj_matrix_t[i][j] == 0.0 and not i == j: #don't count the diagonal edge
+            #        count += 1
 
-            in_degree = len(adj_matrix_t[i]) - 1 - count  # indegree equals to the remaining none zero columns in given row
-            # print(in_degree)
-            if (in_degree < cutoff_l or in_degree > cutoff_r):
-                del_lst.append(i)
+            #in_degree = len(adj_matrix_t[i]) - 1 - count  # indegree equals to the remaining none zero columns in given row
+
+            in_degree = np.count_nonzero(col)
+            #print(in_degree)
+            output_lst.append(in_degree)
+            #if (in_degree < cutoff_l or in_degree > cutoff_r):
+            #    del_lst.append(i)
+        del_lst = degree_bisect(np.array(output_lst), cutoff_l, cutoff_r)
     else:
         print("invalid dir value!")
 
@@ -110,7 +128,6 @@ def generate_degree_selection(df, cutoff_l = 2, cutoff_r = 900, dir = "in"):
     # build the output dataframes
     output_df = pandas.DataFrame(result_matrix, index=rem_names, columns=rem_names)
     # print(output_df)
-
     return output_df
 
 
@@ -200,6 +217,10 @@ def processCSVMatrix(file):
     return df
 
 #df = processCSVMatrix("../../datasets/medium.csv")
+#df = processCSVMatrix("../../datasets/huge.csv")
+#st = time.time()
+#generate_degree_selection(df, dir = "in") # author_similarity   huge 0.41277313232421875
+#print(time.time() - st)
 
 #st = time.time()
 #generate_edge_selection(df) #1.9890801906585693 author_similarity  106.71677088737488 huge

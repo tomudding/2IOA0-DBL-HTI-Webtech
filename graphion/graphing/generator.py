@@ -74,7 +74,13 @@ def generateBokehApp(doc):
             # Link nodelink to matrix (points only)
             #SelectNodeToMatrixLink(s1[1], s2.view)
 
-            return pn.Row(get_custom_key(get_screen1(sid), sid)[0], pn.Column(get_custom_key(get_screen2(sid), sid).view))
+            if self.Screen1 == "3d":
+                return pn.Row(get_custom_key(get_screen1(sid), sid), pn.Column(get_custom_key(get_screen2(sid), sid).view))
+
+            screen1 = get_custom_key(get_screen1(sid), sid)
+            screen1.color_palette = self.Color_palette
+            set_custom_key(get_screen1(sid), screen1, sid)
+            return pn.Row(get_custom_key(get_screen1(sid), sid).view, pn.Column(get_custom_key(get_screen2(sid), sid).view))
 
     df = get_filtered_df(sid)
     visApp = VisApp()
