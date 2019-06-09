@@ -77,7 +77,6 @@
     position: absolute;
     color: rgb(133,133,133);
     font-size: 0.8vw;
-    width: 5.4vw;
     line-height: 0.8vw;
 }
 
@@ -159,7 +158,7 @@
    display: inline-block;
    left: 8.7vw;
    top: 93.5vh;
-   width: 4.1vw;
+   width: 3.5vw;
    height: 3.7vh;
 }
 
@@ -187,7 +186,7 @@
    content: "";
    height: 2.8vh;
    width: 2.8vh;
-   left: 1vh;
+   left: 0.5vh;
    bottom: 0.5vh;
    background-color: white;
    -webkit-transition: .4s;
@@ -373,3 +372,10 @@
     transition: 0.4s;
     font-size: 1.5vw;
 }
+
+#after-loading {
+    background-color:#EAEAEA;
+    height: 100vh;
+    width: 100vw;
+    display: block;
+ }
