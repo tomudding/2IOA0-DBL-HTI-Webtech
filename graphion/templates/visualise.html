@@ -32,7 +32,7 @@ Edited: 2019-06-06
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 	</head>
 	<body>
-		<section class="body-wrapper" id="loading-screen">
+		<section class="body-wrapper" id="loading-screen" hidden>
 			<div class="container">
 				<div class="row">
 					<div class="col-s-6" id="nodelink">
@@ -246,7 +246,7 @@ Edited: 2019-06-06
 				</div>
 			</div>
 		</section>
-		<div id="after-loading" hidden>
+		<div id="after-loading">
 
 			<!-- Left side of the tool bar -->
 			<div class="left-bar-shown" id="left-bar-shown">
@@ -267,14 +267,14 @@ Edited: 2019-06-06
 
 				<!-- Screen 1 options -->
 				<div class="left-bar-screen-big" style="top: 27vh;">Screen 1:</div>
-				<div class="left-bar-screen-small" style="top: 27.3vh; left: 8.2vw;">Radial</div>
-				<img class="icon" id="radial" onclick="displayDiagram('radial')" src="/static/images/icons/icon-radial-diagram.svg" style="left: 8.2vw; top: 17.3vh;">
-				<div class="left-bar-screen-small" style="top: 27.3vh; left: 14.5vw;">Force-directed</div>
-				<img class="icon-selected" id="force" onclick="displayDiagram('force')" src="/static/images/icons/icon-forcedirected-diagram.svg" style="left: 14.5vw; top: 17.3vh;">
+				<div class="left-bar-screen-small" style="top: 27.3vh; left: 14.5vw;">Radial</div>
+				<img class="icon" id="radial" onclick="displayDiagram('radial')" src="/static/images/icons/icon-radial-diagram-black.svg" style="left: 14.5vw; top: 17.3vh;">
+				<div class="left-bar-screen-small" style="top: 27.3vh; left: 8.2vw;">Force-directed</div>
+				<img class="icon-selected" id="force" onclick="displayDiagram('force')" src="/static/images/icons/icon-forcedirected-diagram-black.svg" style="left: 8.2vw; top: 17.3vh;">
 				<div class="left-bar-screen-small" style="top: 39.8vh; left: 8.2vw;">Hierarchical</div>
-				<img class="icon" id="hierarchical" onclick="displayDiagram('hierarchical')" src="/static/images/icons/icon-hierarchical-diagram.svg" style="left: 8.2vw; top: 29.8vh;">
+				<img class="icon" id="hierarchical" onclick="displayDiagram('hierarchical')" src="/static/images/icons/icon-hierarchical-diagram-black.svg" style="left: 8.2vw; top: 29.8vh;">
 				<div class="left-bar-screen-small" style="top: 39.8vh; left: 14.5vw;">3D node-link diagram</div>
-				<img class="icon" id="3d" onclick="displayDiagram('3d')" src="/static/images/icons/icon-3d-diagram.svg" style="left: 14.5vw; top: 29.8vh;">
+				<img class="icon" id="3d" onclick="displayDiagram('3d')" src="/static/images/icons/icon-3d-diagram-black.svg" style="left: 14.5vw; top: 29.8vh;">
 				<div class="left-bar-screen-separator"></div>
 
 
@@ -312,7 +312,7 @@ Edited: 2019-06-06
 				
 				<div class="left-bar-screen-small" style="top: 60vh; left: 2.2vw; 
 				width: 5.4vw;">Adjacency matrix</div>
-				<img class="icon" id="matrix-icon" src="/static/images/icons/icon-matrix.svg" style="left: 2.2vw; top: 49.8vh;">
+				<img class="icon" id="matrix-icon" src="/static/images/icons/icon-matrix-black.svg" style="left: 2.2vw; top: 49.8vh;">
 
 
 				<!-- Rezize option -->
