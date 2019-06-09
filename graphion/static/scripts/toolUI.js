@@ -6,10 +6,12 @@ Last Edited: 2019-06-06
 
 function darkMode(){
     if (document.getElementById('dark-mode-chk-box').checked) {
-        document.getElementById('left-bar-shown').style.backgroundColor = '#424242';
-        document.getElementById('left-bar-hidden').style.backgroundColor = '#424242';
-        document.getElementById('right-bar-shown').style.backgroundColor = '#424242';
-        document.getElementById('right-bar-hidden').style.backgroundColor = '#424242';
+        document.getElementById('left-bar-shown').style.backgroundColor = 'rgb(66,66,66)';
+        document.getElementById('left-bar-hidden').style.backgroundColor = 'rgb(66,66,66)';
+        document.getElementById('right-bar-shown').style.backgroundColor = 'rgb(66,66,66)';
+        document.getElementById('right-bar-hidden').style.backgroundColor = 'rgb(66,66,66)';
+
+        /*Recolor the text*/
         changeColorToWhite();
         /*
         Change color of the icons
@@ -20,9 +22,15 @@ function darkMode(){
         document.getElementById('3d').src="/static/images/icons/icon-3d-diagram.svg";
         document.getElementById('matrix-icon').src="/static/images/icons/icon-matrix.svg";
 
+        /*changeIconSelectedBackgroundColorToGrey();*/
+
     } else {
-        document.getElementById('left-bar-shown').style.backgroundColor = '#FDFCF9';
+        document.getElementById('left-bar-shown').style.backgroundColor = '#F7F7F7';
         document.getElementById('right-bar-shown').style.backgroundColor = '#F7F7F7';
+        document.getElementById('left-bar-hidden').style.backgroundColor = '#F7F7F7';
+        document.getElementById('right-bar-hidden').style.backgroundColor = '#F7F7F7';
+
+        /*Recolor the text*/
         changeColorToGrey();
         /*
         Change color of the icons
@@ -32,8 +40,26 @@ function darkMode(){
         document.getElementById('hierarchical').src="/static/images/icons/icon-hierarchical-diagram-black.svg";
         document.getElementById('3d').src="/static/images/icons/icon-3d-diagram-black.svg";
         document.getElementById('matrix-icon').src="/static/images/icons/icon-matrix-black.svg";
+
+        /*changeIconSelectedBackgroundColorToBlue()*/
     }
 }
+
+/* 
+function changeIconSelectedBackgroundColorToBlue(){
+    var iconSelected = document.getElementsByClassName('icon-selected');
+    for (var i = 0; i < iconSelected.length; i++) {
+        iconSelected[i].style.backgroundColor = 'rgb(49, 137, 255)';
+    }
+}
+
+function changeIconSelectedBackgroundColorToGrey(){
+    var iconSelected = document.getElementsByClassName('icon-selected');
+    for (var i = 0; i < iconSelected.length; i++) {
+        iconSelected[i].style.backgroundColor = 'rgb(100,100,100)';
+    }
+}
+*/
 
 function changeColorToWhite(){
     var elements = document.getElementsByClassName('white-text');
@@ -45,7 +71,7 @@ function changeColorToWhite(){
 function changeColorToGrey(){
     var elements = document.getElementsByClassName('white-text');
     for (var i = 0; i < elements.length; i++) {
-        elements[i].style.color = '#747474';
+        elements[i].style.color = 'rgb(66,66,66)';
     }
 }
 
