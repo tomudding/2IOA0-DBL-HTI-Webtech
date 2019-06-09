@@ -4,7 +4,7 @@ Created: 2019-05-03
 Edited: 2019-06-06
 """
 from graphion import server
-from graphion.graphing.nodelink.graph import generateForceDirectedDiagram, generateHierarchicalDiagram, generateRadialDiagram, generate3DDiagram
+from graphion.graphing.nodelink.graph import generateForceDirectedDiagram, generateHierarchicalDiagram, generateRadialDiagram, generate3DDiagram, generateNodeLinkDiagram
 from graphion.graphing.linking import SelectEdgeCallback, SelectMatrixToNodeCallback, SelectNodeToMatrixCallback
 from graphion.graphing.linking import SelectEdgeLink, SelectMatrixToNodeLink, SelectNodeToMatrixLink
 from graphion.graphing.matrix.protomatrix import makeMatrix
@@ -77,9 +77,11 @@ def generateBokehApp(doc):
             s2.reordering = self.Ordering
             s2.metric = self.Metric
             s2.color_palette = self.Color_palette
-            s2Pane = pn.Column(s2.view)
+            if self.Screen1 == "3d":
+                return pn.Row(s1, s2.view)
 
-            return pn.Row(s1[0], s2Pane)
+            s1.color_palette = self.Color_palette
+            return pn.Row(s1.view, s2.view)
 
     df = get_filtered_df()
 
@@ -128,7 +130,7 @@ def getMatrix(df):
     if 'matrix' in globals() and matrix is not None:
         return matrix
     else:
-        matrix = makeMatrix(df.copy(), s1[1], df=True)
+        matrix = makeMatrix(df.copy(), df=True)
         return matrix
 
 def getHierarchical(df):
@@ -136,7 +138,7 @@ def getHierarchical(df):
     if 'hierarchical' in globals() and hierarchical is not None:
         return hierarchical
     else:
-        hierarchical = generateHierarchicalDiagram(df.copy(), False, df=True)
+        hierarchical = generateNodeLinkDiagram(df.copy(), 'hierarchical')
         return hierarchical
 
 def getGraph3D(df):
@@ -152,7 +154,7 @@ def getForce(df):
     if 'force' in globals() and force is not None:
         return force
     else:
-        force = generateForceDirectedDiagram(df, False, df=True)
+        force = generateNodeLinkDiagram(df.copy(), "FORCE")
         return force
 
 def getRadial(df):
@@ -160,5 +162,5 @@ def getRadial(df):
     if 'radial' in globals() and radial is not None:
         return radial
     else:
-        radial = generateRadialDiagram(df, False, df=True)
+        radial = generateNodeLinkDiagram(df.copy(), "RADIAL")
         return radial
