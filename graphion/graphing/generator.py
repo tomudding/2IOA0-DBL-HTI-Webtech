@@ -1,14 +1,14 @@
 """
 Author(s): Tom Udding, Steven van den Broek, Sam Baggen
 Created: 2019-05-03
-Edited: 2019-06-08
+Edited: 2019-06-09
 """
 from graphion import server
 from graphion.graphing.nodelink.graph import generateForceDirectedDiagram, generateHierarchicalDiagram, generateRadialDiagram, generate3DDiagram
 from graphion.graphing.linking import SelectEdgeCallback, SelectMatrixToNodeCallback, SelectNodeToMatrixCallback
 from graphion.graphing.linking import SelectEdgeLink, SelectMatrixToNodeLink, SelectNodeToMatrixLink
 from graphion.graphing.matrix.protomatrix import makeMatrix
-from graphion.upload import get_filtered_df, is_directed
+from graphion.session.handler import get_filtered_df
 import os
 import panel as pn
 import time

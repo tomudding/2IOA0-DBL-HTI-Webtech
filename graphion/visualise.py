@@ -1,12 +1,12 @@
 """
 Author(s): Tom Udding, Steven van den Broek
 Created: 2019-05-01
-Edited: 2019-06-08
+Edited: 2019-06-09
 """
 from flask import Blueprint, flash, redirect, render_template, request, session
 from graphion import server
 from graphion.graphing.generator import generateBokehApp
-from graphion.upload import get_filtered_df
+from graphion.session.handler import get_filtered_df
 from bokeh.embed import server_document
 import os
 import time
@@ -18,7 +18,7 @@ visualiseBlueprint = Blueprint('visualiseBlueprint', __name__, template_folder='
 def visualise(file):
     if session.get("active", None) is None:
         session['active'] = True
-    if not('app_context' in globals()):
+    if not('APP_CONTEXT' in globals()):
         flash("No dataset has been selected. Please select a previously uploaded dataset or upload a new dataset.", "danger")
         return redirect("/selection")
     if get_filtered_df() is None or get_filtered_df().size == 0:

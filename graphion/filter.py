@@ -1,14 +1,14 @@
 """
 Author(s): Steven van den Broek, Tom Udding
 Created: 2019-05-18
-Edited: 2019-06-08
+Edited: 2019-06-09
 """
 from flask import Blueprint, flash, redirect, render_template, session, request
 from graphion import server
 from bokeh.embed import server_document
 import os
 from graphion.graphing.parser import processCSVMatrix
-from graphion.upload import set_df, set_filtered_df, set_almost_filtered_df,set_partially_filtered_df
+from graphion.session.handler import set_df
 from pandas import read_hdf
 
 filterBlueprint = Blueprint('filterBlueprint', __name__, template_folder='templates')
