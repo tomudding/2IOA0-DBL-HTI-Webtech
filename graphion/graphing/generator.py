@@ -6,7 +6,7 @@ Edited: 2019-06-09
 from graphion import server
 from graphion.graphing.linking import SelectEdgeCallback, SelectMatrixToNodeCallback, SelectNodeToMatrixCallback
 from graphion.graphing.linking import SelectEdgeLink, SelectMatrixToNodeLink, SelectNodeToMatrixLink
-from graphion.session.handler import get_custom_key, set_custom_key, get_filtered_df, set_screen1, get_screen1, set_screen2, get_screen2, populate_3d_diagram, populate_force_diagram, populate_hierarchical_diagram, populate_matrix, populate_radial_diagram
+from graphion.session.handler import get_custom_key, set_custom_key, get_filtered_df, set_screen1, get_screen1, set_screen2, get_screen2, populate_3d_diagram, populate_force_diagram, populate_hierarchical_diagram, populate_matrix, populate_radial_diagram, get_visualisations_app, set_visualisations_app
 import os
 import panel as pn
 import time
@@ -78,6 +78,7 @@ def generateBokehApp(doc):
 
     df = get_filtered_df(sid)
     visApp = VisApp()
+    set_visualisations_app(visApp, sid)
 
     # begin = time.time()
     # m = populate_matrix(df)
@@ -96,18 +97,22 @@ def generateBokehApp(doc):
     pn.extension('plotly')
     return pn.Pane(visApp.view).get_root(doc)
 
-def changeScreen1(new_type):
+def changeScreen1(new_type, sid):
+    visApp = get_visualisations_app(sid)
     visApp.Screen1 = new_type
+    set_visualisations_app(visApp, sid)
 
-def changeOrdering(new_ordering):
+def changeOrdering(new_ordering, sid):
+    visApp = get_visualisations_app(sid)
     visApp.Ordering = new_ordering
+    set_visualisations_app(visApp, sid)
 
-def changeMetric(new_metric):
+def changeMetric(new_metric, sid):
+    visApp = get_visualisations_app(sid)
     visApp.Metric = new_metric
+    set_visualisations_app(visApp, sid)
 
-def changePalette(new_palette):
+def changePalette(new_palette, sid):
+    visApp = get_visualisations_app(sid)
     visApp.Color_palette = new_palette
-
-def getFilePath(file):
-    file = file + '.h5'
-    return os.path.join(server.config['UPLOAD_FOLDER'], file)
+    set_visualisations_app(visApp, sid)

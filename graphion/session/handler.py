@@ -147,7 +147,7 @@ def populate_force_diagram(df, sid):
     if 'force' in APP_CONTEXT['data'][sid]:
         return APP_CONTEXT['data'][sid]['force']
     else:
-        force = generateForceDirectedDiagram(df, False, df=True)
+        force = generateForceDirectedDiagram(df.copy(), False, df=True)
         APP_CONTEXT['data'][sid]['force'] = force
         return force
 
@@ -156,6 +156,16 @@ def populate_radial_diagram(df, sid):
     if 'radial' in APP_CONTEXT['data'][sid]:
         return APP_CONTEXT['data'][sid]['radial']
     else:
-        radial = generateRadialDiagram(df, False, df=True)
+        radial = generateRadialDiagram(df.copy(), False, df=True)
         APP_CONTEXT['data'][sid]['radial'] = radial
         return radial
+
+def get_visualisations_app(sid):
+    global APP_CONTEXT
+    if not('visapp' in APP_CONTEXT['data'][sid]):
+        return None
+    return APP_CONTEXT['data'][sid]['visapp']
+
+def set_visualisations_app(app, sid):
+    global APP_CONTEXT
+    APP_CONTEXT['data'][sid]['visapp'] = app
