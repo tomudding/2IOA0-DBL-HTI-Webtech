@@ -7,12 +7,31 @@ Last Edited: 2019-06-06
 function darkMode(){
     if (document.getElementById('dark-mode-chk-box').checked) {
         document.getElementById('left-bar-shown').style.backgroundColor = '#424242';
+        document.getElementById('left-bar-hidden').style.backgroundColor = '#424242';
         document.getElementById('right-bar-shown').style.backgroundColor = '#424242';
+        document.getElementById('right-bar-hidden').style.backgroundColor = '#424242';
         changeColorToWhite();
+        /*
+        Change color of the icons
+        */
+        document.getElementById('radial').src="/static/images/icons/icon-radial-diagram.svg";
+        document.getElementById('force').src="/static/images/icons/icon-forcedirected-diagram.svg";
+        document.getElementById('hierarchical').src="/static/images/icons/icon-hierarchical-diagram.svg";
+        document.getElementById('3d').src="/static/images/icons/icon-3d-diagram.svg";
+        document.getElementById('matrix-icon').src="/static/images/icons/icon-matrix.svg";
+
     } else {
         document.getElementById('left-bar-shown').style.backgroundColor = '#FDFCF9';
         document.getElementById('right-bar-shown').style.backgroundColor = '#F7F7F7';
         changeColorToGrey();
+        /*
+        Change color of the icons
+        */
+        document.getElementById('radial').src="/static/images/icons/icon-radial-diagram-black.svg";
+        document.getElementById('force').src="/static/images/icons/icon-forcedirected-diagram-black.svg";
+        document.getElementById('hierarchical').src="/static/images/icons/icon-hierarchical-diagram-black.svg";
+        document.getElementById('3d').src="/static/images/icons/icon-3d-diagram-black.svg";
+        document.getElementById('matrix-icon').src="/static/images/icons/icon-matrix-black.svg";
     }
 }
 
