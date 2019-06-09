@@ -13,12 +13,43 @@ import os
 import panel as pn
 import time
 
+from bokeh.themes.theme import Theme
+
 import param
 import holoviews as hv
 
 def generateBokehApp(doc):
     sid = str(doc.session_context.request.arguments['sid'][0].decode('utf-8'))
     reset_plots(sid)
+    # Set theme for holoviews plots
+    theme = Theme(
+        json={
+            'attrs': {
+                'Figure': {
+                    'background_fill_color': None,
+                    'border_fill_color': None,
+                    'outline_line_color': None,
+                },
+                'Grid': {
+                    'grid_line_dash': [6, 4],
+                    'grid_line_alpha': .3,
+                },
+
+                'Axis': {
+                    'major_label_text_color': 'black',
+                    'axis_label_text_color': 'black',
+                    'major_tick_line_color': 'black',
+                    'minor_tick_line_color': 'black',
+                    'axis_line_color': "black"
+                },
+
+                'ColorBar': {
+                    'background_fill_color': None,
+                }
+            }
+        })
+    hv.renderer('bokeh').theme = theme
+
 
     class VisApp(param.Parameterized):
         Screen1 = param.ObjectSelector(default="force",

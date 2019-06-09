@@ -13,10 +13,11 @@ Edited: 2019-06-06
 		<!-- Stylesheets for the loading screen-->
 		<link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700" rel="stylesheet">
 		<!-- Stylesheet for the tool after the loading -->
-		<link rel="stylesheet" type="text/css" href="/static/css/tool_ui.css">
+
 		<script src="/static/scripts/toolUI.js"></script>
 		<link rel="stylesheet" type="text/css" href="/static/css/grid.css">
 		<link rel="stylesheet" type="text/css" href="/static/css/grid_style.css">
+		<link rel="stylesheet" type="text/css" href="/static/css/tool_ui.css">
 		<!-- Bokeh files from Cloudflare CDN -->
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh.min.css" integrity="sha256-kmX/Nb5PazwKydPmaZjEb9sOg8BWh1v5eP14IzXJUkU=" crossorigin="anonymous" />
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh-tables.min.css" integrity="sha256-RL9kShsLcf2jHG2zzLh1peDLvWOEK0wPFWSZTiYykc4=" crossorigin="anonymous" />
@@ -79,7 +80,7 @@ Edited: 2019-06-06
 						function drawBackground() {
 							context.beginPath();
 							context.rect(0, 0, width, height);
-							context.fillStyle = "rgba(255, 255, 255, 1)";
+							context.fillStyle = "rgba(234, 234, 234, 1)";
 							context.fill();
 						}
 						function distance(dotA, dotB) {
@@ -183,7 +184,7 @@ Edited: 2019-06-06
 						function drawMatrixBackground() {
 							matrixContext.beginPath();
 							matrixContext.rect(0, 0, matrixWidth, matrixHeight);
-							matrixContext.fillStyle = "rgba(255, 255, 255, 1)";
+							matrixContext.fillStyle = "rgba(234, 234, 234, 1)";
 							matrixContext.fill();
 						}
 						function Square() {

@@ -416,6 +416,8 @@ def generate3DDiagram(file, df=False):
             t=100
         ),
         hovermode='closest',
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)'
 
     )
 
