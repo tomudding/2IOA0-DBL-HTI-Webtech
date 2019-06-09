@@ -9,3 +9,4 @@ logs/
 testing/tom/
 api/filter/cached_plots/
 .idea/
+flask_session/

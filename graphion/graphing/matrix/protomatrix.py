@@ -1,7 +1,7 @@
 """
-Author(s): Steven van den Broek, Yuqin Cui, Sam Baggen
+Author(s): Steven van den Broek, Yuqin Cui, Sam Baggen, Tom Udding
 Created: 2019-05-05
-Edited: 2019-06-06
+Edited: 2019-06-08
 """
 import numpy as np
 import pandas as pd
@@ -20,7 +20,7 @@ from bokeh.models import BoxSelectTool
 
 from graphion.graphing.linking import SelectMatrixToNodeCallback, SelectMatrixToNodeLink
 
-def makeMatrix(file, df=False):
+def makeMatrix(file, nl, df=False):
     if not df:
         df = read_hdf(file)
     else:
@@ -203,7 +203,6 @@ def makeMatrix(file, df=False):
                 # select = SelectMatrixToNodeLink(hm, plot, indices=names)
                 # select.register_callback('bokeh', SelectMatrixToNodeCallback)
 
-
                 return hm
                 # return pn.Row(hm, table)
                 # selection = Selection1D(source=hm, subscribers=[print_info])
@@ -211,11 +210,9 @@ def makeMatrix(file, df=False):
 
     matrix = Matrix_dropdown(name='Adjacency Matrix')
 
-
     # %%
     # hv_plot = hm + table
-
     #matrix_pane1 = pn.Column(pn.Pane(matrix.param, css_classes=['matrix_dropdowns']), matrix.view)
     # matrix_pane2 = pn.Column(matrix.param, matrix.view(show_only_selection=False))
-
+    
     return matrix
