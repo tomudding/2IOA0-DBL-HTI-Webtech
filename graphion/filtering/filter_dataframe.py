@@ -55,7 +55,11 @@ def filter_df_weight(df, cutoff_l = 0.6, cutoff_r = 10.0):
     #print("convertbacktoDf")
     return df_filtered
 
-
+def degree_bisect(arr, cutoff_l, cutoff_r):
+    index, degree = np.argsort(arr), np.sort(arr)
+    l = bisect.bisect_left(degree, cutoff_l)
+    r = bisect.bisect_right(degree, cutoff_r)
+    return(list(index[:l]) + list(index[r:]))
 
 def generate_degree_selection(df, cutoff_l = 2, cutoff_r = 900, dir = "in"):
     # df = read_hdf(file)
@@ -70,6 +74,7 @@ def generate_degree_selection(df, cutoff_l = 2, cutoff_r = 900, dir = "in"):
     del_lst = []  # initialize list of indices of nodes going to be deleted
 
     if dir == "out":
+        output_lst = []
         # for all nodes with out-degree outside of the cutoff range, add them to the delete list
         for i in range(len(adj_matrix)):  # iterate through rows
             row = np.array(adj_matrix[i])
@@ -81,11 +86,15 @@ def generate_degree_selection(df, cutoff_l = 2, cutoff_r = 900, dir = "in"):
             ##out_degree = len(adj_matrix[i]) - 1 - count #outdegree equals to the remaining none zero columns in given row
             out_degree = np.count_nonzero(row)
             #print(out_degree)
-            if(out_degree < cutoff_l or out_degree > cutoff_r):
-                del_lst.append(i)
+            output_lst.append(out_degree)
+            #if(out_degree < cutoff_l or out_degree > cutoff_r):
+            #    del_lst.append(i)
+
+        del_lst = degree_bisect(np.array(output_lst), cutoff_l, cutoff_r)
 
 
     elif dir == "in":
+        output_lst = []
         # for all nodes with in-degree outside of the cutoff range, add them to the delete list
         adj_matrix_t = adj_matrix.transpose()
         for i in range(len(adj_matrix_t)):  # iterate through rows
@@ -100,8 +109,10 @@ def generate_degree_selection(df, cutoff_l = 2, cutoff_r = 900, dir = "in"):
 
             in_degree = np.count_nonzero(col)
             #print(in_degree)
-            if (in_degree < cutoff_l or in_degree > cutoff_r):
-                del_lst.append(i)
+            output_lst.append(in_degree)
+            #if (in_degree < cutoff_l or in_degree > cutoff_r):
+            #    del_lst.append(i)
+        del_lst = degree_bisect(np.array(output_lst), cutoff_l, cutoff_r)
     else:
         print("invalid dir value!")
 
@@ -117,7 +128,6 @@ def generate_degree_selection(df, cutoff_l = 2, cutoff_r = 900, dir = "in"):
     # build the output dataframes
     output_df = pandas.DataFrame(result_matrix, index=rem_names, columns=rem_names)
     # print(output_df)
-
     return output_df
 
 
