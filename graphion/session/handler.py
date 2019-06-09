@@ -4,7 +4,7 @@ Created: 2019-06-09
 Edited: 2019-06-09
 """
 from graphion.graphing.matrix.protomatrix import makeMatrix
-from graphion.graphing.nodelink.graph import generateForceDirectedDiagram, generateHierarchicalDiagram, generateRadialDiagram, generate3DDiagram
+from graphion.graphing.nodelink.graph import generateForceDirectedDiagram, generateHierarchicalDiagram, generateRadialDiagram, generate3DDiagram, generateNodeLinkDiagram
 from time import time
 
 def is_global():
@@ -119,46 +119,52 @@ def get_screen2(sid):
 def populate_matrix(df, sid):
     global APP_CONTEXT
     if 'matrix' in APP_CONTEXT['data'][sid]:
-        return APP_CONTEXT['data'][sid]['matrix']
-    else:
-        matrix = makeMatrix(df.copy(), get_custom_key(get_screen1(sid), sid)[1], df=True)
-        APP_CONTEXT['data'][sid]['matrix'] = matrix
-        return matrix
+        plot = APP_CONTEXT['data'][sid]['matrix']
+        if plot is not None:
+            return plot
+    matrix = makeMatrix(df.copy(), get_custom_key(get_screen1(sid), sid), df=True)
+    APP_CONTEXT['data'][sid]['matrix'] = matrix
+    return matrix
 
 def populate_hierarchical_diagram(df, sid):
     global APP_CONTEXT
-    if 'hierarchical' in globals() and hierarchical is not None:
-        return hierarchical
-    else:
-        hierarchical = generateHierarchicalDiagram(df.copy(), False, df=True)
-        return hierarchical
+    if 'hierarchical' in APP_CONTEXT['data'][sid]:
+        plot = APP_CONTEXT['data'][sid]['hierarchical']
+        if plot is not None:
+            return plot
+    # hierarchical = generateHierarchicalDiagram(df.copy(), False, df=True)
+    hierarchical = generateNodeLinkDiagram(df.copy(), 'hierarchical')
+    APP_CONTEXT['data'][sid]['hierarchical'] = hierarchical
+    return hierarchical
 
 def populate_3d_diagram(df, sid):
     global APP_CONTEXT
     if '3d' in APP_CONTEXT['data'][sid]:
-        return APP_CONTEXT['data'][sid]['3d']
-    else:
-        graph3D = generate3DDiagram(df.copy(), df=True)
-        APP_CONTEXT['data'][sid]['3d'] = graph3D
-        return graph3D
+        if  APP_CONTEXT['data'][sid]['3d'] is not None:
+            return APP_CONTEXT['data'][sid]['3d']
+    graph3D = generate3DDiagram(df.copy(), df=True)
+    APP_CONTEXT['data'][sid]['3d'] = graph3D
+    return graph3D
 
 def populate_force_diagram(df, sid):
     global APP_CONTEXT
     if 'force' in APP_CONTEXT['data'][sid]:
-        return APP_CONTEXT['data'][sid]['force']
-    else:
-        force = generateForceDirectedDiagram(df.copy(), False, df=True)
-        APP_CONTEXT['data'][sid]['force'] = force
-        return force
+        if APP_CONTEXT['data'][sid]['force'] is not None:
+            return APP_CONTEXT['data'][sid]['force']
+    # force = generateForceDirectedDiagram(df.copy(), False, df=True)
+    force = generateNodeLinkDiagram(df.copy(), 'force')
+    APP_CONTEXT['data'][sid]['force'] = force
+    return force
 
 def populate_radial_diagram(df, sid):
     global APP_CONTEXT
     if 'radial' in APP_CONTEXT['data'][sid]:
-        return APP_CONTEXT['data'][sid]['radial']
-    else:
-        radial = generateRadialDiagram(df.copy(), False, df=True)
-        APP_CONTEXT['data'][sid]['radial'] = radial
-        return radial
+        if APP_CONTEXT['data'][sid]['radial'] is not None:
+            return APP_CONTEXT['data'][sid]['radial']
+    # radial = generateRadialDiagram(df.copy(), False, df=True)
+    radial = generateNodeLinkDiagram(df.copy(), 'radial')
+    APP_CONTEXT['data'][sid]['radial'] = radial
+    return radial
 
 def get_visualisations_app(sid):
     global APP_CONTEXT
@@ -169,3 +175,11 @@ def get_visualisations_app(sid):
 def set_visualisations_app(app, sid):
     global APP_CONTEXT
     APP_CONTEXT['data'][sid]['visapp'] = app
+
+def reset_plots(sid):
+    global APP_CONTEXT
+    APP_CONTEXT['data'][sid]['radial'] = None
+    APP_CONTEXT['data'][sid]['force'] = None
+    APP_CONTEXT['data'][sid]['hierarchical'] = None
+    APP_CONTEXT['data'][sid]['3d'] = None
+    APP_CONTEXT['data'][sid]['matrix'] = None

@@ -20,7 +20,7 @@ from bokeh.models import BoxSelectTool
 
 from graphion.graphing.linking import SelectMatrixToNodeCallback, SelectMatrixToNodeLink
 
-def makeMatrix(file, df=False):
+def makeMatrix(file, nl, df=False):
     if not df:
         df = read_hdf(file)
     else:

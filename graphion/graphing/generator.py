@@ -6,7 +6,9 @@ Edited: 2019-06-09
 from graphion import server
 from graphion.graphing.linking import SelectEdgeCallback, SelectMatrixToNodeCallback, SelectNodeToMatrixCallback
 from graphion.graphing.linking import SelectEdgeLink, SelectMatrixToNodeLink, SelectNodeToMatrixLink
-from graphion.session.handler import get_custom_key, set_custom_key, get_filtered_df, set_screen1, get_screen1, set_screen2, get_screen2, populate_3d_diagram, populate_force_diagram, populate_hierarchical_diagram, populate_matrix, populate_radial_diagram, get_visualisations_app, set_visualisations_app
+from graphion.session.handler import get_custom_key, set_custom_key, get_filtered_df, set_screen1, get_screen1, \
+    set_screen2, get_screen2, populate_3d_diagram, populate_force_diagram, populate_hierarchical_diagram,\
+    populate_matrix, populate_radial_diagram, get_visualisations_app, set_visualisations_app, reset_plots
 import os
 import panel as pn
 import time
@@ -16,6 +18,7 @@ import holoviews as hv
 
 def generateBokehApp(doc):
     sid = str(doc.session_context.request.arguments['sid'][0].decode('utf-8'))
+    reset_plots(sid)
 
     class VisApp(param.Parameterized):
         Screen1 = param.ObjectSelector(default="force",
