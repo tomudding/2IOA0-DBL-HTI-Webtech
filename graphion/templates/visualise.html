@@ -32,7 +32,7 @@ Edited: 2019-06-06
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 	</head>
 	<body>
-		<section class="body-wrapper" id="loading-screen">
+		<section class="body-wrapper" id="loading-screen" hidden>
 			<div class="container">
 				<div class="row">
 					<div class="col-s-6" id="nodelink">
@@ -246,16 +246,26 @@ Edited: 2019-06-06
 				</div>
 			</div>
 		</section>
-		<div id="after-loading" hidden>
+		<div id="after-loading">
+
+			<!-- Left side of the tool bar -->
 			<div class="left-bar-shown" id="left-bar-shown">
+
+				<!-- Links to home and filter pages -->
 				<div class="left-bar-small-links">
 					<a href="/"><  home</a><br>
 					<a href="/filter/{{ fileName }}" style="cursor: pointer;"><  filter</a>
 				</div>
+
+				<!-- Logo -->
 				<div class="left-bar-graphion">
 					graph<span class="graphion-bold">ion</span>
 				</div>
-				<div class="left-bar-choose-vis">Choose a vizualisation type:</div>
+
+				<!-- Choose visualization title  -->
+				<div class="left-bar-choose-vis white-text" >Choose a vizualisation type:</div>
+
+				<!-- Screen 1 options -->
 				<div class="left-bar-screen-big" style="top: 27vh;">Screen 1:</div>
 				<div class="left-bar-screen-small" style="top: 27.3vh; left: 8.2vw;">Radial</div>
 				<img class="icon" id="radial" onclick="displayDiagram('radial')" src="/static/images/icons/icon-radial-diagram.svg" style="left: 8.2vw; top: 17.3vh;">
@@ -266,10 +276,14 @@ Edited: 2019-06-06
 				<div class="left-bar-screen-small" style="top: 39.8vh; left: 14.5vw;">3D node-link diagram</div>
 				<img class="icon" id="3d" onclick="displayDiagram('3d')" src="/static/images/icons/icon-3d-diagram.svg" style="left: 14.5vw; top: 29.8vh;">
 				<div class="left-bar-screen-separator"></div>
-				<div class="left-bar-hide-button empty-triangle" onclick="hideLeftBar()">◁</div>
-				<div class="left-bar-screen-big" style="top: 45.5vh;">Screen 2:</div>
 
-				<div class="left-bar-screen-small" style="top: 56.8vh; left: 8.4vw; width: 7.6vw;">Select linkage criterium:</div>
+
+				<!-- Minimize left tool bar button -->
+				<div class="left-bar-hide-button empty-triangle white-text" onclick="hideLeftBar()">◁</div>
+
+				<!-- Screen 2 options -->
+				<div class="left-bar-screen-big" style="top: 45.5vh;">Screen 2:</div>
+				<div class="left-bar-screen-small" style="top: 56.8vh; left: 8.4vw;">Select linkage criterium:</div>
 				<select class="dropdown" onChange = "displayReordering(this.value)" style="left: 8.4vw; top: 59vh; width:11vw;">
 					<option value="none">None</option>
 					<option value="single">Single</option>
@@ -294,11 +308,15 @@ Edited: 2019-06-06
 	                <option value="chebyshev">Chebyshev</option>
 	                <option value="canberra">Canberra</option>
 	                <option value="braycurtis">Braycurtis</option>
-	            </select>
-
-				<div class="left-bar-screen-small" style="top: 60vh; left: 2.2vw;">Adjacency matrix</div>
+				</select>
+				
+				<div class="left-bar-screen-small" style="top: 60vh; left: 2.2vw; 
+				width: 5.4vw;">Adjacency matrix</div>
 				<img class="icon" src="/static/images/icons/icon-matrix.svg" style="left: 2.2vw; top: 49.8vh;">
-				<div class="left-bar-node-labels" style="top: 67vh;">Resize the nodes by:</div>
+
+
+				<!-- Rezize option -->
+				<div class="left-bar-node-labels white-text" style="top: 67vh;">Resize the nodes by:</div>
 				<select class="dropdown" style="left: 1.8vw; top: 70vh; width: 12vw;">
 					<option>In-degree</option>
 					<option>Out-degree</option>
@@ -307,7 +325,10 @@ Edited: 2019-06-06
 					<option>Total in edge weight</option>
 					<option>Total edge weight</option>
 				</select>
-				<div class="left-bar-node-labels" style="top: 75.6vh;">Recolor the nodes by:</div>
+
+
+				<!-- Recolor option -->
+				<div class="left-bar-node-labels white-text" style="top: 75.6vh;">Recolor the nodes by:</div>
 				<select class="dropdown" style="left: 1.8vw; top: 78.5vh; width: 12vw;">
 					<option>In-degree</option>
 					<option>Out-degree</option>
@@ -315,8 +336,11 @@ Edited: 2019-06-06
 					<option>Total out edge weight</option>
 					<option>Total in edge weight</option>
 					<option selected="selected">Total edge weight</option>
-	            </select>
-	            <div class="left-bar-node-labels" style="top: 84.2vh;">Color palette:</div>
+				</select>
+				
+
+				<!-- Color palette -->
+	            <div class="left-bar-node-labels white-text" style="top: 84.2vh;">Color palette:</div>
 				<select class="dropdown" onChange = "displayPalette(this.value)" style="left: 1.8vw; top: 87.1vh; width: 12vw;">
 	                <option selected="selected">kbc</option>
 	                <option>kgy</option>
@@ -329,17 +353,26 @@ Edited: 2019-06-06
 	                <option>inferno</option>
 	                <option>viridis</option>
 				</select>
-				<div class="left-bar-dark-mode-label">Dark mode:</div>
-				<label class="dark-mode-switch">
-					<input type="checkbox">
+
+				<!-- Dark mode -->
+				<div class="left-bar-dark-mode-label white-text">Dark mode:</div>
+				<label class="dark-mode-switch" onclick="darkMode()">
+					<input type="checkbox" id="dark-mode-chk-box">
 					<span class="slider round"></span>
 				</label>
 			</div>
+
+			<!-- Left bar minimized -->
 			<div class="left-bar-hidden" id="left-bar-hidden" hidden>
 				<div class="left-bar-show-button empty-triangle" onclick="showLeftBar()">▷</div>
 			</div>
+
+
+			<!-- Right side of the tool bar -->
 			<div class="right-bar-shown" id="right-bar-shown">
-				<div class="right-bar-big" style="top: 5.6vh; left: 2.5vw;">Children of the current node:</div>
+
+				<!-- First information area -->
+				<div class="right-bar-big white-text" style="top: 5.6vh; left: 2.5vw;">Children of the current node:</div>
 				<div class="right-bar-small" style="top: 10vh; left: 2.5vw;">Select ordering:</div>
 				<select class="dropdown" style="left: 10.5vw; top: 9.1vh; width: 11vw;">
 					<option>Option1</option>
@@ -355,8 +388,13 @@ Edited: 2019-06-06
 						Line4<br>
 					</div>
 				</div>
-				<div class="right-bar-hide-button empty-triangle" onclick="hideRightBar()">▷</div>
-				<div class="right-bar-big" style="top: 53vh; left: 2.5vw;">Some other information:</div>
+
+
+				<!-- Minimize right tool bar button -->
+				<div class="right-bar-hide-button empty-triangle white-text" onclick="hideRightBar()">▷</div>
+
+				<!-- Second information area -->
+				<div class="right-bar-big white-text" style="top: 53vh; left: 2.5vw;">Some other information:</div>
 				<div class="right-bar-small" style="top: 57vh; left: 2.5vw;">Select ordering:</div>
 				<select class="dropdown" style="left: 10.5vw; top: 56.5vh; width: 11vw;">
 					<option>Option1</option>
@@ -373,9 +411,12 @@ Edited: 2019-06-06
 					</div>
 				</div>
 			</div>
+
+			<!-- Right bar minimized -->
 			<div class="right-bar-hidden" id="right-bar-hidden" hidden>
 				<div class="right-bar-show-button empty-triangle" onclick="showRightBar()">◁</div>
 			</div>
+
 		</div>
 		<div style="z-index: 1; position: absolute; left: 4vw;">{{ script|safe }}</div>
 	</body>
