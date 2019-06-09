@@ -4,6 +4,32 @@ Created: Unkown...
 Last Edited: 2019-06-06
 */
 
+function darkMode(){
+    if (document.getElementById('dark-mode-chk-box').checked) {
+        document.getElementById('left-bar-shown').style.backgroundColor = '#424242';
+        document.getElementById('right-bar-shown').style.backgroundColor = '#424242';
+        changeColorToWhite();
+    } else {
+        document.getElementById('left-bar-shown').style.backgroundColor = '#FDFCF9';
+        document.getElementById('right-bar-shown').style.backgroundColor = '#F7F7F7';
+        changeColorToGrey();
+    }
+}
+
+function changeColorToWhite(){
+    var elements = document.getElementsByClassName('white-text');
+    for (var i = 0; i < elements.length; i++) {
+        elements[i].style.color = '#FFFFFF';
+    }
+}
+
+function changeColorToGrey(){
+    var elements = document.getElementsByClassName('white-text');
+    for (var i = 0; i < elements.length; i++) {
+        elements[i].style.color = '#747474';
+    }
+}
+
 function showLeftBar(){
     document.getElementById('left-bar-shown').hidden = false;
     document.getElementById('left-bar-hidden').hidden = true;
