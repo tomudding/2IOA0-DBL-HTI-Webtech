@@ -97,7 +97,7 @@ bkapp = Application(FunctionHandler(modify_doc))
 def bk_worker():
     set_event_loop(new_event_loop())
 
-    bokeh_tornado = BokehTornado({'/bkapp': bkapp}, extra_websocket_origins=["localhost:5000", "2ioa0.uddi.ng:*"])
+    bokeh_tornado = BokehTornado({'/bkapp': bkapp}, extra_websocket_origins=["localhost:5000", "graphion.uddi.ng:*"])
     bokeh_http = HTTPServer(bokeh_tornado)
     bokeh_http.add_sockets(sockets)
 
