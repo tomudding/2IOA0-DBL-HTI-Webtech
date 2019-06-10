@@ -1,6 +1,6 @@
 # 2IOA0 DBL HTI + Webtech
 
-The website can be accessed through [https://2ioa0.uddi.ng/](https://2ioa0.uddi.ng/).
+The website can be accessed through [https://graphion.uddi.ng/](https://graphion.uddi.ng/).
 Please follow the steps under **DOCUMENTATION** for more information on how to locally run graphion.
 
 ## DEADLINES
@@ -24,7 +24,7 @@ Our own deadlines:
 | Filming video                     | 17th of June  |
 | Editing video (draft)             | 19th of June  |
 | Comments on video (draft)         | 20th of June (before 12)  |
-| Fix video | 21st of June| 
+| Fix video | 21st of June|
 | Final touches on our tool         | 21st of June  |
 
 ## REQUIREMENTS
@@ -66,14 +66,14 @@ Minimal requirements as described in VisProjectDescription.pdf and the kickoff s
     - [x] [3D node-link diagram](https://plot.ly/python/3d-network-graph/)
 
 - [x] **Web-based** visualization tool for networks (weighted and directed graphs)
-  - [x] Accessable via URL ([https://2ioa0.uddi.ng/](https://2ioa0.uddi.ng/))
+  - [x] Accessable via URL ([https://graphion.uddi.ng/](https://graphion.uddi.ng/))
   - [x] Upload graph data (in a specified data format)
   - [ ] Visual interactions from each of the 7 categories of interactions (Yi et al.)
   - [ ] Data and insights should be sharable with all other people using the web tool
     - [x] 10 most recent datasets can be chosen
     - [x] Screenshots can be made of each plot
       - [ ] Parameters of plots are included in screenshots
-      
+
 Suggested further improvements but not required:
 - [ ] Multiple coordinated view design
   - [x] Different visualizations next to each other
