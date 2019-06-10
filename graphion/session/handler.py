@@ -21,6 +21,13 @@ def is_user_loaded(sid):
         return True
     return False
 
+def prune_user(sid):
+    global APP_CONTEXT
+    APP_CONTEXT['sessions'][sid] = None
+
+    for key in APP_CONTEXT['data'][sid]:
+        APP_CONTEXT['data'][sid][key] = None
+
 def get_custom_key(key, sid):
     global APP_CONTEXT
     if not(key in APP_CONTEXT['data'][sid]):
