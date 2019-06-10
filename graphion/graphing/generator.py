@@ -45,6 +45,18 @@ def generateBokehApp(doc):
 
                 'ColorBar': {
                     'background_fill_color': None,
+                },
+
+                'Nodes': {
+                    'hover_fill_color': 'green',
+                },
+
+                'Points': {
+                    'hover_fill_color': 'green',
+                },
+
+                'Graph': {
+                    'hover_fill_color': 'green',
                 }
             }
         })

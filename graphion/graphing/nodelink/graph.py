@@ -152,10 +152,9 @@ def generateNodeLinkDiagram(df, diagramType):
             # begin = time.time()
             # Comment the following two/three lines to disable edgebundling and datashading.
             plot = bundle_graph(plot)
-            points = hv.Points((nodes_x, nodes_y, nodes, centralityList, partitionList),
-                               vdims=['Index', 'Centrality', 'Partition'])
+            points = plot.nodes
             points.opts(cmap=partitionColours, color='Partition', size='Centrality',
-                        tools=['box_select', 'lasso_select', 'tap'], active_tools=['wheel_zoom'], toolbar='above',
+                        tools=['box_select', 'lasso_select', 'tap', 'hover'], active_tools=['wheel_zoom'], toolbar='above',
                         show_legend=False, width=600, height=600)
             return plot, points
 
