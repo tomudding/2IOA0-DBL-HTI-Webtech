@@ -147,7 +147,8 @@ def generateBokehApp(doc):
     # pane = pn.Pane(graph)
 
     pn.extension('plotly')
-    return pn.Pane(visApp.view).get_root(doc)
+    # Don't use pn.Pane since that messes up linking
+    return pn.Column(visApp.view).get_root(doc)
 
 def changeScreen1(new_type, sid):
     visApp = get_visualisations_app(sid)

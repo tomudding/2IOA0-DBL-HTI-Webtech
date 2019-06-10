@@ -86,7 +86,7 @@ def get_almost_filtered_df(sid):
     if 'almost_filtered_df' in APP_CONTEXT['data'][sid]:
         if APP_CONTEXT['data'][sid]['almost_filtered_df'] is not None:
             return APP_CONTEXT['data'][sid]['almost_filtered_df'].copy()
-    return get_df(sid)
+    return get_partially_filtered_df(sid)
 
 def set_almost_filtered_df(input, sid):
     global APP_CONTEXT
@@ -199,3 +199,8 @@ def reset_plots(sid):
     APP_CONTEXT['data'][sid]['hierarchical'] = None
     APP_CONTEXT['data'][sid]['3d'] = None
     APP_CONTEXT['data'][sid]['matrix'] = None
+
+def reset_dataframes(sid):
+    global APP_CONTEXT
+    APP_CONTEXT['data'][sid]['almost_filtered'] = None
+    APP_CONTEXT['data'][sid]['partially_filtered'] = None

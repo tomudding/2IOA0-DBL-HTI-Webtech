@@ -68,7 +68,11 @@ def generate_selection(file, kind="degree", dir="in", dataframe=False):
     deg_all = np.reshape(deg_all, (-1, 1))
     deg = np.reshape(deg, (-1, 1))
     # print("Reshaping: {}-{}: ".format(dir, kind) + str(time.time() - begin))
-    deg_plot = np.linspace(0, max(deg_all)[0], 1000)
+    maxi = max(deg_all)[0]
+    if maxi == 0:
+        deg_plot = np.linspace(0, 0.5, 1000)
+    else:
+        deg_plot = np.linspace(0, maxi, 1000)
     # Calculate 'pretty good' (since best takes a long time) bandwidth
     # begin = time.time()
     #

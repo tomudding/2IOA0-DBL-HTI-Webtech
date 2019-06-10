@@ -78,7 +78,8 @@ def generate_degree_selection(df, cutoff_l = 60, cutoff_r = 80, dir = "in"):
         # for all nodes with out-degree outside of the cutoff range, add them to the delete list
         for i in range(len(adj_matrix)):  # iterate through rows
             row = np.array(adj_matrix[i])
-            row = np.delete(row, i)
+            # row = np.delete(row, i)
+
             ##count = 0  #initialize the count for zero weights
             ##for j in range(len(adj_matrix[i])):  # iterate through columns
             ##    if adj_matrix[i][j] == 0.0 and not i == j: #don't count the diagonal edge
@@ -89,8 +90,9 @@ def generate_degree_selection(df, cutoff_l = 60, cutoff_r = 80, dir = "in"):
             output_lst.append(out_degree)
             #if(out_degree < cutoff_l or out_degree > cutoff_r):
             #    del_lst.append(i)
-
+        print(output_lst)
         del_lst = degree_bisect(np.array(output_lst), cutoff_l, cutoff_r)
+        print(del_lst)
 
 
     elif dir == "in":
@@ -99,7 +101,7 @@ def generate_degree_selection(df, cutoff_l = 60, cutoff_r = 80, dir = "in"):
         adj_matrix_t = adj_matrix.transpose()
         for i in range(len(adj_matrix_t)):  # iterate through rows
             col = adj_matrix_t[i]
-            col = np.delete(col, i)
+            # col = np.delete(col, i)
             #count = 0  # initialize the count for zero weights
             #for j in range(len(adj_matrix_t[i])):  # iterate through columns
             #    if adj_matrix_t[i][j] == 0.0 and not i == j: #don't count the diagonal edge

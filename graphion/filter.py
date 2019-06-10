@@ -7,7 +7,7 @@ from flask import Blueprint, flash, redirect, render_template, session, request
 from graphion import server
 from bokeh.embed import server_document
 from graphion.graphing.parser import processCSVMatrix
-from graphion.session.handler import set_df, is_user_loaded, prune_user
+from graphion.session.handler import set_df, is_user_loaded, prune_user, reset_dataframes
 from os.path import exists, join
 from pandas import read_hdf
 
@@ -31,4 +31,5 @@ def visualise(file=None):
     if is_user_loaded(sid):
         prune_user(sid)
     set_df(df, sid)
+    reset_dataframes(sid)
     return render_template('filter.html', fileName=file)

@@ -126,7 +126,10 @@ def generateNodeLinkDiagram(df, diagramType):
             # calculate centrality
             centrality = degree_centrality(G)
             _, nodeCentralities = zip(*sorted(centrality.items()))
-            centralityList = [10 + 12 * t / max(nodeCentralities) for t in nodeCentralities]
+            if max(nodeCentralities) > 0:
+                centralityList = [10 + 12 * t / max(nodeCentralities) for t in nodeCentralities]
+            else:
+                centralityList = [10 + 12 * t for t in nodeCentralities]
 
             # create partitions
             partition = best_partition(G)
@@ -152,7 +155,8 @@ def generateNodeLinkDiagram(df, diagramType):
 
             # begin = time.time()
             # Comment the following two/three lines to disable edgebundling and datashading.
-            plot = bundle_graph(plot)
+            if max(nodeCentralities) > 0:
+                plot = bundle_graph(plot)
             points = plot.nodes
             points.opts(cmap=partitionColours, color='Partition', size='Centrality',
                         tools=['box_select', 'lasso_select', 'tap', 'hover'], active_tools=['wheel_zoom'], toolbar='above',
