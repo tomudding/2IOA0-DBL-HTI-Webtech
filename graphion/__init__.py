@@ -1,7 +1,7 @@
 """
 Author(s): Tom Udding, Steven van den Broek, Sam Baggen
 Created: 2019-04-29
-Edited: 2019-06-08
+Edited: 2019-06-10
 """
 from flask import Flask
 server = Flask(__name__)
@@ -19,7 +19,10 @@ if "gunicorn" not in environ.get("SERVER_SOFTWARE", ""):
     stdoutHandler.setLevel(logging.INFO)
     logger.addHandler(stdoutHandler)
 
-fileHandler = logging.FileHandler('logs/flask.log', mode="w")
+if "gunicorn" not in environ.get("SERVER_SOFTWARE", ""):
+    fileHandler = logging.FileHandler('logs/flask.log', mode="w")
+else:
+    fileHandler = logging.FileHandler('logs/flask.log')
 fileHandler.setLevel(logging.INFO)
 logger.addHandler(fileHandler)
 
