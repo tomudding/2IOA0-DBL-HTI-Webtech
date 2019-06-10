@@ -4,7 +4,7 @@
  * Edited: 2019-06-06
  */
 
-.bokeh-container {
+ .bokeh-container {
     margin: 0 auto;
 }
 
@@ -23,87 +23,86 @@
     z-index: 10;
     left: 0vw;
     top: 0vh;
-    width: 22vw;
+    width: 337px;
     height: 100vh;
     border-right: 1px solid rgb(170,170,170);
 }
 
 .left-bar-small-links {
     position: absolute;
-    left: 0.7vw;
+    left: 10.7px;
     top: 1vh;
-    width: 5vw;
+    width: 77px;
     height: 3.5vh;
-    font-size: 0.9vw;
-   line-height: 1.2vw;
+    font-size: 0.875rem;
+    line-height: 1.125rem;
 }
 
-.left-bar-small-links:hover {
+.left-bar-small-links a:hover {
     color: rgb(49, 137, 255);
 }
 
 .left-bar-small-links a {
-   color: #9C9C9C;
+   color: rgb(133, 133, 133);
    border-bottom: 0px;
+   font-weight: 300;
 }
 
 .left-bar-graphion {
     position: absolute;
-    left: 1.5vw;
+    left: 23px;
     top: 9vh;
     color: rgb(49, 137, 255);
-    font-size: 1.8vw;
-    line-height: 1.8vw;
+    font-size: 1.75rem;
+    line-height: 1.75rem;
     font-weight: 100;
     letter-spacing: 2px;
 }
 
 .left-bar-choose-vis {
     position: absolute;
-    left: 1.5vw;
-    width: 18vw;
+    left: 23px;
+    width: 277px;
     top: 13.6vh;
-    font-size: 1.2vw;
-    line-height: 1.2vw;
+    font-size: 1.125rem;
+    line-height: 1.125rem;
     color: white;
 }
 
 .left-bar-screen-big {
     position: absolute;
     color: rgb(133, 133, 133);
-    font-size: 1.2vw;
-    width: 6vw;
-    line-height: 1.2vw;
-    left: 1.7vw;
+    font-size: 1.125rem;
+    width: 92px;
+    line-height: 1.125rem;
+    left: 23px;
     font-weight: 100;
 }
 
 .left-bar-screen-small {
     position: absolute;
     color: rgb(133,133,133);
-    font-size: 0.8vw;
-    line-height: 0.8vw;
+    font-size: 0.75rem;
+    line-height: 0.75rem;
 }
 
 .left-bar-screen-separator {
     position: absolute;
-    background-color: #707070;
+    background-color: rgb(133, 133, 133);
     height: 1px;
-    left: 2.5vw;
+    left: 38px;
     top: 44vh;
-    width: 16vw;
-    font-size: 1vw;
-    line-height: 1vw;
+    width: 245px;
 }
 
 .left-bar-hide-button {
     position: absolute;
-    left:20vw;
+    left: 307px;
     top: 48vh;
-    width: 2vw;
-    height: 4vh;
-    font-size: 2vw;
-    line-height: 3vw;
+    width: 2vh;
+    font-size: 2vh;
+    line-height: 3vh;
+    height: 3vh;
     color: white;
     cursor: pointer;
 }
@@ -111,10 +110,9 @@
 .left-bar-node-labels {
     position: absolute;
     color: white;
-    left: 1.8vw;
-    width: 18vw;
-    font-size: 1vw;
-    line-height: 1.2vw;
+    left: 23px;
+    font-size: 1rem;
+    line-height: 1rem;
 }
 
 .left-bar-color-picker {
@@ -129,10 +127,10 @@
 .left-bar-dark-mode-label {
     position: absolute;
     color: white;
-    left: 1.5vw;
+    left: 23px;
     top: 94vh;
-    font-size: 1.2vw;
-    line-height: 1.2vw;
+    font-size: 1.125rem;
+    line-height: 1.125rem;
 }
 
 .left-bar-hidden {
@@ -141,19 +139,18 @@
     position: absolute;
     left: 0vw;
     top: 0vh;
-    width: 2.5vw;
+    width: 38px;
     height: 100vh;
     border-right: 1px solid rgb(170,170,170);
 }
 
 .left-bar-show-button {
    position: absolute;
-   left:0.5vw;
+   left:8px;
    top: 48vh;
-   width: 3vw;
-   height: 4vh;
-   font-size: 3vw;
-   line-height: 3vw;
+   width: 2vh;
+   height: 3vh;
+   line-height: 3vh;
    color: white;
    cursor: pointer;
 }
@@ -162,9 +159,9 @@
 .dark-mode-switch {
    position: absolute;
    display: inline-block;
-   left: 8.7vw;
+   left: 135px;;
    top: 93.5vh;
-   width: 3.5vw;
+   width: 54px;
    height: 3.7vh;
 }
 
@@ -230,7 +227,7 @@
     z-index: 10;
     right: 0vw;
     top: 0vh;
-    width: 22vw;
+    width: 337px;
     height: 100vh;
     border-left: 1px solid rgb(170,170,170);
 }
@@ -238,26 +235,25 @@
 .right-bar-big {
     position: absolute;
     color: white;
-    left: 1.3vw;
-    font-size: 1.2vw;
-    line-height: 1.2vw;
+    font-size: 1.125rem;
+    line-height: 1.125rem;
 }
 
 .right-bar-small {
     position: absolute;
     color: rgb(133,133,133);
     left: 1.3vw;
-    font-size: 1.1vw;
-    line-height: 1.1vw;
+    font-size: 0.75rem;
+    line-height: 0.75rem;
 }
 
 .right-bar-hide-button {
     position: absolute;
     color: white;
-    right: 20vw;
-    top: 48.5vh;
-    font-size: 2vw;
-    line-height: 3vw;
+    right: 307px;
+    top: 48vh;
+    font-size: 2vh;
+    line-height: 3vh;
     height: 3vh;
     cursor: pointer;
 }
@@ -265,17 +261,18 @@
 .right-bar-info-block {
     position: absolute;
     left: 1vw;
-    width: 19vw;
+    width: 290px;
     height: 32vh;
     background-color: white;
+    border: 1px solid rgb(170,170,170);
 }
 
 .right-bar-info-title {
     position: absolute;
     left: 1vw;
     top: 2vh;
-    font-size: 1.1vw;
-    line-height: 1.1vw;
+    font-size: 1.125rem;
+    line-height: 1.125rem;
     color: black;
 }
 
@@ -285,8 +282,8 @@
     top: 5vh;
     width: 10vw;
     height: 30vh;
-    font-size: 0.9vw;
-    line-height: 0.9vw;
+    font-size: 0.75rem;
+    line-height: 0.75rem;
     color: rgb(133,133,133);
 }
 
@@ -296,7 +293,7 @@
    z-index: 10;
    right: 0;
    top: 0vh;
-   width: 2.5vw;
+   width: 38px;
    height: 100vh;
    border-left: 1px solid rgb(170,170,170);
 }
@@ -304,11 +301,10 @@
 .right-bar-show-button {
    position: absolute;
    color: white;
-   right: 0.5vw;
-   top: 48.5vh;
-   font-size: 2.5vw;
-   line-height: 2.5vw;
+   right: 8px;
+   top: 48vh;
    height: 3vh;
+   line-height: 3vh;
    cursor: pointer;
 }
 
@@ -316,7 +312,7 @@
    position: absolute;
    color: rgb(133,133,133);
    height: 4vh;
-   font-size: 0.7vw;
+   font-size: 0.625rem;
    background-image: url("../images/dropdown.png");
    background-position: right center;
    background-size: cover;
@@ -327,38 +323,20 @@
     margin-left: -50px;
 }
 
-/*
-.dropdown {
-   position: absolute;
-   background-color: white;
-   color: rgb(133,133,133);
-   height: 4vh;
-   font-size: 1.1vw;
-    border-radius: 10px;
-   background-image: url("../images/dropdown.png");
-   background-position: right top;
-   background-size: cover;
-   background-repeat: no-repeat;
-}
-*/
-
 #after-loading .icon {
    position: absolute;
    cursor: pointer;
-   width: 5.0vw;
+   width: 9.6vh;
    height: 9.6vh;
    border-style: solid;
    border-color: rgb(170,170,170);
    border-radius: 5px;
-   border-left-width: 0.2vw;
-   border-right-width: 0.2vw;
-   border-top-width: 0.3vh;
-   border-bottom-width: 0.3vh;
+   border-width: 2px;
 }
 
 .icon-selected {
    position: absolute;
-   width: 5.0vw;
+   width: 9.6vh;
    height: 9.6vh;
    border-style: solid;
    border-color: rgb(170,170,170);
@@ -371,14 +349,14 @@
 }
 
 .empty-triangle {
-    font-size: 2vw;
+    font-size: 1.875rem;
     transition: 0.4s;
 }
 
 .empty-triangle:hover {
     color: rgb(49, 137, 255);
     transition: 0.4s;
-    font-size: 1.5vw;
+    font-size: 1.5rem;
 }
 
 #after-loading {
@@ -392,3 +370,17 @@ body{
 .white-text {
     color: rgb(66,66,66);
 }
+
+/* Resizing of the screen
+
+@media (max-width: 1300px) {
+    .left-bar-shown {
+        width: 25vw;
+    }
+
+    .right-bar-shown {
+        width: 25vw;
+    }
+}
+
+*/
