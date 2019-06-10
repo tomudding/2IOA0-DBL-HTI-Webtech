@@ -8,7 +8,16 @@ from graphion.graphing.nodelink.graph import generateForceDirectedDiagram, gener
 from time import time
 
 def is_global():
+    global APP_CONTEXT
     if 'APP_CONTEXT' in globals():
+        return True
+    return False
+
+def is_user_loaded(sid):
+    global APP_CONTEXT
+    if not(is_global()):
+        return False
+    if sid in APP_CONTEXT['data']:
         return True
     return False
 
