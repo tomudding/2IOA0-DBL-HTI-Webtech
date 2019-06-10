@@ -39,6 +39,7 @@ from tornado.ioloop import IOLoop
 
 # constants
 SECRET_KEY = "2718281828459045235360287471352662497757247093699959574966967627724076630353547594571382178525166427"
+SEED = 2464195387
 UPLOAD_FOLDER = 'uploads'               #
 TOKEN_SIZE = 16                         #
 BUFFER_SIZE = 100000                    #
@@ -46,6 +47,7 @@ MAX_CONTENT_LENGTH = 1000 * 1024 * 1024 # limit file upload size to 1 GB
 
 # app configurations
 server.config['SECRET_KEY'] = SECRET_KEY
+server.config['SEED'] = SEED
 server.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 server.config['TOKEN_SIZE'] = TOKEN_SIZE
 server.config['BUFFER_SIZE'] = BUFFER_SIZE

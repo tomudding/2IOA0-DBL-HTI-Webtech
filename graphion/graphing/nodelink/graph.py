@@ -1,11 +1,12 @@
 """
 Author(s): Tom Udding, Steven van den Broek, Yuqing Zeng, Tim van de Klundert, Sam Baggen
 Created: 2019-05-03
-Edited: 2019-06-08
+Edited: 2019-06-10
 """
 from bokeh.plotting import figure, reset_output
 from bokeh.models import Circle, ColumnDataSource
 from community import best_partition
+from graphion import server
 from graphion.graphing.parser import processCSVMatrix
 from holoviews import opts, renderer, extension
 from holoviews.element.graphs import Graph
@@ -92,7 +93,7 @@ def generateNodeLinkDiagram(df, diagramType):
             Create NetworkX graph layout manager
             """
             if diagramType == "FORCE":
-                layout = spring_layout(G, k=1.42 / sqrt(number_of_nodes(G)))
+                layout = spring_layout(G, k=1.42 / sqrt(number_of_nodes(G)), seed=server.config['SEED'])
                 # print(layout)
             elif diagramType == "HIERARCHICAL":
                 # TODO: refactor hierarchical code from Sophia
