@@ -90,9 +90,7 @@ def generate_degree_selection(df, cutoff_l = 60, cutoff_r = 80, dir = "in"):
             output_lst.append(out_degree)
             #if(out_degree < cutoff_l or out_degree > cutoff_r):
             #    del_lst.append(i)
-        print(output_lst)
         del_lst = degree_bisect(np.array(output_lst), cutoff_l, cutoff_r)
-        print(del_lst)
 
 
     elif dir == "in":
