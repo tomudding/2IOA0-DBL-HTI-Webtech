@@ -40,7 +40,7 @@ Edited: 2019-06-10
 						<div id="nodelink-load"><canvas id="nodelink-loading"></canvas></div>
 						<div id="nodelink-plot"></div>
 					</div>
-					<div class="col-s-6" id="matrix">
+					<div class="col-s-6" id="matrix-container">
 						<p id="matrix-text">Loading matrix...</p>
 						<div id="matrix-load"><canvas id="matrix-loading"></canvas></div>
 						<div id="matrix-plot"></div>
@@ -169,7 +169,7 @@ Edited: 2019-06-10
 						draw();
 						var matrixCanvas = document.getElementById("matrix-loading");
 						var matrixContext = matrixCanvas.getContext('2d');
-						var matrixDiv = document.getElementById("matrix");
+						var matrixDiv = document.getElementById("matrix-container");
 						var matrixWidth = matrixDiv.clientWidth - 5;
 						var matrixHeight = (matrixDiv.clientHeight) - 5;
 						matrixCanvas.width = matrixWidth;
@@ -275,7 +275,7 @@ Edited: 2019-06-10
 				<img class="icon" id="hierarchical" onclick="displayDiagram('hierarchical')" src="/static/images/icons/icon-hierarchical-diagram-black.svg" style="left: 125px; top: 29.8vh;">
 				<div class="left-bar-screen-small" style="top: 39.8vh; left: 222px;">3D node-link diagram</div>
 				<img class="icon" id="3d" onclick="displayDiagram('3d')" src="/static/images/icons/icon-3d-diagram-black.svg" style="left: 222px; top: 29.8vh;">
-				
+
 				<!-- Screen divisor  -->
 				<div class="left-bar-screen-separator"></div>
 
@@ -312,9 +312,8 @@ Edited: 2019-06-10
 	                <option value="braycurtis">Braycurtis</option>
 				</select>
 
-				<div class="left-bar-screen-small" style="top: 61.6vh; left: 23px;
-				width: 5.4vw;">Adjacency matrix</div>
-				<img class="icon" id="matrix-icon" src="/static/images/icons/icon-matrix-black.svg" style="left: 23px; top: 50vh; width: 11vh; height: 11vh;">
+				<div class="left-bar-screen-small" style="top: 60vh; left: 2.2vw; width: 5.4vw;">Adjacency matrix</div>
+				<img class="icon-selected" id="matrix" onclick="displayMatrix()" src="/static/images/icons/icon-matrix-black.svg" style="left: 2.2vw; top: 49.8vh;">
 
 
 				<!-- Rezize option -->

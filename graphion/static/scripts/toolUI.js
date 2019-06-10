@@ -1,5 +1,5 @@
-/* 
-Authors: Sam Baggen, Steven van den Broek, Tom Udding(?)
+/*
+Authors: Sam Baggen, Steven van den Broek, Tom Udding
 Created: Unkown...
 Last Edited: 2019-06-06
 */
@@ -45,7 +45,7 @@ function darkMode(){
     }
 }
 
-/* 
+/*
 function changeIconSelectedBackgroundColorToBlue(){
     var iconSelected = document.getElementsByClassName('icon-selected');
     for (var i = 0; i < iconSelected.length; i++) {
@@ -114,6 +114,23 @@ function displayDiagram(id){
         } else {
             // TODO switch to 3d view
         }
+    }
+}
+
+function displayMatrix() {
+    var targetNode = document.getElementById("matrix");
+    var currentState = (targetNode.className == "icon-selected") ? true : false;
+
+    var bokehCanvases = document.querySelectorAll(".bk.bk-canvas")
+    var bokehDiagramCanvasAncestor = bokehCanvases[0].parentElement.parentElement.parentElement;
+    var bokehMatrixCanvasAncestor = bokehCanvases[1].parentElement.parentElement.parentElement.parentElement;
+
+    if (currentState == true) {
+        targetNode.className = "icon";
+        bokehMatrixCanvasAncestor.style.display = "none";
+    } else {
+        targetNode.className = "icon-selected";
+        bokehMatrixCanvasAncestor.style.display = "block";
     }
 }
 

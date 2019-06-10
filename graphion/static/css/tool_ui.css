@@ -2,22 +2,22 @@
  * Author(s): Tim van de Klundert, Anton Vellikok
  * Created: 2019-05-27
  * Edited: 2019-06-10
- */
+**/
 
- .bokeh-container {
+.bokeh-container {
     margin: 0 auto;
 }
 
- .icon-container {
+.icon-container {
     margin-left: 8.2vw;
     margin-top: 17.3vh;
- }
+}
 
- .graphion-bold {
+.graphion-bold {
     font-weight: 400;
- }
+}
 
- .left-bar-shown {
+.left-bar-shown {
     background-color: #F7F7F7;
     position: absolute;
     z-index: 10;
