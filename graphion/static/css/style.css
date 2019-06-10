@@ -1,13 +1,13 @@
 /**
  * Author(s): Tom Udding, Anton Vellikok
  * Created: 2019-04-29
- * Edited: 2019-05-14
+ * Edited: 2019-06-10
  */
 
 /*######################
   ########  ALL  #######
   ######################*/
-  * {
+* {
     padding: 0;
     margin: 0;
     font-family: Roboto, sans-serif;
@@ -74,7 +74,6 @@ a, a:visited, a:hover, a:focus {
     margin-top: 23vh;
     display: inline-block;
     letter-spacing: 5px;
-
 }
 
 .bb-graphion {
@@ -100,7 +99,6 @@ a, a:visited, a:hover, a:focus {
     display: inline-block;
     padding: 0.125rem 0.75rem;
     font-weight: 400;
-    color: rgb(85, 85, 85);
     letter-spacing: 0.125rem;
     border: 0.1875rem solid rgb(255, 255, 255);
     background-color: rgb(255, 255, 255);
@@ -111,8 +109,12 @@ a, a:visited, a:hover, a:focus {
     transition: 0.6s;
 }
 
+.ctrl-menu-button {
+    color: rgb(85, 85, 85) !important;
+}
+
 .ctrl-menu-launch-button {
-    color: rgb(49, 137, 255);
+    color: rgb(49, 137, 255) !important;
 }
 
 .ctlr-menu-button:hover {
