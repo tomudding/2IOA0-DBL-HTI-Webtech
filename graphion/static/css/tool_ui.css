@@ -4,8 +4,12 @@
  * Edited: 2019-06-06
  */
 
+.bokeh-container {
+    margin: 0 auto;
+}
+
  .icon-container {
-    margin-left: 8.2vw; 
+    margin-left: 8.2vw;
     margin-top: 17.3vh;
  }
 
@@ -182,7 +186,7 @@
    -webkit-transition: .4s;
    transition: .4s;
  }
- 
+
  .slider:before {
    position: absolute;
    content: "";
@@ -194,15 +198,15 @@
    -webkit-transition: .4s;
    transition: .4s;
  }
- 
+
  input:checked + .slider {
    background-color: rgb(49, 137, 255);
  }
- 
+
  input:focus + .slider {
    box-shadow: 0 0 1px rgb(49, 137, 255);
  }
- 
+
  input:checked + .slider:before {
    -webkit-transform: translateX(26px);
    -ms-transform: translateX(26px);
@@ -213,7 +217,7 @@
  .slider.round {
    border-radius: 34px;
  }
- 
+
  .slider.round:before {
    border-radius: 50%;
  }

@@ -31,7 +31,7 @@ Edited: 2019-06-10
 		<!-- jQuery for post methods... -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 	</head>
-	<body>
+	<body class="valign-wrapper">
 		<section class="body-wrapper" id="loading-screen">
 			<div class="container">
 				<div class="row">
@@ -51,7 +51,7 @@ Edited: 2019-06-10
 						var context = canvas.getContext('2d');
 						var div = document.getElementById("nodelink");
 						var width = div.clientWidth - 5;
-						var height = (div.clientHeight * 4) - 5;
+						var height = (div.clientHeight * 3) - 5;
 						canvas.width = width;
 						canvas.height = height;
 						var graph = {
@@ -418,6 +418,8 @@ Edited: 2019-06-10
 			</div>
 
 		</div>
-		<div style="z-index: 1; position: absolute; left: 4vw;">{{ script|safe }}</div>
+		<div class="bokeh-container valign">
+			<div>{{ script|safe }}</div>
+		</div>
 	</body>
 </html>
