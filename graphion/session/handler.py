@@ -1,7 +1,7 @@
 """
 Author(s): Tom Udding, Steven van den Broek
 Created: 2019-06-09
-Edited: 2019-06-10
+Edited: 2019-06-12
 """
 from graphion.graphing.matrix.protomatrix import makeMatrix
 from graphion.graphing.nodelink.graph import generateForceDirectedDiagram, generateHierarchicalDiagram, generateRadialDiagram, generate3DDiagram, generateNodeLinkDiagram
@@ -38,20 +38,31 @@ def set_custom_key(key, value, sid):
     global APP_CONTEXT
     APP_CONTEXT['data'][sid][key] = value
 
+def set_current_dataset(id, sid):
+    global APP_CONTEXT
+    APP_CONTEXT['data'][sid]['dataset_id'] = id
+
+def get_current_dataset(sid):
+    global APP_CONTEXT
+    if not('dataset_id' in APP_CONTEXT['data'][sid]):
+        return None
+    return APP_CONTEXT['data'][sid]['dataset_id']
+
 def get_df(sid):
     global APP_CONTEXT
     if not('df' in APP_CONTEXT['data'][sid]):
         return None
     return APP_CONTEXT['data'][sid]['df'].copy()
 
-def set_df(input, sid):
+def set_df(df, id, sid):
     if not(is_global()):
         global APP_CONTEXT
         APP_CONTEXT = {'sessions': {}, 'data': {}}
     if APP_CONTEXT['sessions'].get(sid, None) is None:
         APP_CONTEXT['sessions'][sid] = time() # store current time for when we want to prune the variable
         APP_CONTEXT['data'][sid] = {}
-    APP_CONTEXT['data'][sid]['df'] = input
+    set_current_dataset(id, sid)
+    APP_CONTEXT['data'][sid]['df'] = df
 
 def get_filtered_df(sid):
     global APP_CONTEXT

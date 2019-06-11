@@ -1,12 +1,12 @@
 """
 Author(s): Tom Udding, Steven van den Broek
 Created: 2019-05-01
-Edited: 2019-06-10
+Edited: 2019-06-12
 """
 from flask import Blueprint, flash, redirect, render_template, request, session
 from graphion import server
 from graphion.graphing.generator import generateBokehApp
-from graphion.session.handler import get_filtered_df, is_global, is_user_loaded, set_matrix_df
+from graphion.session.handler import get_filtered_df, is_global, is_user_loaded, set_matrix_df, get_current_dataset
 from bokeh.embed import server_document
 import os
 import time
@@ -18,12 +18,17 @@ visualiseBlueprint = Blueprint('visualiseBlueprint', __name__, template_folder='
 def visualise(file):
     if session.get("active", None) is None:
         session['active'] = True
+
     sid = request.cookies.get(server.config['SESSION_COOKIE_NAME'])
     if not(is_global()) or not(is_user_loaded(sid)):
         if file is None:
             return redirect("/selection")
         else:
             return redirect("/filter/%s" % file)
+
+    if not(get_current_dataset(sid) == file):
+        return redirect("/visualise/%s" % get_current_dataset(sid))
+
     if get_filtered_df(sid) is None or get_filtered_df(sid).size == 0:
         if file is None:
             flash("No dataset has been selected. Please select a previously uploaded dataset or upload a new dataset.", "danger")
