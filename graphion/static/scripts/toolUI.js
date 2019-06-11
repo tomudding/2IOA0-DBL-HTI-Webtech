@@ -1,7 +1,7 @@
 /*
 Authors: Sam Baggen, Steven van den Broek, Tom Udding
 Created: Unkown...
-Last Edited: 2019-06-06
+Last Edited: 2019-06-12
 */
 
 function darkMode(){
@@ -121,16 +121,15 @@ function displayMatrix() {
     var targetNode = document.getElementById("matrix");
     var currentState = (targetNode.className == "icon-selected") ? true : false;
 
-    var bokehCanvases = document.querySelectorAll(".bk.bk-canvas")
-    var bokehDiagramCanvasAncestor = bokehCanvases[0].parentElement.parentElement.parentElement;
-    var bokehMatrixCanvasAncestor = bokehCanvases[1].parentElement.parentElement.parentElement.parentElement;
+    var screen1 = document.querySelector(".screen-1");
+    var screen2 = document.querySelector(".screen-2");
 
     if (currentState == true) {
         targetNode.className = "icon";
-        bokehMatrixCanvasAncestor.style.display = "none";
+        screen2.style.display = "none";
     } else {
         targetNode.className = "icon-selected";
-        bokehMatrixCanvasAncestor.style.display = "block";
+        screen2.style.display = "block";
     }
 }
 

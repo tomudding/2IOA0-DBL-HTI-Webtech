@@ -1,7 +1,7 @@
 """
 Author(s): Tom Udding, Steven van den Broek, Yuqing Zeng, Tim van de Klundert, Sam Baggen
 Created: 2019-05-03
-Edited: 2019-06-10
+Edited: 2019-06-12
 """
 from bokeh.plotting import figure, reset_output
 from bokeh.models import Circle, ColumnDataSource
@@ -45,17 +45,6 @@ def decreaseDiagramSize(file):
     return df
 
 """
-Function to calculate edge information (positions).
-TODO: implement weights
-"""
-def calculateEdgePositions(G, layout):
-    d = dict(xs=[], ys=[])
-    for u, v, _ in G.edges(data=True):
-        d['xs'].append([layout[u][0], layout[v][0]])
-        d['ys'].append([layout[u][1], layout[v][1]])
-    return d
-
-"""
 Function to generate a node-link diagram based on a
 ```filePath```, a ```diagramType```, and ```isDirected```.
 
@@ -63,18 +52,6 @@ Returns a Panel.Column of the diagram.
 """
 def generateNodeLinkDiagram(df, diagramType):
     diagramType = diagramType.upper()
-
-    # """
-    # Create NetworkX graph object
-    # """
-    # if isDirected == False:
-    #     G = Graph(from_pandas_adjacency(df))
-    # elif isDirected == True:
-    #     G = DiGraph(from_pandas_adjacency(df))
-    # else:
-    #     # TODO: throw exception
-    #     pass
-
 
     class Nodelink(param.Parameterized):
         color_palette = param.ObjectSelector(default='kbc',
@@ -106,19 +83,6 @@ def generateNodeLinkDiagram(df, diagramType):
                 # TODO: throw exception
                 pass
 
-            # # get node and edge information from graph
-            # nodes, nodes_coordinates = zip(*sorted(layout.items()))
-            # nodes_xs, nodes_ys = list(zip(*nodes_coordinates))
-            # nodeDataSource = ColumnDataSource(dict(x=nodes_xs, y=nodes_ys, name=nodes))
-            # lineDataSource = ColumnDataSource(calculateEdgePositions(G, layout))
-            #
-            # # create plot
-            # plot = figure(plot_width=400, plot_height=400)
-            # nodeGlyph = plot.circle('x', 'y', source=nodeDataSource, size=10, line_width=1, line_color="#000000", level='overlay')
-            # lineGlyph = plot.multi_line('xs', 'ys', source=lineDataSource, line_width=1.3, color='#000000')
-
-            # if diagramType == "HIERARCHICAL":
-            #     print()
             # get node and edge information from graph
             nodes, nodes_coordinates = zip(*sorted(layout.items()))
             nodes_x, nodes_y = list(zip(*nodes_coordinates))

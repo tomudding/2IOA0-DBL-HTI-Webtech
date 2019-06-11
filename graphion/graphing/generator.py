@@ -1,7 +1,7 @@
 """
 Author(s): Tom Udding, Steven van den Broek, Sam Baggen
 Created: 2019-05-03
-Edited: 2019-06-09
+Edited: 2019-06-12
 """
 from graphion import server
 from graphion.graphing.linking import SelectEdgeCallback, SelectMatrixToNodeCallback, SelectNodeToMatrixCallback
@@ -119,14 +119,18 @@ def generateBokehApp(doc):
 
             # Link nodelink to matrix (points only)
             #SelectNodeToMatrixLink(s1[1], s2.view)
+            gridSpec = pn.GridSpec(sizing_mode='stretch_both')
 
             if self.Screen1 == "3d":
-                return pn.Row(get_custom_key(get_screen1(sid), sid), pn.Column(get_custom_key(get_screen2(sid), sid).view))
+                gridSpec[0, 0] = pn.Column(get_custom_key(get_screen1(sid), sid), css_classes=['screen-1', 'col-s-6'])
+            else:
+                screen1 = get_custom_key(get_screen1(sid), sid)
+                screen1.color_palette = self.Color_palette
+                set_custom_key(get_screen1(sid), screen1, sid)
+                gridSpec[0, 0] = pn.Column(get_custom_key(get_screen1(sid), sid).view, css_classes=['screen-1', 'col-s-6'])
 
-            screen1 = get_custom_key(get_screen1(sid), sid)
-            screen1.color_palette = self.Color_palette
-            set_custom_key(get_screen1(sid), screen1, sid)
-            return pn.Row(get_custom_key(get_screen1(sid), sid).view, pn.Column(get_custom_key(get_screen2(sid), sid).view))
+            gridSpec[0, 1] = pn.Column(get_custom_key(get_screen2(sid), sid).view, css_classes=['screen-2', 'col-s-6'])
+            return gridSpec
 
     df = get_filtered_df(sid)
     visApp = VisApp()
