@@ -403,6 +403,7 @@ a, a:visited, a:hover, a:focus {
     position: -webkit-sticky;
     position: sticky;
     top: 0;
+    border: 2px solid black;
 }
 
 @media (max-width: 1000px) {
