@@ -115,14 +115,12 @@ def generate_selection(file, kind="degree", dir="in", dataframe=False):
             """
         type_dependent2 = """
         amount = result;
-        
-             colored_amount = "<span style='color:red; font-weight:bold'>" + amount + "</span>"
-                    if (amount < 600){
-                        colored_amount = "<span style='color:orange; font-weight:bold'>" + amount + "</span>"
-                    }
-                    if (amount < 150){
-                        colored_amount = "<span style='color:green; font-weight:bold'>" + amount + "</span>"
-                    }
+            let hue = 120 - amount/5;
+            if (hue < 0){
+                hue = 0;
+            }
+            colored_amount = `<span style='color: hsl(${hue},100%,43%); font-weight:bold'>` + amount + "</span>"
+                   
             let lower = Math.ceil(geometry.x0);
             let upper = Math.floor(geometry.x1);
             if(lower < 0){
@@ -147,14 +145,11 @@ def generate_selection(file, kind="degree", dir="in", dataframe=False):
 
         type_dependent2 = """
         amount = result;
-        
-            colored_amount = "<span style='color:red; font-weight:bold'>" + amount + "</span>"
-        if (amount < 4000){
-        colored_amount = "<span style='color:orange; font-weight:bold'>" + amount + "</span>"
+        let hue = 120 - amount/20;
+        if (hue < 0){
+            hue = 0;
         }
-        if (amount < 1500){
-        colored_amount = "<span style='color:green; font-weight:bold'>" + amount + "</span>"
-        }
+        colored_amount = `<span style='color: hsl(${hue},100%,43%); font-weight:bold'>` + amount + "</span>"
         
         let lower = Math.ceil(geometry.x0*100)/100
         if(lower < 0){
