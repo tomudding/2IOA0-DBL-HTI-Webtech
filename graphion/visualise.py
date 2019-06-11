@@ -6,7 +6,7 @@ Edited: 2019-06-10
 from flask import Blueprint, flash, redirect, render_template, request, session
 from graphion import server
 from graphion.graphing.generator import generateBokehApp
-from graphion.session.handler import get_filtered_df, is_global, is_user_loaded
+from graphion.session.handler import get_filtered_df, is_global, is_user_loaded, set_matrix_df
 from bokeh.embed import server_document
 import os
 import time
@@ -30,6 +30,9 @@ def visualise(file):
             return redirect("/selection")
         else:
             return redirect("/filter/%s" % file)
+
+    # Set the dataframe with edges for the matrix
+    set_matrix_df(sid)
 
     if "gunicorn" in os.environ.get("SERVER_SOFTWARE", ""):
         script = server_document('https://graphion.uddi.ng:%d/bkapp' % server.config['PORT'], relative_urls=False, resources=None, arguments={'sid': sid})

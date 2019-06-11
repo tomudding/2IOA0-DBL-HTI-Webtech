@@ -10,7 +10,9 @@ from graphion.filtering.distribution_selection import generate_selection
 from graphion.filtering.filter_dataframe import generate_degree_selection, fetch_edge_count, filter_df_weight
 import time
 
-from graphion.session.handler import get_partially_filtered_df, get_almost_filtered_df, get_df, set_almost_filtered_df, set_partially_filtered_df, set_filtered_df, set_left_weight, get_left_weight, set_right_weight, get_right_weight
+from graphion.session.handler import get_partially_filtered_df, get_almost_filtered_df, get_df,\
+    set_almost_filtered_df, set_partially_filtered_df, set_filtered_df, set_left_weight,\
+    get_left_weight, set_right_weight, get_right_weight
 
 from os.path import exists
 import os

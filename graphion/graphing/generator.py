@@ -8,7 +8,7 @@ from graphion.graphing.linking import SelectEdgeCallback, SelectMatrixToNodeCall
 from graphion.graphing.linking import SelectEdgeLink, SelectMatrixToNodeLink, SelectNodeToMatrixLink
 from graphion.session.handler import get_custom_key, set_custom_key, get_filtered_df, set_screen1, get_screen1, \
     set_screen2, get_screen2, populate_3d_diagram, populate_force_diagram, populate_hierarchical_diagram,\
-    populate_matrix, populate_radial_diagram, get_visualisations_app, set_visualisations_app, reset_plots
+    populate_matrix, populate_radial_diagram, get_visualisations_app, set_visualisations_app, reset_plots, get_matrix_df
 import os
 import panel as pn
 import time
@@ -83,24 +83,29 @@ def generateBokehApp(doc):
                                              objects=['kbc', 'kgy', 'bgy', 'bmw', 'bmy', 'cividis', 'dimgray', 'fire',
                                                       'inferno', 'viridis'])
 
+        def __init__(self, datashaded = True):
+            self.datashaded = datashaded
+
+            super(VisApp, self).__init__()
+
         @param.depends('Screen1', 'Screen2', 'Ordering', 'Metric', 'Color_palette')
         def view(self):
             if self.Screen1 == "radial":
                 set_screen1("radial", sid)
-                populate_radial_diagram(df, sid)
+                populate_radial_diagram(df, sid, datashaded=self.datashaded)
             if self.Screen1 == "force":
                 set_screen1("force", sid)
-                populate_force_diagram(df, sid)
+                populate_force_diagram(df, sid, datashaded=self.datashaded)
             if self.Screen1 == "hierarchical":
                 set_screen1("hierarchical", sid)
-                populate_hierarchical_diagram(df, sid)
+                populate_hierarchical_diagram(df, sid, datashaded=self.datashaded)
             if self.Screen1 == "3d":
                 set_screen1("3d", sid)
                 populate_3d_diagram(df, sid)
             # print(s1[1])
             if self.Screen2 == "matrix":
                 set_screen2("matrix", sid)
-                populate_matrix(df, sid)
+                populate_matrix(get_matrix_df(sid), sid)
                 screen2 = get_custom_key(get_screen2(sid), sid)
                 screen2.reordering = self.Ordering
                 screen2.metric = self.Metric
@@ -133,7 +138,7 @@ def generateBokehApp(doc):
             return gridSpec
 
     df = get_filtered_df(sid)
-    visApp = VisApp()
+    visApp = VisApp(datashaded=False)
     set_visualisations_app(visApp, sid)
 
     # begin = time.time()

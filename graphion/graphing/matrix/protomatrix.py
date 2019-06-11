@@ -35,12 +35,31 @@ def makeMatrix(file, nl, df=False):
     df.set_index([df.columns], inplace=True)
 
     df_original = df.copy()
-    # %%
-    # convert similarity into unsimilarity (1.0 - similarity)
-    # begin = time.time()
-    for name in names:
-        df[name] = 1 - df[name]
-    # print("Matrix, inverting values took: " + str(time.time()-begin))
+
+    def remove_noise(df):
+        noise = []
+        global names
+        # print(names)
+        names = df.columns.tolist()
+
+        for name in names:
+            if (len(df[name][df[name] == 0]) == len(names)):
+                noise.append(name)
+
+        for name in noise:
+            names.remove(name)
+
+        df.drop(noise, inplace=True)
+        df.drop(noise, axis=1, inplace=True)
+        names = df.columns.tolist()
+        return df
+
+    def invert_df(df):
+        for name in df.columns:
+            df[name] = 1 - df[name]
+
+        return df
+        # print(df)
     # %%
     # This is just the method online: https://gmarti.gitlab.io/ml/2017/09/07/how-to-sort-distance-matrix.html
     # We have to clean data and modified the method
@@ -65,9 +84,12 @@ def makeMatrix(file, nl, df=False):
                     traversal_tree(hier_tree, number_of_node, int(hier_tree[current_index - number_of_node][0])))
 
     # %%
-    def compute_serial_matrix(df, method="ward", dist_metric="euclidean"):
+    def compute_serial_matrix(df, method="ward", dist_metric="euclidean", calc_pdist=True):
         # define the dist_mat by different dist_metric mathod in fast_clustering package
-        dist_mat = squareform(pdist(df, metric=dist_metric))
+        if calc_pdist:
+            dist_mat = squareform(pdist(df, metric=dist_metric))
+        else:
+            dist_mat = df
         # hierar tree was got from package "fast-clustering"
         hierar_tree = linkage(squareform(dist_mat), method=method, preserve_input=True)
         # The order implied by the hierarhical tree
@@ -76,9 +98,11 @@ def makeMatrix(file, nl, df=False):
 
     # linkage(squareform(pdist(df, metric="euclidean")), method="ward",preserve_input=True)
     # %%
+
+    # %%
     # order original matrix based on index provided
     def author_reorder_list(df, order):
-        new_names = df.columns
+        new_names = df.columns.tolist()
         return [new_names[i] for i in order]
 
     def reordercol(df, order):
@@ -103,11 +127,12 @@ def makeMatrix(file, nl, df=False):
 
     # %%
     def to_liquid(matrix):
-        solid = pd.DataFrame(matrix)
+        # print(len(names))
+        solid = pd.DataFrame(matrix.copy())
         solid.index = names
         solid.columns = names
         solid.reset_index(inplace=True)
-        liquid = solid.melt(id_vars='index', value_vars=list(df.columns[0:]), var_name="name2")
+        liquid = solid.melt(id_vars='index', value_vars=list(names), var_name="name2")
         liquid.columns = ['index2', 'index1', 'value']
         liquid = liquid[['index1', 'index2', 'value']]
         # print(liquid)
@@ -127,23 +152,80 @@ def makeMatrix(file, nl, df=False):
         # print(liquid)
         return liquid
 
-    # %%
     def dis_to_similarity(grid):
         nrows = len(grid)
         ncols = len(grid[0])
         for i in range(nrows):
             for j in range(ncols):
                 grid[i][j] = 1 - grid[i][j]
-                # %%
 
     pn.extension()
 
-    select_tool = BoxSelectTool()
+    class SelectLink(Link):
+        _requires_target = True
 
-    result = to_liquid(df_original.values)
-    hm = hv.HeatMap(result).opts(tools=['tap', select_tool, 'hover'], active_tools=['box_select'],
-                                 height=550, width=600, xaxis=None, yaxis=None, cmap=palette['kbc'])
-    current_data = hm.data
+    class SelectCallback(LinkCallback):
+
+        source_model = 'selected'
+        # source_handles = ['cds']
+        on_source_changes = ['indices']
+
+        target_model = 'selected'
+
+        source_code = "let len = {}".format(len(names)) + """
+            let new_indices = []
+            for (let i = 0; i < source_selected.indices.length; i++){
+                let index = source_selected.indices[i]
+                j = len-1-(index%len)+Math.floor(index/(len))*(len)
+                new_indices[i] = j
+            }
+            target_selected.indices = new_indices
+        """
+
+    SelectLink.register_callback('bokeh', SelectCallback)
+
+    # table = hv.Table(current_data)
+    # SelectLink(hm, table)
+    # SelectLink(table, hm)
+
+    class SelectedDataLink(Link):
+        _requires_target = True
+
+    class SelectedDataCallback(LinkCallback):
+
+        source_model = 'selected'
+        source_handles = ['cds']
+        on_source_changes = ['indices']
+
+        target_model = 'cds'
+
+        source_code = "let len = {}".format(len(names)) + """
+            let new_indices = []
+            for (let i = 0; i < source_selected.indices.length; i++){
+                let index = source_selected.indices[i]
+                j = len-1-(index%len)+Math.floor(index/(len))*(len)
+                new_indices[i] = j
+            }
+            var inds = source_selected.indices
+            var d = source_cds.data
+
+            selected_data = {}
+            selected_data['index1'] = []
+            selected_data['index2'] = []
+            selected_data['value'] = []
+            selected_data['zvalues'] = []
+
+            for (var i = 0; i < inds.length; i++){
+                selected_data['index1'].push(d['index1'][inds[i]])
+                selected_data['index2'].push(d['index2'][inds[i]])
+                selected_data['value'].push(d['value'][inds[i]])
+                selected_data['zvalues'].push(d['zvalues'][inds[i]])
+            }
+            target_cds.data = selected_data
+
+        """
+
+    SelectedDataLink.register_callback('bokeh', SelectedDataCallback)
 
     class Matrix_dropdown(param.Parameterized):
         reordering = param.ObjectSelector(default="none",
@@ -153,62 +235,67 @@ def makeMatrix(file, nl, df=False):
                                       objects=["euclidean", "minkowski", "cityblock", "sqeuclidean", "cosine",
                                                "correlation", "hamming", "jaccard", "chebyshev", "canberra",
                                                "braycurtis"])
-        color_palette = param.ObjectSelector(default='kbc',
+        color_palette = param.ObjectSelector(default='cividis',
                                              objects=['kbc', 'kgy', 'bgy', 'bmw', 'bmy', 'cividis', 'dimgray', 'fire',
                                                       'inferno', 'viridis'])
 
-        def view(self, show_only_selection=True):
-            global selection
-            global current_data
-            global hm
+        def __init__(self, calc_pdist=True, show_only_selection=True):
+            self.show_only_selection = show_only_selection
+            self.calc_pdist = calc_pdist
+            super(Matrix_dropdown, self).__init__()
+
+        @param.depends('reordering', 'metric', 'color_palette')
+        def view(self):
             if self.reordering == "none":
-                # if 'selection' in globals():
-                #     selection.clear()
+                result = to_liquid(df_original.copy().values)
 
-                result = to_liquid(df_original.values)
-                # return result.hvplot.heatmap('index1', 'index2', 'value', invert=True, tools=['tap', select_tool],
-                #          height=500, width=600, flip_yaxis=True, xaxis=None, yaxis=None, cmap=palette['kbc'])
+                hm = hv.HeatMap(result).opts(tools=['tap', 'box_select', 'hover'], active_tools=['box_select'],
+                                             height=500, width=550, xaxis=None, yaxis=None, cmap=self.color_palette,
+                                             colorbar=True, toolbar='above')
 
-                hm = hv.HeatMap(result).opts(tools=['tap', select_tool, 'hover'], toolbar='above', active_tools=['box_select'],
-                                             height=500, width=530, xaxis=None, yaxis=None, cmap=self.color_palette,
-                                             colorbar=True)
-                current_data = hm.data
-                table = hv.Table(current_data)
-                table.opts(height=500)
+                # FOR LINKING TESTING
+                # current_data = hm.data
+                # table = hv.Table(current_data)
+                # table.opts(height=500)
+                #
+                # if self.show_only_selection:
+                #     SelectedDataLink(hm, table)
+                # else:
+                #     SelectLink(hm, table)
+                #     SelectLink(table, hm)
 
-                # print(plot)
-                #select = SelectMatrixToNodeLink(hm, plot, indices=names)
-                # select.register_callback('bokeh', SelectMatrixToNodeCallback)
-
-                return hm
                 # return pn.Row(hm, table)
-                # selection = Selection1D(source=hm, subscribers=[print_info])
-                # return hv.DynamicMap(lambda index: hm, streams=[selection])
+                return hm
+
             else:
-                #             if 'selection' in globals():
-                #                 selection.clear()
-                res_order, res_linkage = compute_serial_matrix(df, self.reordering, dist_metric=self.metric)
-                reordered_matrix_col = reordercol(df, res_order)
+                inverted = invert_df(df.copy())
+
+                res_order, res_linkage = compute_serial_matrix(inverted, self.reordering, dist_metric=self.metric,
+                                                               calc_pdist=self.calc_pdist)
+
+                reordered_matrix_col = reordercol(inverted, res_order)
                 reordered_matrix = reorderrow(reordered_matrix_col, res_order)
                 dis_to_similarity(reordered_matrix)
-                # reordered_matrix = pd.DataFrame(reordered_matrix, index = author_reorder_list(df,res_order), column = author_reorder_list(df,res_order))
-                result = to_liquid_2(reordered_matrix, df, res_order)
-                hm = hv.HeatMap(result).opts(tools=['tap', select_tool, 'hover'], toolbar='above', active_tools=['box_select'],
-                                             height=500, width=530, xaxis=None, yaxis=None, cmap=self.color_palette,
-                                             colorbar=True)
-                current_data = hm.data
-                table = hv.Table(current_data)
-                table.opts(height=500)
-                # print(plot)
-                # select = SelectMatrixToNodeLink(hm, plot, indices=names)
-                # select.register_callback('bokeh', SelectMatrixToNodeCallback)
 
-                return hm
+                result = to_liquid_2(reordered_matrix, inverted, res_order)
+
+                hm = hv.HeatMap(result).opts(tools=['tap', 'box_select', 'hover'], active_tools=['box_select'],
+                                             height=500, width=550, xaxis=None, yaxis=None, cmap=self.color_palette,
+                                             colorbar=True, toolbar='above')
+                # FOR LINKING TESTING
+                # table = hv.Table(hm.data)
+                # table.opts(height=500)
+                #
+                # if self.show_only_selection:
+                #     SelectedDataLink(hm, table)
+                # else:
+                #     SelectLink(hm, table)
+                #     SelectLink(table, hm)
+                #
                 # return pn.Row(hm, table)
-                # selection = Selection1D(source=hm, subscribers=[print_info])
-                # return hv.DynamicMap(lambda index: hm, streams=[selection])
+                return hm
 
-    matrix = Matrix_dropdown(name='Adjacency Matrix')
+    matrix = Matrix_dropdown()
 
     # %%
     # hv_plot = hm + table

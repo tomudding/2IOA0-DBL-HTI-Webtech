@@ -50,7 +50,7 @@ Function to generate a node-link diagram based on a
 
 Returns a Panel.Column of the diagram.
 """
-def generateNodeLinkDiagram(df, diagramType):
+def generateNodeLinkDiagram(df, diagramType, datashaded=True):
     diagramType = diagramType.upper()
 
     class Nodelink(param.Parameterized):
@@ -120,7 +120,8 @@ def generateNodeLinkDiagram(df, diagramType):
             # begin = time.time()
             # Comment the following two/three lines to disable edgebundling and datashading.
             if max(nodeCentralities) > 0:
-                plot = bundle_graph(plot)
+                if datashaded:
+                    plot = bundle_graph(plot)
             points = plot.nodes
             points.opts(cmap=partitionColours, color='Partition', size='Centrality',
                         tools=['box_select', 'lasso_select', 'tap', 'hover'], active_tools=['wheel_zoom'], toolbar='above',
@@ -128,8 +129,11 @@ def generateNodeLinkDiagram(df, diagramType):
             return plot, points
 
         def view(self):
-            plot = dynspread(datashade(self.plot, normalization='linear', width=600, height=600, cmap=palette[self.color_palette]))
-            return plot * self.points
+            if datashaded:
+                plot = dynspread(datashade(self.plot, normalization='linear', width=600, height=600, cmap=palette[self.color_palette]))
+                return plot * self.points
+            # plot = datashade(self.plot, normalization='linear', width=600, height=600)
+            return self.plot * self.points
 
     # print("Edge bundling and datashading took: " + str(time.time()-begin))
     return Nodelink(diagramType)

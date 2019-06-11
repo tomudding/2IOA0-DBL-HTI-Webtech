@@ -70,6 +70,18 @@ def set_filtered_df(input, sid):
     global APP_CONTEXT
     APP_CONTEXT['data'][sid]['filtered_df'] = input
 
+def get_matrix_df(sid):
+    global APP_CONTEXT
+    if 'matrix_df' in APP_CONTEXT['data'][sid]:
+        if APP_CONTEXT['data'][sid]['matrix_df'] is not None:
+            return APP_CONTEXT['data'][sid]['matrix_df'].copy()
+    return get_df(sid)
+
+def set_matrix_df(sid):
+    global APP_CONTEXT
+    new_names = get_filtered_df(sid).columns
+    APP_CONTEXT['data'][sid]['matrix_df'] = get_df(sid)[new_names].loc[new_names]
+
 def get_partially_filtered_df(sid):
     global APP_CONTEXT
     if 'partially_filtered_df' in APP_CONTEXT['data'][sid]:
@@ -142,14 +154,14 @@ def populate_matrix(df, sid):
     APP_CONTEXT['data'][sid]['matrix'] = matrix
     return matrix
 
-def populate_hierarchical_diagram(df, sid):
+def populate_hierarchical_diagram(df, sid, **kwargs):
     global APP_CONTEXT
     if 'hierarchical' in APP_CONTEXT['data'][sid]:
         plot = APP_CONTEXT['data'][sid]['hierarchical']
         if plot is not None:
             return plot
     # hierarchical = generateHierarchicalDiagram(df.copy(), False, df=True)
-    hierarchical = generateNodeLinkDiagram(df.copy(), 'hierarchical')
+    hierarchical = generateNodeLinkDiagram(df.copy(), 'hierarchical', **kwargs)
     APP_CONTEXT['data'][sid]['hierarchical'] = hierarchical
     return hierarchical
 
@@ -162,23 +174,23 @@ def populate_3d_diagram(df, sid):
     APP_CONTEXT['data'][sid]['3d'] = graph3D
     return graph3D
 
-def populate_force_diagram(df, sid):
+def populate_force_diagram(df, sid, **kwargs):
     global APP_CONTEXT
     if 'force' in APP_CONTEXT['data'][sid]:
         if APP_CONTEXT['data'][sid]['force'] is not None:
             return APP_CONTEXT['data'][sid]['force']
     # force = generateForceDirectedDiagram(df.copy(), False, df=True)
-    force = generateNodeLinkDiagram(df.copy(), 'force')
+    force = generateNodeLinkDiagram(df.copy(), 'force', **kwargs)
     APP_CONTEXT['data'][sid]['force'] = force
     return force
 
-def populate_radial_diagram(df, sid):
+def populate_radial_diagram(df, sid, **kwargs):
     global APP_CONTEXT
     if 'radial' in APP_CONTEXT['data'][sid]:
         if APP_CONTEXT['data'][sid]['radial'] is not None:
             return APP_CONTEXT['data'][sid]['radial']
     # radial = generateRadialDiagram(df.copy(), False, df=True)
-    radial = generateNodeLinkDiagram(df.copy(), 'radial')
+    radial = generateNodeLinkDiagram(df.copy(), 'radial', **kwargs)
     APP_CONTEXT['data'][sid]['radial'] = radial
     return radial
 
@@ -204,3 +216,4 @@ def reset_dataframes(sid):
     global APP_CONTEXT
     APP_CONTEXT['data'][sid]['almost_filtered'] = None
     APP_CONTEXT['data'][sid]['partially_filtered'] = None
+    APP_CONTEXT['data'][sid]['matrix_df'] = None
