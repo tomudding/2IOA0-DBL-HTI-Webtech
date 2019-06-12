@@ -138,7 +138,10 @@ def generateBokehApp(doc):
             return gridSpec
 
     df = get_filtered_df(sid)
-    visApp = VisApp(datashaded=False)
+
+    #visApp = VisApp(datashaded=False)
+    visApp = VisApp()
+
     set_visualisations_app(visApp, sid)
 
     # begin = time.time()
