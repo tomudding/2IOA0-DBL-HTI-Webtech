@@ -8,7 +8,8 @@ from graphion.graphing.linking import SelectEdgeCallback, SelectMatrixToNodeCall
 from graphion.graphing.linking import SelectEdgeLink, SelectMatrixToNodeLink, SelectNodeToMatrixLink
 from graphion.session.handler import get_custom_key, set_custom_key, get_filtered_df, set_screen1, get_screen1, \
     set_screen2, get_screen2, populate_3d_diagram, populate_force_diagram, populate_hierarchical_diagram,\
-    populate_matrix, populate_radial_diagram, get_visualisations_app, set_visualisations_app, reset_plots, get_matrix_df
+    populate_matrix, populate_radial_diagram, get_visualisations_app, set_visualisations_app, reset_plots, \
+    get_matrix_df, get_datashading
 import os
 import panel as pn
 import time
@@ -140,7 +141,7 @@ def generateBokehApp(doc):
     df = get_filtered_df(sid)
 
     #visApp = VisApp(datashaded=False)
-    visApp = VisApp()
+    visApp = VisApp(datashaded=get_datashading(sid))
 
     set_visualisations_app(visApp, sid)
 
