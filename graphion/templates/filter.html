@@ -499,7 +499,9 @@ Edited: 2019-06-12
                                         <div class="col-s-12 col-0-margin">
                                             <div class="row">
                                                 <div class="footer-area">
-                                                    <button class="button pop-up-footer-button pop-up-footer-button-back" disabled>Back</button>
+                                                    <button class="button pop-up-footer-button pop-up-footer-button-back" onclick="
+                                                    document.getElementById('set-datashading-state').style.display='none';
+                                                    document.getElementById('filter-node-out-degree').style.display='block';">Back</button>
                                                     <button class="button button-primary pop-up-footer-button-continue" id="start-tool"
                                                     onclick="location.href='/visualise/{{fileName}}'">
                                                         Start the tool
