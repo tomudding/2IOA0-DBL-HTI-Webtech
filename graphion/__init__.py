@@ -68,6 +68,8 @@ from graphion.api.visualise.matrix_reordering import apiOrderBlueprint
 from graphion.api.visualise.matrix_metric import apiMetricBlueprint
 from graphion.api.visualise.matrix_palette import apiPaletteBlueprint
 from graphion.api.visualise.datashading import apiDatashadingBlueprint
+from graphion.api.visualise.nodelink_color import apiNodeColorBlueprint
+from graphion.api.visualise.nodelink_size import apiNodeSizeBlueprint
 
 # register views as blueprints
 server.register_blueprint(indexBlueprint)
@@ -80,6 +82,8 @@ server.register_blueprint(apiOrderBlueprint)
 server.register_blueprint(apiMetricBlueprint)
 server.register_blueprint(apiPaletteBlueprint)
 server.register_blueprint(apiDatashadingBlueprint)
+server.register_blueprint(apiNodeColorBlueprint)
+server.register_blueprint(apiNodeSizeBlueprint)
 
 # other stuff
 if (not isdir(server.config['UPLOAD_FOLDER'])):

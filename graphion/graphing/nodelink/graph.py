@@ -134,9 +134,26 @@ def generateNodeLinkDiagram(df, diagramType, datashaded=True):
                 outWeight = G.degree(weight='weight')
                 totalWeight = G.degree(weight='weight')
 
+            # Defining a scale to prevent ridiculous node sizes, WIP
+            maxInDegree = max(inDegree)
+            maxOutDegree = max (outDegree)
+            maxTotalDegree = max(totalDegree)
+            maxInWeight = max(inWeight)
+            maxOutWeight = max(outWeight)
+            maxTotalWeight = max(totalWeight)
+
+            minInDegree = min(inDegree)
+            minOutDegree = min (outDegree)
+            minTotalDegree = min(totalDegree)
+            minInWeight = min(inWeight)
+            minOutWeight = min(outWeight)
+            minTotalWeight = min(totalWeight)
+
+            
+
             # Making a dictionary for all attributes
             attributes = {}
-            for n in nodes:
+            for n in nodes:                
                 attributes[n] = {'indegree': inDegree[n],
                                  'outdegree': outDegree[n],
                                  'totaldegree': totalDegree[n],
@@ -153,8 +170,8 @@ def generateNodeLinkDiagram(df, diagramType, datashaded=True):
             plot = hv.Graph.from_networkx(G, layout)
 
             # disabling displaying all node info on hovering over the node
-            tooltips = [('Index', '@index')]
-            hover = HoverTool(tooltips=tooltips)
+            #tooltips = [('Index', '@index')]
+            #hover = HoverTool(tooltips=tooltips)
 
             # begin = time.time()
             # Comment the following two/three lines to disable edgebundling and datashading.
@@ -163,13 +180,14 @@ def generateNodeLinkDiagram(df, diagramType, datashaded=True):
                     plot = bundle_graph(plot)
             points = plot.nodes
             points.opts(cmap=palette[self.color_palette], color=self.node_color, size=self.node_size,
-                        tools=['box_select', 'lasso_select', 'tap', hover], active_tools=['wheel_zoom'], toolbar='above',
+                        tools=['box_select', 'lasso_select', 'tap', 'hover'], active_tools=['wheel_zoom'], toolbar='above',
                         show_legend=False, width=600, height=600)
             return plot, points
 
         def view(self):
             if datashaded:
                 plot = dynspread(datashade(self.plot, normalization='linear', width=600, height=600, cmap=palette[self.color_palette]))
+                self.points.opts(cmap=palette[self.color_palette], color=self.node_color, size=self.node_size)
                 return plot * self.points
             # plot = datashade(self.plot, normalization='linear', width=600, height=600)
             return self.plot * self.points

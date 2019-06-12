@@ -83,14 +83,20 @@ def generateBokehApp(doc):
         Color_palette = param.ObjectSelector(default='kbc',
                                              objects=['kbc', 'kgy', 'bgy', 'bmw', 'bmy', 'cividis', 'dimgray', 'fire',
                                                       'inferno', 'viridis'])
+        Node_size = param.ObjectSelector(default='totalweight', 
+                                            objects=['indegree', 'outdegree', 'totaldegree', 'inweight', 'outweight', 'totalweight'])
+
+        Node_color = param.ObjectSelector(default='totalweight', 
+                                            objects=['indegree', 'outdegree', 'totaldegree', 'inweight', 'outweight', 'totalweight'])
 
         def __init__(self, datashaded = True):
             self.datashaded = datashaded
 
             super(VisApp, self).__init__()
 
-        @param.depends('Screen1', 'Screen2', 'Ordering', 'Metric', 'Color_palette')
+        @param.depends('Screen1', 'Screen2', 'Ordering', 'Metric', 'Color_palette', 'Node_size', 'Node_color')
         def view(self):
+            print("Detected change in attributes")
             if self.Screen1 == "radial":
                 set_screen1("radial", sid)
                 populate_radial_diagram(df, sid, datashaded=self.datashaded)
@@ -132,6 +138,8 @@ def generateBokehApp(doc):
             else:
                 screen1 = get_custom_key(get_screen1(sid), sid)
                 screen1.color_palette = self.Color_palette
+                screen1.node_size = self.Node_size
+                screen1.node_color = self.Node_color
                 set_custom_key(get_screen1(sid), screen1, sid)
                 gridSpec[0, 0] = pn.Column(get_custom_key(get_screen1(sid), sid).view, css_classes=['screen-1', 'col-s-6'])
 
@@ -182,3 +190,17 @@ def changePalette(new_palette, sid):
     visApp = get_visualisations_app(sid)
     visApp.Color_palette = new_palette
     set_visualisations_app(visApp, sid)
+
+def changeNodeSize(new_size, sid):
+    visApp = get_visualisations_app(sid)
+    visApp.Node_size = new_size
+    print("Applying node sizes")
+    set_visualisations_app(visApp, sid)
+    print("Set node sizes..?")
+
+def changeNodeColor(new_color, sid):
+    visApp = get_visualisations_app(sid)
+    visApp.Node_color = new_color
+    print("Applying node colors")
+    set_visualisations_app(visApp, sid)
+    print("Set node colors..?")

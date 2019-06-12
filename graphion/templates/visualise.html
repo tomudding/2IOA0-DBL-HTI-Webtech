@@ -318,25 +318,25 @@ Edited: 2019-06-10
 
 				<!-- Rezize option -->
 				<div class="left-bar-node-labels white-text" style="top: 67vh;">Resize the nodes by:</div>
-				<select class="dropdown" style="left: 23px; top: 70vh; width: 170px;">
-					<option>In-degree</option>
-					<option>Out-degree</option>
-					<option>Total degree</option>
-					<option>Total out edge weight</option>
-					<option>Total in edge weight</option>
-					<option>Total edge weight</option>
+				<select class="dropdown"onChange = "displayNodeSize(this.value)" style="left: 23px; top: 70vh; width: 170px;">
+					<option value="indegree">In-degree</option>
+					<option value="outdegree">Out-degree</option>
+					<option value="totaldegree">Total degree</option>
+					<option value="outweight">Total out edge weight</option>
+					<option value="inweight">Total in edge weight</option>
+					<option value="totalweight">Total edge weight</option>
 				</select>
 
 
 				<!-- Recolor option -->
 				<div class="left-bar-node-labels white-text" style="top: 75.6vh;">Recolor the nodes by:</div>
-				<select class="dropdown" style="left: 23px; top: 78.5vh; width: 170px;">
-					<option>In-degree</option>
-					<option>Out-degree</option>
-					<option>Total degree</option>
-					<option>Total out edge weight</option>
-					<option>Total in edge weight</option>
-					<option selected="selected">Total edge weight</option>
+				<select class="dropdown" onChange = "displayNodeColor(this.value)" style="left: 23px; top: 78.5vh; width: 170px;">
+					<option value="indegree">In-degree</option>
+					<option value="outdegree">Out-degree</option>
+					<option value="totaldegree">Total degree</option>
+					<option value="outweight">Total out edge weight</option>
+					<option value="inweight">Total in edge weight</option>
+					<option value="totalweight" selected>Total edge weight</option>
 				</select>
 
 

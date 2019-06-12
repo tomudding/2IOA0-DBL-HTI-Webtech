@@ -144,3 +144,11 @@ function displayMetric(id){
 function displayPalette(id){
     $.post("/switch-palette", {to: id});
 }
+
+function displayNodeSize(id){
+    $.post("/switch-size", {to: id});
+}
+
+function displayNodeColor(id){
+    $.post("/switch-color", {to: id});
+}
