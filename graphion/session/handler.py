@@ -74,7 +74,7 @@ def get_filtered_df(sid):
         if APP_CONTEXT['data'][sid]['almost_filtered_df'] is not None:
             return APP_CONTEXT['data'][sid]['almost_filtered_df'].copy()
     if 'partially_filtered_df' in APP_CONTEXT['data'][sid]:
-        if APP_CONTEXT['data'][sid]['almost_filtered_df'] is not None:
+        if APP_CONTEXT['data'][sid]['partially_filtered_df'] is not None:
             return APP_CONTEXT['data'][sid]['partially_filtered_df'].copy()
     return get_df(sid)
 
