@@ -483,6 +483,7 @@ Edited: 2019-06-12
                                                 function datashade() {
                                                     var state = document.getElementById('datashading').checked;
                                                     document.getElementById('start-tool').disabled = true;
+                                                    document.getElementById('datashading-status').textContent = (state == true) ? "disabled" : "enabled";
 
                                                     $.post('/switch-datashading', {datashading: state}, function(data){
                                                         if (data == 'switched') {
@@ -491,8 +492,8 @@ Edited: 2019-06-12
                                                     });
                                                 }
                                             </script>
-                                            <input type="checkbox" name="datashading" id="datashading" onclick="datashade()"></input>
-                                            <label for="datashading" onclick="datashade()">Enable datashading?</label>
+                                            <input type="checkbox" name="datashading" id="datashading" onclick="datashade()" checked></input>
+                                            <label for="datashading" onclick="datashade()">Datashading is <strong id="datashading-status">enabled</strong></label>
                                         </div>
                                     </div>
                                     <div class="row">
