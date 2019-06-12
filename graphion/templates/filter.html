@@ -132,7 +132,7 @@ Edited: 2019-06-12
                                             function(response) {
                                                 console.log('response is', response);
                                                 //document.getElementById('weight-selection').setAttribute('hidden', true);
-                                                return response.json(); 
+                                                return response.json();
                                                 })
                                             .then(function(item) {
                                                 console.log('item is', item);
@@ -141,7 +141,7 @@ Edited: 2019-06-12
                                             });">
                                                 Cluster Type 2
                                             </button>
-                                            <button 
+                                            <button
                                                 id="start-tool-cluster"
                                                 hidden="true"
                                                 onclick="location.href='/visualise/{{fileName}}'">
@@ -492,7 +492,7 @@ Edited: 2019-06-12
                                                 function datashade() {
                                                     var state = document.getElementById('datashading').checked;
                                                     document.getElementById('start-tool').disabled = true;
-                                                    document.getElementById('datashading-status').textContent = (state == true) ? "disabled" : "enabled";
+                                                    document.getElementById('datashading-status').textContent = (state == true) ? "enabled" : "disabled";
 
                                                     $.post('/switch-datashading', {datashading: state}, function(data){
                                                         if (data == 'switched') {
