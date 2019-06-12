@@ -228,3 +228,13 @@ def reset_dataframes(sid):
     APP_CONTEXT['data'][sid]['almost_filtered'] = None
     APP_CONTEXT['data'][sid]['partially_filtered'] = None
     APP_CONTEXT['data'][sid]['matrix_df'] = None
+
+def set_datashading(state, sid):
+    global APP_CONTEXT
+    APP_CONTEXT['data'][sid]['datashading'] = state
+
+def get_datashading(sid):
+    global APP_CONTEXT
+    if not('datashading' in APP_CONTEXT['data'][sid]):
+        return True
+    return APP_CONTEXT['data'][sid]['datashading']
