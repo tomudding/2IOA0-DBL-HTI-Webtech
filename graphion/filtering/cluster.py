@@ -94,13 +94,15 @@ def generate_cluster_graph(dataframe):
 
         data.selected.js_on_change('indices', CustomJS(args=dict(data=data), code="""
                 let inds = cb_obj.indices;
-                let labels = []
+                let labels = [];
                 for (let i = 0; i < inds.length; i++){
                     let label = data.data.Label[inds[i]]
                     labels[i] = label
                 }
-                console.log(labels)
-                // $.post("/handle-cluster-callback", {'labels': labels})
+                console.log(labels);
+                $.post("/api/filter/clustering/choose/" + labels[0], function(response){
+                    document.getElementById('start-tool-cluster').hidden = false;
+                });
             """))
 
         TOOLTIPS = [
@@ -127,5 +129,5 @@ def get_dataframe_from_dot(dataframe, cluster_umber):
     cluster_n, counter, cluster_label_df = K_mean_cluster(dataframe)
     cluster_selected_index = cluster_label_df.loc[cluster_label_df['cluster_label'] == cluster_umber]
     cluster_selected_name_series = cluster_selected_index['index']
-    cluster_selected_df = df.loc[cluster_selected_name_series, cluster_selected_name_series]
+    cluster_selected_df = dataframe.loc[cluster_selected_name_series, cluster_selected_name_series]
     return cluster_selected_df
