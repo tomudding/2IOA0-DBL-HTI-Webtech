@@ -479,8 +479,20 @@ Edited: 2019-06-12
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-s-12 icon-area valign">
-                                            <input type="checkbox" name="datashading" id="datashading"></input>
-                                            <label for="datashading">Enable datashading?</label>
+                                            <script>
+                                                function datashade() {
+                                                    var state = document.getElementById('datashading').checked;
+                                                    document.getElementById('start-tool').disabled = true;
+
+                                                    $.post('/switch-datashading', {datashading: state}, function(data){
+                                                        if (data == 'switched') {
+                                                            document.getElementById('start-tool').disabled = false;
+                                                        }
+                                                    });
+                                                }
+                                            </script>
+                                            <input type="checkbox" name="datashading" id="datashading" onclick="datashade()"></input>
+                                            <label for="datashading" onclick="datashade()">Enable datashading?</label>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -488,7 +500,7 @@ Edited: 2019-06-12
                                             <div class="row">
                                                 <div class="footer-area">
                                                     <button class="button pop-up-footer-button pop-up-footer-button-back" disabled>Back</button>
-                                                    <button class="button button-primary pop-up-footer-button-continue"
+                                                    <button class="button button-primary pop-up-footer-button-continue" id="start-tool"
                                                     onclick="location.href='/visualise/{{fileName}}'">
                                                         Start the tool
                                                     </button>

@@ -13,5 +13,9 @@ apiDatashadingBlueprint = Blueprint('apiDatashadingBlueprint', __name__)
 def worker():
     sid = request.cookies.get(server.config['SESSION_COOKIE_NAME'])
     state = request.form['datashading']
+    if state.upper() == "TRUE":
+        state = True
+    else:
+        state = False
     set_datashading(state, sid)
     return "switched"

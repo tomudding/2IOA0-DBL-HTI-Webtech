@@ -62,6 +62,7 @@ def set_df(df, id, sid):
         APP_CONTEXT['sessions'][sid] = time() # store current time for when we want to prune the variable
         APP_CONTEXT['data'][sid] = {}
     set_current_dataset(id, sid)
+    set_datashading(False, sid)
     APP_CONTEXT['data'][sid]['df'] = df
 
 def get_filtered_df(sid):
