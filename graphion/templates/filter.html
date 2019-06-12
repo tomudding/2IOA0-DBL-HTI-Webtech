@@ -120,24 +120,32 @@ Edited: 2019-06-12
 								<h2 class="card-title text-center">Specify your point of interest</h2>
                                 <hr>
                                 <div class="card-body">
+                                    <div id="cluster-graph"/>
                                     <div class="row">
-                                        <div class="col-s-6 icon-area">
-                                            <img src="/static/images/clusters.svg" alt="clusters-img">
-                                            <br>
-                                            <button class="button button-primary"
-                                            onclick="
-                                            document.getElementById('choose-POI-clusters').style.display='none';">
-                                                Cluster Type 1
-                                            </button>
-                                        </div>
                                         <div class="vertical-line"></div>
                                         <div class="col-s-6 icon-area">
                                             <img src="/static/images/clusters.svg" alt="clusters-img">
                                             <br>
                                             <button class="button button-primary"
                                             onclick="
-                                            document.getElementById('choose-POI-clusters').style.display='none';">
+                                            fetch('/api/filter/clustering/graph/').then(
+                                            function(response) {
+                                                console.log('response is', response);
+                                                //document.getElementById('weight-selection').setAttribute('hidden', true);
+                                                return response.json(); 
+                                                })
+                                            .then(function(item) {
+                                                console.log('item is', item);
+                                                Bokeh.embed.embed_item(item, 'cluster-graph');
+                                                //document.getElementById('between-weight').removeAttribute('hidden');
+                                            });">
                                                 Cluster Type 2
+                                            </button>
+                                            <button 
+                                                id="start-tool-cluster"
+                                                hidden="true"
+                                                onclick="location.href='/visualise/{{fileName}}'">
+                                                        Start the tool
                                             </button>
                                         </div>
                                     </div>

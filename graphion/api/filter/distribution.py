@@ -1,18 +1,19 @@
 """
-Author(s): Steven van den Broek, Tom Udding
+Author(s): Steven van den Broek, Tom Udding, Tim van de Klundert
 Created: 2019-05-18
-Edited: 2019-06-09
+Edited: 2019-06-12
 """
 from bokeh.embed import json_item
 from flask import Flask, render_template, request, redirect, Response, Blueprint, jsonify, session
 from json import dump, dumps
 from graphion.filtering.distribution_selection import generate_selection
+from graphion.filtering.cluster import generate_cluster_graph, get_dataframe_from_dot
 from graphion.filtering.filter_dataframe import generate_degree_selection, fetch_edge_count, filter_df_weight
 import time
 
 from graphion.session.handler import get_partially_filtered_df, get_almost_filtered_df, get_df,\
     set_almost_filtered_df, set_partially_filtered_df, set_filtered_df, set_left_weight,\
-    get_left_weight, set_right_weight, get_right_weight
+    get_left_weight, set_right_weight, get_right_weight, set_cluster_filtered_df
 
 from os.path import exists
 import os
@@ -20,6 +21,23 @@ from graphion import server
 
 
 apiDegreeBlueprint = Blueprint('apiDegreeBlueprint', __name__, template_folder='templates')
+
+# If anyone feels like moving this to another file, be my guest
+@apiDegreeBlueprint.route('/api/filter/clustering/graph/', methods=['GET'], strict_slashes=False)
+def clusteringAPI():
+    print('clusteringAPI')
+    sid = request.cookies.get(server.config['SESSION_COOKIE_NAME'])
+    data = get_df(sid)
+    plot = generate_cluster_graph(data)
+    return dumps(json_item(plot))
+
+@apiDegreeBlueprint.route('/api/filter/clustering/choose/<number>', methods=['POST'], strict_slashes=False)
+def chooseClusterNumber(number):
+    print('cluster number is ' + number)
+    sid = request.cookies.get(server.config['SESSION_COOKIE_NAME'])
+    data = get_df(sid)
+    set_cluster_filtered_df(get_dataframe_from_dot(data, int(number)), sid)
+    return dumps(dict())
 
 # @apiDegreeBlueprint.route('/api/filter/distribution/<type>/<dir>/<file>', methods=['GET'], strict_slashes=False)
 @apiDegreeBlueprint.route('/api/filter/distribution/<type>/<dir>', methods=['GET'], strict_slashes=False)

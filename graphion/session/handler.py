@@ -76,11 +76,18 @@ def get_filtered_df(sid):
     if 'partially_filtered_df' in APP_CONTEXT['data'][sid]:
         if APP_CONTEXT['data'][sid]['partially_filtered_df'] is not None:
             return APP_CONTEXT['data'][sid]['partially_filtered_df'].copy()
+    if 'cluster_filtered_df' in APP_CONTEXT['data'][sid]:
+        if APP_CONTEXT['data'][sid]['cluster_filtered_df'] is not None:
+            return APP_CONTEXT['data'][sid]['cluster_filtered_df']
     return get_df(sid)
 
 def set_filtered_df(input, sid):
     global APP_CONTEXT
     APP_CONTEXT['data'][sid]['filtered_df'] = input
+
+def set_cluster_filtered_df(input, sid):
+    global APP_CONTEXT
+    APP_CONTEXT['data'][sid]['cluster_filtered_df'] = input
 
 def get_matrix_df(sid):
     global APP_CONTEXT
