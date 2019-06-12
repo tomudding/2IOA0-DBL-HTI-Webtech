@@ -1,9 +1,8 @@
 /*
-Author(s): Steven van den Broek, Anton Vellikok
+Author(s): Steven van den Broek, Anton Vellikok, Tom Udding
 Created: 2019-05-18
-Edited: 2019-06-04
+Edited: 2019-06-12
 */
-
 
 /*############################################
   #########  Page X: General outlook  ########
@@ -96,6 +95,14 @@ Edited: 2019-06-04
     display: none;
 }
 
+/**
+ *
+**/
+
+#set-datashading-state {
+    display: none;
+}
+
 /*############################################
   ##############  Help Section  ##############
   ############################################*/
@@ -121,6 +128,10 @@ Edited: 2019-06-04
 }
 
 #help-page-6 {
+    display: none;
+}
+
+#help-page-datashading {
     display: none;
 }
 

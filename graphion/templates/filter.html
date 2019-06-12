@@ -1,7 +1,7 @@
 <!--
 Author(s): Steven van den Broek, Anton Vellikok, Tom Udding
 Created: 2019-05-18
-Edited: 2019-06-06
+Edited: 2019-06-12
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -418,8 +418,9 @@ Edited: 2019-06-06
                                                         Back
                                                     </button>
                                                     <button class="button button-primary pop-up-footer-button-continue"
-                                                    onclick="location.href='/visualise/{{fileName}}'">
-                                                        Start the tool
+                                                    onclick="document.getElementById('filter-node-out-degree').style.display='none';
+                                                    document.getElementById('set-datashading-state').style.display='block';">
+                                                        Continue
                                                     </button>
                                                     <button class="button pop-up-footer-button pop-up-footer-button-help"
                                                     onclick="
@@ -458,6 +459,76 @@ Edited: 2019-06-06
                                                     onclick="
                                                     document.getElementById('help-page-5').style.display='none';
                                                     document.getElementById('filter-node-out-degree').style.display='block';">
+                                                        Back
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Page X: Enable or disable datashading -->
+                    <div class="col-s-8 col-offset-2 valign" id="set-datashading-state">
+                        <div class="card-container">
+                            <div class="card-contents">
+                                <h2 class="card-title text-center">Datashading</h2>
+                                <hr>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-s-12 icon-area valign">
+                                            <input type="checkbox" name="datashading" id="datashading"></input>
+                                            <label for="datashading">Enable datashading?</label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-s-12 col-0-margin">
+                                            <div class="row">
+                                                <div class="footer-area">
+                                                    <button class="button pop-up-footer-button pop-up-footer-button-back" disabled>Back</button>
+                                                    <button class="button button-primary pop-up-footer-button-continue"
+                                                    onclick="location.href='/visualise/{{fileName}}'">
+                                                        Start the tool
+                                                    </button>
+                                                    <button class="button pop-up-footer-button pop-up-footer-button-help"
+                                                    onclick="
+                                                    document.getElementById('help-page-datashading').style.display='block';
+                                                    document.getElementById('set-datashading-state').style.display='none';">
+                                                        Help
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Help section of page X -->
+                    <div class="col-s-8 col-offset-2 valign" id="help-page-datashading">
+                        <div class="card-container">
+                            <div class="card-contents">
+                                <h2 class="card-title text-center">Help</h2>
+                                <hr>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-s-12">
+                                            <h3 class="help-section-title">What is datashading?</h3>
+                                            <p class="help-section-paragraph">TBA</p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-s-12 col-0-margin">
+                                            <div class="row">
+                                                <div class="footer-area">
+                                                    <button class="button pop-up-footer-button pop-up-footer-button-back"
+                                                    onclick="
+                                                    document.getElementById('help-page-datashading').style.display='none';
+                                                    document.getElementById('set-datashading-state').style.display='block';">
                                                         Back
                                                     </button>
                                                 </div>

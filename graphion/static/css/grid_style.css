@@ -979,7 +979,7 @@ input[type="radio"]:not([hidden="true"]):hover + label::before {
 
 input[type="checkbox"]:checked + label::before,
 input[type="radio"]:not([hidden="true"]):checked + label::before {
-    background-color: rgb(34, 116, 165);
+    background-color: rgb(49, 137, 255);
 }
 
 input[type="checkbox"]:disabled + label,
