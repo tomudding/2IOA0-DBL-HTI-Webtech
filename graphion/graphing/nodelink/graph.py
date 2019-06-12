@@ -4,7 +4,7 @@ Created: 2019-05-03
 Edited: 2019-06-12
 """
 from bokeh.plotting import figure, reset_output
-from bokeh.models import Circle, ColumnDataSource
+from bokeh.models import Circle, ColumnDataSource, HoverTool
 from community import best_partition
 from graphion import server
 from graphion.graphing.parser import processCSVMatrix
@@ -17,7 +17,7 @@ from networkx.algorithms.centrality import degree_centrality
 from networkx.drawing.layout import circular_layout, spring_layout
 from networkx.drawing.nx_agraph import graphviz_layout
 from networkx.drawing.nx_pylab import draw_networkx_edges
-from networkx.classes.function import number_of_nodes
+from networkx.classes.function import number_of_nodes, is_directed
 import numpy as np
 from pandas import read_hdf, Series
 import panel as pn
@@ -57,6 +57,10 @@ def generateNodeLinkDiagram(df, diagramType, datashaded=True):
         color_palette = param.ObjectSelector(default='kbc',
                                              objects=['kbc', 'kgy', 'bgy', 'bmw', 'bmy', 'cividis', 'dimgray', 'fire',
                                                       'inferno', 'viridis'])
+        node_size = param.ObjectSelector(default='indegree', 
+                                            objects=['indegree', 'outdegree', 'totaldegree', 'inweight', 'outweight', 'totalweight'])
+        node_color = param.ObjectSelector(default='totalweight', 
+                                            objects=['indegree', 'outdegree', 'totaldegree', 'inweight', 'outweight', 'totalweight'])
 
         def __init__(self, diagramType):
             self.diagramType = diagramType
@@ -83,6 +87,8 @@ def generateNodeLinkDiagram(df, diagramType, datashaded=True):
                 # TODO: throw exception
                 pass
 
+            print()
+
             # get node and edge information from graph
             nodes, nodes_coordinates = zip(*sorted(layout.items()))
             nodes_x, nodes_y = list(zip(*nodes_coordinates))
@@ -90,24 +96,53 @@ def generateNodeLinkDiagram(df, diagramType, datashaded=True):
             # calculate centrality
             centrality = degree_centrality(G)
             _, nodeCentralities = zip(*sorted(centrality.items()))
-            if max(nodeCentralities) > 0:
-                centralityList = [10 + 12 * t / max(nodeCentralities) for t in nodeCentralities]
-            else:
-                centralityList = [10 + 12 * t for t in nodeCentralities]
+            # currently not used code below but can easily be used again
+            #if max(nodeCentralities) > 0:
+            #    centralityList = [10 + 12 * t / max(nodeCentralities) for t in nodeCentralities]
+            #else:
+            #    centralityList = [10 + 12 * t for t in nodeCentralities]
 
-            # create partitions
-            partition = best_partition(G)
-            _, nodePartitions = zip(*sorted(partition.items()))
+            # create partitions, currently not used but can easily be used again
+            #partition = best_partition(G)
+            #_, nodePartitions = zip(*sorted(partition.items()))
             # nodeDataSource.add(nodePartitions, 'partition')
-            partitionColours = ["#b2182b", "#d6604d", "#f4a582", "#fddbc7", "#f7f7f7", "#d1e5f0", "#92c5de", "#4393c3",
-                                "#2166ac"]  # safe to use for colourblind people
-            partitionList = [partitionColours[t % len(partitionColours)] for t in nodePartitions]
+            #partitionColours = ["#b2182b", "#d6604d", "#f4a582", "#fddbc7", "#f7f7f7", "#d1e5f0", "#92c5de", "#4393c3",
+            #                    "#2166ac"]  # safe to use for colourblind people
+            #partitionList = [partitionColours[t % len(partitionColours)] for t in nodePartitions]
+
+            # get degree information
+            if is_directed(G):
+                inDegree = G.in_degree
+                outDegree = G.out_degree
+                totalDegree = {}
+                for n in nodes:
+                    totalDegree[n] = {n: inDegree[n] + outDegree[n]}
+            else :
+                inDegree = G.degree
+                outDegree = G.degree
+                totalDegree = G.degree
+            
+            # get weight information
+            if is_directed(G):
+                inWeight = G.in_degree(weight='weight')
+                outWeight = G.out_degree(weight='weight')
+                totalWeight = {}
+                for n in nodes:
+                    totalWeight[n] = {n: inWeight[n] + outWeight[n]}
+            else :
+                inWeight = G.degree(weight='weight')
+                outWeight = G.degree(weight='weight')
+                totalWeight = G.degree(weight='weight')
 
             # Making a dictionary for all attributes
             attributes = {}
             for n in nodes:
-                attributes[n] = {'Centrality': centralityList[nodes.index(n)],
-                                 'Partition': partitionList[nodes.index(n)]}
+                attributes[n] = {'indegree': inDegree[n],
+                                 'outdegree': outDegree[n],
+                                 'totaldegree': totalDegree[n],
+                                 'inweight': inWeight[n],
+                                 'outweight': outWeight[n],
+                                 'totalweight': totalWeight[n]}
             nx.set_node_attributes(G, attributes)
 
             # create the plot itself
@@ -117,14 +152,18 @@ def generateNodeLinkDiagram(df, diagramType, datashaded=True):
             # else:
             plot = hv.Graph.from_networkx(G, layout)
 
+            # disabling displaying all node info on hovering over the node
+            tooltips = [('Index', '@index')]
+            hover = HoverTool(tooltips=tooltips)
+
             # begin = time.time()
             # Comment the following two/three lines to disable edgebundling and datashading.
             if max(nodeCentralities) > 0:
                 if datashaded:
                     plot = bundle_graph(plot)
             points = plot.nodes
-            points.opts(cmap=partitionColours, color='Partition', size='Centrality',
-                        tools=['box_select', 'lasso_select', 'tap', 'hover'], active_tools=['wheel_zoom'], toolbar='above',
+            points.opts(cmap=palette[self.color_palette], color=self.node_color, size=self.node_size,
+                        tools=['box_select', 'lasso_select', 'tap', hover], active_tools=['wheel_zoom'], toolbar='above',
                         show_legend=False, width=600, height=600)
             return plot, points
 
