@@ -30,6 +30,8 @@ import matplotlib.pyplot as plt
 from bokeh.models import ColumnDataSource, Plot, LinearAxis, Grid
 from bokeh.models.glyphs import Text
 from bokeh.io import curdoc, show
+from sklearn.decomposition import PCA
+
 
 
 def K_mean_cluster(dataframe):
@@ -37,7 +39,9 @@ def K_mean_cluster(dataframe):
     # if node_number >= 1500:
     #     print("The dataset is too large to cluster, use edge weight filter")
     # else:
-    X = np.array(dataframe.values)
+    pca=PCA(n_components=1)
+    newData=pca.fit_transform(dataframe.values)
+    X = np.array(newData)
 
     n_clusters= node_number//200 + 1
 
@@ -57,7 +61,7 @@ def K_mean_cluster(dataframe):
     largest_cluster_node_number = check_frequency[0][1]
 
     #check whether it's extremely unevenly distributed
-    if largest_cluster_node_number >= node_number//3 and largest_cluster_node_number >=500:
+    if largest_cluster_node_number >= node_number//3 and largest_cluster_node_number >=500 and node_number<1500:
         #sparate the whole dataset into 2 datasets, one biggest, one combined small others
         cluster_n = 2
         cluster_label_df.loc[cluster_label_df['cluster_label'] != largest_cluster_label, ['cluster_label']] = largest_cluster_label+1
@@ -71,7 +75,7 @@ def K_mean_cluster(dataframe):
 
 def generate_cluster_graph(dataframe):
     node_number = len(dataframe.columns)
-    if node_number >= 1500:
+    if node_number >= 150000:
         N = 40
         x = np.linspace(-2, 2, N)
         y = np.linspace(0,0, N)
