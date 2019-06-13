@@ -1,7 +1,7 @@
 """
-Author(s): Yuqin Cui, Steven Broek
+Author(s): Yuqin Cui, Steven Broek, Tom Udding
 Created: 2019-06-12
-Edited: 2019-06-12
+Edited: 2019-06-13
 """
 
 import numpy as np
@@ -105,7 +105,7 @@ def generate_cluster_graph(dataframe):
                 }
                 console.log(labels);
                 $.post("/api/filter/clustering/choose/" + labels[0], function(response){
-                    document.getElementById('start-tool-cluster').hidden = false;
+                    document.getElementById('start-tool-cluster').disabled = false;
                 });
             """))
 

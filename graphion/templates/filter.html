@@ -53,16 +53,15 @@ Edited: 2019-06-13
                         return response.json();
                     })
                     .then(function (item) {
-                        const clusterGraphCard = document.getElementById('cluster-graph-card');
-                        const clusterGraph = document.getElementById('cluster-graph');
+                        const clusterGraph = document.getElementById('cluster-graph-wrapper');
 
                         // Get rid of the previous graph
-                        if (clusterGraph !== null){
-                            clusterGraph.remove();
+                        if (clusterGraph.hasChildNodes()){
+                            clusterGraph.firstChild.remove();
                         }
                         const newClusterGraph = document.createElement('div');
                         newClusterGraph.id = 'cluster-graph';
-                        clusterGraphCard.append(newClusterGraph);
+                        clusterGraph.append(newClusterGraph);
                         Bokeh.embed.embed_item(item, 'cluster-graph');
                     });
             }
@@ -170,16 +169,9 @@ Edited: 2019-06-13
                                 <h2 class="card-title text-center">Specify your point of interest</h2>
                                 <hr>
                                 <div class="card-body" id="cluster-graph-card">
-                                    <div id="cluster-graph"> </div>
                                     <div class="row">
-                                        <div class="vertical-line"></div>
-                                        <div class="col-s-6 icon-area">
-                                            <button id="start-tool-cluster" hidden="true"
-                                                onclick="
-                                                document.getElementById('choose-POI-clusters').style.display='none';
-                                                document.getElementById('set-datashading-state').style.display='block';">
-                                                Continue
-                                            </button>
+                                        <div class="col-s-12 icon-area valign">
+                                            <div id="cluster-graph-wrapper"></div>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -191,6 +183,12 @@ Edited: 2019-06-13
                                                         document.getElementById('choose-POI-clusters').style.display='none';
                                                         document.getElementById('choose-theme').style.display='block'">
                                                         Back
+                                                    </button>
+                                                    <button class="button button-primary pop-up-footer-button-continue" id="start-tool-cluster" disabled
+                                                        onclick="
+                                                        document.getElementById('choose-POI-clusters').style.display='none';
+                                                        document.getElementById('set-datashading-state').style.display='block';">
+                                                        Continue
                                                     </button>
                                                     <!-- Opens a "Help" -popup window -->
                                                     <button class="button pop-up-footer-button pop-up-footer-button-help"
