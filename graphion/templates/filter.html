@@ -46,11 +46,23 @@ Edited: 2019-06-12
     <script>
 
         function clickOnClusters() {
+            document.getElementById('choose-POI-clusters').style.display='block';
+            document.getElementById('choose-theme').style.display='none';
             fetch('/api/filter/clustering/graph/').then(
                 function (response) {
                     return response.json();
                 })
                 .then(function (item) {
+                    const clusterGraphCard = document.getElementById('cluster-graph-card');
+                    const clusterGraph = document.getElementById('cluster-graph');
+
+                    // Get rid of the previous graph
+                    if (clusterGraph !== null){
+                        clusterGraph.remove();
+                    }
+                    const newClusterGraph = document.createElement('div');
+                    newClusterGraph.id = 'cluster-graph';
+                    clusterGraphCard.append(newClusterGraph);
                     Bokeh.embed.embed_item(item, 'cluster-graph');
                 });
         }
@@ -90,10 +102,7 @@ Edited: 2019-06-12
                                     <div class="col-s-6 icon-area">
                                         <img src="/static/images/clusters.svg" alt="clusters-img">
                                         <br>
-                                        <button class="button button-primary"
-                                            onclick="
-                                            document.getElementById('choose-POI-clusters').style.display='block';
-                                            document.getElementById('choose-theme').style.display='none'">Clusters</button>
+                                        <button class="button button-primary" onclick="clickOnClusters()">Clusters</button>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -126,15 +135,7 @@ Edited: 2019-06-12
                                 <div class="row">
                                     <div class="col-s-12">
                                         <h3 class="help-section-title">What are interesting nodes / edges?</h3>
-                                        <p class="help-section-paragraph">For big datasets, it is not possible to show
-                                            all nodes and edges in the dataset. That's why you are getting the
-                                            opportunity to decide which nodes and edges you want to visualize. We will
-                                            call those nodes and edges 'interesting'.<br>All edges have a weight
-                                            (possibly 0 or 1). Edges will be considered interesting if their weight is
-                                            between the minimum and maximum weight, which you get to decide.<br>Nodes
-                                            will be considered interesting if the number of incoming and outcoming
-                                            interesting edges is within the minimum and maximum that, again, you can
-                                            decide.</p><br>
+                                        <p class="help-section-paragraph">For big datasets, it is not possible to show all nodes and edges in the dataset. That's why you are getting the opportunity to decide which nodes and edges you want to visualize. We will call those nodes and edges 'interesting'.<br>All edges have a weight (possibly 0 or 1). Edges will be considered interesting if their weight is between the minimum and maximum weight, which you get to decide.<br>Nodes will be considered interesting if the number of incoming and outcoming interesting edges is within the minimum and maximum that, again, you can decide.</p><br>
                                         <h3 class="help-section-title">What are clusters?</h3>
                                         <p class="help-section-paragraph">Lorem ipsum dolor sit amet, consectetur
                                             adipiscing elit. Fusce varius finibus sem vitae molestie. Vivamus at quam
@@ -169,16 +170,11 @@ Edited: 2019-06-12
                         <div class="card-contents">
                             <h2 class="card-title text-center">Specify your point of interest</h2>
                             <hr>
-                            <div class="card-body">
+                            <div class="card-body" id="cluster-graph-card">
                                 <div id="cluster-graph"> </div>
                                 <div class="row">
                                     <div class="vertical-line"></div>
                                     <div class="col-s-6 icon-area">
-                                        <img src="/static/images/clusters.svg" alt="clusters-img">
-                                        <br>
-                                        <button class="button button-primary" onclick="clickOnClusters()">
-                                            Cluster Type 2
-                                        </button>
                                         <button id="start-tool-cluster" hidden="true"
                                             onclick="location.href='/visualise/{{fileName}}'">
                                             Start the tool
