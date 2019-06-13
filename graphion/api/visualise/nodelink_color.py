@@ -13,6 +13,5 @@ apiNodeColorBlueprint = Blueprint('apiNodeColorBlueprint', __name__, template_fo
 def worker():
     sid = request.cookies.get(server.config['SESSION_COOKIE_NAME'])
     new_color = request.form['to']
-    print("Started changing the node colors")
     changeNodeColor(new_color, sid)
     return "new node color succesfully applied"
