@@ -10,7 +10,7 @@ from graphion import server
 from graphion.graphing.parser import processCSVMatrix
 from holoviews import opts, renderer, extension
 from holoviews.element.graphs import Graph
-from math import sqrt
+from math import sqrt, log
 import networkx as nx
 from networkx import DiGraph, Graph, from_pandas_adjacency
 from networkx.algorithms.centrality import degree_centrality
@@ -133,33 +133,48 @@ def generateNodeLinkDiagram(df, diagramType, datashaded=True):
                 inWeight = G.degree(weight='weight')
                 outWeight = G.degree(weight='weight')
                 totalWeight = G.degree(weight='weight')
-
-            # Defining a scale to prevent ridiculous node sizes, WIP
-            maxInDegree = max(inDegree)
-            maxOutDegree = max (outDegree)
-            maxTotalDegree = max(totalDegree)
-            maxInWeight = max(inWeight)
-            maxOutWeight = max(outWeight)
-            maxTotalWeight = max(totalWeight)
-
-            minInDegree = min(inDegree)
-            minOutDegree = min (outDegree)
-            minTotalDegree = min(totalDegree)
-            minInWeight = min(inWeight)
-            minOutWeight = min(outWeight)
-            minTotalWeight = min(totalWeight)
-
             
-
-            # Making a dictionary for all attributes
+            # Making a dictionary for all attributes, and ensuring none of the values go crazy. Dirty but it works
             attributes = {}
-            for n in nodes:                
-                attributes[n] = {'indegree': inDegree[n],
-                                 'outdegree': outDegree[n],
-                                 'totaldegree': totalDegree[n],
-                                 'inweight': inWeight[n],
-                                 'outweight': outWeight[n],
-                                 'totalweight': totalWeight[n]}
+            for n in nodes:  
+                ind = inDegree[n]
+                outd = outDegree[n]
+                totd = totalDegree[n]
+                inw = inWeight[n]
+                outw = outWeight[n]
+                totw = totalWeight[n]
+
+                if ind > 150 :
+                    ind = 150
+                elif ind < 5 :
+                    ind = 5
+                if outd > 150 :
+                    outd = 150
+                elif outd < 5 :
+                    outd = 5
+                if totd > 150 :
+                    totd = 150
+                elif totd < 5 :
+                    totd = 5
+                if inw > 150 :
+                    inw = 150
+                elif inw < 5 :
+                    inw = 5
+                if outw > 150 :
+                    outw = 150
+                elif outw < 5 :
+                    outw = 5
+                if totw > 150 :
+                    totw = 150
+                elif totw < 5 :
+                    totw = 5
+                
+                attributes[n] = {'indegree': ind,
+                                 'outdegree': outd,
+                                 'totaldegree': totd,
+                                 'inweight': inw,
+                                 'outweight': outw,
+                                 'totalweight': totw}
             nx.set_node_attributes(G, attributes)
 
             # create the plot itself
@@ -170,8 +185,8 @@ def generateNodeLinkDiagram(df, diagramType, datashaded=True):
             plot = hv.Graph.from_networkx(G, layout)
 
             # disabling displaying all node info on hovering over the node
-            #tooltips = [('Index', '@index')]
-            #hover = HoverTool(tooltips=tooltips)
+            tooltips = [('Index', '@index')]
+            hover = HoverTool(tooltips=tooltips)
 
             # begin = time.time()
             # Comment the following two/three lines to disable edgebundling and datashading.
@@ -180,7 +195,7 @@ def generateNodeLinkDiagram(df, diagramType, datashaded=True):
                     plot = bundle_graph(plot)
             points = plot.nodes
             points.opts(cmap=palette[self.color_palette], color=self.node_color, size=self.node_size,
-                        tools=['box_select', 'lasso_select', 'tap', 'hover'], active_tools=['wheel_zoom'], toolbar='above',
+                        tools=['box_select', 'lasso_select', 'tap', hover], active_tools=['wheel_zoom'], toolbar='above',
                         show_legend=False, width=600, height=600)
             return plot, points
 
