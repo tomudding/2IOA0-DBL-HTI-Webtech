@@ -13,6 +13,5 @@ apiNodeSizeBlueprint = Blueprint('apiNodeSizeBlueprint', __name__, template_fold
 def worker():
     sid = request.cookies.get(server.config['SESSION_COOKIE_NAME'])
     new_size = request.form['to']
-    print("Started changing the node size")
     changeNodeSize(new_size, sid)
     return "new node size succesfully applied"

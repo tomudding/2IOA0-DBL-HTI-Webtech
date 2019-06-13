@@ -83,8 +83,8 @@ def generateBokehApp(doc):
         Color_palette = param.ObjectSelector(default='kbc',
                                              objects=['kbc', 'kgy', 'bgy', 'bmw', 'bmy', 'cividis', 'dimgray', 'fire',
                                                       'inferno', 'viridis'])
-        Node_size = param.ObjectSelector(default='totalweight', 
-                                            objects=['indegree', 'outdegree', 'totaldegree', 'inweight', 'outweight', 'totalweight'])
+        Node_size = param.ObjectSelector(default='totalweightsize', 
+                                            objects=['indegreesize', 'outdegreesize', 'totaldegreesize', 'inweightsize', 'outweightsize', 'totalweightsize'])
 
         Node_color = param.ObjectSelector(default='totalweight', 
                                             objects=['indegree', 'outdegree', 'totaldegree', 'inweight', 'outweight', 'totalweight'])
@@ -96,7 +96,6 @@ def generateBokehApp(doc):
 
         @param.depends('Screen1', 'Screen2', 'Ordering', 'Metric', 'Color_palette', 'Node_size', 'Node_color')
         def view(self):
-            print("Detected change in attributes")
             if self.Screen1 == "radial":
                 set_screen1("radial", sid)
                 populate_radial_diagram(df, sid, datashaded=self.datashaded)
@@ -194,13 +193,9 @@ def changePalette(new_palette, sid):
 def changeNodeSize(new_size, sid):
     visApp = get_visualisations_app(sid)
     visApp.Node_size = new_size
-    print("Applying node sizes")
     set_visualisations_app(visApp, sid)
-    print("Set node sizes..?")
 
 def changeNodeColor(new_color, sid):
     visApp = get_visualisations_app(sid)
     visApp.Node_color = new_color
-    print("Applying node colors")
     set_visualisations_app(visApp, sid)
-    print("Set node colors..?")

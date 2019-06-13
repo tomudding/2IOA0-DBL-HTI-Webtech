@@ -57,8 +57,8 @@ def generateNodeLinkDiagram(df, diagramType, datashaded=True):
         color_palette = param.ObjectSelector(default='kbc',
                                              objects=['kbc', 'kgy', 'bgy', 'bmw', 'bmy', 'cividis', 'dimgray', 'fire',
                                                       'inferno', 'viridis'])
-        node_size = param.ObjectSelector(default='indegree', 
-                                            objects=['indegree', 'outdegree', 'totaldegree', 'inweight', 'outweight', 'totalweight'])
+        node_size = param.ObjectSelector(default='indegreesize', 
+                                            objects=['indegreesize', 'outdegreesize', 'totaldegreesize', 'inweightsize', 'outweightsize', 'totalweightsize'])
         node_color = param.ObjectSelector(default='totalweight', 
                                             objects=['indegree', 'outdegree', 'totaldegree', 'inweight', 'outweight', 'totalweight'])
 
@@ -135,6 +135,8 @@ def generateNodeLinkDiagram(df, diagramType, datashaded=True):
                 totalWeight = G.degree(weight='weight')
             
             # Making a dictionary for all attributes, and ensuring none of the values go crazy. Dirty but it works
+            minSize = 5
+            maxSize = 25
             attributes = {}
             for n in nodes:  
                 ind = inDegree[n]
@@ -144,37 +146,43 @@ def generateNodeLinkDiagram(df, diagramType, datashaded=True):
                 outw = outWeight[n]
                 totw = totalWeight[n]
 
-                if ind > 150 :
-                    ind = 150
-                elif ind < 5 :
-                    ind = 5
-                if outd > 150 :
-                    outd = 150
-                elif outd < 5 :
-                    outd = 5
-                if totd > 150 :
-                    totd = 150
-                elif totd < 5 :
-                    totd = 5
-                if inw > 150 :
-                    inw = 150
-                elif inw < 5 :
-                    inw = 5
-                if outw > 150 :
-                    outw = 150
-                elif outw < 5 :
-                    outw = 5
-                if totw > 150 :
-                    totw = 150
-                elif totw < 5 :
-                    totw = 5
+                if ind > maxSize :
+                    ind = maxSize
+                elif ind < minSize :
+                    ind = minSize
+                if outd > maxSize :
+                    outd = maxSize
+                elif outd < minSize :
+                    outd = minSize
+                if totd > maxSize :
+                    totd = maxSize
+                elif totd < minSize :
+                    totd = minSize
+                if inw > maxSize :
+                    inw = maxSize
+                elif inw < minSize :
+                    inw = minSize
+                if outw > maxSize :
+                    outw = maxSize
+                elif outw < minSize :
+                    outw = minSize
+                if totw > maxSize :
+                    totw = maxSize
+                elif totw < minSize :
+                    totw = minSize
                 
-                attributes[n] = {'indegree': ind,
-                                 'outdegree': outd,
-                                 'totaldegree': totd,
-                                 'inweight': inw,
-                                 'outweight': outw,
-                                 'totalweight': totw}
+                attributes[n] = {'indegreesize': ind,
+                                 'outdegreesize': outd,
+                                 'totaldegreesize': totd,
+                                 'inweightsize': inw,
+                                 'outweightsize': outw,
+                                 'totalweightsize': totw,
+                                 'indegree': inDegree[n],
+                                 'outdegree': outDegree[n],
+                                 'totaldegree': totalDegree[n],
+                                 'inweight': inWeight[n],
+                                 'outweight': outWeight[n],
+                                 'totalweight': totalWeight[n]}
             nx.set_node_attributes(G, attributes)
 
             # create the plot itself
@@ -185,7 +193,8 @@ def generateNodeLinkDiagram(df, diagramType, datashaded=True):
             plot = hv.Graph.from_networkx(G, layout)
 
             # disabling displaying all node info on hovering over the node
-            tooltips = [('Index', '@index')]
+            tooltips = [('Index', '@index'), ('In-Degree', '@indegree'), ('Out-Degree', '@outdegree'), ('Total Degree', '@totaldegree'), 
+                        ('In Edge Weight', '@inweight'), ('Out Edge-Weight', '@outweight'), ('Total Edge-Weight', '@totalweight')]
             hover = HoverTool(tooltips=tooltips)
 
             # begin = time.time()
