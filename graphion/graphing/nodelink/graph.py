@@ -1,7 +1,7 @@
 """
 Author(s): Tom Udding, Steven van den Broek, Yuqing Zeng, Tim van de Klundert, Sam Baggen
 Created: 2019-05-03
-Edited: 2019-06-12
+Edited: 2019-06-13
 """
 from bokeh.plotting import figure, reset_output
 from bokeh.models import Circle, ColumnDataSource, HoverTool
@@ -25,6 +25,7 @@ import plotly.graph_objs as go
 import holoviews as hv
 from holoviews.operation.datashader import datashade, bundle_graph, dynspread
 from colorcet import palette
+from sys import maxsize
 
 import param
 
@@ -112,71 +113,190 @@ def generateNodeLinkDiagram(df, diagramType, datashaded=True):
 
             # get degree information
             if is_directed(G):
-                inDegree = G.in_degree
-                outDegree = G.out_degree
+                inDegreeSize = dict(G.in_degree)
+                inDegree = dict(G.in_degree)
+                outDegreeSize = dict(G.out_degree)
+                outDegree = dict(G.out_degree)
+                totalDegreeSize = {}
                 totalDegree = {}
                 for n in nodes:
+                    totalDegreeSize[n] = {n: inDegreeSize[n] + outDegreeSize[n]}
                     totalDegree[n] = {n: inDegree[n] + outDegree[n]}
             else :
-                inDegree = G.degree
-                outDegree = G.degree
-                totalDegree = G.degree
+                inDegreeSize = dict(G.degree)
+                inDegree = dict(G.degree)
+                outDegreeSize = dict(G.degree)
+                outDegree = dict(G.degree)
+                totalDegreeSize = dict(G.degree)
+                totalDegree = dict(G.degree)
             
             # get weight information
             if is_directed(G):
-                inWeight = G.in_degree(weight='weight')
-                outWeight = G.out_degree(weight='weight')
+                inWeightSize = dict(G.in_degree(weight='weight'))
+                inWeight = dict(G.in_degree(weight='weight'))
+                outWeightSize = dict(G.out_degree(weight='weight'))
+                outWeight = dict(G.out_degree(weight='weight'))
+                totalWeightSize = {}
                 totalWeight = {}
                 for n in nodes:
+                    totalWeightSize[n] = {n: inWeightSize[n] + outWeightSize[n]}
                     totalWeight[n] = {n: inWeight[n] + outWeight[n]}
             else :
-                inWeight = G.degree(weight='weight')
-                outWeight = G.degree(weight='weight')
-                totalWeight = G.degree(weight='weight')
-            
-            # Making a dictionary for all attributes, and ensuring none of the values go crazy. Dirty but it works
-            minSize = 5
-            maxSize = 25
-            attributes = {}
-            for n in nodes:  
-                ind = inDegree[n]
-                outd = outDegree[n]
-                totd = totalDegree[n]
-                inw = inWeight[n]
-                outw = outWeight[n]
-                totw = totalWeight[n]
+                inWeightSize = dict(G.degree(weight='weight'))
+                inWeight = dict(G.degree(weight='weight'))
+                outWeightSize = dict(G.degree(weight='weight'))
+                outWeight = dict(G.degree(weight='weight'))
+                totalWeightSize = dict(G.degree(weight='weight'))
+                totalWeight = dict(G.degree(weight='weight'))
 
-                if ind > maxSize :
-                    ind = maxSize
-                elif ind < minSize :
-                    ind = minSize
-                if outd > maxSize :
-                    outd = maxSize
-                elif outd < minSize :
-                    outd = minSize
-                if totd > maxSize :
-                    totd = maxSize
-                elif totd < minSize :
-                    totd = minSize
-                if inw > maxSize :
-                    inw = maxSize
-                elif inw < minSize :
-                    inw = minSize
-                if outw > maxSize :
-                    outw = maxSize
-                elif outw < minSize :
-                    outw = minSize
-                if totw > maxSize :
-                    totw = maxSize
-                elif totw < minSize :
-                    totw = minSize
+            # Creating a scale to ensure that the node sizes don't go bananas
+            minNodeSize = 0.1 # minNodeSize * maxNodeSize = minimum node size
+            maxIn = -maxsize - 1
+            minIn = maxsize
+            maxOut = -maxsize - 1
+            minOut = maxsize
+            maxTot = -maxsize - 1
+            minTot = maxsize
+            maxInw = -maxsize - 1
+            minInw = maxsize
+            maxOutw = -maxsize - 1
+            minOutw = maxsize
+            maxTotw = -maxsize - 1
+            minTotw = maxsize
+            for n in nodes:
+                ind = inDegreeSize[n]
+                outd = outDegreeSize[n]
+                totd = totalDegreeSize[n]
+                inw = inWeightSize[n]
+                outw = outWeightSize[n]
+                totw = totalWeightSize[n]
+                if ind > maxIn:
+                    maxIn = ind
+                elif ind < minIn:
+                    minIn = ind
+                if outd > maxOut:
+                    maxOut = outd
+                elif outd < minOut:
+                    minOut = outd
+                if totd > maxTot:
+                    maxTot = totd
+                elif totd < minTot:
+                    minTot = totd
+                if inw > maxInw:
+                    maxInw = inw
+                elif inw < minInw:
+                    minInw = inw
+                if outw > maxOutw:
+                    maxOutw = outw
+                elif outw < minOutw:
+                    minOutw = outw
+                if totw > maxTotw:
+                    maxTotw = totw
+                elif totw < minTotw:
+                    minTotw = totw
+
+            if maxIn == minIn:
+                sameInDegree = True
+            else:
+                sameInDegree = False
+                for n in nodes:
+                    result = (inDegreeSize[n] - minIn) / maxIn
+                    if result < minNodeSize:
+                        inDegreeSize[n] = minNodeSize
+                    else:
+                        inDegreeSize[n] = result
+            if maxOut == minOut:
+                sameOutDegree = True
+            else:
+                sameOutDegree = False
+                for n in nodes:
+                    result = (outDegreeSize[n] - minOut) / maxOut
+                    if result < minNodeSize:
+                        outDegreeSize[n] = minNodeSize
+                    else:
+                        outDegreeSize[n] = result
+            if maxTot == minTot:
+                sameTotalDegree = True
+            else:
+                sameTotalDegree = False
+                for n in nodes:
+                    result = (totalDegreeSize[n] - minTot) / maxTot
+                    if result < minNodeSize:
+                        totalDegreeSize[n] = minNodeSize
+                    else:
+                        totalDegreeSize[n] = result
+            if maxInw == minInw:
+                sameInWeight = True
+            else:
+                sameInWeight = False
+                for n in nodes:
+                    result = (inWeightSize[n] - minInw) / maxInw
+                    if result < minNodeSize:
+                        inWeightSize[n] = minNodeSize
+                    else:
+                        inWeightSize[n] = result
+            if maxOutw == minOutw:
+                sameOutWeight = True
+            else:
+                sameOutWeight = False
+                for n in nodes:
+                    result = (outWeightSize[n] - minOutw) / maxOutw
+                    if result < minNodeSize:
+                        outWeightSize[n] = minNodeSize
+                    else:
+                        outWeightSize[n] = result
+            if maxTotw == minTotw:
+                sameTotalWeight = True
+            else:
+                sameTotalWeight = False
+                for n in nodes:
+                    result = (totalWeightSize[n] - minTotw) / maxTotw
+                    if result < minNodeSize:
+                        totalWeightSize[n] = minNodeSize
+                    else:
+                        totalWeightSize[n] = result
+            
+            # Making a dictionary for all attributes, and ensuring none of the values go crazy.
+            attributes = {}
+            maxNodeSize = 30
+            for n in nodes:  
+                outd = outDegreeSize[n]
+                totd = totalDegreeSize[n]
+                inw = inWeightSize[n]
+                outw = outWeightSize[n]
+                totw = totalWeightSize[n]
+
+                if sameInDegree:
+                    ind = 1
+                else:
+                    ind = inDegreeSize[n]
+                if sameOutDegree:
+                    outd = 1
+                else:
+                    outd = outDegreeSize[n]
+                if sameTotalDegree:
+                    totd = 1
+                else:
+                    totd = totalDegreeSize[n]
+                if sameInWeight:
+                    inw = 1
+                else:
+                    inw = inWeightSize[n]
+                if sameOutWeight:
+                    outw = 1
+                else:
+                    outw = outWeightSize[n]
+                if sameTotalWeight:
+                    totw = 1
+                else:
+                    totw = totalWeightSize[n]
                 
-                attributes[n] = {'indegreesize': ind,
-                                 'outdegreesize': outd,
-                                 'totaldegreesize': totd,
-                                 'inweightsize': inw,
-                                 'outweightsize': outw,
-                                 'totalweightsize': totw,
+                attributes[n] = {'indegreesize': ind * maxNodeSize,
+                                 'outdegreesize': outd * maxNodeSize,
+                                 'totaldegreesize': totd * maxNodeSize,
+                                 'inweightsize': inw * maxNodeSize,
+                                 'outweightsize': outw * maxNodeSize,
+                                 'totalweightsize': totw * maxNodeSize,
                                  'indegree': inDegree[n],
                                  'outdegree': outDegree[n],
                                  'totaldegree': totalDegree[n],
