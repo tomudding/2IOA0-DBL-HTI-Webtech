@@ -1,7 +1,7 @@
 <!--
 Author(s): Tom Udding
 Created: 2019-04-29
-Edited: 2019-06-06
+Edited: 2019-06-14
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -53,32 +53,37 @@ Edited: 2019-06-06
 				background: linear-gradient(to right, rgb(49, 137, 255) 0%, rgb(0, 97, 228) 100%);
 			}
 
-			.preview-container #previews .graphion-dropzone-info {
+			.preview-container #previews-matrix .graphion-matrix-dropzone-info,
+			.preview-container #previews-edgelist .graphion-egelist-dropzone-info {
 			    display: flex;
 			    flex-wrap: nowrap;
 				width: calc(100% - 1.25rem);
 				height: 3rem;
 			}
 
-			.preview-container #previews .graphion-dropzone-info > .thumb-container {
+			.preview-container #previews-matrix .graphion-matrix-dropzone-info > .thumb-container,
+			.preview-container #previews-edgelist .graphion-egelist-dropzone-info > .thumb-container {
 			    flex: 0 0 3.125rem;
 			    max-width: 3.125rem;
 			    border-radius: 10px;
 			    overflow: hidden;
 			}
 
-			.preview-container #previews .graphion-dropzone-info img {
+			.preview-container #previews-matrix .graphion-matrix-dropzone-info img,
+			.preview-container #previews-edgelist .graphion-egelist-dropzone-info img {
 			    max-width: 100%;
 			    height: auto;
 			}
 
-			.preview-container #previews .graphion-dropzone-info > .details {
+			.preview-container #previews-matrix .graphion-matrix-dropzone-info > .details,
+			.preview-container #previews-edgelist .graphion-egelist-dropzone-info > .details {
 			    position: relative;
 			    flex: 0 0 calc(100% - 3.125rem);
 			    max-width: calc(100% - 3.125rem);
 			}
 
-			#previews > div {
+			#previews-matrix > div,
+			#previews-edgelist > div {
 			    display: -webkit-flex;
 			    display: -ms-flexbox;
 			    display: flex;
@@ -139,17 +144,58 @@ Edited: 2019-06-06
 											{% endif %}
 										</div>
 									</div>
-									<div class="row file-upload-container" style="display: none">
+									<div class="row file-upload-container" style="display: none;">
+										<div class="col-s-12 col-0-margin">
+											<div class="row">
+												<div class="col-s-4 col-offset-2">
+													<button class="button button-primary" id="file-selection-upload-edgelist" disabled>Upload Edge List</button>
+												</div>
+												<div class="col-s-4">
+													<button class="button button-primary" id="file-selection-upload-matrix">Upload Matrix</button>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row file-upload-matrix-container" style="display: none;">
 										<div class="col-s-12">
-											<form action="/upload" method="post" class="dropzone" id="graphion-dropzone" enctype="multipart/form-data">
+											<form action="/upload_matrix" method="post" class="dropzone" id="graphion-matrix-dropzone" enctype="multipart/form-data">
 												<div class="fallback">
 													<input type="file" name="file" accept=".csv, text/csv">
 													<input type="submit" class="button button-primary" value="Submit" name="submit">
 												</div>
 												<div class="preview-container dz-preview uploaded-files">
-													<div id="previews">
-														<div id="graphion-dropzone-template">
-															<div class="graphion-dropzone-info">
+													<div id="previews-matrix">
+														<div id="graphion-matrix-dropzone-template">
+															<div class="graphion-matrix-dropzone-info">
+																<div class="thumb-container">
+																	<img data-dz-thumbnail />
+																</div>
+																<div class="details">
+																	<div>
+																		<span data-dz-name></span> <span data-dz-size></span>
+																	</div>
+																	<div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
+																	<div class="loader bar" style="display: none"><div class="intermediate"></div></div>
+																	<div class="dz-error-message"><span data-dz-errormessage></span></div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</form>
+										</div>
+									</div>
+									<div class="row file-upload-edgelist-container" style="display: none">
+										<div class="col-s-12">
+											<form action="/upload_edgelist" method="post" class="dropzone" id="graphion-edgelist-dropzone" enctype="multipart/form-data">
+												<div class="fallback">
+													<input type="file" name="file" accept=".csv, text/csv">
+													<input type="submit" class="button button-primary" value="Submit" name="submit">
+												</div>
+												<div class="preview-container dz-preview uploaded-files">
+													<div id="previews-edgelist">
+														<div id="graphion-edgelist-dropzone-template">
+															<div class="graphion-edgelist-dropzone-info">
 																<div class="thumb-container">
 																	<img data-dz-thumbnail />
 																</div>
@@ -194,15 +240,19 @@ Edited: 2019-06-06
 		</section>
 	</body>
 	<script>
+		var selectionState = "start";
+
 		document.getElementById("file-selection-list").addEventListener('click', function() {
+			selectionState = "list-choose";
 			toggleButtons();
 			removeAlerts();
 			document.querySelector(".card-title").textContent = "Select a file";
-			document.querySelector(".file-upload-container").style.display = "none";
+			document.querySelector(".file-upload-matrix-container").style.display = "none";
 			document.querySelector(".file-selection-container").style.display = "flex";
 		}, false);
 
 		document.getElementById("file-selection-upload").addEventListener('click', function() {
+			selectionState = "upload-choose";
 			toggleButtons();
 			removeAlerts();
 			document.querySelector(".card-title").textContent="Upload a file";
@@ -210,12 +260,45 @@ Edited: 2019-06-06
 			document.querySelector(".file-upload-container").style.display = "flex";
 		}, false);
 
-		document.getElementById("file-selection-back").addEventListener('click', function() {
+		document.getElementById("file-selection-upload-edgelist").addEventListener('click', function() {
+			selectionState = "upload-edgelist";
 			toggleButtons();
 			removeAlerts();
-			document.querySelector(".card-title").textContent="Select or upload a file";
-			document.querySelector(".file-selection-container").style.display = "none";
+			document.querySelector(".card-title").textContent="Upload a file";
 			document.querySelector(".file-upload-container").style.display = "none";
+			document.querySelector(".file-upload-edgelist-container").style.display = "flex";
+		}, false);
+
+		document.getElementById("file-selection-upload-matrix").addEventListener('click', function() {
+			selectionState = "upload-matrix";
+			toggleButtons();
+			removeAlerts();
+			document.querySelector(".card-title").textContent="Upload a file";
+			document.querySelector(".file-upload-container").style.display = "none";
+			document.querySelector(".file-upload-matrix-container").style.display = "flex";
+		}, false);
+
+		document.getElementById("file-selection-back").addEventListener('click', function() {
+			removeAlerts();
+			if (selectionState == "list-choose" || selectionState == "upload-choose") {
+				selectionState = "start";
+				toggleButtons();
+				document.querySelector(".card-title").textContent="Select or upload a file";
+				document.querySelector(".file-selection-container").style.display = "none";
+				document.querySelector(".file-upload-container").style.display = "none";
+			} else if (selectionState == "upload-edgelist" || selectionState == "upload-matrix") {
+				document.getElementById("file-selection-upload-edgelist").style.display = "none";
+				document.getElementById("file-selection-upload-matrix").style.display = "none";
+				if (selectionState == "upload-edgelist") {
+					document.querySelector(".file-upload-edgelist-container").style.display = "none";
+				} else if (selectionState == "upload-matrix") {
+					document.querySelector(".file-upload-matrix-container").style.display = "none";
+				}
+				selectionState = "upload-choose";
+				toggleButtons();
+				document.querySelector(".card-title").textContent="Upload a file";
+				document.querySelector(".file-upload-container").style.display = "flex";
+			}
 		}, false);
 
 		function removeAlerts() {
@@ -226,34 +309,100 @@ Edited: 2019-06-06
 		}
 
 		function toggleButtons() {
-			if (window.getComputedStyle(document.getElementById("file-selection-back")).getPropertyValue("display") == "none") {
-				document.getElementById("file-selection-back").style.display = "inline-block";
-				document.getElementById("file-selection-buttons").style.display = "none";
-				document.getElementById("file-selection-list").style.display = "none";
-				document.getElementById("file-selection-upload").style.display = "none";
-			} else {
-				document.getElementById("file-selection-back").style.display = "none";
-				document.getElementById("file-selection-buttons").style.display = "flex";
-				document.getElementById("file-selection-list").style.display = "inline-block";
-				document.getElementById("file-selection-upload").style.display = "inline-block";
+			if (selectionState == "start") {
+				if (window.getComputedStyle(document.getElementById("file-selection-back")).getPropertyValue("display") == "none") {
+					document.getElementById("file-selection-back").style.display = "inline-block";
+					document.getElementById("file-selection-buttons").style.display = "none";
+					document.getElementById("file-selection-list").style.display = "none";
+					document.getElementById("file-selection-upload").style.display = "none";
+				} else {
+					document.getElementById("file-selection-back").style.display = "none";
+					document.getElementById("file-selection-buttons").style.display = "flex";
+					document.getElementById("file-selection-list").style.display = "inline-block";
+					document.getElementById("file-selection-upload").style.display = "inline-block";
+				}
+			} else if (selectionState == "list-choose" || selectionState == "upload-choose") {
+				if (window.getComputedStyle(document.getElementById("file-selection-back")).getPropertyValue("display") == "none") {
+					document.getElementById("file-selection-back").style.display = "inline-block";
+					document.getElementById("file-selection-buttons").style.display = "none";
+					document.getElementById("file-selection-list").style.display = "none";
+					document.getElementById("file-selection-upload").style.display = "none";
+				} else {
+					document.getElementById("file-selection-list").style.display = "inline-block";
+					document.getElementById("file-selection-upload").style.display = "inline-block";
+					document.getElementById("file-selection-upload-edgelist").style.display = "inline-block";
+					document.getElementById("file-selection-upload-matrix").style.display = "inline-block";
+				}
+			} else if (selectionState == "upload-edgelist" || selectionState == "upload-matrix") {
+				if (window.getComputedStyle(document.getElementById("file-selection-back")).getPropertyValue("display") == "none") {
+					document.getElementById("file-selection-back").style.display = "inline-block";
+					document.getElementById("file-selection-buttons").style.display = "none";
+					document.getElementById("file-selection-upload-edgelist").style.display = "none";
+					document.getElementById("file-selection-upload-matrix").style.display = "none";
+				} else {
+					document.getElementById("file-selection-buttons").style.display = "none";
+					document.getElementById("file-selection-upload-edgelist").style.display = "inline-block";
+					document.getElementById("file-selection-upload-matrix").style.display = "inline-block";
+				}
 			}
 		}
 	</script>
 	<script>
-		var previewElement = document.getElementById("graphion-dropzone-template");
-		var previewTemplate = previewElement.parentNode.innerHTML;
-		previewElement.parentNode.parentNode.style.display = "none";
-		previewElement.parentNode.removeChild(previewElement);
+		var previewElementMatrix = document.getElementById("graphion-matrix-dropzone-template");
+		var previewTemplateMatrix = previewElementMatrix.parentNode.innerHTML;
+		previewElementMatrix.parentNode.parentNode.style.display = "none";
+		previewElementMatrix.parentNode.removeChild(previewElementMatrix);
 
-		Dropzone.options.graphionDropzone = {
+		Dropzone.options.graphionMatrixDropzone = {
 			acceptedFiles: "text/csv,.csv",
 			createImageThumbnails: true,
 			dictDefaultMessage: "Drop files here or click to upload",
 			maxFiles: 1,
 			maxFilesize: 1000,
 			paramName: "file",
-			previewsContainer: "#previews",
-			previewTemplate: previewTemplate,
+			previewsContainer: "#previews-matrix",
+			previewTemplate: previewTemplateMatrix,
+			timeout: 300000,
+			init: function() {
+				this.on("addedfile", function(file) {
+					document.querySelector(".preview-container").style.display = "inline-block";
+					document.querySelector(".dz-default.dz-message").style.display = "none";
+					file.previewElement.classList.add("type-" + file.name.split('.').pop());
+					document.getElementById("file-selection-back").disabled = true;
+				});
+		        this.on("success", function(file) {
+		            window.location = "/filter/" + file.xhr.response;
+		        });
+				this.on("uploadprogress", function(file, progress, bytesSent) {
+					console.log("Uploading " + file.name + ". Already sent " + bytesSent + " bytes.");
+					document.querySelector("[data-dz-uploadprogress]").style.width = progress + "%";
+
+					if (progress == 100) {
+						document.querySelector(".dz-progress").style.display = "none";
+						document.querySelector(".loader.bar").style.display = "block";
+
+						document.querySelector(".card-title").textContent = "Processing file...";
+						document.querySelector(".card-subtitle.text-center").textContent = "Your file has been uploaded and we are currently processing it. You will be redirected after processing has completed.";
+					}
+				});
+		    }
+		};
+	</script>
+	<script>
+		var previewElementEdgelist = document.getElementById("graphion-edgelist-dropzone-template");
+		var previewTemplateEdgelist = previewElementEdgelist.parentNode.innerHTML;
+		previewElementEdgelist.parentNode.parentNode.style.display = "none";
+		previewElementEdgelist.parentNode.removeChild(previewElementEdgelist);
+
+		Dropzone.options.graphionEdgelistDropzone = {
+			acceptedFiles: ".txt,.edges,.edgelist",
+			createImageThumbnails: true,
+			dictDefaultMessage: "Drop files here or click to upload",
+			maxFiles: 1,
+			maxFilesize: 1000,
+			paramName: "file",
+			previewsContainer: "#previews-edgelist",
+			previewTemplate: previewTemplateEdgelist,
 			timeout: 300000,
 			init: function() {
 				this.on("addedfile", function(file) {

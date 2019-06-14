@@ -1,7 +1,7 @@
 """
 Author(s): Tom Udding, Steven van den Broek, Sam Baggen
 Created: 2019-04-29
-Edited: 2019-06-12
+Edited: 2019-06-14
 """
 from flask import Flask
 server = Flask(__name__)
@@ -58,10 +58,11 @@ import graphion.error
 import graphion.upload
 
 # import views from app
+from graphion.filter import filterBlueprint
 from graphion.index import indexBlueprint
 from graphion.selection import selectionBlueprint
+from graphion.upload import uploadBlueprint
 from graphion.visualise import visualiseBlueprint
-from graphion.filter import filterBlueprint
 from graphion.api.filter.distribution import apiDegreeBlueprint
 from graphion.api.visualise.plot_switching import apiSwitchBlueprint
 from graphion.api.visualise.matrix_reordering import apiOrderBlueprint
@@ -72,10 +73,11 @@ from graphion.api.visualise.nodelink_color import apiNodeColorBlueprint
 from graphion.api.visualise.nodelink_size import apiNodeSizeBlueprint
 
 # register views as blueprints
+server.register_blueprint(filterBlueprint)
 server.register_blueprint(indexBlueprint)
 server.register_blueprint(selectionBlueprint)
+server.register_blueprint(uploadBlueprint)
 server.register_blueprint(visualiseBlueprint)
-server.register_blueprint(filterBlueprint)
 server.register_blueprint(apiDegreeBlueprint)
 server.register_blueprint(apiSwitchBlueprint)
 server.register_blueprint(apiOrderBlueprint)

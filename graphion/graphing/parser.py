@@ -1,7 +1,7 @@
 """
 Author(s): Tom Udding
 Created: 2019-05-03
-Edited: 2019-05-05
+Edited: 2019-06-14
 """
 from csv import Sniffer
 from pandas.core.frame import DataFrame
@@ -13,7 +13,7 @@ def processCSVMatrix(file):
         dialect = Sniffer().sniff(csvfile.readline())
 
     df = DataFrame()
-    for chunk in read_csv(file, sep=dialect.delimiter, mangle_dupe_cols=True, index_col=False, chunksize=1000):
+    for chunk in read_csv(file, sep=dialect.delimiter, mangle_dupe_cols=True, index_col=False, chunksize=10000):
         df = concat([df, chunk], ignore_index=True)
 
     nodes = df.columns.values.tolist()
@@ -21,5 +21,15 @@ def processCSVMatrix(file):
     df["Unnamed: 0"] = nodes
     df = df.rename(columns={'Unnamed: 0': 'name'})
     df = df.set_index(keys='name')
+
+    return df
+
+def processEdgeList(file):
+    with open(file, 'r') as csvfile:
+        dialect = Sniffer().sniff(csvfile.readline())
+
+    df = DataFrame()
+    for chunk in read_csv(file, sep=dialect.delimiter, chunksize=10000):
+        df = concat([df, chunk], ignore_index=True)
 
     return df
