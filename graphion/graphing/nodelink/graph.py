@@ -26,7 +26,7 @@ import holoviews as hv
 from holoviews.operation.datashader import datashade, bundle_graph, dynspread
 from colorcet import palette
 from sys import maxsize
-
+from bokeh.palettes import Cividis256, Viridis256, Inferno256
 import param
 
 import time
@@ -55,9 +55,10 @@ def generateNodeLinkDiagram(df, diagramType, datashaded=True):
     diagramType = diagramType.upper()
 
     class Nodelink(param.Parameterized):
+        colorList = ['kbc', 'kgy', 'bgy', 'bmw', 'bmy', 'cividis', 'dimgray', 'fire', 'inferno', 'viridis']
+        colorMap = {}
         color_palette = param.ObjectSelector(default='kbc',
-                                             objects=['kbc', 'kgy', 'bgy', 'bmw', 'bmy', 'cividis', 'dimgray', 'fire',
-                                                      'inferno', 'viridis'])
+                                             objects=colorList)
         node_size = param.ObjectSelector(default='indegreesize', 
                                             objects=['indegreesize', 'outdegreesize', 'totaldegreesize', 'inweightsize', 'outweightsize', 'totalweightsize'])
         node_color = param.ObjectSelector(default='totalweight', 
@@ -315,21 +316,32 @@ def generateNodeLinkDiagram(df, diagramType, datashaded=True):
                         ('In Edge Weight', '@inweight'), ('Out Edge-Weight', '@outweight'), ('Total Edge-Weight', '@totalweight')]
             hover = HoverTool(tooltips=tooltips)
 
+            # Make custom dictionary with color palettes
+            for c in self.colorList:
+                if c == 'cividis':
+                    self.colorMap[c] = Cividis256
+                elif c == 'viridis':
+                    self.colorMap[c] = Viridis256
+                elif c == 'inferno':
+                    self.colorMap[c] = Inferno256
+                else:
+                    self.colorMap[c] = palette[c]
+
             # begin = time.time()
             # Comment the following two/three lines to disable edgebundling and datashading.
             if max(nodeCentralities) > 0:
                 if datashaded:
                     plot = bundle_graph(plot)
             points = plot.nodes
-            points.opts(cmap=palette[self.color_palette], color=self.node_color, size=self.node_size,
+            points.opts(cmap=self.colorMap[self.color_palette], color=self.node_color, size=self.node_size,
                         tools=['box_select', 'lasso_select', 'tap', hover], active_tools=['wheel_zoom'], toolbar='above',
                         show_legend=False, width=600, height=600)
             return plot, points
 
         def view(self):
             if datashaded:
-                plot = dynspread(datashade(self.plot, normalization='linear', width=600, height=600, cmap=palette[self.color_palette]))
-                self.points.opts(cmap=palette[self.color_palette], color=self.node_color, size=self.node_size)
+                plot = dynspread(datashade(self.plot, normalization='linear', width=600, height=600, cmap=self.colorMap[self.color_palette]))
+                self.points.opts(cmap=self.colorMap[self.color_palette], color=self.node_color, size=self.node_size)
                 return plot * self.points
             # plot = datashade(self.plot, normalization='linear', width=600, height=600)
             return self.plot * self.points
