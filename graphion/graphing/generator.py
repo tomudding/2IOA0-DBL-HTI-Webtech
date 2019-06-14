@@ -83,7 +83,7 @@ def generateBokehApp(doc):
         Color_palette = param.ObjectSelector(default='kbc',
                                              objects=['kbc', 'kgy', 'bgy', 'bmw', 'bmy', 'cividis', 'dimgray', 'fire',
                                                       'inferno', 'viridis'])
-        Node_size = param.ObjectSelector(default='totalweightsize', 
+        Node_size = param.ObjectSelector(default='indegreesize', 
                                             objects=['indegreesize', 'outdegreesize', 'totaldegreesize', 'inweightsize', 'outweightsize', 'totalweightsize'])
 
         Node_color = param.ObjectSelector(default='totalweight', 
