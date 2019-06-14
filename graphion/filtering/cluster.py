@@ -1,7 +1,7 @@
 """
-Author(s): Yuqin Cui, Steven Broek, Tom Udding
+Author(s): Yuqin Cui, Steven Broek
 Created: 2019-06-12
-Edited: 2019-06-13
+Edited: 2019-06-12
 """
 
 import numpy as np
@@ -93,7 +93,7 @@ def generate_cluster_graph(dataframe):
     else:
         cluster_n, counter, cluster_label_df = K_mean_cluster(dataframe)
         data = ColumnDataSource({"Label": list(counter.keys()), "Size": list(counter.values()),
-                                 "circle_size": [item/10 for item in counter.values()],
+                                 "circle_size": [item/10 + 10 for item in counter.values()],
                                  "color": [["olive","navy"][i%2] for i in counter.keys()]})
 
         data.selected.js_on_change('indices', CustomJS(args=dict(data=data), code="""
@@ -105,7 +105,7 @@ def generate_cluster_graph(dataframe):
                 }
                 console.log(labels);
                 $.post("/api/filter/clustering/choose/" + labels[0], function(response){
-                    document.getElementById('start-tool-cluster').disabled = false;
+                    document.getElementById('start-tool-cluster').hidden = false;
                 });
             """))
 
@@ -114,7 +114,7 @@ def generate_cluster_graph(dataframe):
             ("Number of nodes in this cluster", "@Size"),
         ]
 
-        p = figure(plot_width=400, plot_height=400, title="Choose your cluster", tools=['wheel_zoom','box_zoom', 'hover','tap', 'lasso_select', 'reset'], tooltips=TOOLTIPS)
+        p = figure(plot_width=400, plot_height=400, title="Choose your cluster", tools=['wheel_zoom','box_zoom', 'hover','tap', 'reset'], tooltips=TOOLTIPS)
         p.circle("Label", "Label", size="circle_size", color="color", alpha=0.5, source=data)
         p.title.text_color = "olive"
         p.title.text_font = "times"
