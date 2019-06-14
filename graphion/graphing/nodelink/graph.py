@@ -114,40 +114,38 @@ def generateNodeLinkDiagram(df, diagramType, datashaded=True):
             # get degree information
             if is_directed(G):
                 inDegreeSize = dict(G.in_degree)
-                inDegree = dict(G.in_degree)
+                inDegree = inDegreeSize.copy()
                 outDegreeSize = dict(G.out_degree)
-                outDegree = dict(G.out_degree)
+                outDegree = outDegreeSize.copy()
                 totalDegreeSize = {}
-                totalDegree = {}
                 for n in nodes:
                     totalDegreeSize[n] = {n: inDegreeSize[n] + outDegreeSize[n]}
-                    totalDegree[n] = {n: inDegree[n] + outDegree[n]}
+                totalDegree = totalDegreeSize.copy()
             else :
                 inDegreeSize = dict(G.degree)
-                inDegree = dict(G.degree)
-                outDegreeSize = dict(G.degree)
-                outDegree = dict(G.degree)
-                totalDegreeSize = dict(G.degree)
-                totalDegree = dict(G.degree)
+                inDegree = inDegreeSize.copy()
+                outDegreeSize = inDegreeSize.copy()
+                outDegree = inDegreeSize.copy()
+                totalDegreeSize = inDegreeSize.copy()
+                totalDegree = inDegreeSize.copy()
             
             # get weight information
             if is_directed(G):
                 inWeightSize = dict(G.in_degree(weight='weight'))
-                inWeight = dict(G.in_degree(weight='weight'))
+                inWeight = inWeightSize.copy()
                 outWeightSize = dict(G.out_degree(weight='weight'))
-                outWeight = dict(G.out_degree(weight='weight'))
+                outWeight = outWeightSize.copy()
                 totalWeightSize = {}
-                totalWeight = {}
                 for n in nodes:
                     totalWeightSize[n] = {n: inWeightSize[n] + outWeightSize[n]}
-                    totalWeight[n] = {n: inWeight[n] + outWeight[n]}
+                totalWeight = totalWeightSize.copy()
             else :
                 inWeightSize = dict(G.degree(weight='weight'))
-                inWeight = dict(G.degree(weight='weight'))
-                outWeightSize = dict(G.degree(weight='weight'))
-                outWeight = dict(G.degree(weight='weight'))
-                totalWeightSize = dict(G.degree(weight='weight'))
-                totalWeight = dict(G.degree(weight='weight'))
+                inWeight = inWeightSize.copy()
+                outWeightSize = inWeightSize.copy()
+                outWeight = inWeightSize.copy()
+                totalWeightSize = inWeightSize.copy()
+                totalWeight = inWeightSize.copy()
 
             # Creating a scale to ensure that the node sizes don't go bananas
             minNodeSize = 0.1 # minNodeSize * maxNodeSize = minimum node size
