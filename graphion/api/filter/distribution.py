@@ -13,12 +13,14 @@ import time
 
 from graphion.session.handler import get_partially_filtered_df, get_almost_filtered_df, get_df,\
     set_almost_filtered_df, set_partially_filtered_df, set_filtered_df, set_left_weight,\
-    get_left_weight, set_right_weight, get_right_weight, set_cluster_filtered_df
+    get_left_weight, set_right_weight, get_right_weight, set_cluster_filtered_df, get_visualisations_app
 
 from os.path import exists
 import os
 from graphion import server
 
+from holoviews.plotting.bokeh.callbacks import LinkCallback
+from holoviews.plotting.links import Link
 
 apiDegreeBlueprint = Blueprint('apiDegreeBlueprint', __name__, template_folder='templates')
 
@@ -38,6 +40,83 @@ def chooseClusterNumber(number):
     data = get_df(sid)
     set_cluster_filtered_df(get_dataframe_from_dot(data, int(number)), sid)
     return dumps(dict())
+
+@apiDegreeBlueprint.route('/link', methods=['POST'], strict_slashes=False)
+def linkPlots():
+    sid = request.cookies.get(server.config['SESSION_COOKIE_NAME'])
+    visApp = get_visualisations_app(sid)
+
+    class SelectLink(Link):
+        _requires_target = True
+
+    class SelectCallback(LinkCallback):
+
+        source_model = 'selected'
+        # source_handles = ['cds']
+        on_source_changes = ['indices']
+
+        target_model = 'selected'
+
+        source_code = """
+            console.log("selected")
+            let new_indices = []
+            for (let i = 0; i < source_selected.indices.length; i++){
+                let index = source_selected.indices[i]
+                j = len-1-(index%len)+Math.floor(index/(len))*(len)
+                new_indices[i] = j
+            }
+            target_selected.indices = new_indices
+        """
+
+    SelectLink.register_callback('bokeh', SelectCallback)
+
+    # table = hv.Table(current_data)
+    # SelectLink(hm, table)
+    # SelectLink(table, hm)
+
+    class SelectedDataLink(Link):
+        _requires_target = True
+
+    class SelectedDataCallback(LinkCallback):
+
+        source_model = 'selected'
+        source_handles = ['cds']
+        on_source_changes = ['indices']
+
+        target_model = 'cds'
+
+        source_code = """
+            console.log("Selected")
+            let new_indices = []
+            for (let i = 0; i < source_selected.indices.length; i++){
+                let index = source_selected.indices[i]
+                j = len-1-(index%len)+Math.floor(index/(len))*(len)
+                new_indices[i] = j
+            }
+            var inds = source_selected.indices
+            var d = source_cds.data
+
+            selected_data = {}
+            selected_data['index1'] = []
+            selected_data['index2'] = []
+            selected_data['value'] = []
+            selected_data['zvalues'] = []
+
+            for (var i = 0; i < inds.length; i++){
+                selected_data['index1'].push(d['index1'][inds[i]])
+                selected_data['index2'].push(d['index2'][inds[i]])
+                selected_data['value'].push(d['value'][inds[i]])
+                selected_data['zvalues'].push(d['zvalues'][inds[i]])
+            }
+            target_cds.data = selected_data
+
+        """
+
+    SelectedDataLink.register_callback('bokeh', SelectedDataCallback)
+    SelectedDataLink(visApp.hm, visApp.table)
+    visApp.trash += 1
+    return "linked"
+
 
 # @apiDegreeBlueprint.route('/api/filter/distribution/<type>/<dir>/<file>', methods=['GET'], strict_slashes=False)
 @apiDegreeBlueprint.route('/api/filter/distribution/<type>/<dir>', methods=['GET'], strict_slashes=False)

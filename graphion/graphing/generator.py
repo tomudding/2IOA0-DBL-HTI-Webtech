@@ -169,12 +169,14 @@ def generateBokehApp(doc):
         Node_color = param.ObjectSelector(default='totalweight', 
                                             objects=['indegree', 'outdegree', 'totaldegree', 'inweight', 'outweight', 'totalweight'])
 
+        trash = param.Integer(0)
+
         def __init__(self, datashaded = True):
             self.datashaded = datashaded
 
             super(VisApp, self).__init__()
 
-        @param.depends('Screen1', 'Screen2', 'Ordering', 'Metric', 'Color_palette', 'Node_size', 'Node_color')
+        @param.depends('Screen1', 'Screen2', 'Ordering', 'Metric', 'Color_palette', 'Node_size', 'Node_color', 'trash')
         def view(self):
             if self.Screen1 == "radial":
                 set_screen1("radial", sid)
@@ -198,7 +200,9 @@ def generateBokehApp(doc):
                 screen2.color_palette = self.Color_palette
 
                 hm = screen2.view()
+                self.hm = hm
                 table = hv.Table(hm.data)
+                self.table = table
                 table.opts(height=500)
 
                 def hook(plot, element):
@@ -207,7 +211,7 @@ def generateBokehApp(doc):
 
                 # hm.opts(hooks=[hook])
                 if screen2.show_only_selection:
-                    dlink = SelectedDataLink(hm, table)
+                    dlink = SelectedDataLink(hm, table, name=str(time.time()))
                 else:
                     SelectLink(hm, table)
                     SelectLink(table, hm)
