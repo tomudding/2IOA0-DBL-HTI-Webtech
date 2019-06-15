@@ -1,7 +1,7 @@
 """
 Author(s): Tom Udding, Steven van den Broek, Yuqing Zeng, Tim van de Klundert, Sam Baggen
 Created: 2019-05-03
-Edited: 2019-06-13
+Edited: 2019-06-16
 """
 from bokeh.plotting import figure, reset_output
 from bokeh.models import Circle, ColumnDataSource, HoverTool
@@ -28,9 +28,6 @@ from colorcet import palette
 from sys import maxsize
 from bokeh.palettes import Cividis256, Viridis256, Inferno256
 import param
-
-import time
-
 
 hv.extension('bokeh')
 
@@ -59,9 +56,9 @@ def generateNodeLinkDiagram(df, diagramType, datashaded=True):
         colorMap = {}
         color_palette = param.ObjectSelector(default='kbc',
                                              objects=colorList)
-        node_size = param.ObjectSelector(default='indegreesize', 
+        node_size = param.ObjectSelector(default='indegreesize',
                                             objects=['indegreesize', 'outdegreesize', 'totaldegreesize', 'inweightsize', 'outweightsize', 'totalweightsize'])
-        node_color = param.ObjectSelector(default='totalweight', 
+        node_color = param.ObjectSelector(default='totalweight',
                                             objects=['indegree', 'outdegree', 'totaldegree', 'inweight', 'outweight', 'totalweight'])
 
         def __init__(self, diagramType):
@@ -77,19 +74,13 @@ def generateNodeLinkDiagram(df, diagramType, datashaded=True):
             """
             if diagramType == "FORCE":
                 layout = spring_layout(G, k=1.42 / sqrt(number_of_nodes(G)), seed=server.config['SEED'])
-                # print(layout)
             elif diagramType == "HIERARCHICAL":
-                # TODO: refactor hierarchical code from Sophia
                 layout = graphviz_layout(nx.Graph([(u, v, d) for u, v, d in G.edges(data=True)]), prog='dot')
                 pass
             elif diagramType == "RADIAL":
                 layout = circular_layout(G)
-                # print(layout)
             else:
-                # TODO: throw exception
                 pass
-
-            print()
 
             # get node and edge information from graph
             nodes, nodes_coordinates = zip(*sorted(layout.items()))
@@ -98,19 +89,6 @@ def generateNodeLinkDiagram(df, diagramType, datashaded=True):
             # calculate centrality
             centrality = degree_centrality(G)
             _, nodeCentralities = zip(*sorted(centrality.items()))
-            # currently not used code below but can easily be used again
-            #if max(nodeCentralities) > 0:
-            #    centralityList = [10 + 12 * t / max(nodeCentralities) for t in nodeCentralities]
-            #else:
-            #    centralityList = [10 + 12 * t for t in nodeCentralities]
-
-            # create partitions, currently not used but can easily be used again
-            #partition = best_partition(G)
-            #_, nodePartitions = zip(*sorted(partition.items()))
-            # nodeDataSource.add(nodePartitions, 'partition')
-            #partitionColours = ["#b2182b", "#d6604d", "#f4a582", "#fddbc7", "#f7f7f7", "#d1e5f0", "#92c5de", "#4393c3",
-            #                    "#2166ac"]  # safe to use for colourblind people
-            #partitionList = [partitionColours[t % len(partitionColours)] for t in nodePartitions]
 
             # get degree information
             if is_directed(G):
@@ -122,14 +100,14 @@ def generateNodeLinkDiagram(df, diagramType, datashaded=True):
                 for n in nodes:
                     totalDegreeSize[n] = {n: inDegreeSize[n] + outDegreeSize[n]}
                 totalDegree = totalDegreeSize.copy()
-            else :
+            else:
                 inDegreeSize = dict(G.degree)
                 inDegree = inDegreeSize.copy()
                 outDegreeSize = inDegreeSize.copy()
                 outDegree = inDegreeSize.copy()
                 totalDegreeSize = inDegreeSize.copy()
                 totalDegree = inDegreeSize.copy()
-            
+
             # get weight information
             if is_directed(G):
                 inWeightSize = dict(G.in_degree(weight='weight'))
@@ -140,7 +118,7 @@ def generateNodeLinkDiagram(df, diagramType, datashaded=True):
                 for n in nodes:
                     totalWeightSize[n] = {n: inWeightSize[n] + outWeightSize[n]}
                 totalWeight = totalWeightSize.copy()
-            else :
+            else:
                 inWeightSize = dict(G.degree(weight='weight'))
                 inWeight = inWeightSize.copy()
                 outWeightSize = inWeightSize.copy()
@@ -254,11 +232,11 @@ def generateNodeLinkDiagram(df, diagramType, datashaded=True):
                         totalWeightSize[n] = minNodeSize
                     else:
                         totalWeightSize[n] = result
-            
+
             # Making a dictionary for all attributes, and ensuring none of the values go crazy.
             attributes = {}
             maxNodeSize = 30
-            for n in nodes:  
+            for n in nodes:
                 outd = outDegreeSize[n]
                 totd = totalDegreeSize[n]
                 inw = inWeightSize[n]
@@ -289,7 +267,7 @@ def generateNodeLinkDiagram(df, diagramType, datashaded=True):
                     totw = 1
                 else:
                     totw = totalWeightSize[n]
-                
+
                 attributes[n] = {'indegreesize': ind * maxNodeSize,
                                  'outdegreesize': outd * maxNodeSize,
                                  'totaldegreesize': totd * maxNodeSize,
@@ -302,17 +280,12 @@ def generateNodeLinkDiagram(df, diagramType, datashaded=True):
                                  'inweight': inWeight[n],
                                  'outweight': outWeight[n],
                                  'totalweight': totalWeight[n]}
-            nx.set_node_attributes(G, attributes)
 
-            # create the plot itself
-            # if diagramType == "HIERARCHICAL":
-            #     SG = nx.Graph([(u, v, d) for u, v, d in G.edges(data=True)])
-            #     plot = hv.Graph.from_networkx(SG, positions=graphviz_layout(SG, prog='dot'))
-            # else:
+            nx.set_node_attributes(G, attributes)
             plot = hv.Graph.from_networkx(G, layout)
 
             # disabling displaying all node info on hovering over the node
-            tooltips = [('Index', '@index'), ('In-Degree', '@indegree'), ('Out-Degree', '@outdegree'), ('Total Degree', '@totaldegree'), 
+            tooltips = [('Index', '@index'), ('In-Degree', '@indegree'), ('Out-Degree', '@outdegree'), ('Total Degree', '@totaldegree'),
                         ('In Edge Weight', '@inweight'), ('Out Edge-Weight', '@outweight'), ('Total Edge-Weight', '@totalweight')]
             hover = HoverTool(tooltips=tooltips)
 
@@ -327,7 +300,6 @@ def generateNodeLinkDiagram(df, diagramType, datashaded=True):
                 else:
                     self.colorMap[c] = palette[c]
 
-            # begin = time.time()
             # Comment the following two/three lines to disable edgebundling and datashading.
             if max(nodeCentralities) > 0:
                 if datashaded:
@@ -343,157 +315,12 @@ def generateNodeLinkDiagram(df, diagramType, datashaded=True):
                 plot = dynspread(datashade(self.plot, normalization='linear', width=600, height=600, cmap=self.colorMap[self.color_palette]))
                 self.points.opts(cmap=self.colorMap[self.color_palette], color=self.node_color, size=self.node_size)
                 return plot * self.points
-            # plot = datashade(self.plot, normalization='linear', width=600, height=600)
             return self.plot * self.points
 
-    # print("Edge bundling and datashading took: " + str(time.time()-begin))
     return Nodelink(diagramType)
-
-# Generate a force-directed node-link diagram
-def generateForceDirectedDiagram(file, isDirected, df=False):
-    if not df:
-        df = decreaseDiagramSize(file)
-    else:
-        df = file
-    # convert Pandas DataFrame (Matrix) to NetworkX graph
-    G = from_pandas_adjacency(df)
-    layout = spring_layout(G, k=1.42/sqrt(number_of_nodes(G)))
-
-    # get node and edge information from graph
-    nodes, nodes_coordinates = zip(*sorted(layout.items()))
-    nodes_x, nodes_y = list(zip(*nodes_coordinates))
-
-    # calculate centrality
-    centrality = degree_centrality(G)
-    _, nodeCentralities = zip(*sorted(centrality.items()))
-    centralityList = [10 + 12 * t / max(nodeCentralities) for t in nodeCentralities]
-
-    # create partitions
-    partition = best_partition(G)
-    _, nodePartitions = zip(*sorted(partition.items()))
-    #nodeDataSource.add(nodePartitions, 'partition')
-    partitionColours = ["#b2182b","#d6604d","#f4a582","#fddbc7","#f7f7f7","#d1e5f0","#92c5de","#4393c3","#2166ac"] # safe to use for colourblind people
-    partitionList = [partitionColours[t % len(partitionColours)] for t in nodePartitions]
-
-    #Making a dictionary for all attributes
-    attributes = {}
-    for n in nodes:
-        attributes[n] = {'Centrality': centralityList[nodes.index(n)], 'Partition': partitionList[nodes.index(n)]}
-    nx.set_node_attributes(G, attributes)
-
-    # create the plot itself
-    plot = hv.Graph.from_networkx(G, layout)
-
-    # colour the nodes based on the partition
-
-    plot.opts(cmap = partitionColours, color_index='Partition', node_size='Centrality', inspection_policy='nodes', tools=['box_select', 'lasso_select', 'tap', 'hover'], toolbar='above', show_legend=False, width=600, height=600)
-
-    renderer = hv.renderer('bokeh')
-    renderer.webgl = True
-    table = hv.Table(renderer.get_plot(plot).handles['glyph_renderer'].node_renderer.data_source.to_df())
-    points = hv.Points((nodes_x, nodes_y, nodes, centralityList, partitionList), vdims=['Index', 'Centrality', 'Partition'])
-    points.opts(cmap = partitionColours, color_index='Partition', size='Centrality', line_width = 1.5, line_color='#000000')
-    # begin = time.time()
-
-    # Comment the following two/three lines to disable edgebundling and datashading.
-    plot = bundle_graph(plot)
-    plot = (datashade(plot, normalization='linear', width=600, height=600) * plot.nodes).opts(opts.Nodes(cmap=partitionColours, color='Partition', size='Centrality',
-               tools=['box_select', 'lasso_select', 'tap'], active_tools=['wheel_zoom'], toolbar='above', show_legend=False, width=600, height=600))
-
-    # print("Edge bundling and datashading took: " + str(time.time()-begin))
-    return (pn.Column(plot * points), points)
-
-# Generate a hierarchical node-link diagram
-def generateHierarchicalDiagram(file, isDirected, df=False):
-    if not df:
-        df = decreaseDiagramSize(file)
-    else:
-        df = file
-    #df = decreaseDiagramSize(file)
-    # set defaults for HoloViews
-    extension('bokeh')
-    renderer('bokeh').webgl = True
-    reset_output()
-    defaults = dict(width=400, height=400, padding=0.1)
-    opts.defaults(opts.EdgePaths(**defaults), opts.Graph(**defaults), opts.Nodes(**defaults))
-
-    G = from_pandas_adjacency(df)
-    # cutoff = 2 #adjust this parameter to filter edges
-    # SG = nx.Graph([(u, v, d) for u, v, d in G.edges(data=True) if d['weight'] > cutoff])
-    SG = nx.Graph([(u, v, d) for u, v, d in G.edges(data=True)])
-
-    graph = hv.Graph.from_networkx(SG, positions = graphviz_layout(SG, prog ='dot')).opts(directed=isDirected, width=600, height=600, show_legend=False, arrowhead_length=0.0005)
-    graph = bundle_graph(graph)
-    graph = (datashade(graph, normalization='linear', width=600, height=600) * graph.nodes).opts(
-        opts.Nodes(width=600, height=600, tools=['box_select', 'lasso_select', 'tap', 'hover'], active_tools=['wheel_zoom'], toolbar='above', show_legend=False))
-    # Make a panel and widgets with param for choosing a layout
-    return pn.Column(graph)
-
-# Generate a radial node-link diagram
-def generateRadialDiagram(file, isDirected, colorpalette, df=False):
-    if not df:
-        df = decreaseDiagramSize(file)
-    else:
-        df = file
-    #df = decreaseDiagramSize(file)
-
-    node_count = df.shape[0]
-
-    degree_array = node_count * [0]
-    degree_index = 0
-    #row_index = 0
-    for _index,row in df.iterrows():
-        degree = 0
-        for value in row:
-            if value > 0:
-                degree += 1
-        degree_array[degree_index] = degree
-        degree_index += 1
-
-    # print(df.head())
-    # set defaults for HoloViews
-    extension('bokeh')
-    renderer('bokeh').webgl = True
-    reset_output()
-    defaults = dict(width=200, height=200, padding=0.1)
-    opts.defaults(opts.EdgePaths(**defaults), opts.Graph(**defaults), opts.Nodes(**defaults))
-
-    G = from_pandas_adjacency(df)
-    layout = circular_layout(G)
-
-    # get node and edge information from graph
-    nodes, nodes_coordinates = zip(*sorted(layout.items()))
-    nodes_x, nodes_y = list(zip(*nodes_coordinates))
-
-    degreeList = []
-    for n in nodes:
-        if  (degree_array[nodes.index(n)] == 0 or degree_array[nodes.index(n)] == 1):
-            degreeList.append(1)
-        else:
-            degreeList.append(degree_array[nodes.index(n)])
-
-    degree_dict = {}
-    for n in nodes:
-        degree_dict[n] = {'Degree': degreeList[nodes.index(n)]}
-
-
-    nx.set_node_attributes(G, degree_dict)
-    graph = hv.Graph.from_networkx(G, circular_layout)
-    #graph.nodes.data['degree'] = Series(degree_array)
-
-    # I tried simply using node_size='degree', but if it only were that easy... (it is that easy :D, however most of the time the nodes are really small :( )
-    graph.opts(node_size='Degree', directed=isDirected, width=600, height=600, arrowhead_length=0.0005, inspection_policy='nodes', tools=['box_select', 'lasso_select', 'tap', 'hover'], toolbar='above', show_legend=False)
-    points = hv.Points((nodes_x, nodes_y, nodes, degreeList), vdims=['Index', 'Degree'])
-    points.opts(line_width = 1.5, line_color='#000000', size='Degree')
-    graph = bundle_graph(graph)
-    graph = dynspread(datashade(graph, normalization='linear', width=600, height=600, cmap=palette[colorpalette]))
-    return (pn.Column((graph * points.opts(size='Degree', tools=['box_select', 'lasso_select', 'tap', 'hover'], active_tools=['wheel_zoom'], toolbar='above', show_legend=False, width=600, height=600)))
-        , graph, points)
-
 
 # Generate 3D graph
 def generate3DDiagram(file, df=False):
-
     if not df:
         df = decreaseDiagramSize(file)
     else:
@@ -501,20 +328,6 @@ def generate3DDiagram(file, df=False):
 
     names = df.columns.tolist()
     N = len(names)
-
-    # remove some noise (assuming author similarity matrix)
-    # noise = []
-    # for name in names:
-    #     if (len(df[name][df[name] == 0]) == len(names)):
-    #         noise.append(name)
-    #
-    # for name in noise:
-    #     names.remove(name)
-
-
-    # df.drop(noise, inplace=True)
-    # df.drop(noise, axis=1, inplace=True)
-    # N = len(names)
 
     G = nx.from_pandas_adjacency(df)
     G = nx.convert_node_labels_to_integers(G)
@@ -554,14 +367,6 @@ def generate3DDiagram(file, df=False):
         y_edge_ends = [layt[e[0]][1], layt[e[1]][1], None]
         z_edge_ends = [layt[e[0]][2], layt[e[1]][2], None]
         edge_traces.append(make_edge(x_edge_ends, y_edge_ends, z_edge_ends, e[2]['weight']))
-
-    # trace1 = go.Scatter3d(x=Xe,
-    #                      y=Ye,
-    #                      z=Ze,
-    #                      mode='lines',
-    #                      line=dict(color='rgb(125,125,125)', width=1),
-    #                      hoverinfo='none',
-    #                      )
 
     trace2 = go.Scatter3d(x=Xn,
                           y=Yn,

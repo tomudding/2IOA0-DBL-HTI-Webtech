@@ -4,7 +4,7 @@ Created: 2019-06-09
 Edited: 2019-06-12
 """
 from graphion.graphing.matrix.protomatrix import makeMatrix
-from graphion.graphing.nodelink.graph import generateForceDirectedDiagram, generateHierarchicalDiagram, generateRadialDiagram, generate3DDiagram, generateNodeLinkDiagram
+from graphion.graphing.nodelink.graph import generate3DDiagram, generateNodeLinkDiagram
 from time import time
 
 def is_global():
@@ -179,7 +179,6 @@ def populate_hierarchical_diagram(df, sid, **kwargs):
         plot = APP_CONTEXT['data'][sid]['hierarchical']
         if plot is not None:
             return plot
-    # hierarchical = generateHierarchicalDiagram(df.copy(), False, df=True)
     hierarchical = generateNodeLinkDiagram(df.copy(), 'hierarchical', **kwargs)
     APP_CONTEXT['data'][sid]['hierarchical'] = hierarchical
     return hierarchical
@@ -198,7 +197,6 @@ def populate_force_diagram(df, sid, **kwargs):
     if 'force' in APP_CONTEXT['data'][sid]:
         if APP_CONTEXT['data'][sid]['force'] is not None:
             return APP_CONTEXT['data'][sid]['force']
-    # force = generateForceDirectedDiagram(df.copy(), False, df=True)
     force = generateNodeLinkDiagram(df.copy(), 'force', **kwargs)
     APP_CONTEXT['data'][sid]['force'] = force
     return force
@@ -208,7 +206,6 @@ def populate_radial_diagram(df, sid, **kwargs):
     if 'radial' in APP_CONTEXT['data'][sid]:
         if APP_CONTEXT['data'][sid]['radial'] is not None:
             return APP_CONTEXT['data'][sid]['radial']
-    # radial = generateRadialDiagram(df.copy(), False, df=True)
     radial = generateNodeLinkDiagram(df.copy(), 'radial', **kwargs)
     APP_CONTEXT['data'][sid]['radial'] = radial
     return radial
