@@ -1,7 +1,7 @@
 """
-Author(s): Yuqin Cui, Steven Broek
+Author(s): Yuqin Cui, Steven Broek, Tom Udding (small change)
 Created: 2019-06-12
-Edited: 2019-06-12
+Edited: 2019-06-15
 """
 
 import numpy as np
@@ -26,13 +26,10 @@ from sklearn.cluster import KMeans
 import matplotlib
 import matplotlib.pyplot as plt
 
-
 from bokeh.models import ColumnDataSource, Plot, LinearAxis, Grid
 from bokeh.models.glyphs import Text
 from bokeh.io import curdoc, show
 from sklearn.decomposition import PCA
-
-
 
 def K_mean_cluster(dataframe):
     node_number = len(dataframe.columns)
@@ -105,7 +102,7 @@ def generate_cluster_graph(dataframe):
                 }
                 console.log(labels);
                 $.post("/api/filter/clustering/choose/" + labels[0], function(response){
-                    document.getElementById('start-tool-cluster').hidden = false;
+                    document.getElementById('start-tool-cluster').disabled = false;
                 });
             """))
 
@@ -127,7 +124,6 @@ def generate_cluster_graph(dataframe):
         p.yaxis.visible = False
         p.grid.visible = False
         return p
-
 
 def get_dataframe_from_dot(dataframe, cluster_umber):
     cluster_n, counter, cluster_label_df = K_mean_cluster(dataframe)
