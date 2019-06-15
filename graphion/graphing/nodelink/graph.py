@@ -76,7 +76,7 @@ def generateNodeLinkDiagram(df, diagramType, datashaded=True):
             Create NetworkX graph layout manager
             """
             if diagramType == "FORCE":
-                layout = spring_layout(G, k=1.42 / sqrt(number_of_nodes(G)), seed=server.config['SEED'])
+                layout = spring_layout(G, k=10.42 / sqrt(number_of_nodes(G)), seed=server.config['SEED'])
                 # print(layout)
             elif diagramType == "HIERARCHICAL":
                 # TODO: refactor hierarchical code from Sophia

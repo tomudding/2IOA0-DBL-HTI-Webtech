@@ -10,9 +10,12 @@ from graphion.session.handler import get_custom_key, set_custom_key, get_filtere
     set_screen2, get_screen2, populate_3d_diagram, populate_force_diagram, populate_hierarchical_diagram,\
     populate_matrix, populate_radial_diagram, get_visualisations_app, set_visualisations_app, reset_plots, \
     get_matrix_df, get_datashading
+from graphion.graphing.matrix.protomatrix import makeMatrix
 import os
 import panel as pn
 import time
+from holoviews.plotting.bokeh.callbacks import LinkCallback
+from holoviews.plotting.links import Link
 
 from bokeh.themes.theme import Theme
 
@@ -22,6 +25,83 @@ import holoviews as hv
 def generateBokehApp(doc):
     sid = str(doc.session_context.request.arguments['sid'][0].decode('utf-8'))
     reset_plots(sid)
+
+    df = get_filtered_df(sid)
+
+
+
+    class SelectLink(Link):
+        _requires_target = True
+
+    class SelectCallback(LinkCallback):
+
+        source_model = 'selected'
+        # source_handles = ['cds']
+        on_source_changes = ['indices']
+
+        target_model = 'selected'
+
+        source_code = "let len = {}".format(len(df.columns)) + """
+            console.log("selected")
+            let new_indices = []
+            for (let i = 0; i < source_selected.indices.length; i++){
+                let index = source_selected.indices[i]
+                j = len-1-(index%len)+Math.floor(index/(len))*(len)
+                new_indices[i] = j
+            }
+            target_selected.indices = new_indices
+        """
+
+    SelectLink.register_callback('bokeh', SelectCallback)
+
+    # table = hv.Table(current_data)
+    # SelectLink(hm, table)
+    # SelectLink(table, hm)
+
+    class SelectedDataLink(Link):
+        _requires_target = True
+
+    class SelectedDataCallback(LinkCallback):
+
+        source_model = 'selected'
+        source_handles = ['cds']
+        on_source_changes = ['indices']
+
+        target_model = 'cds'
+
+        source_code = "let len = {}".format(len(df.columns)) + """
+            console.log("Selected")
+            let new_indices = []
+            for (let i = 0; i < source_selected.indices.length; i++){
+                let index = source_selected.indices[i]
+                j = len-1-(index%len)+Math.floor(index/(len))*(len)
+                new_indices[i] = j
+            }
+            var inds = source_selected.indices
+            var d = source_cds.data
+
+            selected_data = {}
+            selected_data['index1'] = []
+            selected_data['index2'] = []
+            selected_data['value'] = []
+            selected_data['zvalues'] = []
+
+            for (var i = 0; i < inds.length; i++){
+                selected_data['index1'].push(d['index1'][inds[i]])
+                selected_data['index2'].push(d['index2'][inds[i]])
+                selected_data['value'].push(d['value'][inds[i]])
+                selected_data['zvalues'].push(d['zvalues'][inds[i]])
+            }
+            target_cds.data = selected_data
+
+        """
+
+    SelectedDataLink.register_callback('bokeh', SelectedDataCallback)
+
+
+
+
+
     # Set theme for holoviews plots
     theme = Theme(
         json={
@@ -116,6 +196,23 @@ def generateBokehApp(doc):
                 screen2.reordering = self.Ordering
                 screen2.metric = self.Metric
                 screen2.color_palette = self.Color_palette
+
+                hm = screen2.view()
+                table = hv.Table(hm.data)
+                table.opts(height=500)
+
+                def hook(plot, element):
+                    print(plot.handles['cds'])
+                    print(plot.handles['cds'].selected.indices)
+
+                # hm.opts(hooks=[hook])
+                if screen2.show_only_selection:
+                    dlink = SelectedDataLink(hm, table)
+                else:
+                    SelectLink(hm, table)
+                    SelectLink(table, hm)
+                print("Linked hm to table")
+                print(dlink)
                 set_custom_key(get_screen2(sid), screen2, sid)
 
             # Setting up the linking, generateDiagram functions return two-tuple (graph, points). Points is the selection layer
@@ -130,6 +227,7 @@ def generateBokehApp(doc):
 
             # Link nodelink to matrix (points only)
             #SelectNodeToMatrixLink(s1[1], s2.view)
+            print("Ran VisApp view")
             gridSpec = pn.GridSpec(sizing_mode='stretch_both')
 
             if self.Screen1 == "3d":
@@ -142,12 +240,14 @@ def generateBokehApp(doc):
                 set_custom_key(get_screen1(sid), screen1, sid)
                 gridSpec[0, 0] = pn.Column(get_custom_key(get_screen1(sid), sid).view, css_classes=['screen-1', 'col-s-6'])
 
-            gridSpec[0, 1] = pn.Column(get_custom_key(get_screen2(sid), sid).view, css_classes=['screen-2', 'col-s-6'])
+            gridSpec[0, 1] = pn.Column(hm.opts(hooks=[hook]), table, css_classes=['screen-2', 'col-s-6'])
+
             return gridSpec
 
-    df = get_filtered_df(sid)
 
-    #visApp = VisApp(datashaded=False)
+
+
+    # visApp = VisApp(datashaded=False)
     visApp = VisApp(datashaded=get_datashading(sid))
 
     set_visualisations_app(visApp, sid)
@@ -168,6 +268,10 @@ def generateBokehApp(doc):
 
     pn.extension('plotly')
     # Don't use pn.Pane since that messes up linking
+
+    # matrix = makeMatrix(get_matrix_df(sid), None, df=True)
+
+    # return pn.Column(matrix.view, matrix.param).get_root(doc)
     return pn.Column(visApp.view).get_root(doc)
 
 def changeScreen1(new_type, sid):

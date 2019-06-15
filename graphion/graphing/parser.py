@@ -22,4 +22,9 @@ def processCSVMatrix(file):
     df = df.rename(columns={'Unnamed: 0': 'name'})
     df = df.set_index(keys='name')
 
+    # Remove underscores in names
+    names = df.columns.tolist()
+    names = [name.replace('_', ' ') for name in names]
+    df.columns = names
+
     return df

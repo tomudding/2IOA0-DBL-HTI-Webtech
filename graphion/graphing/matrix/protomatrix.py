@@ -25,15 +25,12 @@ def makeMatrix(file, nl, df=False):
         df = read_hdf(file)
     else:
         df = file
-    big_bang = time.time()
+
     names = df.columns.tolist()
     if (len(names) > 400):
         df = df.head(400)[names[0:400]]
-    names = df.columns.tolist()
-    names = [name.replace('_', ' ') for name in names]
-    df.columns = names
-    df.set_index([df.columns], inplace=True)
 
+    df.set_index([df.columns], inplace=True)
     df_original = df.copy()
 
     def remove_noise(df):
@@ -242,6 +239,7 @@ def makeMatrix(file, nl, df=False):
         def __init__(self, calc_pdist=True, show_only_selection=True):
             self.show_only_selection = show_only_selection
             self.calc_pdist = calc_pdist
+            self.current = None
             super(Matrix_dropdown, self).__init__()
 
         @param.depends('reordering', 'metric', 'color_palette')
@@ -263,8 +261,11 @@ def makeMatrix(file, nl, df=False):
                 # else:
                 #     SelectLink(hm, table)
                 #     SelectLink(table, hm)
+                # print("Linked hm to table")
 
-                # return pn.Row(hm, table)
+                #return pn.Row(hm, table)
+
+                self.current = hm
                 return hm
 
             else:
@@ -282,7 +283,7 @@ def makeMatrix(file, nl, df=False):
                 hm = hv.HeatMap(result).opts(tools=['tap', 'box_select', 'hover'], active_tools=['box_select'],
                                              height=500, width=550, xaxis=None, yaxis=None, cmap=self.color_palette,
                                              colorbar=True, toolbar='above')
-                # FOR LINKING TESTING
+                # # FOR LINKING TESTING
                 # table = hv.Table(hm.data)
                 # table.opts(height=500)
                 #
@@ -291,8 +292,10 @@ def makeMatrix(file, nl, df=False):
                 # else:
                 #     SelectLink(hm, table)
                 #     SelectLink(table, hm)
-                #
+                # print("Linked hm to table")
+
                 # return pn.Row(hm, table)
+                self.current = hm
                 return hm
 
     matrix = Matrix_dropdown()
