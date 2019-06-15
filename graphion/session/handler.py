@@ -1,7 +1,7 @@
 """
 Author(s): Tom Udding, Steven van den Broek
 Created: 2019-06-09
-Edited: 2019-06-12
+Edited: 2019-06-15
 """
 from graphion.graphing.matrix.protomatrix import makeMatrix
 from graphion.graphing.nodelink.graph import generate3DDiagram, generateNodeLinkDiagram

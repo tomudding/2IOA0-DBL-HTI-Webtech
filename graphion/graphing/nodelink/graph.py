@@ -1,7 +1,7 @@
 """
 Author(s): Tom Udding, Steven van den Broek, Yuqing Zeng, Tim van de Klundert, Sam Baggen
 Created: 2019-05-03
-Edited: 2019-06-16
+Edited: 2019-06-15
 """
 from bokeh.plotting import figure, reset_output
 from bokeh.models import Circle, ColumnDataSource, HoverTool
