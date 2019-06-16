@@ -2,7 +2,7 @@
     <defs>
         <style>.a{fill:#3189ff;}.b{fill:#0061e4;}.c{font-size:35px;fill:#f1f2f2;font-family:Aileron-Bold, Aileron;font-weight:700;}</style>
     </defs>
-    <title>graphion</title>
+    <title>icon-file-csv</title>
     <path class="a" d="M161.125,30H59.66669A6.18478,6.18478,0,0,0,53.5,36.16663V219.83331A6.18483,6.18483,0,0,0,59.66669,226H196.33331A6.18483,6.18483,0,0,0,202.5,219.83331V71.375Z"/>
     <path class="b" d="M161.125,35.375V65.20837a6.18478,6.18478,0,0,0,6.16669,6.16663H202.5L161.125,30Z"/>
     <text class="c" transform="translate(71.64063 206.32983)">CSV</text>

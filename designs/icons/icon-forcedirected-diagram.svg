@@ -2,7 +2,7 @@
     <defs>
         <style>.a,.c,.d{fill:none;stroke:#231f20;stroke-miterlimit:10;}.a{stroke-width:5px;}.b{fill:#231f20;}.c{stroke-width:3px;}.d{stroke-width:7px;}</style>
     </defs>
-    <title>graphion</title>
+    <title>icon-forcedirected-diagram</title>
     <line class="a" x1="121.04167" y1="115.41667" x2="121.04167" y2="65.41667"/>
     <path class="b" d="M62.54167,96.16667a13,13,0,1,0,13,13A13,13,0,0,0,62.54167,96.16667Zm0,21a8,8,0,1,1,8-8A8,8,0,0,1,62.54167,117.16667Z"/>
     <line class="c" x1="71.875" y1="112.58333" x2="103.45833" y2="124.91667"/>

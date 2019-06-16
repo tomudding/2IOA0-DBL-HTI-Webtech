@@ -2,7 +2,7 @@
     <defs>
         <style>.a{fill:#231f20;}.b,.c{fill:none;stroke:#231f20;stroke-miterlimit:10;}.b{stroke-width:6px;}.c{stroke-width:5px;}</style>
     </defs>
-    <title>graphion</title>
+    <title>icon-hierarchical-diagram</title>
     <path class="a" d="M128,50a21,21,0,1,0,21,21A21,21,0,0,0,128,50Zm0,35a14,14,0,1,1,14-14A14,14,0,0,1,128,85Z"/>
     <path class="a" d="M78,115a18,18,0,1,0,18,18A18,18,0,0,0,78,115Zm0,29.5A11.5,11.5,0,1,1,89.5,133,11.5,11.5,0,0,1,78,144.5Z"/>
     <path class="a" d="M178,115a18,18,0,1,0,18,18A18,18,0,0,0,178,115Zm0,29.5A11.5,11.5,0,1,1,189.5,133,11.5,11.5,0,0,1,178,144.5Z"/>

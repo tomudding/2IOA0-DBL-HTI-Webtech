@@ -1,7 +1,7 @@
 """
 Author(s): Tom Udding, Steven van den Broek
 Created: 2019-05-01
-Edited: 2019-06-14
+Edited: 2019-06-16
 """
 import os, secrets
 from flask import Blueprint, flash, request, redirect, session
@@ -27,7 +27,7 @@ def upload_matrix():
         stream, form, files = parse_form_data(request.environ, stream_factory=custom_stream_factory)
 
         file = next(iter(files.values()))
-        fileOriginalName = secure_filename(file.filename.rsplit('.', 1)[0].lower())
+        fileOriginalName = secure_filename(file.filename)
         df = processCSVMatrix(file.stream.name)
         df.to_hdf(os.path.join(server.config['UPLOAD_FOLDER'], (fileUniqueHash + '.h5')), key=fileOriginalName)
         file.stream.close()
@@ -49,9 +49,9 @@ def upload_edgelist():
         stream, form, files = parse_form_data(request.environ, stream_factory=custom_stream_factory)
 
         file = next(iter(files.values()))
-        fileOriginalName = secure_filename(file.filename.rsplit('.', 1)[0].lower())
-        df = processCSVMatrix(file.stream.name)
-        df.to_hdf(os.path.join(server.config['UPLOAD_FOLDER'], (fileUniqueHash + '.h5')), key=('e_' + fileOriginalName))
+        fileOriginalName = secure_filename(file.filename)
+        df = processEdgeList(file.stream.name)
+        df.to_hdf(os.path.join(server.config['UPLOAD_FOLDER'], (fileUniqueHash + '.h5')), key=fileOriginalName)
         file.stream.close()
         os.remove(file.stream.name)
         return fileUniqueHash

@@ -2,7 +2,7 @@
     <defs>
         <style>.a,.b,.d,.e{fill:none;stroke-miterlimit:10;}.a{stroke:#58595b;}.a,.d{stroke-width:3px;}.b,.d,.e{stroke:#231f20;}.b{stroke-width:5px;}.c{fill:#231f20;}.e{stroke-width:7px;}</style>
     </defs>
-    <title>graphion</title>
+    <title>icon-3d-diagram</title>
     <polyline class="a" points="210.341 181.958 123.739 131.958 123.739 31.958 123.739 131.958 37.136 181.958"/>
     <line class="b" x1="123.73877" y1="115.95833" x2="123.73877" y2="65.95833"/>
     <path class="c" d="M65.23877,96.70833a13,13,0,1,0,13,13A13,13,0,0,0,65.23877,96.70833Zm0,21a8,8,0,1,1,8-8A8,8,0,0,1,65.23877,117.70833Z"/>
