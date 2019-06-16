@@ -19,9 +19,56 @@ from bokeh.themes.theme import Theme
 import param
 import holoviews as hv
 
+from holoviews.plotting.bokeh.callbacks import LinkCallback
+from holoviews.plotting.links import Link
+
 def generateBokehApp(doc):
     sid = str(doc.session_context.request.arguments['sid'][0].decode('utf-8'))
     reset_plots(sid)
+
+    df = get_filtered_df(sid)
+
+    class SelectedDataLink(Link):
+        _requires_target = True
+
+    class SelectedDataCallback(LinkCallback):
+
+        source_model = 'selected'
+        source_handles = ['cds']
+        on_source_changes = ['indices']
+
+        target_model = 'cds'
+
+        source_code = "let len = {}".format(len(df.columns)) + """
+                    let new_indices = []
+                    for (let i = 0; i < source_selected.indices.length; i++){
+                        let index = source_selected.indices[i]
+                        j = len-1-(index%len)+Math.floor(index/(len))*(len)
+                        new_indices[i] = j
+                    }
+                    var inds = source_selected.indices
+                    var d = source_cds.data
+
+                    selected_data = {}
+                    selected_data['index1'] = []
+                    selected_data['index2'] = []
+                    selected_data['value'] = []
+                    selected_data['zvalues'] = []
+
+                    for (var i = 0; i < inds.length; i++){
+                        selected_data['index1'].push(d['index1'][inds[i]])
+                        selected_data['index2'].push(d['index2'][inds[i]])
+                        selected_data['value'].push(d['value'][inds[i]])
+                        selected_data['zvalues'].push(d['zvalues'][inds[i]])
+                    }
+                    target_cds.data = selected_data
+
+                """
+
+    SelectedDataLink.register_callback('bokeh', SelectedDataCallback)
+
+
+
     # Set theme for holoviews plots
     theme = Theme(
         json={
@@ -109,6 +156,7 @@ def generateBokehApp(doc):
                 set_screen1("3d", sid)
                 populate_3d_diagram(df, sid)
             # print(s1[1])
+            screen1 = get_custom_key(get_screen1(sid), sid)
             if self.Screen2 == "matrix":
                 set_screen2("matrix", sid)
                 populate_matrix(get_matrix_df(sid), sid)
@@ -118,34 +166,40 @@ def generateBokehApp(doc):
                 screen2.color_palette = self.Color_palette
                 set_custom_key(get_screen2(sid), screen2, sid)
 
-            # Setting up the linking, generateDiagram functions return two-tuple (graph, points). Points is the selection layer
-            # makeMatrix returns matrix_dropdown object. matrix.view returns the heatmap object
-            #SelectMatrixToNodeLink.register_callback('bokeh', SelectMatrixToNodeCallback)
-            #SelectEdgeLink.register_callback('bokeh', SelectEdgeCallback)
-            #SelectNodeToMatrixLink.register_callback('bokeh', SelectNodeToMatrixCallback)
+                # Setting up the linking, generateDiagram functions return two-tuple (graph, points). Points is the selection layer
+                # makeMatrix returns matrix_dropdown object. matrix.view returns the heatmap object
+                SelectMatrixToNodeLink.register_callback('bokeh', SelectMatrixToNodeCallback)
+                SelectEdgeLink.register_callback('bokeh', SelectEdgeCallback)
+                SelectNodeToMatrixLink.register_callback('bokeh', SelectNodeToMatrixCallback)
+                graph, points = screen1.view()
+                matrix = screen2.view()
+                table = hv.Table(matrix.data)
+                # Link matrix to the nodelink (both graph and points)
+                SelectMatrixToNodeLink(matrix, points)
+                # SelectedDataLink(matrix, points)
 
-            # Link matrix to the nodelink (both graph and points)
-            #SelectMatrixToNodeLink(s2.view, s1[1])
-            #SelectEdgeLink(s2.view, s1[0])
+                # renderer = hv.renderer('bokeh')
+                # print(renderer.get_plot(points).handles)
+                SelectedDataLink(matrix, table)
 
-            # Link nodelink to matrix (points only)
-            #SelectNodeToMatrixLink(s1[1], s2.view)
-            gridSpec = pn.GridSpec(sizing_mode='stretch_both')
+                # Link nodelink to matrix (points only)
+                SelectNodeToMatrixLink(points, matrix)
+                gridSpec = pn.GridSpec(sizing_mode='stretch_both')
 
             if self.Screen1 == "3d":
                 gridSpec[0, 0] = pn.Column(get_custom_key(get_screen1(sid), sid), css_classes=['screen-1', 'col-s-6'])
             else:
-                screen1 = get_custom_key(get_screen1(sid), sid)
+
                 screen1.color_palette = self.Color_palette
                 screen1.node_size = self.Node_size
                 screen1.node_color = self.Node_color
                 set_custom_key(get_screen1(sid), screen1, sid)
-                gridSpec[0, 0] = pn.Column(get_custom_key(get_screen1(sid), sid).view, css_classes=['screen-1', 'col-s-6'])
+                gridSpec[0, 0] = pn.Column(graph * points, css_classes=['screen-1', 'col-s-6'])
 
-            gridSpec[0, 1] = pn.Column(get_custom_key(get_screen2(sid), sid).view, css_classes=['screen-2', 'col-s-6'])
+            gridSpec[0, 1] = pn.Column(matrix, table, css_classes=['screen-2', 'col-s-6'])
             return gridSpec
 
-    df = get_filtered_df(sid)
+
 
     #visApp = VisApp(datashaded=False)
     visApp = VisApp(datashaded=get_datashading(sid))

@@ -30,9 +30,6 @@ def makeMatrix(file, nl, df=False):
     if (len(names) > 400):
         df = df.head(400)[names[0:400]]
     names = df.columns.tolist()
-    names = [name.replace('_', ' ') for name in names]
-    df.columns = names
-    df.set_index([df.columns], inplace=True)
 
     df_original = df.copy()
 

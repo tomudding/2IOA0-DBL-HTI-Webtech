@@ -279,7 +279,8 @@ def generateNodeLinkDiagram(df, diagramType, datashaded=True):
                                  'totaldegree': totalDegree[n],
                                  'inweight': inWeight[n],
                                  'outweight': outWeight[n],
-                                 'totalweight': totalWeight[n]}
+                                 'totalweight': totalWeight[n],
+                                 'count': 0}
 
             nx.set_node_attributes(G, attributes)
             plot = hv.Graph.from_networkx(G, layout)
@@ -314,8 +315,8 @@ def generateNodeLinkDiagram(df, diagramType, datashaded=True):
             if datashaded:
                 plot = dynspread(datashade(self.plot, normalization='linear', width=600, height=600, cmap=self.colorMap[self.color_palette]))
                 self.points.opts(cmap=self.colorMap[self.color_palette], color=self.node_color, size=self.node_size)
-                return plot * self.points
-            return self.plot * self.points
+                return (plot, self.points)
+            return (self.plot, self.points)
 
     return Nodelink(diagramType)
 

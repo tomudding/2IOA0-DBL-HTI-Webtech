@@ -1,7 +1,7 @@
 """
-Author(s): Sam Baggen
+Author(s): Sam Baggen, Steven van den Broek
 Created: 2019-06-03
-Edited: 2019-06-04
+Edited: 2019-06-16
 """
 
 from holoviews.plotting.bokeh.callbacks import LinkCallback
@@ -21,38 +21,62 @@ class SelectMatrixToNodeCallback(LinkCallback):
     source_handles = ['cds']
     on_source_changes = ['indices']
 
-    target_model = 'glyph_renderer'
+    target_model = 'cds'
 
-    source_code = """console.log("TRIGGERED MtN")
-        //let len = indices.length
-        //let new_indices = []
-        //for (let i = 0; i < source_selected.indices.length; i++){
-        //    let index = source_selected.indices[i]
-        //    j = len-1-(index%len)+Math.floor(index/(len))*(len)
-        //    new_indices[i] = j
-        //}
-        //var inds = source_selected.indices
-        //var d = source_cds.data
+    source_code = """// console.log("TRIGGERED MtN")
+        // console.log(Array.from(target_cds.data['count']))
+        //console.log(source_cds.data['index1'])
+        if (target_cds.data["count"][0] < 1){
+        let len = indices.length
+        let new_indices = []
+        for (let i = 0; i < source_selected.indices.length; i++){
+            let index = source_selected.indices[i]
+            j = len-1-(index%len)+Math.floor(index/(len))*(len)
+            new_indices[i] = j
+        }
+        var inds = source_selected.indices
+        var d = source_cds.data
 
-        //selected_data = {}
-        //selected_data['index1'] = []
+        selected_data = []
+        // selected_data['index1'] = []
         //selected_data['index2'] = []
-        //selected_data['value'] = []
-        //selected_data['zvalues'] = []
+        // selected_data['value'] = []
+        // selected_data['zvalues'] = []
 
-        //for (var i = 0; i < inds.length; i++){
+        for (var i = 0; i < inds.length; i++){
+            if (!selected_data.includes(d['index1'][inds[i]])){
+                selected_data.push(d['index1'][inds[i]]);
+            }
+            if (!selected_data.includes(d['index2'][inds[i]])){
+                selected_data.push(d['index2'][inds[i]]);
+            }
+        }
         //    selected_data['index1'].push(d['index1'][inds[i]])
         //    selected_data['index2'].push(d['index2'][inds[i]])
         //    selected_data['value'].push(d['value'][inds[i]])
         //    selected_data['zvalues'].push(d['zvalues'][inds[i]])
-        //}
-
+        
+        //console.log(selected_data)
+        //console.log(target_cds.data)
+        let nodelink_indices = []
+        for (let i = 0; i < selected_data.length; i++){
+            let index = target_cds.data.index.indexOf(selected_data[i]);
+            nodelink_indices.push(index);
+        }
+        //console.log(target_cds.selected.indices)
+        
         //var cds = target_glyph_renderer.edge_renderer.data_source.data
         //var startIndex = cds['start']
         //var endIndex = cds['end']
 
         //target_glyph_renderer.node_renderer.data_source.selected.indices = selected_data
-
+        target_cds.data["count"][0] += 1;
+        
+        target_cds.selected.indices = nodelink_indices;
+        }
+        else{
+            target_cds.data["count"][0]=0;
+        }
     """
 
 class SelectNodeToMatrixLink(Link):
@@ -66,11 +90,15 @@ class SelectNodeToMatrixCallback(LinkCallback):
     target_model = 'cds'
 
     source_code = """
-        console.log("TRIGGERED NtM")
+        // console.log("TRIGGERED NtM")
+        // console.log(Array.from(source_cds.data['count']));
+        if(source_cds.data["count"][0] < 1){
         var nodeIndices = []
+        //console.log(source_selected.indices)
         for (var i = 0; i < source_selected.indices.length; i++){
-            nodeIndices.push(source_cds.data['index'][i])
+            nodeIndices.push(source_cds.data['index'][source_selected.indices[i]])
         }
+        //console.log(nodeIndices)
         
         var matrixIndices = []
         for (var i = 0; i < nodeIndices.length; i++){
@@ -80,8 +108,23 @@ class SelectNodeToMatrixCallback(LinkCallback):
                 }
             }
         }
-
+        for (var i = 0; i < nodeIndices.length; i++){
+            for (var j = 0; j < target_cds.data['index1'].length; j++){
+                if (target_cds.data['index1'][j] == nodeIndices[i]){
+                    matrixIndices.push(j)
+                }
+            }
+        }
+        //console.log(target_cds.data)
+        //console.log(matrixIndices)
+        
+        source_cds.data["count"][0] += 1;
+        
         target_cds.selected.indices = matrixIndices
+        }
+        else{
+         source_cds.data["count"][0] = 0;
+         }
     """
 
 class SelectEdgeLink(Link):
