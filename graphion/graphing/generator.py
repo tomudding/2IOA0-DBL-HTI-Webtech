@@ -173,6 +173,7 @@ def generateBokehApp(doc):
 
         def __init__(self, datashaded = True):
             self.datashaded = datashaded
+            self.dlink = None
 
             super(VisApp, self).__init__()
 
@@ -211,12 +212,16 @@ def generateBokehApp(doc):
 
                 # hm.opts(hooks=[hook])
                 if screen2.show_only_selection:
-                    dlink = SelectedDataLink(hm, table, name=str(time.time()))
+                    print(self.dlink)
+                    if self.dlink is not None:
+                        print("Unlinked plots")
+                        self.dlink.unlink()
+                    self.dlink = SelectedDataLink(hm, table)
                 else:
                     SelectLink(hm, table)
                     SelectLink(table, hm)
                 print("Linked hm to table")
-                print(dlink)
+                print(self.dlink)
                 set_custom_key(get_screen2(sid), screen2, sid)
 
             # Setting up the linking, generateDiagram functions return two-tuple (graph, points). Points is the selection layer
