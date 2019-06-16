@@ -29,6 +29,7 @@ def processCSVMatrix(file):
     names = df.columns.tolist()
     names = [name.replace('_', ' ') for name in names]
     df.columns = names
+    df.set_index([df.columns], inplace=True)
 
     return df
 
