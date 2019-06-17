@@ -1,7 +1,7 @@
 /*
 Authors: Sam Baggen, Steven van den Broek, Tom Udding
 Created: Unkown...
-Last Edited: 2019-06-12
+Last Edited: 2019-06-17
 */
 
 function darkMode(){
@@ -10,6 +10,8 @@ function darkMode(){
         document.getElementById('left-bar-hidden').style.backgroundColor = 'rgb(66,66,66)';
         document.getElementById('right-bar-shown').style.backgroundColor = 'rgb(66,66,66)';
         document.getElementById('right-bar-hidden').style.backgroundColor = 'rgb(66,66,66)';
+        document.getElementById('body').style.backgroundColor = '#7E8288';
+        document.getElementById('after-loading').style.backgroundColor = '#7E8288';
 
         /*Recolor the text*/
         changeColorToWhite();
@@ -20,7 +22,7 @@ function darkMode(){
         document.getElementById('force').src="/static/images/icons/icon-forcedirected-diagram.svg";
         document.getElementById('hierarchical').src="/static/images/icons/icon-hierarchical-diagram.svg";
         document.getElementById('3d').src="/static/images/icons/icon-3d-diagram.svg";
-        document.getElementById('matrix-icon').src="/static/images/icons/icon-matrix.svg";
+        document.getElementById('matrix').src="/static/images/icons/icon-matrix.svg";
 
         /*changeIconSelectedBackgroundColorToGrey();*/
 
@@ -29,6 +31,8 @@ function darkMode(){
         document.getElementById('right-bar-shown').style.backgroundColor = '#F7F7F7';
         document.getElementById('left-bar-hidden').style.backgroundColor = '#F7F7F7';
         document.getElementById('right-bar-hidden').style.backgroundColor = '#F7F7F7';
+        document.getElementById('body').style.backgroundColor = '#EAEAEA';
+        document.getElementById('after-loading').style.backgroundColor = '#EAEAEA';
 
         /*Recolor the text*/
         changeColorToGrey();
@@ -39,7 +43,7 @@ function darkMode(){
         document.getElementById('force').src="/static/images/icons/icon-forcedirected-diagram-black.svg";
         document.getElementById('hierarchical').src="/static/images/icons/icon-hierarchical-diagram-black.svg";
         document.getElementById('3d').src="/static/images/icons/icon-3d-diagram-black.svg";
-        document.getElementById('matrix-icon').src="/static/images/icons/icon-matrix-black.svg";
+        document.getElementById('matrix').src="/static/images/icons/icon-matrix-black.svg";
 
         /*changeIconSelectedBackgroundColorToBlue()*/
     }
