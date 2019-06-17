@@ -1,7 +1,7 @@
 /**
  * Author(s): Tim van de Klundert, Anton Vellikok
  * Created: 2019-05-27
- * Edited: 2019-06-10
+ * Edited: 2019-06-17
 **/
 
 .bokeh-container {
@@ -161,7 +161,7 @@
    display: inline-block;
    left: 135px;;
    top: 93.5vh;
-   width: 54px;
+   width: calc(3.8vh + 26px);
    height: 3.7vh;
 }
 
