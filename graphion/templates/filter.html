@@ -1,7 +1,7 @@
 <!--
 Author(s): Steven van den Broek, Anton Vellikok, Tom Udding
 Created: 2019-05-18
-Edited: 2019-06-16
+Edited: 2019-06-17
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -302,6 +302,7 @@ Edited: 2019-06-16
 
                                                     <button class="button button-primary pop-up-footer-button-continue"
                                                         onclick="
+                                                        document.getElementById('continue-text-edge-filter').innerHTML = '';
                                                         document.getElementById('filter-edges').removeAttribute('hidden');
                                                         $.post('/filter-edges', function(result){document.getElementById('filter-edge-weight').style.display='none';
                                                         document.getElementById('filter-node-in-degree').style.display='block';
@@ -315,7 +316,8 @@ Edited: 2019-06-16
                                                         }); document.getElementById('filter-edges').setAttribute('hidden', true);})
 
                                                         ">
-                                                        <div class="load-animation" id="filter-edges" hidden></div>Continue
+                                                        <div class="load-animation" id="filter-edges" hidden></div>
+                                                        <div id="continue-text-edge-filter">Continue</div>
                                                     </button>
 
                                                     <!-- Opens a "Help" -popup window -->
