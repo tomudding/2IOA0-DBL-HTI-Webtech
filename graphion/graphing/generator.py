@@ -4,8 +4,8 @@ Created: 2019-05-03
 Edited: 2019-06-12
 """
 from graphion import server
-from graphion.graphing.linking import SelectEdgeCallback, SelectMatrixToNodeCallback, SelectNodeToMatrixCallback
-from graphion.graphing.linking import SelectEdgeLink, SelectMatrixToNodeLink, SelectNodeToMatrixLink
+from graphion.graphing.linking import SelectEdgeCallback, SelectMatrixToNodeCallback, SelectNodeToMatrixCallback\
+    , SelectNodeToTableCallback,  SelectEdgeLink, SelectMatrixToNodeLink, SelectNodeToMatrixLink, SelectNodeToTableLink
 from graphion.session.handler import get_custom_key, set_custom_key, get_filtered_df, set_screen1, get_screen1, \
     set_screen2, get_screen2, populate_3d_diagram, populate_force_diagram, populate_hierarchical_diagram,\
     populate_matrix, populate_radial_diagram, get_visualisations_app, set_visualisations_app, reset_plots, \
@@ -171,17 +171,20 @@ def generateBokehApp(doc):
                 SelectMatrixToNodeLink.register_callback('bokeh', SelectMatrixToNodeCallback)
                 SelectEdgeLink.register_callback('bokeh', SelectEdgeCallback)
                 SelectNodeToMatrixLink.register_callback('bokeh', SelectNodeToMatrixCallback)
+                SelectNodeToTableLink.register_callback('bokeh', SelectNodeToTableCallback)
                 graph, points = screen1.view()
                 matrix = screen2.view()
-                table = hv.Table(matrix.data)
+                edge_table = hv.Table(matrix.data)
+                node_table = hv.Table(points.data[['index', 'indegree', 'outdegree']])
                 # Link matrix to the nodelink (both graph and points)
                 SelectMatrixToNodeLink(matrix, points)
+
                 # SelectedDataLink(matrix, points)
 
                 # renderer = hv.renderer('bokeh')
                 # print(renderer.get_plot(points).handles)
-                SelectedDataLink(matrix, table)
-
+                SelectedDataLink(matrix, edge_table)
+                SelectNodeToTableLink(points, node_table)
                 # Link nodelink to matrix (points only)
                 SelectNodeToMatrixLink(points, matrix)
                 gridSpec = pn.GridSpec(sizing_mode='stretch_both')
@@ -194,9 +197,9 @@ def generateBokehApp(doc):
                 screen1.node_size = self.Node_size
                 screen1.node_color = self.Node_color
                 set_custom_key(get_screen1(sid), screen1, sid)
-                gridSpec[0, 0] = pn.Column(graph * points, css_classes=['screen-1', 'col-s-6'])
+                gridSpec[0, 0] = pn.Column(graph * points, pn.Column(node_table, css_classes=['node_table']), css_classes=['screen-1', 'col-s-6'])
 
-            gridSpec[0, 1] = pn.Column(matrix, table, css_classes=['screen-2', 'col-s-6'])
+            gridSpec[0, 1] = pn.Column(matrix, pn.Column(edge_table, css_classes=['edge_table']), css_classes=['screen-2', 'col-s-6'])
             return gridSpec
 
 

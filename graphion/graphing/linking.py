@@ -127,6 +127,22 @@ class SelectNodeToMatrixCallback(LinkCallback):
          }
     """
 
+
+class SelectNodeToTableLink(Link):
+    _requires_target = True
+
+
+class SelectNodeToTableCallback(LinkCallback):
+    source_model = 'selected'
+    source_handles = ['cds']
+    on_source_changes = ['indices']
+
+    target_model = 'cds'
+
+    source_code = """
+        target_cds.selected.indices = source_selected.indices
+    """
+
 class SelectEdgeLink(Link):
     _requires_target = True
     
