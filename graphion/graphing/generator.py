@@ -157,6 +157,18 @@ def generateBokehApp(doc):
                 populate_3d_diagram(df, sid)
             # print(s1[1])
             screen1 = get_custom_key(get_screen1(sid), sid)
+
+            gridSpec = pn.GridSpec(sizing_mode='stretch_both')
+
+            if self.Screen1 == "3d":
+                gridSpec[0, 0] = pn.Column(get_custom_key(get_screen1(sid), sid), css_classes=['screen-1', 'col-s-6'])
+            else:
+                screen1.color_palette = self.Color_palette
+                screen1.node_size = self.Node_size
+                screen1.node_color = self.Node_color
+                set_custom_key(get_screen1(sid), screen1, sid)
+
+
             if self.Screen2 == "matrix":
                 set_screen2("matrix", sid)
                 populate_matrix(get_matrix_df(sid), sid)
@@ -166,40 +178,43 @@ def generateBokehApp(doc):
                 screen2.color_palette = self.Color_palette
                 set_custom_key(get_screen2(sid), screen2, sid)
 
-                # Setting up the linking, generateDiagram functions return two-tuple (graph, points). Points is the selection layer
-                # makeMatrix returns matrix_dropdown object. matrix.view returns the heatmap object
-                SelectMatrixToNodeLink.register_callback('bokeh', SelectMatrixToNodeCallback)
-                SelectEdgeLink.register_callback('bokeh', SelectEdgeCallback)
-                SelectNodeToMatrixLink.register_callback('bokeh', SelectNodeToMatrixCallback)
-                SelectNodeToTableLink.register_callback('bokeh', SelectNodeToTableCallback)
-                graph, points = screen1.view()
                 matrix = screen2.view()
+
                 edge_table = hv.Table(matrix.data)
-                node_table = hv.Table(points.data[['index', 'indegree', 'outdegree']])
-                # Link matrix to the nodelink (both graph and points)
-                SelectMatrixToNodeLink(matrix, points)
+                SelectedDataLink(matrix, edge_table)
+
+                if self.Screen1 != "3d":
+                    # Setting up the linking, generateDiagram functions return two-tuple (graph, points). Points is the selection layer
+                    # makeMatrix returns matrix_dropdown object. matrix.view returns the heatmap object
+                    SelectMatrixToNodeLink.register_callback('bokeh', SelectMatrixToNodeCallback)
+                    SelectNodeToMatrixLink.register_callback('bokeh', SelectNodeToMatrixCallback)
+                    SelectNodeToTableLink.register_callback('bokeh', SelectNodeToTableCallback)
+
+                    graph, points = screen1.view()
+
+                    node_table = hv.Table(points.data[['index', 'indegree', 'outdegree']])
+                    # Link matrix to the nodelink (both graph and points)
+                    SelectMatrixToNodeLink(matrix, points)
+
+                    SelectNodeToTableLink(points, node_table)
+
+                    # Link nodelink to matrix (points only)
+                    SelectNodeToMatrixLink(points, matrix)
+                    gridSpec[0, 0] = pn.Column(graph * points, pn.Column(node_table, css_classes=['node_table']),
+                                               css_classes=['screen-1', 'col-s-6'])
+                gridSpec[0, 1] = pn.Column(matrix, pn.Column(edge_table, css_classes=['edge_table']),
+                                            css_classes=['screen-2', 'col-s-6'])
+
+
 
                 # SelectedDataLink(matrix, points)
 
                 # renderer = hv.renderer('bokeh')
                 # print(renderer.get_plot(points).handles)
-                SelectedDataLink(matrix, edge_table)
-                SelectNodeToTableLink(points, node_table)
-                # Link nodelink to matrix (points only)
-                SelectNodeToMatrixLink(points, matrix)
-                gridSpec = pn.GridSpec(sizing_mode='stretch_both')
 
-            if self.Screen1 == "3d":
-                gridSpec[0, 0] = pn.Column(get_custom_key(get_screen1(sid), sid), css_classes=['screen-1', 'col-s-6'])
-            else:
 
-                screen1.color_palette = self.Color_palette
-                screen1.node_size = self.Node_size
-                screen1.node_color = self.Node_color
-                set_custom_key(get_screen1(sid), screen1, sid)
-                gridSpec[0, 0] = pn.Column(graph * points, pn.Column(node_table, css_classes=['node_table']), css_classes=['screen-1', 'col-s-6'])
 
-            gridSpec[0, 1] = pn.Column(matrix, pn.Column(edge_table, css_classes=['edge_table']), css_classes=['screen-2', 'col-s-6'])
+
             return gridSpec
 
 
