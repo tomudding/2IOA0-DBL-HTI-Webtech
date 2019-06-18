@@ -140,7 +140,20 @@ class SelectNodeToTableCallback(LinkCallback):
     target_model = 'cds'
 
     source_code = """
-        target_cds.selected.indices = source_selected.indices
+        var inds = source_selected.indices
+        var d = source_cds.data
+
+        selected_data = {}
+        selected_data['index'] = []
+        selected_data['indegree'] = []
+        selected_data['outdegree'] = []
+
+        for (var i = 0; i < inds.length; i++){
+            selected_data['index'].push(d['index'][inds[i]])
+            selected_data['indegree'].push(d['indegree'][inds[i]])
+            selected_data['outdegree'].push(d['outdegree'][inds[i]])
+        }
+        target_cds.data = selected_data
     """
 
 class SelectEdgeLink(Link):

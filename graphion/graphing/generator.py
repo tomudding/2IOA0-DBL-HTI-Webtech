@@ -109,7 +109,7 @@ def generateBokehApp(doc):
             }
         })
     hv.renderer('bokeh').theme = theme
-
+    hv.renderer('bokeh').webgl = True
 
     class VisApp(param.Parameterized):
         Screen1 = param.ObjectSelector(default="force",
