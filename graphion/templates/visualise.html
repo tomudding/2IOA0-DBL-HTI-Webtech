@@ -32,6 +32,42 @@ Edited: 2019-06-17
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 	</head>
 	<body class="valign-wrapper" id="body">
+		<button onclick="makeScreenshot()">Screenshot</button>
+		<script>
+
+			function makeScreenshot(){
+				const canvas = document.getElementsByTagName('canvas')[0];
+				/*
+				const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+				console.log('gl is ' + gl + ' and ctx is ' + canvas.getContext('2d'));
+				const length = 4 * canvas.width * canvas.height;
+				const pixelBuffer = new Uint8Array(length);
+				gl.readPixels(0, 0, canvas.width, canvas.height, gl.RGBA, gl.UNSIGNED_BYTE, pixelBuffer);
+				const offCanvas = document.createElement('canvas');
+				offCanvas.width = canvas.width;
+				offCanvas.height = canvas.height;
+				const ctx = offCanvas.getContext('2d');
+				const imageData = ctx.createImageData(canvas.width, canvas.height);
+				const data = imageData.data;
+				for (let index = 0; index < length; index++){
+					data[index] = pixelBuffer[index];
+				}
+				ctx.putImageData(imageData, 0, 0);
+				document.body.append(offCanvas);
+				*/
+				const offCanvas = document.createElement('canvas');
+				offCanvas.width = canvas.width;
+				offCanvas.height = canvas.height;
+				const ctx = offCanvas.getContext('2d');
+				ctx.drawImage(canvas, 0, 0);
+				document.getElementById('after-loading').remove();
+				document.getElementsByClassName('bokeh-container valign')[0].remove();
+				const div = document.createElement('div');
+				div.innerText = "Right click on the visualization below and click on 'Save image as...'";
+				document.body.append(div);
+				document.body.append(offCanvas);
+			}
+		</script>
 		<section class="body-wrapper" id="loading-screen">
 			<div class="container">
 				<div class="row">
