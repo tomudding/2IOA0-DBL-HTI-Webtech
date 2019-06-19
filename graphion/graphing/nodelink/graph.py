@@ -46,9 +46,9 @@ def decreaseDiagramSize(file):
 Function to generate a node-link diagram based on a
 ```filePath```, a ```diagramType```, and ```isDirected```.
 
-Returns a Panel.Column of the diagram.
+Returns a plot and points tuple.
 """
-def generateNodeLinkDiagram(df, diagramType, datashaded=True):
+def generateNodeLinkDiagram(df, diagramType, sid, datashaded=True):
     diagramType = diagramType.upper()
 
     class Nodelink(Parameterized):
@@ -61,9 +61,11 @@ def generateNodeLinkDiagram(df, diagramType, datashaded=True):
         node_color = ObjectSelector(default='totalweight',
                                             objects=['indegree', 'outdegree', 'totaldegree', 'inweight', 'outweight', 'totalweight'])
 
-        def __init__(self, diagramType):
+        def __init__(self, diagramType, sid):
             self.diagramType = diagramType
             super(Nodelink, self).__init__()
+            from graphion.session.handler import calculate_plot_size # import must be here to prevent circular dependent imports 
+            self.width, self.height = calculate_plot_size(sid)
             self.plot, self.points = self.make_plot()
 
         def make_plot(self):
@@ -308,20 +310,20 @@ def generateNodeLinkDiagram(df, diagramType, datashaded=True):
             points = plot.nodes
             points.opts(cmap=self.colorMap[self.color_palette], color=self.node_color, size=self.node_size,
                         tools=['box_select', 'lasso_select', 'tap', hover], active_tools=['wheel_zoom'], toolbar='above',
-                        show_legend=False, width=600, height=600)
+                        show_legend=False, width=self.width, height=self.height)
             return plot, points
 
         def view(self):
             if datashaded:
-                plot = dynspread(datashade(self.plot, normalization='linear', width=600, height=600, cmap=self.colorMap[self.color_palette]))
+                plot = dynspread(datashade(self.plot, normalization='linear', width=self.width, height=self.height, cmap=self.colorMap[self.color_palette]))
                 self.points.opts(cmap=self.colorMap[self.color_palette], color=self.node_color, size=self.node_size)
                 return (plot, self.points)
             return (self.plot, self.points)
 
-    return Nodelink(diagramType)
+    return Nodelink(diagramType, sid)
 
 # Generate 3D graph
-def generate3DDiagram(file, df=False):
+def generate3DDiagram(file, sid, df=False):
     if not df:
         df = decreaseDiagramSize(file)
     else:
@@ -391,10 +393,13 @@ def generate3DDiagram(file, df=False):
                 title=''
                 )
 
+    from graphion.session.handler import calculate_plot_size
+    pwidth, pheight = calculate_plot_size(sid)
+    
     layout = Layout(
         title="Force-directed layout",
-        width=600,
-        height=600,
+        width=pwidth,
+        height=pheight,
         showlegend=False,
         scene=dict(
             xaxis=dict(axis),

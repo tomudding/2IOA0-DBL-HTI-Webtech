@@ -1,7 +1,7 @@
 """
 Author(s): Tom Udding, Steven van den Broek
 Created: 2019-06-09
-Edited: 2019-06-15
+Edited: 2019-06-19
 """
 from graphion.graphing.matrix.protomatrix import makeMatrix
 from graphion.graphing.nodelink.graph import generate3DDiagram, generateNodeLinkDiagram
@@ -179,7 +179,7 @@ def populate_hierarchical_diagram(df, sid, **kwargs):
         plot = APP_CONTEXT['data'][sid]['hierarchical']
         if plot is not None:
             return plot
-    hierarchical = generateNodeLinkDiagram(df.copy(), 'hierarchical', **kwargs)
+    hierarchical = generateNodeLinkDiagram(df.copy(), 'hierarchical', sid, **kwargs)
     APP_CONTEXT['data'][sid]['hierarchical'] = hierarchical
     return hierarchical
 
@@ -188,7 +188,7 @@ def populate_3d_diagram(df, sid):
     if '3d' in APP_CONTEXT['data'][sid]:
         if  APP_CONTEXT['data'][sid]['3d'] is not None:
             return APP_CONTEXT['data'][sid]['3d']
-    graph3D = generate3DDiagram(df.copy(), df=True)
+    graph3D = generate3DDiagram(df.copy(), sid, df=True)
     APP_CONTEXT['data'][sid]['3d'] = graph3D
     return graph3D
 
@@ -197,7 +197,7 @@ def populate_force_diagram(df, sid, **kwargs):
     if 'force' in APP_CONTEXT['data'][sid]:
         if APP_CONTEXT['data'][sid]['force'] is not None:
             return APP_CONTEXT['data'][sid]['force']
-    force = generateNodeLinkDiagram(df.copy(), 'force', **kwargs)
+    force = generateNodeLinkDiagram(df.copy(), 'force', sid, **kwargs)
     APP_CONTEXT['data'][sid]['force'] = force
     return force
 
@@ -206,7 +206,7 @@ def populate_radial_diagram(df, sid, **kwargs):
     if 'radial' in APP_CONTEXT['data'][sid]:
         if APP_CONTEXT['data'][sid]['radial'] is not None:
             return APP_CONTEXT['data'][sid]['radial']
-    radial = generateNodeLinkDiagram(df.copy(), 'radial', **kwargs)
+    radial = generateNodeLinkDiagram(df.copy(), 'radial', sid, **kwargs)
     APP_CONTEXT['data'][sid]['radial'] = radial
     return radial
 
@@ -243,3 +243,36 @@ def get_datashading(sid):
     if not('datashading' in APP_CONTEXT['data'][sid]):
         return True
     return APP_CONTEXT['data'][sid]['datashading']
+
+def set_window_width(width, sid):
+    global APP_CONTEXT
+    APP_CONTEXT['data'][sid]['width'] = width
+    
+def get_window_width(sid):
+    global APP_CONTEXT
+    if not('width' in APP_CONTEXT['data'][sid]):
+        return None
+    return APP_CONTEXT['data'][sid]['width']
+    
+def set_window_height(height, sid):
+    global APP_CONTEXT
+    APP_CONTEXT['data'][sid]['height'] = height
+    
+def get_window_height(sid):
+    global APP_CONTEXT
+    if not('height' in APP_CONTEXT['data'][sid]):
+        return None
+    return APP_CONTEXT['data'][sid]['height']
+
+def calculate_plot_size(sid):
+    window_width = get_window_width(sid)
+    window_height = get_window_height(sid)
+    
+    if window_width is None:
+        window_width = 1000
+    if window_height is None:
+        window_height = 600
+    
+    plot_width = int((window_width - (2 * 38)) / 2) # the collapsed sidebars are 38px each
+    plot_height = window_height - 30 - 2 * 5 # account for bokeh toolbar and stupid bokeh margins
+    return (plot_width, plot_height)

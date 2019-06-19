@@ -1,7 +1,7 @@
 <!--
 Author(s): Steven van den Broek, Anton Vellikok, Tom Udding
 Created: 2019-05-18
-Edited: 2019-06-17
+Edited: 2019-06-19
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -66,9 +66,17 @@ Edited: 2019-06-17
                     });
             }
         </script>
+        <script>
+            $(window).on('load', function() {
+                $.post('/update-window-specs', { w: window.innerWidth, h: window.innerHeight }, function (data) {
+                    if (data != 'updated') {
+                        console.log("An unexpected error occured, plots will be sized 450x450.");
+                    }
+                });
+            });
+        </script>
         <title>graphion - filter</title>
     </head>
-
     <body>
         {% include "header.html" %}
         <section class="body-wrapper valign-wrapper">

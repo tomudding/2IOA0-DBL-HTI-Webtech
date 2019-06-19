@@ -1,7 +1,7 @@
 """
 Author(s): Tom Udding, Steven van den Broek, Sam Baggen
 Created: 2019-04-29
-Edited: 2019-06-14
+Edited: 2019-06-19
 """
 from flask import Flask
 server = Flask(__name__)
@@ -71,6 +71,7 @@ from graphion.api.visualise.matrix_palette import apiPaletteBlueprint
 from graphion.api.visualise.datashading import apiDatashadingBlueprint
 from graphion.api.visualise.nodelink_color import apiNodeColorBlueprint
 from graphion.api.visualise.nodelink_size import apiNodeSizeBlueprint
+from graphion.api.visualise.window_specs import apiWindowSpecsBlueprint
 
 # register views as blueprints
 server.register_blueprint(filterBlueprint)
@@ -86,6 +87,7 @@ server.register_blueprint(apiPaletteBlueprint)
 server.register_blueprint(apiDatashadingBlueprint)
 server.register_blueprint(apiNodeColorBlueprint)
 server.register_blueprint(apiNodeSizeBlueprint)
+server.register_blueprint(apiWindowSpecsBlueprint)
 
 # other stuff
 if (not isdir(server.config['UPLOAD_FOLDER'])):
