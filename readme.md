@@ -10,20 +10,20 @@ Given project deadlines:
 -------------------------|----------------
 | ~~Interim video~~         | ~~24th of May~~  |
 | ~~Interim report~~         | ~~24th of May~~  |
-| Nearly final tool      | 12th of June |
-| Send 2 best figures to Burch     | 18th of June |
+| ~~Nearly final tool~~      | ~~12th of June~~ |
+| ~~Send 2 best figures to Burch~~     | ~~18th of June~~ |
 | Final tool/report/video| 21st of June |
 
 Our own deadlines:
 
 | Task                              | Deadline date |
 ------------------------------------|----------------
-| Draft of final report             | 14th of June  |
-| Filming video                     | 14th of June  |
-| Checking and correcting report    | 16th of June  |
-| Generating neat visualizations for aesthetics award     | 16th of June  |
+| ~~Filming video~~                     | ~~14th of June~~  |
+| ~~Generating neat visualizations for aesthetics award~~     | ~~16th of June~~  |
 | Editing video (draft)             | 19th of June  |
 | Comments on video (draft)         | 20th of June (before 12)  |
+| Draft of final report             | 20/21th of June  |
+| Checking and correcting report    | 21th of June  |
 | Fix video | 21st of June|
 | Final touches on our tool         | 21st of June  |
 
@@ -68,7 +68,7 @@ Minimal requirements as described in VisProjectDescription.pdf and the kickoff s
 - [x] **Web-based** visualization tool for networks (weighted and directed graphs)
   - [x] Accessable via URL ([https://graphion.uddi.ng/](https://graphion.uddi.ng/))
   - [x] Upload graph data (in a specified data format)
-  - [ ] Visual interactions from each of the 7 categories of interactions (Yi et al.)
+  - [x] Visual interactions from each of the 7 categories of interactions (Yi et al.)
   - [ ] Data and insights should be sharable with all other people using the web tool
     - [x] 10 most recent datasets can be chosen
     - [x] Screenshots can be made of each plot
@@ -77,7 +77,7 @@ Minimal requirements as described in VisProjectDescription.pdf and the kickoff s
 Suggested further improvements but not required:
 - [ ] Multiple coordinated view design
   - [x] Different visualizations next to each other
-  - [ ] Brushing and linking (highlighting / selecting is synchronized between graphs)
+  - [x] Brushing and linking (highlighting / selecting is synchronized between graphs)
 - [x] Edge bundling (though bold red text comes included: Only if you enjoy visualization and like to do more)
 
 ## DOCUMENTATION
