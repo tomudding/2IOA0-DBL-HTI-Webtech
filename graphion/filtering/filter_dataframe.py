@@ -1,12 +1,12 @@
 """
-Author(s): Unknown
-Created: Unknown
-Edited 2019-06-19
+Author(s): Yuqing Zeng
+Created: Yuqing Zeng
+Edited 2019-05-20
 """
 from bisect import bisect_left, bisect_right
 from pandas.core.frame import DataFrame
 from itertools import repeat
-from numpy import array, argsort, asarray, concatenate, count_nonzero, delete, reshape, sort
+from numpy import array, argsort, asarray, concatenate, count_nonzero, delete, reshape, sort, size, array_equal
 from time import time
 
 def intersection(lst1, lst2):
@@ -20,7 +20,7 @@ def fetch_edge_count(df, cutoff_l = 0.6, cutoff_r = 10.0):
     weight = sort(arr)
     l = bisect_left(weight, cutoff_l)
     r = bisect_right(weight, cutoff_r)
-    return r - l;
+    return r - l
 
 def filter_df_weight(df, cutoff_l = 0.6, cutoff_r = 10.0):
     names = df.columns.tolist()
@@ -197,3 +197,24 @@ def generate_edge_selection(df, cutoff_l = 0.6, cutoff_r = 10.0, keep_edges = Fa
     if keep_edges:
         return df_filtered_keep_edge
     return df_filtered_not_keep_edge
+
+def getGraphInfo(df):
+    """
+    :param df: input adjacency matrix in the form of dataframe
+    :return: tuple of #nodes, #edges, #sparsity, #directedness
+    """
+    adj_matrix = df.to_numpy(copy=True)
+    arr = adj_matrix.flatten("C")
+    dir = True
+    transposed = adj_matrix.transpose()
+    if array_equal(adj_matrix[0], transposed[0]):
+        dir = False
+    node_count = len(adj_matrix)
+    edge_count = count_nonzero(arr) #This will count self-connected edges and
+    # count undirected edges twice
+    sparsity = edge_count/size(arr)
+
+    return node_count, edge_count, sparsity, dir
+
+
+
