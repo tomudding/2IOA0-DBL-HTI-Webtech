@@ -276,3 +276,15 @@ def calculate_plot_size(sid):
     plot_width = int((window_width - (2 * 38)) / 2) # the collapsed sidebars are 38px each
     plot_height = window_height - 30 - 2 * 5 # account for bokeh toolbar and stupid bokeh margins
     return (plot_width, plot_height)
+
+
+def set_directed(boolean, sid):
+    global APP_CONTEXT
+    APP_CONTEXT['data'][sid]['directed'] = width
+
+
+def get_directed(sid):
+    global APP_CONTEXT
+    if 'directed' not in APP_CONTEXT['data'][sid]:
+        return None
+    return APP_CONTEXT['data'][sid]['directed']

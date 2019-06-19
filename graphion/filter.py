@@ -1,13 +1,13 @@
 """
 Author(s): Steven van den Broek, Tom Udding
 Created: 2019-05-18
-Edited: 2019-06-12
+Edited: 2019-06-19
 """
 from flask import Blueprint, flash, redirect, render_template, session, request
 from graphion import server
 from bokeh.embed import server_document
 from graphion.graphing.parser import processCSVMatrix
-from graphion.session.handler import set_df, is_user_loaded, prune_user, reset_dataframes
+from graphion.session.handler import set_df, is_user_loaded, prune_user, reset_dataframes, set_directed
 from graphion.filtering.filter_dataframe import getGraphInfo
 from os.path import exists, join
 from pandas import read_hdf
@@ -35,8 +35,16 @@ def visualise(file=None):
         prune_user(sid)
     set_df(df, file, sid)
     reset_dataframes(sid)
+
+    # Get info
     nodes, edges, sparcity, directed = getGraphInfo(df)
+
+    # Save directedness in session
+    set_directed(directed, sid)
+
+    # Round and make percentage
     sparcity = round(sparcity * 100, 2)
+
     if directed:
         directedness = "directed"
     else:
