@@ -16,7 +16,7 @@ Edited: 2019-06-19
 		<script src="/static/scripts/toolUI.js"></script>
 		<link rel="stylesheet" type="text/css" href="/static/css/grid.css">
 		<link rel="stylesheet" type="text/css" href="/static/css/grid_style.css">
-		<link rel="stylesheet" type="text/css" href="/static/css/tool_ui.css">
+		<link id="tool-ui-sheet" rel="stylesheet" type="text/css" href="/static/css/tool_ui.css">
 		<!-- Bokeh files from Cloudflare CDN -->
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh.min.css" integrity="sha256-kmX/Nb5PazwKydPmaZjEb9sOg8BWh1v5eP14IzXJUkU=" crossorigin="anonymous" />
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh-tables.min.css" integrity="sha256-RL9kShsLcf2jHG2zzLh1peDLvWOEK0wPFWSZTiYykc4=" crossorigin="anonymous" />
@@ -46,6 +46,18 @@ Edited: 2019-06-19
 						<div id="matrix-plot"></div>
 					</div>
 					<script>
+						// Calculate correct width for class for bokeh oontainer and add to tool_ui.css
+						document.getElementById("tool-ui-sheet");
+						for(var i=0; i<document.styleSheets.length; i++) {
+							var sheet = document.styleSheets[i];
+							if(sheet.ownerNode.id == "tool-ui-sheet") {
+							  break;
+							}
+						}
+						sheet.insertRule(`.good-width {width: ${window.innerWidth - (2 * 38) + 20}px !important; }`);
+
+
+
 						var canvas = document.getElementById('nodelink-loading');
 						var container = document.getElementById('loading-screen');
 						var context = canvas.getContext('2d');

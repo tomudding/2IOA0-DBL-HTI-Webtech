@@ -153,4 +153,5 @@ function removeRightToolbar(){
     // const trash = document.getElementsByClassName("trash")[0];
     // trash.classList.add("invisible");
     document.getElementsByClassName("right-bar-shown")[0].classList.add("invisible");
+    document.getElementsByClassName("right-bar-hidden")[0].classList.add("invisible");
 }
