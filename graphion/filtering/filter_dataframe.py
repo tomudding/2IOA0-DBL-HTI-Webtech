@@ -8,9 +8,7 @@ from pandas.core.frame import DataFrame
 from itertools import repeat
 from numpy import array, argsort, asarray, concatenate, count_nonzero, delete, reshape, sort, size, array_equal
 from time import time
-from csv import Sniffer
-from pandas.io.parsers import read_csv
-from pandas.core.reshape.concat import concat
+
 def intersection(lst1, lst2):
     temp = set(lst2)
     lst3 = [value for value in lst1 if value in temp]
@@ -220,27 +218,3 @@ def getGraphInfo(df):
 
 
 
-def processCSVMatrix(file):
-    with open(file, 'r') as csvfile:
-        dialect = Sniffer().sniff(csvfile.readline())
-
-    df = DataFrame()
-    for chunk in read_csv(file, sep=dialect.delimiter, mangle_dupe_cols=True, index_col=False, chunksize=1000):
-        df = concat([df, chunk], ignore_index=True)
-
-    nodes = df.columns.values.tolist()
-    nodes.pop(0)
-    df["Unnamed: 0"] = nodes
-    df = df.rename(columns={'Unnamed: 0': 'name'})
-    df = df.set_index(keys='name')
-
-    # Remove underscores in names
-    names = df.columns.tolist()
-    names = [name.replace('_', ' ') for name in names]
-    df.columns = names
-    df.set_index([df.columns], inplace=True)
-
-    return df
-
-print(getGraphInfo(processCSVMatrix("/Users/zengyuqing/PycharmProjects/2IOA0-DBL-HTI-Webtech/datasets"
-                                    "/GephiMatrix_author_similarity.csv")))
