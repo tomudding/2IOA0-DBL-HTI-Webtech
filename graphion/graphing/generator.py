@@ -136,6 +136,8 @@ def generateBokehApp(doc):
         Node_color = param.ObjectSelector(default='totalweight', 
                                             objects=['indegree', 'outdegree', 'totaldegree', 'inweight', 'outweight', 'totalweight'])
 
+        Ran = param.Boolean(default=False)
+
         def __init__(self, datashaded = True):
             self.datashaded = datashaded
 
@@ -158,7 +160,7 @@ def generateBokehApp(doc):
             # print(s1[1])
             screen1 = get_custom_key(get_screen1(sid), sid)
 
-            gridSpec = pn.GridSpec(sizing_mode='stretch_both')
+            gridSpec = pn.GridSpec(sizing_mode='stretch_both', css_classes=['good-width'])
 
             if self.Screen1 == "3d":
                 gridSpec[0, 0] = pn.Column(get_custom_key(get_screen1(sid), sid), css_classes=['screen-1', 'col-s-6'])
@@ -180,8 +182,10 @@ def generateBokehApp(doc):
 
                 matrix = screen2.view()
 
-                edge_table = hv.Table(matrix.data)
+                edge_table = hv.Table(matrix.data).opts(height=310, width=290)
                 SelectedDataLink(matrix, edge_table)
+
+                gridSpec[0, 1] = pn.Column(matrix, css_classes=['screen-2', 'col-s-6'])
 
                 if self.Screen1 != "3d":
                     # Setting up the linking, generateDiagram functions return two-tuple (graph, points). Points is the selection layer
@@ -192,7 +196,7 @@ def generateBokehApp(doc):
 
                     graph, points = screen1.view()
 
-                    node_table = hv.Table(points.data[['index', 'indegree', 'outdegree']])
+                    node_table = hv.Table(points.data[['index', 'indegree', 'outdegree']]).opts(height=310, width=290)
                     # Link matrix to the nodelink (both graph and points)
                     SelectMatrixToNodeLink(matrix, points)
 
@@ -200,10 +204,15 @@ def generateBokehApp(doc):
 
                     # Link nodelink to matrix (points only)
                     SelectNodeToMatrixLink(points, matrix)
-                    gridSpec[0, 0] = pn.Column(graph * points, pn.Column(node_table, css_classes=['node_table']),
-                                               css_classes=['screen-1', 'col-s-6'])
-                gridSpec[0, 1] = pn.Column(matrix, pn.Column(edge_table, css_classes=['edge_table']),
-                                            css_classes=['screen-2', 'col-s-6'])
+                    gridSpec[0, 0] = pn.Column(graph * points, css_classes=['screen-1', 'col-s-6'])
+                    if not self.Ran:
+                        gridSpec[0, 2] = pn.Row(pn.Column(node_table, css_classes=['node-table', 'invisible']),
+                                                pn.Column(edge_table, css_classes=['edge-table', 'invisible']),
+                                                css_classes=['trash'])
+                else:
+                    if not self.Ran:
+                        gridSpec[0, 2] = pn.Row(pn.Column(edge_table, css_classes=['edge-table', 'invisible']),
+                                                css_classes=['trash'])
 
 
 
@@ -213,7 +222,7 @@ def generateBokehApp(doc):
                 # print(renderer.get_plot(points).handles)
 
 
-
+            self.Ran = True
 
             return gridSpec
 

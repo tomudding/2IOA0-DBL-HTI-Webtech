@@ -103,21 +103,13 @@ let selectedDiagram = 'force';
 
 function displayDiagram(id){
     if (selectedDiagram !== id){
+
+
         document.getElementById(selectedDiagram).className = 'icon';
         selectedDiagram = id;
         document.getElementById(selectedDiagram).className = 'icon-selected';
 
-        $.post("/switch-nodelink", {to: id});
-
-        if (id === 'radial'){
-            // TODO switch to radial view
-        } else if (id === 'force'){
-            // TODO switch to force-directed view
-        } else if (id === 'hierarchical'){
-            // TODO switch to hierarchical view
-        } else {
-            // TODO switch to 3d view
-        }
+        $.post("/switch-nodelink", {to: id}, function(){removeRightToolbar();});
     }
 }
 
@@ -138,21 +130,27 @@ function displayMatrix() {
 }
 
 function displayReordering(id){
-    $.post("/switch-ordering", {to: id});
+    $.post("/switch-ordering", {to: id}, function(){removeRightToolbar()});
 }
 
 function displayMetric(id){
-    $.post("/switch-metric", {to: id});
+    $.post("/switch-metric", {to: id}, function(){removeRightToolbar()});
 }
 
 function displayPalette(id){
-    $.post("/switch-palette", {to: id});
+    $.post("/switch-palette", {to: id}, function(){removeRightToolbar()});
 }
 
 function displayNodeSize(id){
-    $.post("/switch-size", {to: id});
+    $.post("/switch-size", {to: id}, function(){removeRightToolbar()});
 }
 
 function displayNodeColor(id){
-    $.post("/switch-color", {to: id});
+    $.post("/switch-color", {to: id}, function(){removeRightToolbar()});
+}
+
+function removeRightToolbar(){
+    // const trash = document.getElementsByClassName("trash")[0];
+    // trash.classList.add("invisible");
+    document.getElementsByClassName("right-bar-shown")[0].classList.add("invisible");
 }
