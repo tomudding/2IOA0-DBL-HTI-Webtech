@@ -1,14 +1,16 @@
 """
-Author(s): Unknown
-Created: Unknown
-Edited 2019-06-19
+Author(s): Yuqing Zeng
+Created: Yuqing Zeng
+Edited 2019-05-20
 """
 from bisect import bisect_left, bisect_right
 from pandas.core.frame import DataFrame
 from itertools import repeat
-from numpy import array, argsort, asarray, concatenate, count_nonzero, delete, reshape, sort
+from numpy import array, argsort, asarray, concatenate, count_nonzero, delete, reshape, sort, size, array_equal
 from time import time
-
+from csv import Sniffer
+from pandas.io.parsers import read_csv
+from pandas.core.reshape.concat import concat
 def intersection(lst1, lst2):
     temp = set(lst2)
     lst3 = [value for value in lst1 if value in temp]
@@ -20,7 +22,7 @@ def fetch_edge_count(df, cutoff_l = 0.6, cutoff_r = 10.0):
     weight = sort(arr)
     l = bisect_left(weight, cutoff_l)
     r = bisect_right(weight, cutoff_r)
-    return r - l;
+    return r - l
 
 def filter_df_weight(df, cutoff_l = 0.6, cutoff_r = 10.0):
     names = df.columns.tolist()
@@ -197,3 +199,48 @@ def generate_edge_selection(df, cutoff_l = 0.6, cutoff_r = 10.0, keep_edges = Fa
     if keep_edges:
         return df_filtered_keep_edge
     return df_filtered_not_keep_edge
+
+def getGraphInfo(df):
+    """
+    :param df: input adjacency matrix in the form of dataframe
+    :return: tuple of #nodes, #edges, #sparsity, #directedness
+    """
+    adj_matrix = df.to_numpy(copy=True)
+    arr = adj_matrix.flatten("C")
+    dir = True
+    transposed = adj_matrix.transpose()
+    if array_equal(adj_matrix[0], transposed[0]):
+        dir = False
+    node_count = len(adj_matrix)
+    edge_count = count_nonzero(arr) #This will count self-connected edges and
+    # count undirected edges twice
+    sparsity = edge_count/size(arr)
+
+    return node_count, edge_count, sparsity, dir
+
+
+
+def processCSVMatrix(file):
+    with open(file, 'r') as csvfile:
+        dialect = Sniffer().sniff(csvfile.readline())
+
+    df = DataFrame()
+    for chunk in read_csv(file, sep=dialect.delimiter, mangle_dupe_cols=True, index_col=False, chunksize=1000):
+        df = concat([df, chunk], ignore_index=True)
+
+    nodes = df.columns.values.tolist()
+    nodes.pop(0)
+    df["Unnamed: 0"] = nodes
+    df = df.rename(columns={'Unnamed: 0': 'name'})
+    df = df.set_index(keys='name')
+
+    # Remove underscores in names
+    names = df.columns.tolist()
+    names = [name.replace('_', ' ') for name in names]
+    df.columns = names
+    df.set_index([df.columns], inplace=True)
+
+    return df
+
+print(getGraphInfo(processCSVMatrix("/Users/zengyuqing/PycharmProjects/2IOA0-DBL-HTI-Webtech/datasets"
+                                    "/GephiMatrix_author_similarity.csv")))
