@@ -268,9 +268,34 @@ Edited: 2019-06-17
 							squares.forEach(function(square) {
 								square.draw();
 							});
-							if (document.getElementsByClassName('bk bk-canvas-events').length > 0) {
+							if (document.getElementsByClassName('node-table').length > 0) {
 								container.remove();
 								document.getElementById('after-loading').hidden = false;
+								const edge_t = document.getElementsByClassName('edge-table')[0];
+								const node_t = document.getElementsByClassName('node-table')[0];
+								if (node_t) {
+									document.getElementById("node-container").appendChild(node_t);
+								}
+								document.getElementById("edge-container").appendChild(edge_t);
+								if (node_t) {
+									node_t.classList.remove("invisible");
+								}
+								edge_t.classList.remove("invisible");
+								const trash = document.getElementsByClassName("trash")[0];
+								const too_large = document.getElementsByClassName("screen-1")[0].parentNode;
+								too_large.removeChild(trash);
+								// let sum = 0;
+								// for (let i = 0; i < too_large.childNodes.length; i++){
+								// 	sum += too_large.childNodes[i].offsetWidth
+								//
+								// }
+								// too_large.style.width = `${sum}px`;
+								// too_large.parentNode.style.width = `${sum}px`;
+								// too_large.parentNode.parentNode.style.width = `${sum}px`;
+								too_large.classList.add("good-width");
+								too_large.parentNode.classList.add("good-width");
+								too_large.parentNode.parentNode.classList.add("good-width");
+
 							} else {
 								requestAnimFrame(drawMatrix)
 							}
@@ -409,44 +434,17 @@ Edited: 2019-06-17
 			<div class="right-bar-shown" id="right-bar-shown">
 
 				<!-- First information area -->
-				<div class="right-bar-big white-text" style="top: 5.6vh; left: 38px;">Children of the current node:</div>
-				<div class="right-bar-small" style="top: 10.3vh; left: 38px;">Select ordering:</div>
-				<select class="dropdown" style="left: 158px; top: 9vh; width: 170px;">
-					<option>Option1</option>
-					<option>Option2</option>
-					<option>Option3</option>
-				</select>
-				<div class="right-bar-info-block" style="top: 14.4vh; left: 38px;">
-					<div class="right-bar-info-title">The info title of this ordering</div>
-					<div class="right-bar-info-text">
-						Line1<br>
-						Line2<br>
-						Line3<br>
-						Line4<br>
-					</div>
-				</div>
+				<div class="right-bar-big white-text" style="top: 5.6vh; left: 38px;">Selected nodes</div>
+
+				<div id="node-container" class="right-bar-info-block bk-root" style="top: 10vh; left: 25px;"></div>
 
 
 				<!-- Minimize right tool bar button -->
 				<div class="right-bar-hide-button empty-triangle white-text" onclick="hideRightBar()">▷</div>
 
 				<!-- Second information area -->
-				<div class="right-bar-big white-text" style="top: 53vh; left: 38px;">Some other information:</div>
-				<div class="right-bar-small" style="top: 57.8vh; left: 38px;">Select ordering:</div>
-				<select class="dropdown" style="left: 158px; top: 56.5vh; width: 170px;">
-					<option>Option1</option>
-					<option>Option2</option>
-					<option>Option3</option>
-				</select>
-				<div class="right-bar-info-block" style="top: 62vh; left: 38px;">
-					<div class="right-bar-info-title">The second info title about this</div>
-					<div class="right-bar-info-text">
-						Line1<br>
-						Line2<br>
-						Line3<br>
-						Line4<br>
-					</div>
-				</div>
+				<div class="right-bar-big white-text" style="top: 53vh; left: 38px;">Selected edges</div>
+				<div id="edge-container" class="right-bar-info-block bk-root" style="top: 57vh; left: 25px;"></div>
 			</div>
 
 			<!-- Right bar minimized -->

@@ -263,8 +263,6 @@
     left: 1vw;
     width: 290px;
     height: 32vh;
-    background-color: white;
-    border: 1px solid rgb(170,170,170);
 }
 
 .right-bar-info-title {
@@ -306,6 +304,24 @@
    height: 3vh;
    line-height: 3vh;
    cursor: pointer;
+}
+
+.node-table {
+    top: 0px !important;
+    left: 0px !important;
+}
+
+.edge-table {
+    top: 0px !important;
+    left: 0px !important;
+}
+
+.invisible {
+    display: none !important;
+}
+
+.good-width {
+    width: 1200px !important;
 }
 
 .dropdown {

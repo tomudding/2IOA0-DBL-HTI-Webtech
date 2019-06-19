@@ -14,8 +14,8 @@ from graphion.session.handler import get_custom_key, set_custom_key, get_filtere
 from holoviews import renderer, Table
 from holoviews.plotting.bokeh.callbacks import LinkCallback
 from holoviews.plotting.links import Link
-from panel import Column, extension, GridSpec
-from param import depends, ObjectSelector, Parameterized
+from panel import Column, extension, GridSpec, Row
+from param import depends, ObjectSelector, Parameterized, Boolean
 
 def generateBokehApp(doc):
     sid = str(doc.session_context.request.arguments['sid'][0].decode('utf-8'))
@@ -131,6 +131,8 @@ def generateBokehApp(doc):
         Node_color = ObjectSelector(default='totalweight', 
                                             objects=['indegree', 'outdegree', 'totaldegree', 'inweight', 'outweight', 'totalweight'])
 
+        Ran = Boolean(default=False)
+
         def __init__(self, datashaded = True):
             self.datashaded = datashaded
 
@@ -152,7 +154,8 @@ def generateBokehApp(doc):
                 populate_3d_diagram(df, sid)
             # print(s1[1])
             screen1 = get_custom_key(get_screen1(sid), sid)
-            gridSpec = GridSpec(sizing_mode='stretch_both')
+
+            gridSpec = GridSpec(sizing_mode='stretch_both', css_classes=['good-width'])
 
             if self.Screen1 == "3d":
                 gridSpec[0, 0] = Column(get_custom_key(get_screen1(sid), sid), css_classes=['screen-1', 'col-s-6'])
@@ -173,8 +176,11 @@ def generateBokehApp(doc):
 
                 matrix = screen2.view()
 
-                edge_table = Table(matrix.data)
+                edge_table = Table(matrix.data).opts(height=310, width=290)
+
                 SelectedDataLink(matrix, edge_table)
+
+                gridSpec[0, 1] = Column(matrix, css_classes=['screen-2', 'col-s-6'])
 
                 if self.Screen1 != "3d":
                     # Setting up the linking, generateDiagram functions return two-tuple (graph, points). Points is the selection layer
@@ -183,22 +189,30 @@ def generateBokehApp(doc):
                     SelectNodeToMatrixLink.register_callback('bokeh', SelectNodeToMatrixCallback)
                     SelectNodeToTableLink.register_callback('bokeh', SelectNodeToTableCallback)
                     graph, points = screen1.view()
-                    node_table = Table(points.data[['index', 'indegree', 'outdegree']])
-                    
+
+                    node_table = Table(points.data[['index', 'indegree', 'outdegree']]).opts(height=310, width=290)
+
                     # Link matrix to the nodelink (both graph and points)
                     SelectMatrixToNodeLink(matrix, points)
                     SelectNodeToTableLink(points, node_table)
 
                     # Link nodelink to matrix (points only)
                     SelectNodeToMatrixLink(points, matrix)
-                    gridSpec[0, 0] = Column(graph * points, Column(node_table, css_classes=['node_table']),
-                                               css_classes=['screen-1', 'col-s-6'])
-                gridSpec[0, 1] = Column(matrix, Column(edge_table, css_classes=['edge_table']),
-                                            css_classes=['screen-2', 'col-s-6'])
+
+                    gridSpec[0, 0] = Column(graph * points, css_classes=['screen-1', 'col-s-6'])
+                    if not self.Ran:
+                        gridSpec[0, 2] = Row(Column(node_table, css_classes=['node-table', 'invisible']),
+                                                Column(edge_table, css_classes=['edge-table', 'invisible']),
+                                                css_classes=['trash'])
+                else:
+                    if not self.Ran:
+                        gridSpec[0, 2] = Row(Column(edge_table, css_classes=['edge-table', 'invisible']),
+                                                css_classes=['trash'])
 
                 # SelectedDataLink(matrix, points)
                 # renderer = renderer('bokeh')
                 # print(renderer.get_plot(points).handles)
+            self.Ran = True
             return gridSpec
 
     visApp = VisApp(datashaded=get_datashading(sid))
