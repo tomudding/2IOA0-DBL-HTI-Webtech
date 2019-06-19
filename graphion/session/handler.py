@@ -169,7 +169,7 @@ def populate_matrix(df, sid):
         plot = APP_CONTEXT['data'][sid]['matrix']
         if plot is not None:
             return plot
-    matrix = makeMatrix(df.copy(), get_custom_key(get_screen1(sid), sid), df=True)
+    matrix = makeMatrix(df.copy(), get_custom_key(get_screen1(sid), sid), sid, df=True)
     APP_CONTEXT['data'][sid]['matrix'] = matrix
     return matrix
 
@@ -254,34 +254,18 @@ def get_window_width(sid):
         return None
     return APP_CONTEXT['data'][sid]['width']
     
-def set_window_height(height, sid):
-    global APP_CONTEXT
-    APP_CONTEXT['data'][sid]['height'] = height
-    
-def get_window_height(sid):
-    global APP_CONTEXT
-    if not('height' in APP_CONTEXT['data'][sid]):
-        return None
-    return APP_CONTEXT['data'][sid]['height']
-
 def calculate_plot_size(sid):
     window_width = get_window_width(sid)
-    window_height = get_window_height(sid)
     
     if window_width is None:
-        window_width = 1000
-    if window_height is None:
-        window_height = 600
+        window_width = 1200
     
-    plot_width = int((window_width - (2 * 38)) / 2) # the collapsed sidebars are 38px each
-    plot_height = window_height - 30 - 2 * 5 # account for bokeh toolbar and stupid bokeh margins
-    return (plot_width, plot_height)
-
-
+    plot_size = int((window_width - (2 * 38)) / 2) # the collapsed sidebars are 38px each
+    return plot_size
+    
 def set_directed(boolean, sid):
     global APP_CONTEXT
-    APP_CONTEXT['data'][sid]['directed'] = width
-
+    APP_CONTEXT['data'][sid]['directed'] = boolean
 
 def get_directed(sid):
     global APP_CONTEXT

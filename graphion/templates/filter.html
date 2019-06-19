@@ -68,7 +68,7 @@ Edited: 2019-06-19
         </script>
         <script>
             $(window).on('load', function() {
-                $.post('/update-window-specs', { w: window.innerWidth, h: window.innerHeight }, function (data) {
+                $.post('/update-window-specs', { w: window.innerWidth }, function (data) {
                     if (data != 'updated') {
                         console.log("An unexpected error occured, plots will be sized 450x450.");
                     }
