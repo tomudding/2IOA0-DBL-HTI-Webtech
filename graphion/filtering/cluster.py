@@ -1,34 +1,20 @@
 """
-Author(s): Yuqin Cui, Steven Broek, Tom Udding (small change)
+Author(s): Yuqin Cui, Steven Broek, Tom Udding
 Created: 2019-06-12
-Edited: 2019-06-15
+Edited: 2019-06-19
 """
-
-import numpy as np
-import pandas as pd
-import panel as pn
-import param
-import hvplot.pandas
-import holoviews as hv
-from holoviews import opts, streams
-from bokeh.models import CustomJS, BoxSelectTool, ColumnDataSource
-from colorcet import palette
-from bokeh.models.widgets.buttons import Button
-from holoviews.streams import Selection1D
-from sklearn.cluster import KMeans
-
-import collections
-from bokeh.plotting import figure,show
-from bokeh.layouts import row
-from bokeh.models import CustomJS, ColumnDataSource
-from bokeh.plotting import figure, output_file, show
-from sklearn.cluster import KMeans
-import matplotlib
-import matplotlib.pyplot as plt
-
-from bokeh.models import ColumnDataSource, Plot, LinearAxis, Grid
+from bokeh.io import curdoc
+from bokeh.models import ColumnDataSource, Plot, LinearAxis, CustomJS
 from bokeh.models.glyphs import Text
-from bokeh.io import curdoc, show
+from bokeh.models.widgets.buttons import Button
+from bokeh.plotting import figure
+from collections import Counter
+from colorcet import palette
+from holoviews import opts, streams
+from holoviews.streams import Selection1D
+from numpy import array, linspace
+from pandas import DataFrame, concat, Series
+from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
 
 def K_mean_cluster(dataframe):
@@ -36,22 +22,22 @@ def K_mean_cluster(dataframe):
     # if node_number >= 1500:
     #     print("The dataset is too large to cluster, use edge weight filter")
     # else:
-    pca=PCA(n_components=1)
-    newData=pca.fit_transform(dataframe.values)
-    X = np.array(newData)
+    pca = PCA(n_components=1)
+    newData = pca.fit_transform(dataframe.values)
+    X = array(newData)
 
     n_clusters= node_number//200 + 1
 
     kmeans = KMeans(n_clusters= (node_number//200+1), random_state=0).fit(X)
     cluster_label = kmeans.labels_
     cluster_label = cluster_label.tolist()
-    counter=collections.Counter(cluster_label)
+    counter = Counter(cluster_label)
 
     names = dataframe.columns.tolist()
-    cluster_label = pd.Series(cluster_label)
-    names_series = pd.Series(names)
-    cluster_label_df = pd.concat([names_series, cluster_label], axis=1)
-    cluster_label_df = pd.DataFrame({'index': names,'cluster_label': cluster_label})
+    cluster_label = Series(cluster_label)
+    names_series = Series(names)
+    cluster_label_df = concat([names_series, cluster_label], axis=1)
+    cluster_label_df = DataFrame({'index': names,'cluster_label': cluster_label})
 
     check_frequency = counter.most_common(1)
     largest_cluster_label = check_frequency[0][0]
@@ -74,8 +60,8 @@ def generate_cluster_graph(dataframe):
     node_number = len(dataframe.columns)
     if node_number >= 150000:
         N = 40
-        x = np.linspace(-2, 2, N)
-        y = np.linspace(0,0, N)
+        x = linspace(-2, 2, N)
+        y = linspace(0,0, N)
         a = "Sorry, the dataset is too large to split"
         text = [a[i] for i in range(N)]
         source = ColumnDataSource(dict(x=x, y=y, text=text))

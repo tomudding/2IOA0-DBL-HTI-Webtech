@@ -1,24 +1,24 @@
 """
 Author(s): Steven van den Broek, Tom Udding
 Created: 2019-05-18
-Edited: 2019-05-31
+Edited: 2019-06-19
 """
-from sklearn.neighbors import KernelDensity
-from sklearn.model_selection import GridSearchCV
-import numpy as np
 from bokeh.plotting import figure
 from bokeh.models import BoxSelectTool, CustomJS, ColumnDataSource
 from bokeh.models.widgets import Paragraph
-import pandas
+from numpy import append, array, exp, insert, linspace, reshape, std
+from numpy.random import choice
 from pandas import read_hdf
-import time
+from sklearn.neighbors import KernelDensity
+from sklearn.model_selection import GridSearchCV
+from time import time
 
 def generate_selection(file, kind="degree", dir="in", dataframe=False):
     if file is None or file.size == 0:
         p = Paragraph(text="""No nodes left""")
         return p
 
-    # big_bang = time.time()
+    # big_bang = time()
 
     if (kind == "degree"):
         edges=False
@@ -27,7 +27,7 @@ def generate_selection(file, kind="degree", dir="in", dataframe=False):
 
     limit = 1000
 
-    begin = time.time()
+    begin = time()
     if not dataframe:
         df = read_hdf(file)
     else:
@@ -35,9 +35,9 @@ def generate_selection(file, kind="degree", dir="in", dataframe=False):
 
     names = df.columns.tolist()
 
-    # print("Reading data {}-{}: ".format(dir, kind) + str(time.time()-begin))
+    # print("Reading data {}-{}: ".format(dir, kind) + str(time()-begin))
 
-    # begin = time.time()
+    # begin = time()
     ### BASIC DEGREE COUNTING
     if (not edges):
         if (dir == "in"):
@@ -48,43 +48,43 @@ def generate_selection(file, kind="degree", dir="in", dataframe=False):
         adj_matrix = df.to_numpy(copy=True)  # convert dataframe to numpy array for efficiency
         deg_all = adj_matrix.flatten()
 
-    # print("Degree counting/edge weights {}-{}: ".format(dir, kind) + str(time.time() - begin))
-    # begin = time.time()
+    # print("Degree counting/edge weights {}-{}: ".format(dir, kind) + str(time() - begin))
+    # begin = time()
     if (len(deg_all) > limit):
-        deg = np.random.choice(deg_all, limit, replace=False)
+        deg = choice(deg_all, limit, replace=False)
         #deg = deg_all[:limit]
-        # print("Random sampling: {}-{}: ".format(dir, kind) + str(time.time() - begin))
-        # begin = time.time()
-        np.append(deg, np.array([max(deg_all)]))
-        np.append(deg, np.array([min(deg_all)]))
-        # print("Appending: {}-{}: ".format(dir, kind) + str(time.time() - begin))
+        # print("Random sampling: {}-{}: ".format(dir, kind) + str(time() - begin))
+        # begin = time()
+        append(deg, array([max(deg_all)]))
+        append(deg, array([min(deg_all)]))
+        # print("Appending: {}-{}: ".format(dir, kind) + str(time() - begin))
     else:
         deg = deg_all
 
     if(edges):
         deg = [item for item in deg if item > 0]
 
-    # begin = time.time()
-    deg_all = np.reshape(deg_all, (-1, 1))
-    deg = np.reshape(deg, (-1, 1))
-    # print("Reshaping: {}-{}: ".format(dir, kind) + str(time.time() - begin))
+    # begin = time()
+    deg_all = reshape(deg_all, (-1, 1))
+    deg = reshape(deg, (-1, 1))
+    # print("Reshaping: {}-{}: ".format(dir, kind) + str(time() - begin))
     maxi = max(deg_all)[0]
     if maxi == 0:
-        deg_plot = np.linspace(0, 0.5, 1000)
+        deg_plot = linspace(0, 0.5, 1000)
     else:
-        deg_plot = np.linspace(0, maxi, 1000)
+        deg_plot = linspace(0, maxi, 1000)
     # Calculate 'pretty good' (since best takes a long time) bandwidth
-    # begin = time.time()
+    # begin = time()
     #
     # grid = GridSearchCV(KernelDensity(),
-    #                     {'bandwidth': np.linspace(0.1, 10.0, 20)},
+    #                     {'bandwidth': linspace(0.1, 10.0, 20)},
     #                     cv=min(len(deg), 5),
     #                     iid=False)  # 5-fold cross-validation
     # grid.fit(deg)
-    # print("Bandwidth: {}-{}: ".format(dir, kind) + str(time.time()-begin))
-    # begin = time.time()
+    # print("Bandwidth: {}-{}: ".format(dir, kind) + str(time()-begin))
+    # begin = time()
     # kde = grid.best_estimator_
-    bandwidth = max(1.06 * np.std(deg) * len(deg)**(-1/5), 0.05)
+    bandwidth = max(1.06 * std(deg) * len(deg)**(-1/5), 0.05)
     kde = KernelDensity(kernel="gaussian", bandwidth=bandwidth).fit(deg)
     # if (not edges):
     #     kde = KernelDensity(kernel="gaussian", bandwidth=5.3).fit(deg)
@@ -93,12 +93,12 @@ def generate_selection(file, kind="degree", dir="in", dataframe=False):
     try:
         print(deg_plot[0][0])
     except IndexError:
-        deg_plot = np.array([[item] for item in deg_plot])
+        deg_plot = array([[item] for item in deg_plot])
     log_dens = kde.score_samples(deg_plot)
-    X = np.append(deg_plot[:, 0], deg_plot[:, 0][-1])
-    X = np.insert(X, 0, X[0])
-    Y = np.append(np.exp(log_dens), 0)
-    Y = np.insert(Y, 0, 0)
+    X = append(deg_plot[:, 0], deg_plot[:, 0][-1])
+    X = insert(X, 0, X[0])
+    Y = append(exp(log_dens), 0)
+    Y = insert(Y, 0, 0)
     complete = ColumnDataSource(data=dict(x=X, y=Y))
     before = ColumnDataSource(data=dict(x=[], y=[]))
     middle = ColumnDataSource(data=dict(x=X, y=Y))
@@ -252,6 +252,6 @@ def generate_selection(file, kind="degree", dir="in", dataframe=False):
     p.border_fill_color = None
     p.outline_line_color = None
 
-    # print("KDE + plotting: {}-{}: ".format(dir, kind) + str(time.time()-begin))
-    # print("Total {}-{}: ".format(dir, kind) + str(time.time()-big_bang))
+    # print("KDE + plotting: {}-{}: ".format(dir, kind) + str(time()-begin))
+    # print("Total {}-{}: ".format(dir, kind) + str(time()-big_bang))
     return p

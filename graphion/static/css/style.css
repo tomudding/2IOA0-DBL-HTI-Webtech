@@ -1,7 +1,7 @@
 /**
  * Author(s): Tom Udding, Anton Vellikok
  * Created: 2019-04-29
- * Edited: 2019-06-11
+ * Edited: 2019-06-19
  */
 
 /*######################
@@ -158,9 +158,17 @@ a, a:visited, a:hover, a:focus {
     left: 2.75rem;
 }
 
+#menu-cross-break {
+    display: none;
+}
+
 @media only screen and (max-width: 768px) {
     .ctrl-menu-cross {
         display: none;
+    }
+
+    #menu-cross-break {
+        display: block;
     }
 }
 

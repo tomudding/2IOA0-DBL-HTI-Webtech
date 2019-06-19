@@ -80,6 +80,10 @@ Edited: 2019-06-17
                             <div class="card-contents">
                                 <h2 class="card-title text-center">Begin by choosing your point of interest</h2>
                                 <hr>
+                                <div class="text-center" style="margin-bottom: 20px; margin-top: 20px;">Selected dataset contains <span id="node-amount">INSERT</span> nodes and <span id="edge-amount">INSERT</span> edges.
+                                <br>
+                                It is of <span id="directedness">INSERT</span> form and has a sparcity of <span id="sparcity">INSERT</span>.
+                                </div>
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-s-6 icon-area">
@@ -389,6 +393,7 @@ Edited: 2019-06-17
                                                 <div class="footer-area">
                                                     <button class="button pop-up-footer-button pop-up-footer-button-back"
                                                         onclick="
+                                                        document.getElementById('continue-text-edge-filter').innerHTML = 'Continue';
                                                         document.getElementById('filter-node-in-degree').style.display='none';
                                                         document.getElementById('filter-edge-weight').style.display='block';
                                                         plot = document.getElementById('in-degree-plot');

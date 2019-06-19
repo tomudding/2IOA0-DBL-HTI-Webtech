@@ -1,20 +1,19 @@
 """
-Author(s): Sam Baggen, Steven van den Broek
+Author(s): Sam Baggen, Steven van den Broek, Tom Udding
 Created: 2019-06-03
 Edited: 2019-06-16
 """
-
+from holoviews import extension
 from holoviews.plotting.bokeh.callbacks import LinkCallback
 from holoviews.plotting.links import Link
-import param
-import holoviews as hv
+from param import List
 
-hv.extension('bokeh')
+extension('bokeh')
 
 # Linking classes
 class SelectMatrixToNodeLink(Link):
     _requires_target = True
-    indices = param.List(default=[], doc="The list of indices to be passed to the callback")
+    indices = List(default=[], doc="The list of indices to be passed to the callback")
 
 class SelectMatrixToNodeCallback(LinkCallback):
     source_model = 'selected'
