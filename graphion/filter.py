@@ -29,7 +29,7 @@ def visualise(file=None):
         flash("Dataset could not be found. Please select a previously uploaded dataset or upload a new dataset.", "danger")
         return redirect('/selection')
 
-    df = read_hdf(join(server.config['UPLOAD_FOLDER'], (file + '.h5'))) # should be done in a memory efficient way (instead of loading the whole file into memory)
+    df = read_hdf(join(server.config['UPLOAD_FOLDER'], (file + '.h5'))) # this is the only and fastest way to do this with a fixed HDF format
     sid = request.cookies.get(server.config['SESSION_COOKIE_NAME'])
     if is_user_loaded(sid):
         prune_user(sid)
