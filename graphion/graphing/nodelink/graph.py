@@ -1,7 +1,7 @@
 """
 Author(s): Tom Udding, Steven van den Broek, Yuqing Zeng, Tim van de Klundert, Sam Baggen
 Created: 2019-05-03
-Edited: 2019-06-19
+Edited: 2019-06-20
 """
 from bokeh.models import Circle, ColumnDataSource, HoverTool
 from bokeh.palettes import Cividis256, Viridis256, Inferno256
@@ -63,19 +63,26 @@ def generateNodeLinkDiagram(df, diagramType, sid, datashaded=True):
 
         def __init__(self, diagramType, sid):
             self.diagramType = diagramType
+            self.sid = sid
             super(Nodelink, self).__init__()
             from graphion.session.handler import calculate_plot_size # import must be here to prevent circular dependent imports 
-            self.size = calculate_plot_size(sid)
+            self.size = calculate_plot_size(self.sid)
             self.plot, self.points = self.make_plot()
 
         def make_plot(self):
-            G = from_pandas_adjacency(df)
+            from graphion.session.handler import get_directed # dependency cycle fix
+
+            if get_directed(self.sid):
+                G = from_pandas_adjacency(df, create_using=DiGraph)
+            else:
+                G = from_pandas_adjacency(df, create_using=Graph)
+            nodeCount = number_of_nodes(G)
 
             """
             Create NetworkX graph layout manager
             """
             if diagramType == "FORCE":
-                layout = spring_layout(G, k=10.42 / sqrt(number_of_nodes(G)), seed=server.config['SEED'])
+                layout = spring_layout(G, k=10.42 / sqrt(nodeCount), seed=server.config['SEED'])
             elif diagramType == "HIERARCHICAL":
                 layout = graphviz_layout(Graph([(u, v, d) for u, v, d in G.edges(data=True)]), prog='dot')
                 pass
@@ -91,7 +98,7 @@ def generateNodeLinkDiagram(df, diagramType, sid, datashaded=True):
             # calculate centrality
             centrality = degree_centrality(G)
             _, nodeCentralities = zip(*sorted(centrality.items()))
-
+            
             # get degree information
             if is_directed(G):
                 inDegreeSize = dict(G.in_degree)
@@ -100,7 +107,7 @@ def generateNodeLinkDiagram(df, diagramType, sid, datashaded=True):
                 outDegree = outDegreeSize.copy()
                 totalDegreeSize = {}
                 for n in nodes:
-                    totalDegreeSize[n] = {n: inDegreeSize[n] + outDegreeSize[n]}
+                    totalDegreeSize[n] = inDegreeSize[n] + outDegreeSize[n]
                 totalDegree = totalDegreeSize.copy()
             else:
                 inDegreeSize = dict(G.degree)
@@ -118,7 +125,7 @@ def generateNodeLinkDiagram(df, diagramType, sid, datashaded=True):
                 outWeight = outWeightSize.copy()
                 totalWeightSize = {}
                 for n in nodes:
-                    totalWeightSize[n] = {n: inWeightSize[n] + outWeightSize[n]}
+                    totalWeightSize[n] = inWeightSize[n] + outWeightSize[n]
                 totalWeight = totalWeightSize.copy()
             else:
                 inWeightSize = dict(G.degree(weight='weight'))
