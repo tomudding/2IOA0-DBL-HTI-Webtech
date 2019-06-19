@@ -1,7 +1,7 @@
 <!--
 Author(s): Tom Udding, Sam Baggen, Tim van de Klundert, Anton Vellikok, Steven van den Broek
 Created: 2019-05-01
-Edited: 2019-06-19
+Edited: 2019-06-20
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -30,6 +30,23 @@ Edited: 2019-06-19
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/1.48.1/plotly.min.js" integrity="sha256-LE6cKkU1yNCSCMPJrBlZonWX8bdy0EuY2QDpbmJaOzY=" crossorigin="anonymous"></script>
 		<!-- jQuery for post methods... -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+		<script>
+			function startListeningToBokehEvents() {
+				var targetNodes = document.querySelectorAll('.good-width');
+				var targetNode = targetNodes[targetNodes.length - 1]
+				var config = { attributes: true, childList: true, subtree: true };
+				
+				var callback = function(mutationsList, observer) {
+				    for (var mutation of mutationsList) {
+						// inefficient, but we need to do something to keep that second screen hidden
+				     	fixMatrix(); // yes, not correctly centered, but is fixed after interacting with plots
+				    }
+				};
+
+				var bokehObserver = new MutationObserver(callback);
+				bokehObserver.observe(targetNode, config);
+			}
+		</script>
 	</head>
 	<body class="valign-wrapper" id="body">
 		<section class="body-wrapper" id="loading-screen">
@@ -172,6 +189,7 @@ Edited: 2019-06-19
 							if (document.getElementsByClassName('bk bk-canvas-events').length > 0) {
 								container.remove();
 								document.getElementById('after-loading').hidden = false;
+								startListeningToBokehEvents();
 							} else {
 								requestAnimFrame(draw);
 							}

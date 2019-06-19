@@ -1,7 +1,7 @@
 /*
 Authors: Sam Baggen, Steven van den Broek, Tom Udding
 Created: Unkown...
-Last Edited: 2019-06-17
+Last Edited: 2019-06-20
 */
 
 function darkMode(){
@@ -123,9 +123,29 @@ function displayMatrix() {
     if (currentState == true) {
         targetNode.className = "icon";
         screen2.style.display = "none";
+        screen1.style.left = "calc(25% - 5px)";
     } else {
         targetNode.className = "icon-selected";
         screen2.style.display = "block";
+        screen1.style.left = "5px";
+    }
+}
+
+function fixMatrix() {
+    var targetNode = document.getElementById("matrix");
+    var currentState = (targetNode.className == "icon-selected") ? true : false;
+    
+    var screen1 = document.querySelector(".screen-1");
+    var screen2 = document.querySelector(".screen-2");
+
+    if (currentState == true) {
+        targetNode.className = "icon-selected";
+        screen2.style.display = "block";
+        screen1.style.left = "5px";
+    } else {
+        targetNode.className = "icon";
+        screen2.style.display = "none";
+        screen1.style.left = "calc(25% - 5px)";
     }
 }
 
