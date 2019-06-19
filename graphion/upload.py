@@ -1,12 +1,14 @@
 """
 Author(s): Tom Udding, Steven van den Broek
 Created: 2019-05-01
-Edited: 2019-06-16
+Edited: 2019-06-19
 """
-import os, secrets
 from flask import Blueprint, flash, request, redirect, session
 from graphion import server
 from graphion.graphing.parser import processCSVMatrix, processEdgeList
+from os import remove
+from os.path import join
+from secrets import token_hex
 from tempfile import NamedTemporaryFile
 from werkzeug.formparser import parse_form_data
 from werkzeug.utils import secure_filename
@@ -18,7 +20,7 @@ def upload_matrix():
     if request.method == 'POST':
         # all server-side checks have been removed because they stop the stream
         # I am figuring out how we should do them on the server
-        fileUniqueHash = secrets.token_hex(server.config['TOKEN_SIZE'])
+        fileUniqueHash = token_hex(server.config['TOKEN_SIZE'])
 
         def custom_stream_factory(total_content_length, filename, content_type, content_length=None):
             tmpfile = NamedTemporaryFile('wb+', delete=False) # delete=False requires manual deletion using os.remove(tmpfile.name)
@@ -29,9 +31,9 @@ def upload_matrix():
         file = next(iter(files.values()))
         fileOriginalName = secure_filename(file.filename)
         df = processCSVMatrix(file.stream.name)
-        df.to_hdf(os.path.join(server.config['UPLOAD_FOLDER'], (fileUniqueHash + '.h5')), key=fileOriginalName)
+        df.to_hdf(join(server.config['UPLOAD_FOLDER'], (fileUniqueHash + '.h5')), key=fileOriginalName)
         file.stream.close()
-        os.remove(file.stream.name)
+        remove(file.stream.name)
         return fileUniqueHash
     return redirect('/selection')
 
@@ -40,7 +42,7 @@ def upload_edgelist():
     if request.method == 'POST':
         # all server-side checks have been removed because they stop the stream
         # I am figuring out how we should do them on the server
-        fileUniqueHash = secrets.token_hex(server.config['TOKEN_SIZE'])
+        fileUniqueHash = token_hex(server.config['TOKEN_SIZE'])
 
         def custom_stream_factory(total_content_length, filename, content_type, content_length=None):
             tmpfile = NamedTemporaryFile('wb+', delete=False) # delete=False requires manual deletion using os.remove(tmpfile.name)
@@ -51,8 +53,8 @@ def upload_edgelist():
         file = next(iter(files.values()))
         fileOriginalName = secure_filename(file.filename)
         df = processEdgeList(file.stream.name)
-        df.to_hdf(os.path.join(server.config['UPLOAD_FOLDER'], (fileUniqueHash + '.h5')), key=fileOriginalName)
+        df.to_hdf(join(server.config['UPLOAD_FOLDER'], (fileUniqueHash + '.h5')), key=fileOriginalName)
         file.stream.close()
-        os.remove(file.stream.name)
+        remove(file.stream.name)
         return fileUniqueHash
     return redirect('/selection')

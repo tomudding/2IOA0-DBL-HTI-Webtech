@@ -1,26 +1,21 @@
 """
 Author(s): Tom Udding, Steven van den Broek, Sam Baggen
 Created: 2019-05-03
-Edited: 2019-06-12
+Edited: 2019-06-19
 """
-from graphion import server
-from graphion.graphing.linking import SelectEdgeCallback, SelectMatrixToNodeCallback, SelectNodeToMatrixCallback\
-    , SelectNodeToTableCallback,  SelectEdgeLink, SelectMatrixToNodeLink, SelectNodeToMatrixLink, SelectNodeToTableLink
-from graphion.session.handler import get_custom_key, set_custom_key, get_filtered_df, set_screen1, get_screen1, \
-    set_screen2, get_screen2, populate_3d_diagram, populate_force_diagram, populate_hierarchical_diagram,\
-    populate_matrix, populate_radial_diagram, get_visualisations_app, set_visualisations_app, reset_plots, \
-    get_matrix_df, get_datashading
-import os
-import panel as pn
-import time
-
 from bokeh.themes.theme import Theme
-
-import param
-import holoviews as hv
-
+from graphion import server
+from graphion.graphing.linking import SelectEdgeCallback, SelectMatrixToNodeCallback, SelectNodeToMatrixCallback, \
+     SelectNodeToTableCallback,  SelectEdgeLink, SelectMatrixToNodeLink, SelectNodeToMatrixLink, SelectNodeToTableLink
+from graphion.session.handler import get_custom_key, set_custom_key, get_filtered_df, set_screen1, get_screen1, \
+     set_screen2, get_screen2, populate_3d_diagram, populate_force_diagram, populate_hierarchical_diagram, \
+     populate_matrix, populate_radial_diagram, get_visualisations_app, set_visualisations_app, reset_plots, \
+     get_matrix_df, get_datashading
+from holoviews import renderer, Table
 from holoviews.plotting.bokeh.callbacks import LinkCallback
 from holoviews.plotting.links import Link
+from panel import Column, extension, GridSpec
+from param import depends, ObjectSelector, Parameterized
 
 def generateBokehApp(doc):
     sid = str(doc.session_context.request.arguments['sid'][0].decode('utf-8'))
@@ -108,32 +103,32 @@ def generateBokehApp(doc):
                 }
             }
         })
-    hv.renderer('bokeh').theme = theme
-    hv.renderer('bokeh').webgl = True
+    renderer('bokeh').theme = theme
+    renderer('bokeh').webgl = True
 
-    class VisApp(param.Parameterized):
-        Screen1 = param.ObjectSelector(default="force",
+    class VisApp(Parameterized):
+        Screen1 = ObjectSelector(default="force",
                                        objects=["none", "radial", "force", "hierarchical", "3d"])
 
-        Screen2 = param.ObjectSelector(default="matrix",
+        Screen2 = ObjectSelector(default="matrix",
                                        objects=["none", "matrix"])
 
-        Ordering = param.ObjectSelector(default="none",
+        Ordering = ObjectSelector(default="none",
                                         objects=["none", "single", "average", "complete", "centroid", "weighted",
                                                  "median", "ward"])
 
-        Metric = param.ObjectSelector(default="euclidean",
+        Metric = ObjectSelector(default="euclidean",
                                       objects=["euclidean", "minkowski", "cityblock", "sqeuclidean", "cosine",
                                                "correlation", "hamming", "jaccard", "chebyshev", "canberra",
                                                "braycurtis"])
 
-        Color_palette = param.ObjectSelector(default='kbc',
+        Color_palette = ObjectSelector(default='kbc',
                                              objects=['kbc', 'kgy', 'bgy', 'bmw', 'bmy', 'cividis', 'dimgray', 'fire',
                                                       'inferno', 'viridis'])
-        Node_size = param.ObjectSelector(default='indegreesize', 
+        Node_size = ObjectSelector(default='indegreesize', 
                                             objects=['indegreesize', 'outdegreesize', 'totaldegreesize', 'inweightsize', 'outweightsize', 'totalweightsize'])
 
-        Node_color = param.ObjectSelector(default='totalweight', 
+        Node_color = ObjectSelector(default='totalweight', 
                                             objects=['indegree', 'outdegree', 'totaldegree', 'inweight', 'outweight', 'totalweight'])
 
         def __init__(self, datashaded = True):
@@ -141,7 +136,7 @@ def generateBokehApp(doc):
 
             super(VisApp, self).__init__()
 
-        @param.depends('Screen1', 'Screen2', 'Ordering', 'Metric', 'Color_palette', 'Node_size', 'Node_color')
+        @depends('Screen1', 'Screen2', 'Ordering', 'Metric', 'Color_palette', 'Node_size', 'Node_color')
         def view(self):
             if self.Screen1 == "radial":
                 set_screen1("radial", sid)
@@ -157,17 +152,15 @@ def generateBokehApp(doc):
                 populate_3d_diagram(df, sid)
             # print(s1[1])
             screen1 = get_custom_key(get_screen1(sid), sid)
-
-            gridSpec = pn.GridSpec(sizing_mode='stretch_both')
+            gridSpec = GridSpec(sizing_mode='stretch_both')
 
             if self.Screen1 == "3d":
-                gridSpec[0, 0] = pn.Column(get_custom_key(get_screen1(sid), sid), css_classes=['screen-1', 'col-s-6'])
+                gridSpec[0, 0] = Column(get_custom_key(get_screen1(sid), sid), css_classes=['screen-1', 'col-s-6'])
             else:
                 screen1.color_palette = self.Color_palette
                 screen1.node_size = self.Node_size
                 screen1.node_color = self.Node_color
                 set_custom_key(get_screen1(sid), screen1, sid)
-
 
             if self.Screen2 == "matrix":
                 set_screen2("matrix", sid)
@@ -180,7 +173,7 @@ def generateBokehApp(doc):
 
                 matrix = screen2.view()
 
-                edge_table = hv.Table(matrix.data)
+                edge_table = Table(matrix.data)
                 SelectedDataLink(matrix, edge_table)
 
                 if self.Screen1 != "3d":
@@ -189,58 +182,31 @@ def generateBokehApp(doc):
                     SelectMatrixToNodeLink.register_callback('bokeh', SelectMatrixToNodeCallback)
                     SelectNodeToMatrixLink.register_callback('bokeh', SelectNodeToMatrixCallback)
                     SelectNodeToTableLink.register_callback('bokeh', SelectNodeToTableCallback)
-
                     graph, points = screen1.view()
-
-                    node_table = hv.Table(points.data[['index', 'indegree', 'outdegree']])
+                    node_table = Table(points.data[['index', 'indegree', 'outdegree']])
+                    
                     # Link matrix to the nodelink (both graph and points)
                     SelectMatrixToNodeLink(matrix, points)
-
                     SelectNodeToTableLink(points, node_table)
 
                     # Link nodelink to matrix (points only)
                     SelectNodeToMatrixLink(points, matrix)
-                    gridSpec[0, 0] = pn.Column(graph * points, pn.Column(node_table, css_classes=['node_table']),
+                    gridSpec[0, 0] = Column(graph * points, Column(node_table, css_classes=['node_table']),
                                                css_classes=['screen-1', 'col-s-6'])
-                gridSpec[0, 1] = pn.Column(matrix, pn.Column(edge_table, css_classes=['edge_table']),
+                gridSpec[0, 1] = Column(matrix, Column(edge_table, css_classes=['edge_table']),
                                             css_classes=['screen-2', 'col-s-6'])
 
-
-
                 # SelectedDataLink(matrix, points)
-
-                # renderer = hv.renderer('bokeh')
+                # renderer = renderer('bokeh')
                 # print(renderer.get_plot(points).handles)
-
-
-
-
             return gridSpec
 
-
-
-    #visApp = VisApp(datashaded=False)
     visApp = VisApp(datashaded=get_datashading(sid))
-
     set_visualisations_app(visApp, sid)
 
-    # begin = time.time()
-    # m = populate_matrix(df)
-    # print("Matrix generation took: " + str(time.time()-begin))
-    # begin = time.time()
-    # h = populate_hierarchical_diagram(df)
-    # print("Graph generation took: " + str(time.time()-begin))
-    # begin = time.time()
-    # threeD = populate_3d_diagram(df)
-    # print("3D generation took: " + str(time.time() - begin))
-
-    # pane = pn.Column(pn.Row(graph, matrix), graph3D)
-    # pane = pn.Column(pn.Row(h, m), threeD)
-    # pane = pn.Pane(graph)
-
-    pn.extension('plotly')
+    extension('plotly')
     # Don't use pn.Pane since that messes up linking
-    return pn.Column(visApp.view).get_root(doc)
+    return Column(visApp.view).get_root(doc)
 
 def changeScreen1(new_type, sid):
     visApp = get_visualisations_app(sid)

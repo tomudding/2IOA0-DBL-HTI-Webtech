@@ -1,31 +1,25 @@
 """
 Author(s): Steven van den Broek, Yuqin Cui, Sam Baggen, Tom Udding
 Created: 2019-05-05
-Edited: 2019-06-08
+Edited: 2019-06-19
 """
-import numpy as np
-import pandas as pd
-import panel as pn
-import param
 from colorcet import palette
-from scipy.spatial.distance import pdist, squareform
 from fastcluster import linkage
-from pandas import read_hdf
-import time
-
-import holoviews as hv
+from graphion.graphing.linking import SelectMatrixToNodeCallback, SelectMatrixToNodeLink
+from holoviews import HeatMap
 from holoviews.plotting.bokeh.callbacks import LinkCallback
 from holoviews.plotting.links import Link
-from bokeh.models import BoxSelectTool
-
-from graphion.graphing.linking import SelectMatrixToNodeCallback, SelectMatrixToNodeLink
+from numpy import arange
+from pandas import DataFrame, read_hdf
+from panel import extension
+from param import depends, ObjectSelector, Parameterized
+from scipy.spatial.distance import pdist, squareform
 
 def makeMatrix(file, nl, df=False):
     if not df:
         df = read_hdf(file)
     else:
         df = file
-    big_bang = time.time()
     names = df.columns.tolist()
     if (len(names) > 400):
         df = df.head(400)[names[0:400]]
@@ -105,7 +99,7 @@ def makeMatrix(file, nl, df=False):
     def reordercol(df, order):
         secondIndex = []
         new_df = df
-        new_df['nindex'] = np.arange(len(new_df))
+        new_df['nindex'] = arange(len(new_df))
         for i in order:
             secondIndex += new_df.index[new_df['nindex'] == i].tolist()
         new_df.drop('nindex', axis=1, inplace=True)
@@ -125,7 +119,7 @@ def makeMatrix(file, nl, df=False):
     # %%
     def to_liquid(matrix):
         # print(len(names))
-        solid = pd.DataFrame(matrix.copy())
+        solid = DataFrame(matrix.copy())
         solid.index = names
         solid.columns = names
         solid.reset_index(inplace=True)
@@ -137,7 +131,7 @@ def makeMatrix(file, nl, df=False):
 
     # %%
     def to_liquid_2(matrix, df, order):
-        solid = pd.DataFrame(matrix)
+        solid = DataFrame(matrix)
         name_list = author_reorder_list(df, order)
         # print(name_list)
         solid.index = name_list
@@ -156,7 +150,7 @@ def makeMatrix(file, nl, df=False):
             for j in range(ncols):
                 grid[i][j] = 1 - grid[i][j]
 
-    pn.extension()
+    #extension()
 
     class SelectLink(Link):
         _requires_target = True
@@ -181,7 +175,7 @@ def makeMatrix(file, nl, df=False):
 
     SelectLink.register_callback('bokeh', SelectCallback)
 
-    # table = hv.Table(current_data)
+    # table = Table(current_data)
     # SelectLink(hm, table)
     # SelectLink(table, hm)
 
@@ -224,15 +218,15 @@ def makeMatrix(file, nl, df=False):
 
     SelectedDataLink.register_callback('bokeh', SelectedDataCallback)
 
-    class Matrix_dropdown(param.Parameterized):
-        reordering = param.ObjectSelector(default="none",
+    class Matrix_dropdown(Parameterized):
+        reordering = ObjectSelector(default="none",
                                           objects=["none", "single", "average", "complete", "centroid", "weighted",
                                                    "median", "ward"])
-        metric = param.ObjectSelector(default="euclidean",
+        metric = ObjectSelector(default="euclidean",
                                       objects=["euclidean", "minkowski", "cityblock", "sqeuclidean", "cosine",
                                                "correlation", "hamming", "jaccard", "chebyshev", "canberra",
                                                "braycurtis"])
-        color_palette = param.ObjectSelector(default='cividis',
+        color_palette = ObjectSelector(default='cividis',
                                              objects=['kbc', 'kgy', 'bgy', 'bmw', 'bmy', 'cividis', 'dimgray', 'fire',
                                                       'inferno', 'viridis'])
 
@@ -241,18 +235,18 @@ def makeMatrix(file, nl, df=False):
             self.calc_pdist = calc_pdist
             super(Matrix_dropdown, self).__init__()
 
-        @param.depends('reordering', 'metric', 'color_palette')
+        @depends('reordering', 'metric', 'color_palette')
         def view(self):
             if self.reordering == "none":
                 result = to_liquid(df_original.copy().values)
 
-                hm = hv.HeatMap(result).opts(tools=['tap', 'box_select', 'hover'], active_tools=['box_select'],
+                hm = HeatMap(result).opts(tools=['tap', 'box_select', 'hover'], active_tools=['box_select'],
                                              height=500, width=550, xaxis=None, yaxis=None, cmap=self.color_palette,
                                              colorbar=True, toolbar='above')
 
                 # FOR LINKING TESTING
                 # current_data = hm.data
-                # table = hv.Table(current_data)
+                # table = Table(current_data)
                 # table.opts(height=500)
                 #
                 # if self.show_only_selection:
@@ -276,11 +270,11 @@ def makeMatrix(file, nl, df=False):
 
                 result = to_liquid_2(reordered_matrix, inverted, res_order)
 
-                hm = hv.HeatMap(result).opts(tools=['tap', 'box_select', 'hover'], active_tools=['box_select'],
+                hm = HeatMap(result).opts(tools=['tap', 'box_select', 'hover'], active_tools=['box_select'],
                                              height=500, width=550, xaxis=None, yaxis=None, cmap=self.color_palette,
                                              colorbar=True, toolbar='above')
                 # FOR LINKING TESTING
-                # table = hv.Table(hm.data)
+                # table = Table(hm.data)
                 # table.opts(height=500)
                 #
                 # if self.show_only_selection:

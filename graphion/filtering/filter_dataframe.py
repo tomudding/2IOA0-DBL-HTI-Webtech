@@ -1,15 +1,13 @@
-from csv import Sniffer
+"""
+Author(s): Unknown
+Created: Unknown
+Edited 2019-06-19
+"""
+from bisect import bisect_left, bisect_right
 from pandas.core.frame import DataFrame
-from pandas.core.reshape.concat import concat
-from pandas.io.parsers import read_csv
-from pandas import read_hdf,read_csv
-import numpy as np
-import pandas
-import bisect
-import os
-import numpy as np
 from itertools import repeat
-import time
+from numpy import array, argsort, asarray, concatenate, count_nonzero, delete, reshape, sort
+from time import time
 
 def intersection(lst1, lst2):
     temp = set(lst2)
@@ -19,9 +17,9 @@ def intersection(lst1, lst2):
 def fetch_edge_count(df, cutoff_l = 0.6, cutoff_r = 10.0):
     adj_matrix = df.to_numpy(copy=True)
     arr = adj_matrix.flatten("C")
-    weight = np.sort(arr)
-    l = bisect.bisect_left(weight, cutoff_l)
-    r = bisect.bisect_right(weight, cutoff_r)
+    weight = sort(arr)
+    l = bisect_left(weight, cutoff_l)
+    r = bisect_right(weight, cutoff_r)
     return r - l;
 
 def filter_df_weight(df, cutoff_l = 0.6, cutoff_r = 10.0):
@@ -29,37 +27,37 @@ def filter_df_weight(df, cutoff_l = 0.6, cutoff_r = 10.0):
     width = len(names)
     adj_matrix = df.to_numpy(copy = True)  #convert dataframe to numpy array for efficiency
 
-    #start = time.time()
+    #start = time()
 
     arr = adj_matrix.flatten("C")  # flattens it to a 1-D numpy array
-    current = time.time()
-    index, weight = np.argsort(arr), np.sort(arr)
-    print(time.time() - current)
+    current = time()
+    index, weight = argsort(arr), sort(arr)
+    print(time() - current)
     length = len(weight)
-    current = time.time()
+    current = time()
     dict_x = dict(zip(range(length), zip(index, weight)))
     print("create dict")
-    print(time.time() - current)
-    l = bisect.bisect_left(weight, cutoff_l)
-    r = bisect.bisect_right(weight, cutoff_r)
+    print(time() - current)
+    l = bisect_left(weight, cutoff_l)
+    r = bisect_right(weight, cutoff_r)
 
     ans = list(repeat(0.0, length))
     for x in range(l, r):
         i, w = dict_x[x]
         ans[i] = w
 
-    ans_matrix = np.asarray(ans).reshape(width, width) #0.04630708694458008
+    ans_matrix = asarray(ans).reshape(width, width) #0.04630708694458008
     #print("convertbacktoMatrix")
     #convert back to df
-    df_filtered = pandas.DataFrame(ans_matrix, index=names, columns=names)
+    df_filtered = DataFrame(ans_matrix, index=names, columns=names)
     #print("convertbacktoDf")
     return df_filtered
 
 def degree_bisect(arr, cutoff_l, cutoff_r):
-    index, degree = np.argsort(arr), np.sort(arr)
-    l = bisect.bisect_left(degree, cutoff_l)
-    r = bisect.bisect_right(degree, cutoff_r)
-    return np.concatenate((index[:l], index[r:]))
+    index, degree = argsort(arr), sort(arr)
+    l = bisect_left(degree, cutoff_l)
+    r = bisect_right(degree, cutoff_r)
+    return concatenate((index[:l], index[r:]))
 
 def generate_degree_selection(df, cutoff_l = 60, cutoff_r = 80, dir = "in"):
     # df = read_hdf(file)
@@ -77,7 +75,7 @@ def generate_degree_selection(df, cutoff_l = 60, cutoff_r = 80, dir = "in"):
         output_lst = []
         # for all nodes with out-degree outside of the cutoff range, add them to the delete list
         for i in range(len(adj_matrix)):  # iterate through rows
-            row = np.array(adj_matrix[i])
+            row = array(adj_matrix[i])
             # row = np.delete(row, i)
 
             ##count = 0  #initialize the count for zero weights
@@ -85,12 +83,12 @@ def generate_degree_selection(df, cutoff_l = 60, cutoff_r = 80, dir = "in"):
             ##    if adj_matrix[i][j] == 0.0 and not i == j: #don't count the diagonal edge
             ##        count += 1
             ##out_degree = len(adj_matrix[i]) - 1 - count #outdegree equals to the remaining none zero columns in given row
-            out_degree = np.count_nonzero(row)
+            out_degree = count_nonzero(row)
             #print(out_degree)
             output_lst.append(out_degree)
             #if(out_degree < cutoff_l or out_degree > cutoff_r):
             #    del_lst.append(i)
-        del_lst = degree_bisect(np.array(output_lst), cutoff_l, cutoff_r)
+        del_lst = degree_bisect(array(output_lst), cutoff_l, cutoff_r)
 
 
     elif dir == "in":
@@ -107,12 +105,12 @@ def generate_degree_selection(df, cutoff_l = 60, cutoff_r = 80, dir = "in"):
 
             #in_degree = len(adj_matrix_t[i]) - 1 - count  # indegree equals to the remaining none zero columns in given row
 
-            in_degree = np.count_nonzero(col)
+            in_degree = count_nonzero(col)
             #print(in_degree)
             output_lst.append(in_degree)
             #if (in_degree < cutoff_l or in_degree > cutoff_r):
             #    del_lst.append(i)
-        del_lst = degree_bisect(np.array(output_lst), cutoff_l, cutoff_r)
+        del_lst = degree_bisect(array(output_lst), cutoff_l, cutoff_r)
     else:
         print("invalid dir value!")
 
@@ -120,13 +118,13 @@ def generate_degree_selection(df, cutoff_l = 60, cutoff_r = 80, dir = "in"):
     rem_lst = [i for i in range(len(adj_matrix)) if i not in del_lst]  # remaining indices
     rem_names = [names[i] for i in rem_lst]  # search and list the remaining column names with the remaining indices
 
-    c = np.delete(adj_matrix, tuple(del_lst), 0)
-    result_matrix = np.delete(c, tuple(del_lst), 1)
+    c = delete(adj_matrix, tuple(del_lst), 0)
+    result_matrix = delete(c, tuple(del_lst), 1)
 
    #  print(result_matrix)
 
     # build the output dataframes
-    output_df = pandas.DataFrame(result_matrix, index=rem_names, columns=rem_names)
+    output_df = DataFrame(result_matrix, index=rem_names, columns=rem_names)
     # print(output_df)
     return output_df
 
@@ -174,10 +172,10 @@ def generate_edge_selection(df, cutoff_l = 0.6, cutoff_r = 10.0, keep_edges = Fa
     # print(del_lst)
 
     #below nodes in the del_lst will be deleted
-    c = np.delete(adj_matrix, tuple(del_lst), 0)
-    d = np.delete(adj_matrix_copy, tuple(del_lst), 0)
-    filtered_node_matrix = np.delete(c, tuple(del_lst), 1)
-    filtered_edge_node_matrix = np.delete(d, tuple(del_lst), 1)
+    c = delete(adj_matrix, tuple(del_lst), 0)
+    d = delete(adj_matrix_copy, tuple(del_lst), 0)
+    filtered_node_matrix = delete(c, tuple(del_lst), 1)
+    filtered_edge_node_matrix = delete(d, tuple(del_lst), 1)
 
     #test #########################
     # print(adj_matrix[del_lst[3]][1])
@@ -192,45 +190,10 @@ def generate_edge_selection(df, cutoff_l = 0.6, cutoff_r = 10.0, keep_edges = Fa
     rem_names = [names[i] for i in rem_lst] # search and list the remaining column names with the remaining indices
 
     #build the output dataframes
-    df_filtered_keep_edge = pandas.DataFrame(filtered_node_matrix, index = rem_names, columns = rem_names)
-    df_filtered_not_keep_edge = pandas.DataFrame(filtered_edge_node_matrix, index = rem_names, columns = rem_names)
+    df_filtered_keep_edge = DataFrame(filtered_node_matrix, index = rem_names, columns = rem_names)
+    df_filtered_not_keep_edge = DataFrame(filtered_edge_node_matrix, index = rem_names, columns = rem_names)
 
 
     if keep_edges:
         return df_filtered_keep_edge
     return df_filtered_not_keep_edge
-
-def processCSVMatrix(file):
-    with open(file, 'r') as csvfile:
-        dialect = Sniffer().sniff(csvfile.readline())
-
-    df = DataFrame()
-    for chunk in read_csv(file, sep=dialect.delimiter, mangle_dupe_cols=True, index_col=False, chunksize=1000):
-        df = concat([df, chunk], ignore_index=True)
-
-    nodes = df.columns.values.tolist()
-    nodes.pop(0)
-    df["Unnamed: 0"] = nodes
-    df = df.rename(columns={'Unnamed: 0': 'name'})
-    df = df.set_index(keys='name')
-
-    return df
-
-#df = processCSVMatrix("../../datasets/medium.csv")
-#df = processCSVMatrix("../../datasets/huge.csv")
-#st = time.time()
-#generate_degree_selection(df, dir = "in") # author_similarity   huge 0.41277313232421875
-#print(time.time() - st)
-
-#st = time.time()
-#generate_edge_selection(df) #1.9890801906585693 author_similarity  106.71677088737488 huge
-#print(time.time() - st)
-#st = time.time()
-#a = fetch_edge_count(df) #0.11284518241882324-author_similarity   1.2482659816741943-huge
-# 0.039876699447631836-co-authorship      0.035131216049194336-citation   0.018270969390869140-medium
-#print(time.time() - st)
-#print(a)
-#st = time.time()
-#filter_df_weight(df) #1.4323952198028564-author_similarity   29.66236901283264-huge
-# 0.8445062637329102-co-authorship 0.9564690589904785-co-authorship  0.35132312774658203-medium
-#print(time.time() - st)

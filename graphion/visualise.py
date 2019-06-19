@@ -1,15 +1,15 @@
 """
 Author(s): Tom Udding, Steven van den Broek
 Created: 2019-05-01
-Edited: 2019-06-12
+Edited: 2019-06-19
 """
+from bokeh.embed import server_document
 from flask import Blueprint, flash, redirect, render_template, request, session
 from graphion import server
 from graphion.graphing.generator import generateBokehApp
 from graphion.session.handler import get_filtered_df, is_global, is_user_loaded, set_matrix_df, get_current_dataset
-from bokeh.embed import server_document
-import os
-import time
+from os import environ
+from time import time
 
 visualiseBlueprint = Blueprint('visualiseBlueprint', __name__, template_folder='templates')
 
@@ -39,15 +39,15 @@ def visualise(file):
     # Set the dataframe with edges for the matrix
     set_matrix_df(sid)
 
-    if "gunicorn" in os.environ.get("SERVER_SOFTWARE", ""):
+    if "gunicorn" in environ.get("SERVER_SOFTWARE", ""):
         script = server_document('https://graphion.uddi.ng:%d/bkapp' % server.config['PORT'], relative_urls=False, resources=None, arguments={'sid': sid})
     else:
         script = server_document('http://localhost:%d/bkapp' % server.config['PORT'], relative_urls=False, resources=None, arguments={'sid': sid})
     return render_template('visualise.html', fileName=file, script=script)
 
 def modify_doc(doc):
-    begin = time.time()
+    begin = time()
     doc.add_root(generateBokehApp(doc))
     print("------------------------------------")
-    print("Generating bokeh app in total: " + str(time.time() - begin))
-    print()
+    print("Generating bokeh app in total: " + str(time() - begin))
+    print("------------------------------------")

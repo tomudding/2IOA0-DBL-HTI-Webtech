@@ -1,35 +1,35 @@
 """
 Author(s): Tom Udding, Steven van den Broek, Yuqing Zeng, Tim van de Klundert, Sam Baggen
 Created: 2019-05-03
-Edited: 2019-06-15
+Edited: 2019-06-19
 """
-from bokeh.plotting import figure, reset_output
 from bokeh.models import Circle, ColumnDataSource, HoverTool
+from bokeh.palettes import Cividis256, Viridis256, Inferno256
+from bokeh.plotting import figure, reset_output
+from colorcet import palette
 from community import best_partition
 from graphion import server
 from graphion.graphing.parser import processCSVMatrix
-from holoviews import opts, renderer, extension
-from holoviews.element.graphs import Graph
+from holoviews import opts, renderer
+from holoviews import extension as hvextension
+from holoviews.element.graphs import Graph as HVGraph
+from holoviews.operation.datashader import datashade, bundle_graph, dynspread
 from math import sqrt, log
-import networkx as nx
-from networkx import DiGraph, Graph, from_pandas_adjacency
+from networkx import DiGraph, Graph, from_pandas_adjacency, set_node_attributes, convert_node_labels_to_integers
 from networkx.algorithms.centrality import degree_centrality
 from networkx.drawing.layout import circular_layout, spring_layout
 from networkx.drawing.nx_agraph import graphviz_layout
 from networkx.drawing.nx_pylab import draw_networkx_edges
 from networkx.classes.function import number_of_nodes, is_directed
-import numpy as np
-from pandas import read_hdf, Series
-import panel as pn
-import plotly.graph_objs as go
-import holoviews as hv
-from holoviews.operation.datashader import datashade, bundle_graph, dynspread
-from colorcet import palette
+from numpy import array
+from panel import extension
+from panel.pane import Plotly
+from pandas import read_hdf
+from param import ObjectSelector, Parameterized
+from plotly.graph_objs import Figure, Layout, Scatter3d
 from sys import maxsize
-from bokeh.palettes import Cividis256, Viridis256, Inferno256
-import param
 
-hv.extension('bokeh')
+hvextension('bokeh')
 
 """
 Function to decrease the size of the submatrix.
@@ -51,14 +51,14 @@ Returns a Panel.Column of the diagram.
 def generateNodeLinkDiagram(df, diagramType, datashaded=True):
     diagramType = diagramType.upper()
 
-    class Nodelink(param.Parameterized):
+    class Nodelink(Parameterized):
         colorList = ['kbc', 'kgy', 'bgy', 'bmw', 'bmy', 'cividis', 'dimgray', 'fire', 'inferno', 'viridis']
         colorMap = {}
-        color_palette = param.ObjectSelector(default='kbc',
+        color_palette = ObjectSelector(default='kbc',
                                              objects=colorList)
-        node_size = param.ObjectSelector(default='indegreesize',
+        node_size = ObjectSelector(default='indegreesize',
                                             objects=['indegreesize', 'outdegreesize', 'totaldegreesize', 'inweightsize', 'outweightsize', 'totalweightsize'])
-        node_color = param.ObjectSelector(default='totalweight',
+        node_color = ObjectSelector(default='totalweight',
                                             objects=['indegree', 'outdegree', 'totaldegree', 'inweight', 'outweight', 'totalweight'])
 
         def __init__(self, diagramType):
@@ -75,7 +75,7 @@ def generateNodeLinkDiagram(df, diagramType, datashaded=True):
             if diagramType == "FORCE":
                 layout = spring_layout(G, k=10.42 / sqrt(number_of_nodes(G)), seed=server.config['SEED'])
             elif diagramType == "HIERARCHICAL":
-                layout = graphviz_layout(nx.Graph([(u, v, d) for u, v, d in G.edges(data=True)]), prog='dot')
+                layout = graphviz_layout(Graph([(u, v, d) for u, v, d in G.edges(data=True)]), prog='dot')
                 pass
             elif diagramType == "RADIAL":
                 layout = circular_layout(G)
@@ -282,8 +282,8 @@ def generateNodeLinkDiagram(df, diagramType, datashaded=True):
                                  'totalweight': totalWeight[n],
                                  'count': 0}
 
-            nx.set_node_attributes(G, attributes)
-            plot = hv.Graph.from_networkx(G, layout)
+            set_node_attributes(G, attributes)
+            plot = HVGraph.from_networkx(G, layout)
 
             # disabling displaying all node info on hovering over the node
             tooltips = [('Index', '@index'), ('In-Degree', '@indegree'), ('Out-Degree', '@outdegree'), ('Total Degree', '@totaldegree'),
@@ -330,14 +330,14 @@ def generate3DDiagram(file, df=False):
     names = df.columns.tolist()
     N = len(names)
 
-    G = nx.from_pandas_adjacency(df)
-    G = nx.convert_node_labels_to_integers(G)
+    G = from_pandas_adjacency(df)
+    G = convert_node_labels_to_integers(G)
     # 3d spring layout
-    pos = nx.spring_layout(G, dim=3)
+    pos = spring_layout(G, dim=3)
     # numpy array of x,y,z positions in sorted node order
-    layt = np.array([pos[v] for v in sorted(G)])
+    layt = array([pos[v] for v in sorted(G)])
     # scalar colors
-    scalars = np.array(list(G.nodes())) + 5
+    scalars = array(list(G.nodes())) + 5
     # edges
 
     maximum = 0
@@ -346,10 +346,10 @@ def generate3DDiagram(file, df=False):
         if w > maximum:
             maximum = w
 
-    Edges = np.array([(int(u), int(v), {'weight': d['weight']/maximum}) for (u, v, d) in G.edges(data=True) if d['weight'] > 0])
+    Edges = array([(int(u), int(v), {'weight': d['weight']/maximum}) for (u, v, d) in G.edges(data=True) if d['weight'] > 0])
 
     def make_edge(x, y, z, weight):
-        return go.Scatter3d(
+        return Scatter3d(
             x=x,
             y=y,
             z=z,
@@ -369,7 +369,7 @@ def generate3DDiagram(file, df=False):
         z_edge_ends = [layt[e[0]][2], layt[e[1]][2], None]
         edge_traces.append(make_edge(x_edge_ends, y_edge_ends, z_edge_ends, e[2]['weight']))
 
-    trace2 = go.Scatter3d(x=Xn,
+    trace2 = Scatter3d(x=Xn,
                           y=Yn,
                           z=Zn,
                           mode='markers',
@@ -391,7 +391,7 @@ def generate3DDiagram(file, df=False):
                 title=''
                 )
 
-    layout = go.Layout(
+    layout = Layout(
         title="Force-directed layout",
         width=600,
         height=600,
@@ -411,7 +411,7 @@ def generate3DDiagram(file, df=False):
     )
 
     data = [trace2] + edge_traces
-    fig = go.Figure(data=data, layout=layout)
-    pn.extension('plotly')
-    painful = pn.pane.Plotly(fig)
+    fig = Figure(data=data, layout=layout)
+    extension('plotly')
+    painful = Plotly(fig)
     return painful
