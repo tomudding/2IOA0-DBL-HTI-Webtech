@@ -65,7 +65,7 @@ def generateNodeLinkDiagram(df, diagramType, sid, datashaded=True):
             self.diagramType = diagramType
             super(Nodelink, self).__init__()
             from graphion.session.handler import calculate_plot_size # import must be here to prevent circular dependent imports 
-            self.width, self.height = calculate_plot_size(sid)
+            self.size = calculate_plot_size(sid)
             self.plot, self.points = self.make_plot()
 
         def make_plot(self):
@@ -310,12 +310,12 @@ def generateNodeLinkDiagram(df, diagramType, sid, datashaded=True):
             points = plot.nodes
             points.opts(cmap=self.colorMap[self.color_palette], color=self.node_color, size=self.node_size,
                         tools=['box_select', 'lasso_select', 'tap', hover], active_tools=['wheel_zoom'], toolbar='above',
-                        show_legend=False, width=self.width, height=self.height)
+                        show_legend=False, width=self.size, height=self.size)
             return plot, points
 
         def view(self):
             if datashaded:
-                plot = dynspread(datashade(self.plot, normalization='linear', width=self.width, height=self.height, cmap=self.colorMap[self.color_palette]))
+                plot = dynspread(datashade(self.plot, normalization='linear', width=self.size, height=self.size, cmap=self.colorMap[self.color_palette]))
                 self.points.opts(cmap=self.colorMap[self.color_palette], color=self.node_color, size=self.node_size)
                 return (plot, self.points)
             return (self.plot, self.points)
@@ -394,12 +394,12 @@ def generate3DDiagram(file, sid, df=False):
                 )
 
     from graphion.session.handler import calculate_plot_size
-    pwidth, pheight = calculate_plot_size(sid)
+    psize = calculate_plot_size(sid)
     
     layout = Layout(
         title="Force-directed layout",
-        width=pwidth,
-        height=pheight,
+        width=psize,
+        height=psize,
         showlegend=False,
         scene=dict(
             xaxis=dict(axis),

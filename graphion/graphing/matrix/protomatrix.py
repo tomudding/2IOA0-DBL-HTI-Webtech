@@ -15,7 +15,7 @@ from panel import extension
 from param import depends, ObjectSelector, Parameterized
 from scipy.spatial.distance import pdist, squareform
 
-def makeMatrix(file, df=False):
+def makeMatrix(file, sid, df=False):
     if not df:
         df = read_hdf(file)
     else:
@@ -233,6 +233,8 @@ def makeMatrix(file, df=False):
         def __init__(self, calc_pdist=True, show_only_selection=True):
             self.show_only_selection = show_only_selection
             self.calc_pdist = calc_pdist
+            from graphion.session.handler import calculate_plot_size
+            self.size = calculate_plot_size(sid)
             super(Matrix_dropdown, self).__init__()
 
         @depends('reordering', 'metric', 'color_palette')
@@ -286,7 +288,7 @@ def makeMatrix(file, df=False):
                 # return pn.Row(hm, table)
                 return hm
 
-    matrix = Matrix_dropdown()
+    matrix = Matrix_dropdown(sid)
 
     # %%
     # hv_plot = hm + table

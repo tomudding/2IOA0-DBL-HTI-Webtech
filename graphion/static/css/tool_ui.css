@@ -324,6 +324,14 @@
     width: 1200px !important;
 }
 
+.screen-1 {
+    margin-right: 20px !important;
+}
+
+.screen-2 {
+    margin-left: 20px !important;
+}
+
 .dropdown {
    position: absolute;
    color: rgb(133,133,133);

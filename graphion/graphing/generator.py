@@ -10,7 +10,7 @@ from graphion.graphing.linking import SelectEdgeCallback, SelectMatrixToNodeCall
 from graphion.session.handler import get_custom_key, set_custom_key, get_filtered_df, set_screen1, get_screen1, \
      set_screen2, get_screen2, populate_3d_diagram, populate_force_diagram, populate_hierarchical_diagram, \
      populate_matrix, populate_radial_diagram, get_visualisations_app, set_visualisations_app, reset_plots, \
-     get_matrix_df, get_datashading
+     get_matrix_df, get_datashading, get_window_height
 from holoviews import renderer, Table
 from holoviews.plotting.bokeh.callbacks import LinkCallback
 from holoviews.plotting.links import Link
@@ -176,7 +176,7 @@ def generateBokehApp(doc):
 
                 matrix = screen2.view()
 
-                edge_table = Table(matrix.data).opts(height=310, width=290)
+                edge_table = Table(matrix.data).opts(height=int(get_window_height(sid)/3), width=290)
 
                 SelectedDataLink(matrix, edge_table)
 
@@ -190,7 +190,7 @@ def generateBokehApp(doc):
                     SelectNodeToTableLink.register_callback('bokeh', SelectNodeToTableCallback)
                     graph, points = screen1.view()
 
-                    node_table = Table(points.data[['index', 'indegree', 'outdegree']]).opts(height=310, width=290)
+                    node_table = Table(points.data[['index', 'indegree', 'outdegree']]).opts(height=int(get_window_height(sid)/3), width=290)
 
                     # Link matrix to the nodelink (both graph and points)
                     SelectMatrixToNodeLink(matrix, points)
