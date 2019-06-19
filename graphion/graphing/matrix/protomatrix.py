@@ -15,7 +15,7 @@ from panel import extension
 from param import depends, ObjectSelector, Parameterized
 from scipy.spatial.distance import pdist, squareform
 
-def makeMatrix(file, nl, df=False):
+def makeMatrix(file, df=False):
     if not df:
         df = read_hdf(file)
     else:

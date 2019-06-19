@@ -169,7 +169,7 @@ def populate_matrix(df, sid):
         plot = APP_CONTEXT['data'][sid]['matrix']
         if plot is not None:
             return plot
-    matrix = makeMatrix(df.copy(), get_custom_key(get_screen1(sid), sid), df=True)
+    matrix = makeMatrix(df.copy(), df=True)
     APP_CONTEXT['data'][sid]['matrix'] = matrix
     return matrix
 
