@@ -31,7 +31,7 @@ def upload_matrix():
         file = next(iter(files.values()))
         fileOriginalName = secure_filename(file.filename)
         df = processCSVMatrix(file.stream.name)
-        df.to_hdf(join(server.config['UPLOAD_FOLDER'], (fileUniqueHash + '.h5')), key=fileOriginalName)
+        df.to_hdf(join(server.config['UPLOAD_FOLDER'], (fileUniqueHash + '.h5')), key=fileOriginalName, complib='blosc:snappy', complevel=9)
         file.stream.close()
         remove(file.stream.name)
         return fileUniqueHash
@@ -53,7 +53,7 @@ def upload_edgelist():
         file = next(iter(files.values()))
         fileOriginalName = secure_filename(file.filename)
         df = processEdgeList(file.stream.name)
-        df.to_hdf(join(server.config['UPLOAD_FOLDER'], (fileUniqueHash + '.h5')), key=fileOriginalName)
+        df.to_hdf(join(server.config['UPLOAD_FOLDER'], (fileUniqueHash + '.h5')), key=fileOriginalName, complib='blosc:snappy', complevel=9)
         file.stream.close()
         remove(file.stream.name)
         return fileUniqueHash
