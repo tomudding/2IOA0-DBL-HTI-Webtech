@@ -271,7 +271,9 @@ def calculate_plot_size(sid):
     if window_width is None:
         window_width = 1200
     
-    plot_size = int((window_width - (2 * 38)) / 2) # the collapsed sidebars are 38px each
+    plot_size = (window_width - (2 * 38)) / 2 # the collapsed sidebars are 38px each
+    plot_size = int(plot_size*30/31) # Matrix has more width than height
+    plot_size = plot_size - 15 # Some breathing space
     return plot_size
     
 def set_directed(boolean, sid):

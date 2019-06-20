@@ -156,10 +156,8 @@ def generateBokehApp(doc):
             # print(s1[1])
             screen1 = get_custom_key(get_screen1(sid), sid)
 
-            gridSpec = GridSpec(sizing_mode='stretch_both', css_classes=['good-width'])
-
             if self.Screen1 == "3d":
-                gridSpec[0, 0] = Column(get_custom_key(get_screen1(sid), sid), css_classes=['screen-1', 'col-s-6'])
+                zero_zero = Column(get_custom_key(get_screen1(sid), sid), css_classes=['screen-1', 'col-s-6'])
             else:
                 screen1.color_palette = self.Color_palette
                 screen1.node_size = self.Node_size
@@ -181,7 +179,7 @@ def generateBokehApp(doc):
 
                 SelectedDataLink(matrix, edge_table)
 
-                gridSpec[0, 1] = Column(matrix, css_classes=['screen-2', 'col-s-6'])
+                zero_one = Column(matrix, css_classes=['screen-2', 'col-s-6'])
 
                 if self.Screen1 != "3d":
                     # Setting up the linking, generateDiagram functions return two-tuple (graph, points). Points is the selection layer
@@ -206,21 +204,25 @@ def generateBokehApp(doc):
                     #     PointToGraphLink.register_callback('bokeh', PointToGraphCallback)
                     #     PointToGraphLink(points, graph)
 
-                    gridSpec[0, 0] = Column(graph * points, css_classes=['screen-1', 'col-s-6'])
+                    zero_zero = Column(graph * points, css_classes=['screen-1', 'col-s-6'])
                     if not self.Ran:
-                        gridSpec[0, 2] = Row(Column(node_table, css_classes=['node-table', 'invisible']),
+                        zero_two = Row(Column(node_table, css_classes=['node-table', 'invisible']),
                                                 Column(edge_table, css_classes=['edge-table', 'invisible']),
                                                 css_classes=['trash'])
                 else:
                     if not self.Ran:
-                        gridSpec[0, 2] = Row(Column(edge_table, css_classes=['edge-table', 'invisible']),
+                        zero_two = Row(Column(edge_table, css_classes=['edge-table', 'invisible']),
                                                 css_classes=['trash'])
 
                 # SelectedDataLink(matrix, points)
                 # renderer = renderer('bokeh')
                 # print(renderer.get_plot(points).handles)
-            self.Ran = True
-            return gridSpec
+
+            if not self.Ran:
+                self.Ran = True
+                return Row(zero_zero, zero_one, zero_two, css_classes=['good-width'])
+
+            return Row(zero_zero, zero_one, css_classes=['good-width'])
 
     visApp = VisApp(datashaded=get_datashading(sid))
     set_visualisations_app(visApp, sid)

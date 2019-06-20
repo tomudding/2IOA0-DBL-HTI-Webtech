@@ -5,7 +5,6 @@ Edited: 2019-06-19
 """
 from colorcet import palette
 from fastcluster import linkage
-from graphion.graphing.linking import SelectMatrixToNodeCallback, SelectMatrixToNodeLink
 from holoviews import HeatMap
 from holoviews.plotting.bokeh.callbacks import LinkCallback
 from holoviews.plotting.links import Link
@@ -217,6 +216,7 @@ def makeMatrix(file, sid, df=False):
         """
 
     SelectedDataLink.register_callback('bokeh', SelectedDataCallback)
+    from graphion.session.handler import calculate_plot_size
 
     class Matrix_dropdown(Parameterized):
         reordering = ObjectSelector(default="none",
@@ -236,6 +236,9 @@ def makeMatrix(file, sid, df=False):
             from graphion.session.handler import calculate_plot_size
             self.size = calculate_plot_size(sid)
             super(Matrix_dropdown, self).__init__()
+            self.height = calculate_plot_size(sid)
+            self.width = int(calculate_plot_size(sid)*16/15)
+
 
         @depends('reordering', 'metric', 'color_palette')
         def view(self):
@@ -243,7 +246,7 @@ def makeMatrix(file, sid, df=False):
                 result = to_liquid(df_original.copy().values)
 
                 hm = HeatMap(result).opts(tools=['tap', 'box_select', 'hover'], active_tools=['box_select'],
-                                             height=500, width=550, xaxis=None, yaxis=None, cmap=self.color_palette,
+                                             height=self.height, width=self.width, xaxis=None, yaxis=None, cmap=self.color_palette,
                                              colorbar=True, toolbar='above')
 
                 # FOR LINKING TESTING
@@ -273,7 +276,7 @@ def makeMatrix(file, sid, df=False):
                 result = to_liquid_2(reordered_matrix, inverted, res_order)
 
                 hm = HeatMap(result).opts(tools=['tap', 'box_select', 'hover'], active_tools=['box_select'],
-                                             height=500, width=550, xaxis=None, yaxis=None, cmap=self.color_palette,
+                                             height=self.height, width=self.width, xaxis=None, yaxis=None, cmap=self.color_palette,
                                              colorbar=True, toolbar='above')
                 # FOR LINKING TESTING
                 # table = Table(hm.data)
