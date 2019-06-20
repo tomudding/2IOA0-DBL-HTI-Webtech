@@ -10,7 +10,7 @@ from colorcet import palette
 from community import best_partition
 from graphion import server
 from graphion.graphing.parser import processCSVMatrix
-from holoviews import opts, renderer
+from holoviews import opts, renderer, dim
 from holoviews import extension as hvextension
 from holoviews.element.graphs import Graph as HVGraph
 from holoviews.operation.datashader import datashade, bundle_graph, dynspread
@@ -299,7 +299,7 @@ def generateNodeLinkDiagram(df, diagramType, sid, datashaded=True):
                                      'count': 0}
 
                 set_node_attributes(G, attributes)
-                plot = HVGraph.from_networkx(G, layout)
+                plot = HVGraph.from_networkx(G, layout).opts(directed=get_directed(self.sid), arrowhead_length=0.05)
 
                 # disabling displaying all node info on hovering over the node
                 tooltips = [('Index', '@index'), ('In-Degree', '@indegree'), ('Out-Degree', '@outdegree'), ('Total Degree', '@totaldegree'),
@@ -323,7 +323,7 @@ def generateNodeLinkDiagram(df, diagramType, sid, datashaded=True):
                                      'count': 0}
                                      
                 set_node_attributes(G, attributes)
-                plot = HVGraph.from_networkx(G, layout)
+                plot = HVGraph.from_networkx(G, layout).opts(directed=get_directed(self.sid), arrowhead_length=0.05)
                 tooltips = [('Index', '@index'), ('In-Degree', '@indegree'), ('Out-Degree', '@outdegree'), ('Total Degree', '@totaldegree'),
                             ('In Edge Weight', '@inweight'), ('Out Edge-Weight', '@outweight'), ('Total Edge-Weight', '@totalweight')]
                 hover = HoverTool(tooltips=tooltips)
@@ -339,7 +339,6 @@ def generateNodeLinkDiagram(df, diagramType, sid, datashaded=True):
                 else:
                     self.colorMap[c] = palette[c]
 
-            # Comment the following two/three lines to disable edgebundling and datashading.
             if max(nodeCentralities) > 0:
                 if datashaded and self.nodeCount > 1:
                     plot = bundle_graph(plot)
@@ -347,6 +346,8 @@ def generateNodeLinkDiagram(df, diagramType, sid, datashaded=True):
             points.opts(cmap=self.colorMap[self.color_palette], color=self.node_color, size=self.node_size,
                         tools=['box_select', 'lasso_select', 'tap', hover], active_tools=['wheel_zoom'], toolbar='above',
                         show_legend=False, width=self.size, height=self.size)
+
+            plot.opts(node_size=0, node_color=None, node_line_width=0, node_hover_fill_color='green')
             return plot, points
 
         def view(self):
@@ -354,6 +355,9 @@ def generateNodeLinkDiagram(df, diagramType, sid, datashaded=True):
                 plot = dynspread(datashade(self.plot, normalization='linear', width=self.size, height=self.size, cmap=self.colorMap[self.color_palette]))
                 self.points.opts(cmap=self.colorMap[self.color_palette], color=self.node_color, size=self.node_size)
                 return (plot, self.points)
+            else:
+                self.points.opts(cmap=self.colorMap[self.color_palette], color=self.node_color, size=self.node_size)
+                self.plot.opts(edge_cmap = self.colorMap[self.color_palette], edge_color='weight', edge_line_width=dim('weight').norm()*5+0.1)
             return (self.plot, self.points)
 
     return Nodelink(diagramType, sid)
