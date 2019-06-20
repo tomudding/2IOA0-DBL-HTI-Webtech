@@ -102,18 +102,12 @@ class SelectNodeToMatrixCallback(LinkCallback):
         var matrixIndices = []
         for (var i = 0; i < nodeIndices.length; i++){
             for (var j = 0; j < target_cds.data['index2'].length; j++){
-                if (target_cds.data['index2'][j] == nodeIndices[i]){
+                if (target_cds.data['index2'][j] == nodeIndices[i] || target_cds.data['index1'][j] == nodeIndices[i]){
                     matrixIndices.push(j)
                 }
             }
         }
-        for (var i = 0; i < nodeIndices.length; i++){
-            for (var j = 0; j < target_cds.data['index1'].length; j++){
-                if (target_cds.data['index1'][j] == nodeIndices[i]){
-                    matrixIndices.push(j)
-                }
-            }
-        }
+
         //console.log(target_cds.data)
         //console.log(matrixIndices)
         

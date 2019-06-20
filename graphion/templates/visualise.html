@@ -341,7 +341,7 @@ Edited: 2019-06-20
 				<!-- Screen 2 options -->
 				<div class="left-bar-screen-big" style="top: 45.5vh;">Screen 2:</div>
 				<div class="left-bar-screen-small" style="top: 54.8vh; left: 125px;">Select linkage criterium:</div>
-				<select class="dropdown" onChange = "displayReordering(this.value)" style="left: 125px; top: 57vh; width:170px;">
+				<select class="dropdown" onChange = "displayReordering(this.value)" style="left: 125px; top: 50vh; width:170px;">
 					<option value="none">None</option>
 					<option value="single">Single</option>
 					<option value="average">Average</option>
@@ -349,11 +349,11 @@ Edited: 2019-06-20
 					<option value="centroid">Centroid</option>
 					<option value="weighted">Weighted</option>
 					<option value="median">Median</option>
-					<option value="ward">Ward</option>
+					<option value="ward" selected="selected">Ward</option>
 	            </select>
 
 	            <div class="left-bar-screen-small" style="top: 47.8vh; left: 125px;">Select metric:</div>
-				<select class="dropdown" onChange = "displayMetric(this.value)" style="left: 125px; top: 50vh; width: 170px;">
+				<select class="dropdown" onChange = "displayMetric(this.value)" style="left: 125px; top: 57vh; width: 170px;">
 					<option value="euclidean">Euclidean</option>
 					<option value="minkowski">Minkowski</option>
 					<option value="cityblock">Cityblock</option>

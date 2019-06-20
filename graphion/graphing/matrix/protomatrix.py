@@ -219,7 +219,7 @@ def makeMatrix(file, sid, df=False):
     from graphion.session.handler import calculate_plot_size
 
     class Matrix_dropdown(Parameterized):
-        reordering = ObjectSelector(default="none",
+        reordering = ObjectSelector(default="ward",
                                           objects=["none", "single", "average", "complete", "centroid", "weighted",
                                                    "median", "ward"])
         metric = ObjectSelector(default="euclidean",

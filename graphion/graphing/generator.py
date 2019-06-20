@@ -114,7 +114,7 @@ def generateBokehApp(doc):
         Screen2 = ObjectSelector(default="matrix",
                                        objects=["none", "matrix"])
 
-        Ordering = ObjectSelector(default="none",
+        Ordering = ObjectSelector(default="ward",
                                         objects=["none", "single", "average", "complete", "centroid", "weighted",
                                                  "median", "ward"])
 
