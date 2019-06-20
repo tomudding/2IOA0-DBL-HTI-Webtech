@@ -1,11 +1,19 @@
 /*
 Authors: Sam Baggen, Steven van den Broek, Tom Udding
-Created: Unkown...
+Created: Unkown... (sometime in May probably)
 Last Edited: 2019-06-20
 */
 
+var currentColor = 'rgb(49, 137, 255)'
+
 function darkMode(){
     if (document.getElementById('dark-mode-chk-box').checked) {
+        
+        var elements = document.getElementsByClassName('slider');
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].style.backgroundColor = currentColor;
+        }
+
         document.getElementById('left-bar-shown').style.backgroundColor = 'rgb(66,66,66)';
         document.getElementById('left-bar-hidden').style.backgroundColor = 'rgb(66,66,66)';
         document.getElementById('right-bar-shown').style.backgroundColor = 'rgb(66,66,66)';
@@ -27,6 +35,11 @@ function darkMode(){
         /*changeIconSelectedBackgroundColorToGrey();*/
 
     } else {
+        var elements = document.getElementsByClassName('slider');
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].style.backgroundColor = '#ccc';
+        }
+
         document.getElementById('left-bar-shown').style.backgroundColor = '#F7F7F7';
         document.getElementById('right-bar-shown').style.backgroundColor = '#F7F7F7';
         document.getElementById('left-bar-hidden').style.backgroundColor = '#F7F7F7';
@@ -79,6 +92,63 @@ function changeColorToGrey(){
     }
 }
 
+function changeLogoColor(id) {
+    if (id == 'kgy') {
+        document.getElementById('graphion-logo').style.color = '#22980C';
+        currentColor = '#22980C';
+    } else if (id == 'kbc') {
+        document.getElementById('graphion-logo').style.color = 'rgb(49, 137, 255)';
+        currentColor = 'rgb(49, 137, 255)';
+    } else if (id == 'bgy') {
+        document.getElementById('graphion-logo').style.color = '#D1EE1E';
+        currentColor = '#D1EE1E';
+    } else if (id == 'bmw') {
+        document.getElementById('graphion-logo').style.color = '#D526FF';
+        currentColor = '#D526FF';
+    } else if (id == 'bmy') {
+        document.getElementById('graphion-logo').style.color = '#898678';
+        currentColor = '#898678';
+    } else if (id == 'cividis') {
+        document.getElementById('graphion-logo').style.color = '#FF366B';
+        currentColor = '#FF366B';
+    } else if (id == 'dimgray') {
+        document.getElementById('graphion-logo').style.color = '#909498';
+        currentColor = '#909498';
+    } else if (id == 'fire') {
+        document.getElementById('graphion-logo').style.color = '#FA3B00';
+        currentColor = '#FA3B00';
+    } else if (id == 'inferno') {
+        document.getElementById('graphion-logo').style.color = '#A42C60';
+        currentColor = '#A42C60';
+    } else if (id == 'viridis') {
+        document.getElementById('graphion-logo').style.color = '#1E9D88';
+        currentColor = '#1E9D88';
+    }
+    darkMode();
+    updateDiagramColor();
+}
+
+function updateDiagramColor() {
+
+    var elements1 = document.getElementsByClassName('icon-selected');
+    for (var i = 0; i < elements1.length; i++) {
+        elements1[i].style.backgroundColor = currentColor;
+    }
+/*
+    document.getElementById(selectedDiagram).style.backgroundColor = currentColor;
+*/
+    var elements = document.getElementsByClassName('icon');
+    for (var i = 0; i < elements.length; i++) {
+        elements[i].style.backgroundColor = 'rgba(0,0,0,0)';
+    }
+}
+/*
+function updateMatrixColor() {
+    if (matrixState == 1) {
+        document.getElementById('')
+    }
+}
+*/
 function showLeftBar(){
     document.getElementById('left-bar-shown').hidden = false;
     document.getElementById('left-bar-hidden').hidden = true;
@@ -109,8 +179,10 @@ function displayDiagram(id){
         selectedDiagram = id;
         document.getElementById(selectedDiagram).className = 'icon-selected';
 
+
         $.post("/switch-nodelink", {to: id}, function(){removeRightToolbar();});
     }
+    updateDiagramColor();
 }
 
 function displayMatrix() {
@@ -122,10 +194,12 @@ function displayMatrix() {
 
     if (currentState == true) {
         targetNode.className = "icon";
+        targetNode.style.backgroundColor = 'rgba(0,0,0,0)';
         screen2.style.display = "none";
         screen1.style.left = "calc(25% - 5px)";
     } else {
         targetNode.className = "icon-selected";
+        targetNode.style.backgroundColor = currentColor;
         screen2.style.display = "block";
         screen1.style.left = "5px";
     }
