@@ -1,12 +1,13 @@
 """
 Author(s): Tom Udding, Steven van den Broek, Sam Baggen
 Created: 2019-05-03
-Edited: 2019-06-19
+Edited: 2019-06-20
 """
 from bokeh.themes.theme import Theme
 from graphion import server
-from graphion.graphing.linking import SelectEdgeCallback, SelectMatrixToNodeCallback, SelectNodeToMatrixCallback, \
-     SelectNodeToTableCallback,  SelectEdgeLink, SelectMatrixToNodeLink, SelectNodeToMatrixLink, SelectNodeToTableLink
+from graphion.graphing.linking import SelectMatrixToNodeCallback, SelectNodeToMatrixCallback, \
+     SelectNodeToTableCallback, SelectMatrixToNodeLink, SelectNodeToMatrixLink, SelectNodeToTableLink, \
+    PointToGraphCallback, PointToGraphLink
 from graphion.session.handler import get_custom_key, set_custom_key, get_filtered_df, set_screen1, get_screen1, \
      set_screen2, get_screen2, populate_3d_diagram, populate_force_diagram, populate_hierarchical_diagram, \
      populate_matrix, populate_radial_diagram, get_visualisations_app, set_visualisations_app, reset_plots, \
@@ -188,6 +189,7 @@ def generateBokehApp(doc):
                     SelectMatrixToNodeLink.register_callback('bokeh', SelectMatrixToNodeCallback)
                     SelectNodeToMatrixLink.register_callback('bokeh', SelectNodeToMatrixCallback)
                     SelectNodeToTableLink.register_callback('bokeh', SelectNodeToTableCallback)
+
                     graph, points = screen1.view()
 
                     node_table = Table(points.data[['index', 'indegree', 'outdegree']]).opts(height=int(get_window_height(sid)/3), width=290)
@@ -198,6 +200,11 @@ def generateBokehApp(doc):
 
                     # Link nodelink to matrix (points only)
                     SelectNodeToMatrixLink(points, matrix)
+
+                    # For highlighting edges when tapping on node, but doesn't work
+                    # if not self.datashaded:
+                    #     PointToGraphLink.register_callback('bokeh', PointToGraphCallback)
+                    #     PointToGraphLink(points, graph)
 
                     gridSpec[0, 0] = Column(graph * points, css_classes=['screen-1', 'col-s-6'])
                     if not self.Ran:

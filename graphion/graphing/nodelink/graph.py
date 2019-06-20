@@ -299,7 +299,7 @@ def generateNodeLinkDiagram(df, diagramType, sid, datashaded=True):
                                      'count': 0}
 
                 set_node_attributes(G, attributes)
-                plot = HVGraph.from_networkx(G, layout).opts(directed=get_directed(self.sid), arrowhead_length=0.05)
+                plot = HVGraph.from_networkx(G, layout).opts(directed=get_directed(self.sid), arrowhead_length=0.01)
 
                 # disabling displaying all node info on hovering over the node
                 tooltips = [('Index', '@index'), ('In-Degree', '@indegree'), ('Out-Degree', '@outdegree'), ('Total Degree', '@totaldegree'),
@@ -323,7 +323,7 @@ def generateNodeLinkDiagram(df, diagramType, sid, datashaded=True):
                                      'count': 0}
                                      
                 set_node_attributes(G, attributes)
-                plot = HVGraph.from_networkx(G, layout).opts(directed=get_directed(self.sid), arrowhead_length=0.05)
+                plot = HVGraph.from_networkx(G, layout).opts(directed=get_directed(self.sid), arrowhead_length=0.01)
                 tooltips = [('Index', '@index'), ('In-Degree', '@indegree'), ('Out-Degree', '@outdegree'), ('Total Degree', '@totaldegree'),
                             ('In Edge Weight', '@inweight'), ('Out Edge-Weight', '@outweight'), ('Total Edge-Weight', '@totalweight')]
                 hover = HoverTool(tooltips=tooltips)
@@ -357,7 +357,8 @@ def generateNodeLinkDiagram(df, diagramType, sid, datashaded=True):
                 return (plot, self.points)
             else:
                 self.points.opts(cmap=self.colorMap[self.color_palette], color=self.node_color, size=self.node_size)
-                self.plot.opts(edge_cmap = self.colorMap[self.color_palette], edge_color='weight', edge_line_width=dim('weight').norm()*5+0.1)
+                self.plot.opts(edge_cmap = self.colorMap[self.color_palette], edge_color='weight',
+                               edge_line_width=dim('weight').norm()*5+0.1, edge_line_alpha=0.1+dim('weight').norm()*0.9)
             return (self.plot, self.points)
 
     return Nodelink(diagramType, sid)

@@ -1,7 +1,7 @@
 """
 Author(s): Sam Baggen, Steven van den Broek, Tom Udding
 Created: 2019-06-03
-Edited: 2019-06-16
+Edited: 2019-06-20
 """
 from holoviews import extension
 from holoviews.plotting.bokeh.callbacks import LinkCallback
@@ -204,23 +204,19 @@ class SelectEdgeCallback(LinkCallback):
         }
     """
 
-class SelectLink(Link):
+class PointToGraphLink(Link):
     _requires_target = True
 
-class SelectCallback(LinkCallback):
+class PointToGraphCallback(LinkCallback):
     names = []
     source_model = 'selected'
     # source_handles = ['cds']
     on_source_changes = ['indices']
 
-    target_model = 'selected'
+    target_model = 'glyph_renderer'
 
-    source_code = "let len = {}".format(len(names)) + """
-        let new_indices = []
-        for (let i = 0; i < source_selected.indices.length; i++){
-            let index = source_selected.indices[i]
-            j = len-1-(index%len)+Math.floor(index/(len))*(len)
-            new_indices[i] = j
-        }
-        target_selected.indices = new_indices
+    source_code = """
+        
+        target_glyph_renderer.node_renderer.data_source.selected.indices = source_selected.indices
+        
     """
