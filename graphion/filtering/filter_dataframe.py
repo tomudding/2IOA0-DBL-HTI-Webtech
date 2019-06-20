@@ -6,8 +6,9 @@ Edited 2019-05-20
 from bisect import bisect_left, bisect_right
 from pandas.core.frame import DataFrame
 from itertools import repeat
-from numpy import array, argsort, asarray, concatenate, count_nonzero, delete, reshape, sort, size, array_equal
+from numpy import array, argsort, asarray, concatenate, count_nonzero, delete, reshape, sort, size, array_equal, diagonal
 from time import time
+
 
 def intersection(lst1, lst2):
     temp = set(lst2)
@@ -205,6 +206,7 @@ def getGraphInfo(df):
     """
     adj_matrix = df.to_numpy(copy=True)
     arr = adj_matrix.flatten("C")
+
     dir = True
     transposed = adj_matrix.transpose()
     if array_equal(adj_matrix[0], transposed[0]):
@@ -213,7 +215,9 @@ def getGraphInfo(df):
     edge_count = count_nonzero(arr) #This will count self-connected edges and
     # count undirected edges twice
     sparsity = edge_count/size(arr)
-
+    if not dir:
+        dia = diagonal(adj_matrix)
+        edge_count = int((edge_count + count_nonzero(dia))/2)
     return node_count, edge_count, sparsity, dir
 
 
