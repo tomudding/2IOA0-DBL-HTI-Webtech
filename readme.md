@@ -20,7 +20,7 @@ Our own deadlines:
 ------------------------------------|----------------
 | ~~Filming video~~                     | ~~14th of June~~  |
 | ~~Generating neat visualizations for aesthetics award~~     | ~~16th of June~~  |
-| Editing video (draft)             | 19th of June  |
+| ~~Editing video (draft)~~             | ~~19th of June~~  |
 | Comments on video (draft)         | 20th of June (before 12)  |
 | Draft of final report             | 20/21th of June  |
 | Checking and correcting report    | 21th of June  |
