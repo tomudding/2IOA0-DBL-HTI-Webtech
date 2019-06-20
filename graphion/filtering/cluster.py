@@ -1,7 +1,7 @@
 """
 Author(s): Yuqin Cui, Steven Broek, Tom Udding
 Created: 2019-06-12
-Edited: 2019-06-19
+Edited: 2019-06-21
 """
 from bokeh.io import curdoc
 from bokeh.models import ColumnDataSource, Plot, LinearAxis, CustomJS
@@ -97,7 +97,7 @@ def generate_cluster_graph(dataframe):
             ("Number of nodes in this cluster", "@Size"),
         ]
 
-        p = figure(plot_width=400, plot_height=400, title="Choose your cluster", tools=['wheel_zoom','box_zoom', 'hover','tap', 'reset'], tooltips=TOOLTIPS)
+        p = figure(plot_width=400, plot_height=300, tools=['wheel_zoom','box_zoom', 'hover','tap', 'reset'], tooltips=TOOLTIPS)
         p.circle("Label", "Label", size="circle_size", color="color", alpha=0.5, source=data)
         p.title.text_color = "olive"
         p.title.text_font = "times"
