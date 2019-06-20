@@ -37,16 +37,16 @@ def visualise(file=None):
     reset_dataframes(sid)
 
     # Get info
-    nodes, edges, sparcity, directed = getGraphInfo(df)
+    nodes, edges, density, directed = getGraphInfo(df)
 
     # Save directedness in session
     set_directed(directed, sid)
 
     # Round and make percentage
-    sparcity = round(sparcity * 100, 2)
+    density = round(density * 100, 2)
 
     if directed:
         directedness = "directed"
     else:
         directedness = "undirected"
-    return render_template('filter.html', fileName=file, nodes=nodes, edges=edges, sparcity=sparcity, directedness=directedness)
+    return render_template('filter.html', fileName=file, nodes=nodes, edges=edges, sparcity=density, directedness=directedness)

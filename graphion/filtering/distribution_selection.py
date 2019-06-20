@@ -9,7 +9,7 @@ from bokeh.models.widgets import Paragraph
 from numpy import append, array, exp, insert, linspace, reshape, std
 from numpy.random import choice
 from pandas import read_hdf
-from sklearn.neighbors import KernelDensity
+from KDEpy import FFTKDE
 from sklearn.model_selection import GridSearchCV
 from time import time
 
@@ -25,7 +25,7 @@ def generate_selection(file, kind="degree", dir="in", dataframe=False):
     else:
         edges=True
 
-    limit = 1000
+    limit = 1000000
 
     begin = time()
     if not dataframe:
@@ -65,14 +65,14 @@ def generate_selection(file, kind="degree", dir="in", dataframe=False):
         deg = [item for item in deg if item > 0]
 
     # begin = time()
-    deg_all = reshape(deg_all, (-1, 1))
+    # deg_all = reshape(deg_all, (-1, 1))
     deg = reshape(deg, (-1, 1))
     # print("Reshaping: {}-{}: ".format(dir, kind) + str(time() - begin))
-    maxi = max(deg_all)[0]
-    if maxi == 0:
-        deg_plot = linspace(0, 0.5, 1000)
-    else:
-        deg_plot = linspace(0, maxi, 1000)
+    # maxi = max(deg_all)[0]
+    # if maxi == 0:
+    #     deg_plot = linspace(0, 0.5, 1000)
+    # else:
+    #     deg_plot = linspace(0, maxi, 1000)
     # Calculate 'pretty good' (since best takes a long time) bandwidth
     # begin = time()
     #
@@ -84,20 +84,21 @@ def generate_selection(file, kind="degree", dir="in", dataframe=False):
     # print("Bandwidth: {}-{}: ".format(dir, kind) + str(time()-begin))
     # begin = time()
     # kde = grid.best_estimator_
-    bandwidth = max(1.06 * std(deg) * len(deg)**(-1/5), 0.05)
-    kde = KernelDensity(kernel="gaussian", bandwidth=bandwidth).fit(deg)
+    kde = FFTKDE(kernel='gaussian', bw='silverman').fit(deg)
     # if (not edges):
     #     kde = KernelDensity(kernel="gaussian", bandwidth=5.3).fit(deg)
     # if (edges):
     #     kde = KernelDensity(kernel="gaussian", bandwidth=0.2).fit(deg)
-    try:
-        print(deg_plot[0][0])
-    except IndexError:
-        deg_plot = array([[item] for item in deg_plot])
-    log_dens = kde.score_samples(deg_plot)
-    X = append(deg_plot[:, 0], deg_plot[:, 0][-1])
+    # try:
+    #     print(deg_plot[0][0])
+    # except IndexError:
+    #     deg_plot = array([[item] for item in deg_plot])
+    # log_dens = kde.score_samples(deg_plot)
+
+    X, Y = kde.evaluate()
+    X = append(X, X[-1])
     X = insert(X, 0, X[0])
-    Y = append(exp(log_dens), 0)
+    Y = append(Y, 0)
     Y = insert(Y, 0, 0)
     complete = ColumnDataSource(data=dict(x=X, y=Y))
     before = ColumnDataSource(data=dict(x=[], y=[]))

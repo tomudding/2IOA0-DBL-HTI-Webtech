@@ -8,19 +8,24 @@ from pandas.core.frame import DataFrame
 from itertools import repeat
 from numpy import array, argsort, asarray, concatenate, count_nonzero, delete, reshape, sort, size, array_equal
 from time import time
+from graphion.session.handler import get_directed
 
 def intersection(lst1, lst2):
     temp = set(lst2)
     lst3 = [value for value in lst1 if value in temp]
     return lst3
 
-def fetch_edge_count(df, cutoff_l = 0.6, cutoff_r = 10.0):
+def fetch_edge_count(sid, df, cutoff_l = 0.6, cutoff_r = 10.0):
     adj_matrix = df.to_numpy(copy=True)
     arr = adj_matrix.flatten("C")
     weight = sort(arr)
     l = bisect_left(weight, cutoff_l)
     r = bisect_right(weight, cutoff_r)
-    return r - l
+    if get_directed(sid):
+        return r - l
+    else:
+        return ((r-l)-len(df.columns))/2+len(df.columns)
+
 
 def filter_df_weight(df, cutoff_l = 0.6, cutoff_r = 10.0):
     names = df.columns.tolist()
@@ -210,11 +215,16 @@ def getGraphInfo(df):
     if array_equal(adj_matrix[0], transposed[0]):
         dir = False
     node_count = len(adj_matrix)
-    edge_count = count_nonzero(arr) #This will count self-connected edges and
-    # count undirected edges twice
-    sparsity = edge_count/size(arr)
 
-    return node_count, edge_count, sparsity, dir
+    # This will count self-connected edges
+    if dir:
+        edge_count = count_nonzero(arr)
+    else:
+        edge_count = int((count_nonzero(arr)-node_count)/2+node_count)
+
+    density = edge_count/size(arr)
+
+    return node_count, edge_count, density, dir
 
 
 

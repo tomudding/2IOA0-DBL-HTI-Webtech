@@ -91,7 +91,7 @@ def worker():
         if left <= 0:
             left = 0.0000000001
         begin = time()
-        result = fetch_edge_count(get_df(sid), left, right)
+        result = fetch_edge_count(sid, get_df(sid), left, right)
         set_left_weight(left, sid) # APP_CONTEXT did not work here, so I proxied it through gsh.
         set_right_weight(right, sid)
         print("Calculating selection took: " + str(time() - begin))
