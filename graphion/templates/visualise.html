@@ -13,10 +13,10 @@ Edited: 2019-06-20
 		<!-- Stylesheets for the loading screen-->
 		<link href="https://fonts.googleapis.com/css?family=Roboto:100,200,300,400,700" rel="stylesheet">
 		<!-- Stylesheet for the tool after the loading -->
-		<script src="/static/scripts/toolUI.js"></script>
 		<link rel="stylesheet" type="text/css" href="/static/css/grid.css">
 		<link rel="stylesheet" type="text/css" href="/static/css/grid_style.css">
 		<link id="tool-ui-sheet" rel="stylesheet" type="text/css" href="/static/css/tool_ui.css">
+		<script src="/static/scripts/toolUI.js"></script>
 		<!-- Bokeh files from Cloudflare CDN -->
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh.min.css" integrity="sha256-kmX/Nb5PazwKydPmaZjEb9sOg8BWh1v5eP14IzXJUkU=" crossorigin="anonymous" />
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.1.0/bokeh-tables.min.css" integrity="sha256-RL9kShsLcf2jHG2zzLh1peDLvWOEK0wPFWSZTiYykc4=" crossorigin="anonymous" />
@@ -49,7 +49,7 @@ Edited: 2019-06-20
 		</script>
 	</head>
 	<body class="valign-wrapper" id="body">
-		<section class="body-wrapper" id="loading-screen">
+		<section class="body-wrapper" id="loading-screen" hidden>
 			<div class="container">
 				<div class="row">
 					<div class="col-s-6" id="nodelink">
@@ -301,7 +301,7 @@ Edited: 2019-06-20
 				</div>
 			</div>
 		</section>
-		<div id="after-loading" hidden>
+		<div id="after-loading">
 
 			<!-- Left side of the tool bar -->
 			<div class="left-bar-shown" id="left-bar-shown">
@@ -313,8 +313,8 @@ Edited: 2019-06-20
 				</div>
 
 				<!-- Logo -->
-				<div class="left-bar-graphion">
-				 	<a href="/">graph<span class="graphion-bold">ion</span></a>
+				<div class="left-bar-graphion" id="graphion-logo" onclick="location.href='/'" style="cursor:pointer;">
+				 	graph<span class="graphion-bold">ion</span>
 				</div>
 
 				<!-- Choose visualization title  -->
@@ -397,7 +397,7 @@ Edited: 2019-06-20
 
 				<!-- Color palette -->
 	            <div class="left-bar-node-labels white-text" style="top: 84.2vh;">Color palette:</div>
-				<select class="dropdown" onChange = "displayPalette(this.value)" style="left: 23px; top: 87.1vh; width: 170px;">
+				<select class="dropdown" onChange = "displayPalette(this.value);changeLogoColor(this.value)" style="left: 23px; top: 87.1vh; width: 170px;">
 	                <option value="kbc" selected="selected">Black to Cyan</option>
 	                <option value="kgy">Green to Yellow</option>
 	                <option value="bgy">Blue to Green to Yellow</option>

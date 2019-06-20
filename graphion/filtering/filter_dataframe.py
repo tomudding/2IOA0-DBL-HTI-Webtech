@@ -6,9 +6,10 @@ Edited 2019-05-20
 from bisect import bisect_left, bisect_right
 from pandas.core.frame import DataFrame
 from itertools import repeat
-from numpy import array, argsort, asarray, concatenate, count_nonzero, delete, reshape, sort, size, array_equal
+from numpy import array, argsort, asarray, concatenate, count_nonzero, delete, reshape, sort, size, array_equal, diagonal
 from time import time
 from graphion.session.handler import get_directed
+
 
 def intersection(lst1, lst2):
     temp = set(lst2)
@@ -206,24 +207,23 @@ def generate_edge_selection(df, cutoff_l = 0.6, cutoff_r = 10.0, keep_edges = Fa
 def getGraphInfo(df):
     """
     :param df: input adjacency matrix in the form of dataframe
-    :return: tuple of #nodes, #edges, #sparsity, #directedness
+    :return: tuple of #nodes, #edges, density, directedness
     """
     adj_matrix = df.to_numpy(copy=True)
     arr = adj_matrix.flatten("C")
+
     dir = True
     transposed = adj_matrix.transpose()
     if array_equal(adj_matrix[0], transposed[0]):
         dir = False
     node_count = len(adj_matrix)
 
-    # This will count self-connected edges
-    if dir:
-        edge_count = count_nonzero(arr)
-    else:
-        edge_count = int((count_nonzero(arr)-node_count)/2+node_count)
-
+    edge_count = count_nonzero(arr) #This will count self-connected edges and
+    # count undirected edges twice
     density = edge_count/size(arr)
-
+    if not dir:
+        dia = diagonal(adj_matrix)
+        edge_count = int((edge_count + count_nonzero(dia))/2)
     return node_count, edge_count, density, dir
 
 
