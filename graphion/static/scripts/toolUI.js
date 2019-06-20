@@ -106,11 +106,11 @@ function changeLogoColor(id) {
         document.getElementById('graphion-logo').style.color = '#D526FF';
         currentColor = '#D526FF';
     } else if (id == 'bmy') {
-        document.getElementById('graphion-logo').style.color = '#898678';
-        currentColor = '#898678';
-    } else if (id == 'cividis') {
         document.getElementById('graphion-logo').style.color = '#FF366B';
         currentColor = '#FF366B';
+    } else if (id == 'cividis') {
+        document.getElementById('graphion-logo').style.color = '#898678';
+        currentColor = '#898678';
     } else if (id == 'dimgray') {
         document.getElementById('graphion-logo').style.color = '#909498';
         currentColor = '#909498';
