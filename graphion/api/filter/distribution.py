@@ -62,7 +62,7 @@ def degreeAPI(type=None, dir=None):
             data = get_partially_filtered_df(sid)
         if dir == 'out':
             data = get_almost_filtered_df(sid)
-    plot = generate_selection(data, kind=type, dir=dir, dataframe=True)
+    plot = generate_selection(sid, data, kind=type, dir=dir, dataframe=True)
     return dumps(json_item(plot))
 
 @apiDegreeBlueprint.route('/postmethod', methods=['POST'])

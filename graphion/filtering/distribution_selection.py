@@ -13,7 +13,9 @@ from KDEpy import FFTKDE
 from sklearn.model_selection import GridSearchCV
 from time import time
 
-def generate_selection(file, kind="degree", dir="in", dataframe=False):
+from graphion.session.handler import get_directed
+
+def generate_selection(sid, file, kind="degree", dir="in", dataframe=False):
     if file is None or file.size == 0:
         p = Paragraph(text="""No nodes left""")
         return p
@@ -144,21 +146,39 @@ def generate_selection(file, kind="degree", dir="in", dataframe=False):
             }
             """
 
-        type_dependent2 = """
-        amount = result;
-        let hue = 120 - amount/20;
-        if (hue < 0){
-            hue = 0;
-        }
-        colored_amount = `<span style='color: hsl(${hue},100%,43%); font-weight:bold'>` + amount + "</span>"
-        
-        let lower = Math.ceil(geometry.x0*100)/100
-        if(lower < 0){
-            lower = 0;
-        }
+        if get_directed(sid):
+            type_dependent2 = """
+            amount = result;
+            let hue = 120 - amount/20;
+            if (hue < 0){
+                hue = 0;
+            }
+            colored_amount = `<span style='color: hsl(${hue},100%,43%); font-weight:bold'>` + amount + "</span>"
+            
+            let lower = Math.ceil(geometry.x0*100)/100
+            if(lower < 0){
+                lower = 0;
+            }
+    
+                p.innerHTML = "Selected " + colored_amount + " edges with weight between " + lower + " and " + Math.floor(geometry.x1*100)/100 + "."
+            """
 
-            p.innerHTML = "Selected " + colored_amount + " edges with weight between " + lower + " and " + Math.floor(geometry.x1*100)/100 + "."
-        """
+        else:
+            type_dependent2 = """
+                        amount = result;
+                        let hue = 120 - amount/20;
+                        if (hue < 0){
+                            hue = 0;
+                        }
+                        colored_amount = `<span style='color: hsl(${hue},100%,43%); font-weight:bold'>` + amount + "</span>"
+
+                        let lower = Math.ceil(geometry.x0*100)/100
+                        if(lower < 0){
+                            lower = 0;
+                        }
+
+                            p.innerHTML = "Selected approximately " + colored_amount + " edges with weight between " + lower + " and " + Math.floor(geometry.x1*100)/100 + "."
+                        """
 
     geometry_callback = CustomJS(args=dict(complete=complete, before=before, middle=middle, after=after), code="""
     let geometry = cb_data["geometry"]

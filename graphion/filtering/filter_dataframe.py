@@ -25,7 +25,7 @@ def fetch_edge_count(sid, df, cutoff_l = 0.6, cutoff_r = 10.0):
     if get_directed(sid):
         return r - l
     else:
-        return ((r-l)-len(df.columns))/2+len(df.columns)
+        return int((r-l)/2)
 
 
 def filter_df_weight(df, cutoff_l = 0.6, cutoff_r = 10.0):
