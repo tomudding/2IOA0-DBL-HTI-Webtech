@@ -17,7 +17,7 @@ from graphion.session.handler import get_directed
 
 def generate_selection(sid, file, kind="degree", dir="in", dataframe=False):
     if file is None or file.size == 0:
-        p = Paragraph(text="""No nodes left""")
+        p = Paragraph(text="""No vertices left""")
         return p
 
     # big_bang = time()
@@ -130,10 +130,10 @@ def generate_selection(sid, file, kind="degree", dir="in", dataframe=False):
                 lower = 0;
             }
             if(upper < lower){
-                p.innerHTML = "Selected no nodes, since selection doesn't contain an integer degree.";
+                p.innerHTML = "Selected no vertices, since selection doesn't contain an integer degree.";
             }
             else{
-            """ + 'p.innerHTML = "Selected " + colored_amount + " nodes with {}-degree between " + lower + " and " + upper + ".";'.format(dir) + '}'
+            """ + 'p.innerHTML = "Selected " + colored_amount + " vertices with {}-degree between " + lower + " and " + upper + ".";'.format(dir) + '}'
 
     else:
         type_dependent1 = """
