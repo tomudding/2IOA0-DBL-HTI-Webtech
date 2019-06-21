@@ -108,7 +108,7 @@ Edited: 2019-06-21
                                                  .then(function(item) {
                                                     Bokeh.embed.embed_item(item, 'weight-plot');
                                                     document.getElementById('between-weight').removeAttribute('hidden');
-                                                 });">Interesting nodes / edges</button>
+                                                 });">Interesting vertices / edges</button>
                                         </div>
                                         <div class="vertical-line"></div>
                                         <div class="col-s-6 icon-area">
@@ -145,8 +145,8 @@ Edited: 2019-06-21
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-s-12">
-                                            <h3 class="help-section-title">What are interesting nodes / edges?</h3>
-                                            <p class="help-section-paragraph">For big datasets, it is not possible to show all nodes and edges in the dataset. That's why you are getting the opportunity to decide which nodes and edges you want to visualize. We will call those nodes and edges 'interesting'.<br>All edges have a weight (possibly 0 or 1). Edges will be considered interesting if their weight is between the minimum and maximum weight, which you get to decide.<br>Nodes will be considered interesting if the number of incoming and outcoming interesting edges is within the minimum and maximum that, again, you can decide.</p><br>
+                                            <h3 class="help-section-title">What are interesting vertices / edges?</h3>
+                                            <p class="help-section-paragraph">For big datasets, it is not possible to show all vertices and edges in the dataset. That's why you are getting the opportunity to decide which vertices and edges you want to visualize. We will call those vertices and edges 'interesting'.<br>All edges have a weight (possibly 0 or 1). Edges will be considered interesting if their weight is between the minimum and maximum weight, which you get to decide.<br>Vertices will be considered interesting if the number of incoming and outcoming interesting edges is within the minimum and maximum that, again, you can decide.</p><br>
                                             <h3 class="help-section-title">What are clusters?</h3>
                                             <p class="help-section-paragraph">The cluster method is aiming to split a big dataset into several small datasets mainly based on dimension reduction with Principal Component Analysis (PCA) following by K-mean algorithm, the cluster number is determined automatically according to the size of orginal dataset.<br>The splitted small datasets will be represented by filled cycles in the following page. By click the cycle you are interested, you can visualize the selected cluster. </p>
                                         </div>
@@ -331,7 +331,7 @@ Edited: 2019-06-21
                                     <div class="row">
                                         <div class="col-s-12">
                                             <h3 class="help-section-title">What are edge weights?</h3>
-                                            <p class="help-section-paragraph">The edges are the connections between nodes. Each connection has its own weight, that weight indicates how strong or important the connection is. The exact meaning differs per dataset.</p><br>
+                                            <p class="help-section-paragraph">The edges are the connections between vertices. Each connection has its own weight, that weight indicates how strong or important the connection is. The exact meaning differs per dataset.</p><br>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -356,7 +356,7 @@ Edited: 2019-06-21
                     <div class="col-s-8 col-offset-2 valign" id="filter-node-in-degree">
                         <div class="card-container">
                             <div class="card-contents">
-                                <h2 class="card-title text-center">Filter node's in-degree</h2>
+                                <h2 class="card-title text-center">Filter by in-degree</h2>
                                 <hr>
                                 <div class="card-body">
                                     <div class="row">
@@ -367,7 +367,7 @@ Edited: 2019-06-21
                                                 </div>
                                             </div>
 
-                                            <p id="between-in-degree" hidden>Select nodes by dragging the mouse.</p>
+                                            <p id="between-in-degree" hidden>Select vertices by dragging the mouse.</p>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -422,8 +422,8 @@ Edited: 2019-06-21
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-s-12">
-                                            <h3 class="help-section-title">What is node's in-degree?</h3>
-                                            <p class="help-section-paragraph">The edges are the connections between the nodes. Each edge connects a source node with a destination node. The in-degree of a node is the number of edges that have that node as destination node.</p><br>
+                                            <h3 class="help-section-title">What is in-degree of a vertex?</h3>
+                                            <p class="help-section-paragraph">The edges are the connections between the vertices. Each edge connects a source vertex with a destination vertex. The in-degree of a vertex is the number of edges that have that vertex as destination node.</p><br>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -448,7 +448,7 @@ Edited: 2019-06-21
                     <div class="col-s-8 col-offset-2 valign" id="filter-node-out-degree">
                         <div class="card-container">
                             <div class="card-contents">
-                                <h2 class="card-title text-center">Filter node's out-degree</h2>
+                                <h2 class="card-title text-center">Filter by out-degree</h2>
                                 <hr>
                                 <div class="card-body">
                                     <div class="row">
@@ -459,7 +459,7 @@ Edited: 2019-06-21
                                                 </div>
                                             </div>
 
-                                            <p id="between-out-degree" hidden>Select nodes by dragging the mouse.</p>
+                                            <p id="between-out-degree" hidden>Select vertices by dragging the mouse.</p>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -505,8 +505,8 @@ Edited: 2019-06-21
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-s-12">
-                                            <h3 class="help-section-title">What is node's out-degree?</h3>
-                                            <p class="help-section-paragraph">The edges are the connections between the nodes. Each edge connects a source node with a destination node. The out-degree of a node is the number of edges that have that node as source node.</p><br>
+                                            <h3 class="help-section-title">What is out-degree of a vertex?</h3>
+                                            <p class="help-section-paragraph">The edges are the connections between the vertices. Each edge connects a source vertex with a destination vertex. The out-degree of a vertex is the number of edges that have that vertex as source vertex.</p><br>
                                         </div>
                                     </div>
                                     <div class="row">
