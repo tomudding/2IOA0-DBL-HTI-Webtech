@@ -1,5 +1,6 @@
 name: 2ioa0
 channels:
+  - alubbock
   - anaconda
   - pyviz/label/dev
   - conda-forge
@@ -50,6 +51,7 @@ dependencies:
   - geos=3.7.1=h33f27b4_0
   - geoviews=1.6.3a2=py_0
   - geoviews-core=1.6.3a2=py_0
+  - graphviz=2.41=0
   - hdf4=4.2.13=h712560f_2
   - hdf5=1.10.4=h7ebc959_0
   - heapdict=1.0.0=py36_2
@@ -67,6 +69,7 @@ dependencies:
   - itsdangerous=1.1.0=py36_0
   - jedi=0.13.3=py36_0
   - jinja2=2.10.1=py36_0
+  - joblib=0.13.2=py_0
   - jpeg=9b=hb83a4c4_2
   - jsonschema=3.0.1=py36_0
   - jupyter=1.0.0=py36_7
@@ -76,7 +79,9 @@ dependencies:
   - kealib=1.4.7=h07cbb95_6
   - kiwisolver=1.0.1=py36h6538335_0
   - krb5=1.16.1=hc04afaa_7
+  - libblas=3.8.0=10_mkl
   - libboost=1.67.0=hd9e427e_4
+  - libcblas=3.8.0=10_mkl
   - libcurl=7.64.1=h2a8f88b_0
   - libgdal=2.3.3=h10f50ba_0
   - libiconv=1.15=h1df5818_7
@@ -149,6 +154,7 @@ dependencies:
   - pyepsg=0.4.0=py36_0
   - pyflakes=2.1.1=py36_0
   - pygments=2.3.1=py36_0
+  - pygraphviz=1.5=py36_0
   - pykdtree=1.3.1=py36h8c2d366_2
   - pyopenssl=19.0.0=py36_0
   - pyparsing=2.4.0=py_0
@@ -160,6 +166,7 @@ dependencies:
   - pytables=3.5.1=py36hb9ab341_1
   - python=3.6.8=h9f7ef89_7
   - python-dateutil=2.8.0=py36_0
+  - python-louvain=0.13=py_0
   - python-snappy=0.5.4=py36ha925a31_0
   - pytz=2019.1=py_0
   - pyviz=0.10.0=py_0
@@ -175,6 +182,7 @@ dependencies:
   - rise=5.3.0=py36_0
   - rtree=0.8.3=py36_0
   - scikit-image=0.15.0=py36ha925a31_0
+  - scikit-learn=0.21.1=py36h0ff8352_0
   - scipy=1.2.1=py36h29ff71c_0
   - selenium=3.141.0=py36he774522_0
   - send2trash=1.5.0=py36_0
@@ -216,5 +224,7 @@ dependencies:
   - zstd=1.3.7=h508b16e_0
   - pip:
     - findimports==1.5.1
+    - flask-session==0.3.1
+    - kdepy==0.6.11
 prefix: C:\ProgramData\Anaconda3\envs\2ioa0
 
