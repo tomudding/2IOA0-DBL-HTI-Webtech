@@ -1,7 +1,7 @@
 <!--
 Author(s): Tom Udding
 Created: 2019-04-29
-Edited: 2019-06-20
+Edited: 2019-06-21
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -163,6 +163,7 @@ Edited: 2019-06-20
 									</div>
 									<div class="row file-upload-matrix-container" style="display: none;">
 										<div class="col-s-12">
+											<p class="text-center matrix-errors" style="display: none"></p>
 											<form action="/upload_matrix" method="post" class="dropzone" id="graphion-matrix-dropzone" enctype="multipart/form-data">
 												<div class="fallback">
 													<input type="file" name="file" accept=".csv, text/csv">
@@ -192,6 +193,7 @@ Edited: 2019-06-20
 									</div>
 									<div class="row file-upload-edgelist-container" style="display: none">
 										<div class="col-s-12">
+											<p class="text-center edgelist-errors" style="display: none"></p>
 											<form action="/upload_edgelist" method="post" class="dropzone" id="graphion-edgelist-dropzone" enctype="multipart/form-data">
 												<div class="fallback">
 													<input type="file" name="file" accept=".txt,.edges,.edgelist">
@@ -273,6 +275,8 @@ Edited: 2019-06-20
 			removeAlerts();
 			document.querySelector(".card-title").textContent="Upload a file";
 			document.querySelector(".card-subtitle").textContent = "Upload an edge list.";
+			document.querySelector(".edgelist-errors").textContent = "";
+			document.querySelector(".edgelist-errors").style.display = "none";
 			document.querySelector(".file-upload-container").style.display = "none";
 			document.querySelector(".file-upload-edgelist-container").style.display = "flex";
 		}, false);
@@ -283,6 +287,8 @@ Edited: 2019-06-20
 			removeAlerts();
 			document.querySelector(".card-title").textContent="Upload a file";
 			document.querySelector(".card-subtitle").textContent = "Upload an adjacency matrix.";
+			document.querySelector(".matrix-errors").textContent = "";
+			document.querySelector(".matrix-errors").style.display = "none";
 			document.querySelector(".file-upload-container").style.display = "none";
 			document.querySelector(".file-upload-matrix-container").style.display = "flex";
 		}, false);
@@ -368,6 +374,8 @@ Edited: 2019-06-20
 			acceptedFiles: "text/csv,.csv",
 			createImageThumbnails: true,
 			dictDefaultMessage: "Drop files here or click to upload",
+			dictFileTooBig: "The dataset you are trying to upload is too large. Upload a dataset smaller than 1GB.",
+			dictInvalidFileType: "The dataset you are trying to upload is not of the correct file type (.csv).",
 			maxFiles: 1,
 			maxFilesize: 1000,
 			paramName: "file",
@@ -377,9 +385,31 @@ Edited: 2019-06-20
 			init: function() {
 				this.on("addedfile", function(file) {
 					document.querySelector(".preview-matrix-container").style.display = "inline-block";
+					document.querySelector(".matrix-errors").textContent = "";
+					document.querySelector(".matrix-errors").style.display = "none";
 					document.querySelector(".dz-default.dz-message").style.display = "none";
 					file.previewElement.classList.add("type-" + file.name.split('.').pop());
 					document.getElementById("file-selection-back").disabled = true;
+				});
+				this.on("error", function(file, errorMessage, xhr) {
+					document.querySelector(".card-title").textContent="Upload a file";
+					document.querySelector(".card-subtitle").textContent = "Upload an adjacency matrix.";
+					document.querySelector(".preview-matrix-container").style.display = "none";
+					document.querySelector(".matrix-errors").style.display = "block";
+					if (xhr) {
+						if (xhr.status == 413) {
+							document.querySelector(".matrix-errors").textContent = "The dataset you are trying to upload is too large. Upload a dataset smaller than 1GB.";
+						} else if (xhr.status == 418) {
+							document.querySelector(".matrix-errors").textContent = "The dataset you are trying to upload is not of the correct file type (.csv).";
+						} else {
+							document.querySelector(".matrix-errors").textContent = "An unknown error occurred. Please try again later.";
+						}
+					} else {
+						document.querySelector(".matrix-errors").textContent = errorMessage;
+					}
+					document.querySelector(".dz-default.dz-message").style.display = "block";
+					document.getElementById("file-selection-back").disabled = false;
+					this.removeAllFiles(true);
 				});
 		        this.on("success", function(file) {
 		            window.location = "/filter/" + file.xhr.response;
@@ -409,6 +439,8 @@ Edited: 2019-06-20
 			acceptedFiles: ".txt,.edges,.edgelist",
 			createImageThumbnails: true,
 			dictDefaultMessage: "Drop files here or click to upload",
+			dictFileTooBig: "The dataset you are trying to upload is too large. Upload a dataset smaller than 1MB.",
+			dictInvalidFileType: "The dataset you are trying to upload is not of the correct file type (.txt, .edges, or .edgelist).",
 			maxFiles: 1,
 			maxFilesize: 1,
 			paramName: "file",
@@ -419,8 +451,30 @@ Edited: 2019-06-20
 				this.on("addedfile", function(file) {
 					document.querySelector(".preview-edgelist-container").style.display = "inline-block";
 					document.querySelectorAll(".dz-default.dz-message")[1].style.display = "none";
+					document.querySelector(".edgelist-errors").textContent = "";
+					document.querySelector(".edgelist-errors").style.display = "none";
 					file.previewElement.classList.add("type-edges"); // force type since file.type is empty
 					document.getElementById("file-selection-back").disabled = true;
+				});
+				this.on("error", function(file, errorMessage, xhr) {
+					document.querySelector(".card-title").textContent="Upload a file";
+					document.querySelector(".card-subtitle").textContent = "Upload an edge list.";
+					document.querySelector(".preview-edgelist-container").style.display = "none";
+					document.querySelector(".edgelist-errors").style.display = "block";
+					if (xhr) {
+						if (xhr.status == 413) {
+							document.querySelector(".edgelist-errors").textContent = "The dataset you are trying to upload is too large. Upload a dataset smaller than 1MB.";
+						} else if (xhr.status == 418) {
+							document.querySelector(".edgelist-errors").textContent = "The dataset you are trying to upload is not of the correct file type (.txt, .edges, .edgelist).";
+						} else {
+							document.querySelector(".edgelist-errors").textContent = "An unknown error occurred. Please try again later.";
+						}
+					} else {
+						document.querySelector(".edgelist-errors").textContent = errorMessage;
+					}
+					document.querySelectorAll(".dz-default.dz-message")[1].style.display = "block";
+					document.getElementById("file-selection-back").disabled = false;
+					this.removeAllFiles(true);
 				});
 		        this.on("success", function(file) {
 		            window.location = "/filter/" + file.xhr.response;

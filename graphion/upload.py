@@ -28,12 +28,14 @@ def upload_matrix():
         fileUniqueHash = token_hex(server.config['TOKEN_SIZE'])
 
         def custom_stream_factory(total_content_length, filename, content_type, content_length=None):
+            if total_content_length > server.config['MAX_CONTENT_LENGTH_MATRIX']:
+                raise exceptions.RequestEntityTooLarge()
             if not allowed_matrix(filename):
                 raise exceptions.ImATeapot()
             tmpfile = NamedTemporaryFile('wb+', delete=False) # delete=False requires manual deletion using os.remove(tmpfile.name)
             return tmpfile
 
-        stream, form, files = parse_form_data(request.environ, stream_factory=custom_stream_factory,  max_content_length=server.config['MAX_CONTENT_LENGTH_MATRIX'])
+        stream, form, files = parse_form_data(request.environ, stream_factory=custom_stream_factory)
 
         file = next(iter(files.values()))
         fileOriginalName = secure_filename(file.filename)
@@ -50,12 +52,14 @@ def upload_edgelist():
         fileUniqueHash = token_hex(server.config['TOKEN_SIZE'])
 
         def custom_stream_factory(total_content_length, filename, content_type, content_length=None):
+            if total_content_length > server.config['MAX_CONTENT_LENGTH_EDGELIST']:
+                raise exceptions.RequestEntityTooLarge()
             if not allowed_edgelist(filename):
                 raise exceptions.ImATeapot()
             tmpfile = NamedTemporaryFile('wb+', delete=False) # delete=False requires manual deletion using os.remove(tmpfile.name)
             return tmpfile
 
-        stream, form, files = parse_form_data(request.environ, stream_factory=custom_stream_factory,  max_content_length=server.config['MAX_CONTENT_LENGTH_EDGELIST'])
+        stream, form, files = parse_form_data(request.environ, stream_factory=custom_stream_factory)
 
         file = next(iter(files.values()))
         fileOriginalName = secure_filename(file.filename)
