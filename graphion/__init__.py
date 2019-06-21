@@ -1,7 +1,7 @@
 """
 Author(s): Tom Udding, Steven van den Broek, Sam Baggen
 Created: 2019-04-29
-Edited: 2019-06-19
+Edited: 2019-06-21
 """
 from flask import Flask
 server = Flask(__name__)
@@ -40,10 +40,13 @@ from tornado.ioloop import IOLoop
 # constants
 SECRET_KEY = "2718281828459045235360287471352662497757247093699959574966967627724076630353547594571382178525166427"
 SEED = 2464195387
-UPLOAD_FOLDER = 'uploads'               #
-TOKEN_SIZE = 16                         #
-BUFFER_SIZE = 100000                    #
-MAX_CONTENT_LENGTH = 1000 * 1024 * 1024 # limit file upload size to 1 GB
+UPLOAD_FOLDER = 'uploads'
+TOKEN_SIZE = 16
+BUFFER_SIZE = 100000
+MAX_CONTENT_LENGTH_MATRIX = 1000 * 1024 * 1024  # limit file upload size to 1 GB
+MAX_CONTENT_LENGTH_EDGELIST = 1 * 1024 * 1024   # limit file upload size to 1 MB
+ALLOWED_EXTENSIONS_MATRIX = set(["csv"])
+ALLOWED_EXTENSIONS_EDGELIST = set(["txt","edges","edgelist"])
 
 # app configurations
 server.config['SECRET_KEY'] = SECRET_KEY
@@ -51,7 +54,10 @@ server.config['SEED'] = SEED
 server.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 server.config['TOKEN_SIZE'] = TOKEN_SIZE
 server.config['BUFFER_SIZE'] = BUFFER_SIZE
-server.config['MAX_CONTENT_LENGTH'] = MAX_CONTENT_LENGTH
+server.config['MAX_CONTENT_LENGTH_MATRIX'] = MAX_CONTENT_LENGTH_MATRIX
+server.config['MAX_CONTENT_LENGTH_EDGELIST'] = MAX_CONTENT_LENGTH_EDGELIST
+server.config['ALLOWED_EXTENSIONS_MATRIX'] = ALLOWED_EXTENSIONS_MATRIX
+server.config['ALLOWED_EXTENSIONS_EDGELIST'] = ALLOWED_EXTENSIONS_EDGELIST
 
 # general imports
 import graphion.error
