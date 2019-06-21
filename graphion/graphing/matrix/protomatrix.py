@@ -19,11 +19,8 @@ def makeMatrix(file, sid, df=False):
         df = read_hdf(file)
     else:
         df = file
-    names = df.columns.tolist()
-    if (len(names) > 400):
-        df = df.head(400)[names[0:400]]
-    names = df.columns.tolist()
 
+    names = df.columns.tolist()
     df_original = df.copy()
 
     def remove_noise(df):
