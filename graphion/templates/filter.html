@@ -281,7 +281,15 @@ Edited: 2019-06-21
                                                         document.getElementById('filter-edge-weight').style.display='none';
                                                         document.getElementById('choose-theme').style.display='block';
                                                         plot = document.getElementById('weight-plot');
-                                                        plot.removeChild(plot.childNodes[1]);
+
+                                                        for (let node of plot.childNodes){
+                                                            if(node.classList){
+                                                                if(node.classList.contains('bk')){
+                                                                     plot.removeChild(node);
+                                                                }
+                                                            }
+                                                        }
+
                                                         document.getElementById('between-weight').innerHTML = 'Select nodes by dragging the mouse.';
                                                         document.getElementById('weight-selection').removeAttribute('hidden');">
                                                         Back
@@ -380,7 +388,13 @@ Edited: 2019-06-21
                                                         document.getElementById('filter-node-in-degree').style.display='none';
                                                         document.getElementById('filter-edge-weight').style.display='block';
                                                         plot = document.getElementById('in-degree-plot');
-                                                        plot.removeChild(plot.childNodes[1]);
+                                                        for (let node of plot.childNodes){
+                                                            if(node.classList){
+                                                                if(node.classList.contains('bk')){
+                                                                     plot.removeChild(node);
+                                                                }
+                                                            }
+                                                        }
                                                         document.getElementById('between-in-degree').innerHTML = 'Select vertices by dragging the mouse.';
                                                         document.getElementById('in-degree-selection').removeAttribute('hidden');">
                                                         Back
@@ -471,7 +485,13 @@ Edited: 2019-06-21
                                                         document.getElementById('filter-node-out-degree').style.display='none';
                                                         document.getElementById('filter-node-in-degree').style.display='block';
                                                         plot = document.getElementById('out-degree-plot');
-                                                        plot.removeChild(plot.childNodes[1]);
+                                                        for (let node of plot.childNodes){
+                                                            if(node.classList){
+                                                                if(node.classList.contains('bk')){
+                                                                     plot.removeChild(node);
+                                                                }
+                                                            }
+                                                        }
                                                         document.getElementById('between-out-degree').innerHTML = 'Select vertices by dragging the mouse.';
                                                         document.getElementById('out-degree-selection').removeAttribute('hidden');">
                                                         Back
