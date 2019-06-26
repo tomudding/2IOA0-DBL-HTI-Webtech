@@ -356,9 +356,15 @@ def generateNodeLinkDiagram(df, diagramType, sid, datashaded=True):
                 self.points.opts(cmap=self.colorMap[self.color_palette], color=self.node_color, size=self.node_size)
                 return (plot, self.points)
             else:
-                self.points.opts(cmap=self.colorMap[self.color_palette], color=self.node_color, size=self.node_size)
-                self.plot.opts(edge_cmap = self.colorMap[self.color_palette], edge_color='weight',
-                               edge_line_width=dim('weight').norm()*5+0.1, edge_line_alpha=0.1+dim('weight').norm()*0.9)
+                if (min(self.plot.data['weight']) < max(self.plot.data['weight'])):
+                    self.points.opts(cmap=self.colorMap[self.color_palette], color=self.node_color, size=self.node_size)
+                    self.plot.opts(edge_cmap = self.colorMap[self.color_palette], edge_color='weight',
+                                   edge_line_width=dim('weight').norm()*5+0.1, edge_line_alpha=0.1+dim('weight').norm()*0.9)
+                else:
+                    self.points.opts(cmap=self.colorMap[self.color_palette], color=self.node_color, size=self.node_size)
+                    self.plot.opts(edge_cmap=self.colorMap[self.color_palette], edge_color=dim('weight'),
+                                   edge_line_width=dim('weight')*3,
+                                   edge_line_alpha=dim('weight'))
             return (self.plot, self.points)
 
     return Nodelink(diagramType, sid)
